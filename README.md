@@ -1,0 +1,21 @@
+# Mind-Controlled
+
+This repo houses a cynical philosophy blog about propaganda, conditioning, and the mechanics of mind control (in the Ellul sense).
+
+## Phases
+- Phase 1: deployed shell site + initial config
+- Phase 2: authoring and post pipeline
+- Phase 3: full aesthetic + interaction layer
+- Phase 4: MVP complete
+
+## Development
+- Install: `npm install`
+- Run dev server: `npm run dev`
+- Build: `npm run build`
+- Start production server: `npm run start`
+- Lint: `npm run lint`
+
+## Planning Docs
+- PROJECT_BRIEF.md
+- CONTENT_MODEL.md
+- SITEMAP.md
