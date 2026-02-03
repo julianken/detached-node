@@ -6,15 +6,9 @@ import config from "@payload-config";
 // Force dynamic rendering - database may not have tables during build
 export const dynamic = "force-dynamic";
 
-type FeaturedPost = {
-  id: string;
-  title: string;
-  slug: string;
-  summary?: string | null;
-};
-
 export default async function Home() {
-  let featuredPosts: FeaturedPost[] = [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let featuredPosts: any[] = [];
 
   try {
     const payload = await getPayload({ config });

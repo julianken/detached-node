@@ -6,16 +6,9 @@ import { PostCard } from "@/components/PostCard";
 // Force dynamic rendering - database may not have tables during build
 export const dynamic = "force-dynamic";
 
-type PostListItem = {
-  id: string;
-  title: string;
-  slug: string;
-  summary?: string | null;
-  publishedAt?: string | null;
-};
-
 export default async function PostsPage() {
-  let posts: PostListItem[] = [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let posts: any[] = [];
 
   try {
     const payload = await getPayload({ config });
