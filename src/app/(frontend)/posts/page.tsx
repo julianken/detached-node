@@ -2,16 +2,27 @@ import { getPayload } from "payload";
 import config from "@payload-config";
 import { PageHeader } from "@/components/PageHeader";
 import { PostCard } from "@/components/PostCard";
+import type { Post } from "@/payload-types";
+
+// Force dynamic rendering - database may not have tables during build
+export const dynamic = "force-dynamic";
 
 export default async function PostsPage() {
-  const payload = await getPayload({ config });
-  const { docs: posts } = await payload.find({
-    collection: "posts",
-    where: {
-      status: { equals: "published" },
-    },
-    sort: "-publishedAt",
-  });
+  let posts: Post[] = [];
+
+  try {
+    const payload = await getPayload({ config });
+    const result = await payload.find({
+      collection: "posts",
+      where: {
+        status: { equals: "published" },
+      },
+      sort: "-publishedAt",
+    });
+    posts = result.docs;
+  } catch {
+    // Database tables may not exist yet - show empty state
+  }
 
   return (
     <div className="flex flex-col gap-8">
