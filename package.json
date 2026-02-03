@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "payload": "payload",
+    "ci": "pnpm payload migrate && pnpm build"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "^3.74.0",
