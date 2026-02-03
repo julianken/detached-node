@@ -7,13 +7,7 @@ import { PageHeader } from "@/components/PageHeader";
 // Force dynamic rendering - database may not have tables during build
 export const dynamic = "force-dynamic";
 
-type PageData = {
-  title: string;
-  description?: string | null;
-  body: unknown;
-};
-
-async function getAboutPage(): Promise<PageData | null> {
+async function getAboutPage() {
   try {
     const payload = await getPayload({ config });
     const { docs } = await payload.find({
