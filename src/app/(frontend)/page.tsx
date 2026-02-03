@@ -1,27 +1,18 @@
 import { Card } from "@/components/Card";
 import Link from "next/link";
+import { getPayload } from "payload";
+import config from "@payload-config";
 
-export default function Home() {
-  const highlights = [
-    {
-      title: "Featured Essay",
-      summary:
-        "A long-form entry with a strong hook, a clear thesis, and structured evidence.",
-      href: "/posts/featured-essay",
+export default async function Home() {
+  const payload = await getPayload({ config });
+  const { docs: featuredPosts } = await payload.find({
+    collection: "posts",
+    where: {
+      featured: { equals: true },
+      status: { equals: "published" },
     },
-    {
-      title: "Decoder",
-      summary:
-        "A quick, repeatable pattern for breaking down persuasion tactics.",
-      href: "/posts/decoder-template",
-    },
-    {
-      title: "Index",
-      summary:
-        "A source and citation area that ties essays back to references.",
-      href: "/posts/index-template",
-    },
-  ];
+    limit: 3,
+  });
 
   return (
     <div className="flex flex-col gap-14">
@@ -55,22 +46,30 @@ export default function Home() {
 
       <section>
         <h2 className="text-xl font-semibold text-zinc-900">
-          Content blueprints
+          Featured posts
         </h2>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-600">
-          Use these as placeholders while wiring up the content pipeline.
+          Recent highlights from the archive.
         </p>
         <div className="mt-6 grid gap-6 md:grid-cols-3">
-          {highlights.map((item) => (
-            <Card key={item.title} href={item.href}>
-              <h3 className="text-base font-semibold text-zinc-900">
-                {item.title}
-              </h3>
-              <p className="mt-2 text-sm leading-6 text-zinc-600">
-                {item.summary}
+          {featuredPosts.length > 0 ? (
+            featuredPosts.map((post) => (
+              <Card key={post.id} href={`/posts/${post.slug}`}>
+                <h3 className="text-base font-semibold text-zinc-900">
+                  {post.title}
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-zinc-600">
+                  {post.summary}
+                </p>
+              </Card>
+            ))
+          ) : (
+            <div className="col-span-full rounded-xl border border-dashed border-zinc-300 p-8 text-center">
+              <p className="text-sm text-zinc-500">
+                No featured posts yet. Check back soon.
               </p>
-            </Card>
-          ))}
+            </div>
+          )}
         </div>
       </section>
     </div>
