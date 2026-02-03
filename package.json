@@ -5,10 +5,10 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:production": "pnpm payload migrate && pnpm build",
     "start": "next start",
     "lint": "eslint",
-    "payload": "payload",
-    "ci": "pnpm payload migrate && pnpm build"
+    "payload": "payload"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "^3.74.0",

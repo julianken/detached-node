@@ -1,5 +1,5 @@
 {
-  "buildCommand": "pnpm ci",
+  "buildCommand": "pnpm build:production",
   "functions": {
     "src/app/(payload)/api/**/*": {
       "maxDuration": 60
