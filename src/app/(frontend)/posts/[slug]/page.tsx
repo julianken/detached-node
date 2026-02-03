@@ -5,6 +5,9 @@ import config from "@payload-config";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import type { SerializedEditorState } from "@payloadcms/richtext-lexical/lexical";
 
+// Force dynamic rendering - database may not have tables during build
+export const dynamic = "force-dynamic";
+
 type PostPageProps = {
   params: Promise<{
     slug: string;
@@ -28,68 +31,59 @@ function formatDate(date: string | null | undefined): string {
   });
 }
 
-export async function generateStaticParams() {
-  const payload = await getPayload({ config });
-
-  const { docs: posts } = await payload.find({
-    collection: "posts",
-    where: {
-      status: { equals: "published" },
-    },
-    limit: 1000,
-    select: {
-      slug: true,
-    },
-  });
-
-  return posts.map((post) => ({
-    slug: post.slug,
-  }));
-}
-
 export async function generateMetadata({
   params,
 }: PostPageProps): Promise<Metadata> {
-  const { slug } = await params;
-  const payload = await getPayload({ config });
+  try {
+    const { slug } = await params;
+    const payload = await getPayload({ config });
 
-  const { docs } = await payload.find({
-    collection: "posts",
-    where: {
-      slug: { equals: slug },
-      status: { equals: "published" },
-    },
-    limit: 1,
-  });
+    const { docs } = await payload.find({
+      collection: "posts",
+      where: {
+        slug: { equals: slug },
+        status: { equals: "published" },
+      },
+      limit: 1,
+    });
 
-  const post = docs[0];
+    const post = docs[0];
 
-  if (!post) {
+    if (!post) {
+      return {
+        title: "Post Not Found",
+      };
+    }
+
+    return {
+      title: post.title,
+      description: post.summary,
+    };
+  } catch {
     return {
       title: "Post Not Found",
     };
   }
-
-  return {
-    title: post.title,
-    description: post.summary,
-  };
 }
 
 export default async function PostPage({ params }: PostPageProps) {
   const { slug } = await params;
-  const payload = await getPayload({ config });
 
-  const { docs } = await payload.find({
-    collection: "posts",
-    where: {
-      slug: { equals: slug },
-      status: { equals: "published" },
-    },
-    limit: 1,
-  });
-
-  const post = docs[0];
+  let post = null;
+  try {
+    const payload = await getPayload({ config });
+    const { docs } = await payload.find({
+      collection: "posts",
+      where: {
+        slug: { equals: slug },
+        status: { equals: "published" },
+      },
+      limit: 1,
+    });
+    post = docs[0];
+  } catch {
+    // Database tables may not exist yet
+  }
 
   if (!post) {
     notFound();

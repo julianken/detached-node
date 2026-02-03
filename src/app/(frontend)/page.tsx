@@ -2,17 +2,28 @@ import { Card } from "@/components/Card";
 import Link from "next/link";
 import { getPayload } from "payload";
 import config from "@payload-config";
+import type { Post } from "@/payload-types";
+
+// Force dynamic rendering - database may not have tables during build
+export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const payload = await getPayload({ config });
-  const { docs: featuredPosts } = await payload.find({
-    collection: "posts",
-    where: {
-      featured: { equals: true },
-      status: { equals: "published" },
-    },
-    limit: 3,
-  });
+  let featuredPosts: Post[] = [];
+
+  try {
+    const payload = await getPayload({ config });
+    const result = await payload.find({
+      collection: "posts",
+      where: {
+        featured: { equals: true },
+        status: { equals: "published" },
+      },
+      limit: 3,
+    });
+    featuredPosts = result.docs;
+  } catch {
+    // Database tables may not exist yet - show empty state
+  }
 
   return (
     <div className="flex flex-col gap-14">

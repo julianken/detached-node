@@ -3,18 +3,27 @@ import { getPayload } from "payload";
 import config from "@payload-config";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import { PageHeader } from "@/components/PageHeader";
+import type { Page } from "@/payload-types";
 
-async function getAboutPage() {
-  const payload = await getPayload({ config });
-  const { docs } = await payload.find({
-    collection: "pages",
-    where: {
-      slug: { equals: "about" },
-      status: { equals: "published" },
-    },
-    limit: 1,
-  });
-  return docs[0] ?? null;
+// Force dynamic rendering - database may not have tables during build
+export const dynamic = "force-dynamic";
+
+async function getAboutPage(): Promise<Page | null> {
+  try {
+    const payload = await getPayload({ config });
+    const { docs } = await payload.find({
+      collection: "pages",
+      where: {
+        slug: { equals: "about" },
+        status: { equals: "published" },
+      },
+      limit: 1,
+    });
+    return docs[0] ?? null;
+  } catch {
+    // Database tables may not exist yet
+    return null;
+  }
 }
 
 export async function generateMetadata(): Promise<Metadata> {
