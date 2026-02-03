@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "src/app/(payload)/api/**/*": {
+      "maxDuration": 60
+    }
+  }
+}
