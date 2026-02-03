@@ -94,22 +94,22 @@ export default async function PostPage({ params }: PostPageProps) {
   return (
     <article className="mx-auto flex max-w-3xl flex-col gap-6">
       <header className="flex flex-col gap-2">
-        <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">
+        <p className="text-xs uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
           {typeLabel}
         </p>
-        <h1 className="text-3xl font-semibold tracking-tight text-zinc-900">
+        <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
           {post.title}
         </h1>
         {post.publishedAt && (
-          <p className="text-sm text-zinc-500">{formatDate(post.publishedAt)}</p>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">{formatDate(post.publishedAt)}</p>
         )}
       </header>
 
       {post.summary && (
-        <p className="text-lg leading-relaxed text-zinc-600">{post.summary}</p>
+        <p className="text-lg leading-relaxed text-zinc-600 dark:text-zinc-400">{post.summary}</p>
       )}
 
-      <section className="prose prose-zinc max-w-none">
+      <section className="prose prose-zinc dark:prose-invert max-w-none">
         <RichText data={post.body as SerializedEditorState} />
       </section>
     </article>

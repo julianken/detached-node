@@ -32,7 +32,7 @@ export default async function PostsPage() {
       />
       <div className="flex flex-col gap-6">
         {posts.length === 0 ? (
-          <p className="text-sm text-zinc-500">
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">
             No posts yet. Check back soon.
           </p>
         ) : (
