@@ -3,12 +3,17 @@ import { getPayload } from "payload";
 import config from "@payload-config";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import { PageHeader } from "@/components/PageHeader";
-import type { Page } from "@/payload-types";
 
 // Force dynamic rendering - database may not have tables during build
 export const dynamic = "force-dynamic";
 
-async function getAboutPage(): Promise<Page | null> {
+type PageData = {
+  title: string;
+  description?: string | null;
+  body: unknown;
+};
+
+async function getAboutPage(): Promise<PageData | null> {
   try {
     const payload = await getPayload({ config });
     const { docs } = await payload.find({

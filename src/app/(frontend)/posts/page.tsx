@@ -2,13 +2,20 @@ import { getPayload } from "payload";
 import config from "@payload-config";
 import { PageHeader } from "@/components/PageHeader";
 import { PostCard } from "@/components/PostCard";
-import type { Post } from "@/payload-types";
 
 // Force dynamic rendering - database may not have tables during build
 export const dynamic = "force-dynamic";
 
+type PostListItem = {
+  id: string;
+  title: string;
+  slug: string;
+  summary?: string | null;
+  publishedAt?: string | null;
+};
+
 export default async function PostsPage() {
-  let posts: Post[] = [];
+  let posts: PostListItem[] = [];
 
   try {
     const payload = await getPayload({ config });

@@ -2,13 +2,19 @@ import { Card } from "@/components/Card";
 import Link from "next/link";
 import { getPayload } from "payload";
 import config from "@payload-config";
-import type { Post } from "@/payload-types";
 
 // Force dynamic rendering - database may not have tables during build
 export const dynamic = "force-dynamic";
 
+type FeaturedPost = {
+  id: string;
+  title: string;
+  slug: string;
+  summary?: string | null;
+};
+
 export default async function Home() {
-  let featuredPosts: Post[] = [];
+  let featuredPosts: FeaturedPost[] = [];
 
   try {
     const payload = await getPayload({ config });
