@@ -1,3 +1,6 @@
+import { Card } from "@/components/Card";
+import Link from "next/link";
+
 export default function Home() {
   const highlights = [
     {
@@ -35,18 +38,18 @@ export default function Home() {
           system.
         </p>
         <div className="mt-8 flex flex-wrap gap-4">
-          <a
+          <Link
             className="rounded-full border border-zinc-900 px-5 py-2 text-sm font-medium text-zinc-900 transition hover:bg-zinc-900 hover:text-white"
             href="/posts"
           >
             Browse posts
-          </a>
-          <a
+          </Link>
+          <Link
             className="rounded-full border border-zinc-200 px-5 py-2 text-sm font-medium text-zinc-600 transition hover:border-zinc-400 hover:text-zinc-900"
             href="/about"
           >
             About the project
-          </a>
+          </Link>
         </div>
       </section>
 
@@ -59,18 +62,14 @@ export default function Home() {
         </p>
         <div className="mt-6 grid gap-6 md:grid-cols-3">
           {highlights.map((item) => (
-            <a
-              key={item.title}
-              className="rounded-xl border border-zinc-200 p-5 transition hover:border-zinc-400"
-              href={item.href}
-            >
+            <Card key={item.title} href={item.href}>
               <h3 className="text-base font-semibold text-zinc-900">
                 {item.title}
               </h3>
               <p className="mt-2 text-sm leading-6 text-zinc-600">
                 {item.summary}
               </p>
-            </a>
+            </Card>
           ))}
         </div>
       </section>

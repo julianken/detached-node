@@ -1,3 +1,6 @@
+import { PageHeader } from "@/components/PageHeader";
+import { PostCard } from "@/components/PostCard";
+
 const posts = [
   {
     title: "Sample post title",
@@ -22,31 +25,19 @@ const posts = [
 export default function PostsPage() {
   return (
     <div className="flex flex-col gap-8">
-      <header>
-        <h1 className="text-3xl font-semibold tracking-tight text-zinc-900">
-          Posts
-        </h1>
-        <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-600">
-          A simple listing layout you can replace with dynamic content later.
-        </p>
-      </header>
+      <PageHeader
+        title="Posts"
+        subtitle="A simple listing layout you can replace with dynamic content later."
+      />
       <div className="flex flex-col gap-6">
         {posts.map((post) => (
-          <a
+          <PostCard
             key={post.title}
-            className="rounded-xl border border-zinc-200 p-6 transition hover:border-zinc-400"
+            title={post.title}
+            date={post.date}
+            summary={post.summary}
             href={post.href}
-          >
-            <div className="flex items-center justify-between gap-4">
-              <h2 className="text-lg font-semibold text-zinc-900">
-                {post.title}
-              </h2>
-              <span className="text-xs text-zinc-500">{post.date}</span>
-            </div>
-            <p className="mt-2 text-sm leading-6 text-zinc-600">
-              {post.summary}
-            </p>
-          </a>
+          />
         ))}
       </div>
     </div>
