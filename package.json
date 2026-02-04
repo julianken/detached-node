@@ -10,6 +10,8 @@
     "start": "next start",
     "lint": "eslint",
     "payload": "payload",
+    "seed:test": "tsx scripts/seed-test-db.ts",
+    "db:reset": "tsx scripts/seed-test-db.ts",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:debug": "playwright test --debug"
