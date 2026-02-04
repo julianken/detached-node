@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { getPayload } from "payload";
 import config from "@payload-config";
 import { PageHeader } from "@/components/PageHeader";
@@ -5,6 +6,11 @@ import { PostCard } from "@/components/PostCard";
 
 // Force dynamic rendering - database may not have tables during build
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Posts",
+  description: "Essays and analysis on propaganda, conditioning, and the mechanics of mind control.",
+};
 
 export default async function PostsPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
