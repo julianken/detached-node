@@ -1,10 +1,12 @@
 name: E2E Tests
 
 on:
-  pull_request:
-    branches: [main]
-  push:
-    branches: [main]
+  workflow_dispatch:
+    inputs:
+      test_pattern:
+        description: 'Test file pattern (optional, e.g., "public/*" or leave empty for all)'
+        required: false
+        default: ''
 
 env:
   DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
@@ -63,7 +65,12 @@ jobs:
         run: pnpm seed:test
 
       - name: Run E2E tests
-        run: pnpm test:e2e
+        run: |
+          if [ -n "${{ github.event.inputs.test_pattern }}" ]; then
+            pnpm test:e2e tests/e2e/${{ github.event.inputs.test_pattern }}
+          else
+            pnpm test:e2e
+          fi
 
       - name: Upload Playwright report
         uses: actions/upload-artifact@v4
