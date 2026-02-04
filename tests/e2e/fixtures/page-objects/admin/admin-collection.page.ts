@@ -14,7 +14,7 @@ export class AdminCollectionPage {
   constructor(page: Page) {
     this.page = page
     this.collectionHeading = page.locator('h1')
-    this.createNewButton = page.getByRole('link', { name: /create new|add new/i })
+    this.createNewButton = page.getByRole('link', { name: /create new|add new/i }).first()
     this.tableRows = page.locator('table tbody tr, [class*="table"] [class*="row"]')
     this.searchInput = page.locator('input[type="search"], input[placeholder*="search" i]')
     this.filterButton = page.getByRole('button', { name: /filter/i })
