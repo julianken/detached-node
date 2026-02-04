@@ -4,6 +4,7 @@ import { getPayload } from "payload";
 import config from "@payload-config";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import type { SerializedEditorState } from "@payloadcms/richtext-lexical/lexical";
+import { formatDate, getTypeLabel } from "@/lib/formatting";
 
 // Force dynamic rendering - database may not have tables during build
 export const dynamic = "force-dynamic";
@@ -13,23 +14,6 @@ type PostPageProps = {
     slug: string;
   }>;
 };
-
-// Map post type values to display labels
-const typeLabels: Record<string, string> = {
-  essay: "Essay",
-  decoder: "Decoder",
-  index: "Index",
-  "field-report": "Field Report",
-};
-
-function formatDate(date: string | null | undefined): string {
-  if (!date) return "";
-  return new Date(date).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-}
 
 export async function generateMetadata({
   params,
@@ -93,7 +77,7 @@ export default async function PostPage({ params }: PostPageProps) {
     notFound();
   }
 
-  const typeLabel = typeLabels[post.type] || post.type;
+  const typeLabel = getTypeLabel(post.type);
 
   return (
     <article className="mx-auto flex max-w-3xl flex-col gap-6">

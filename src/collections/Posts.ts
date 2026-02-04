@@ -1,4 +1,6 @@
 import type { CollectionConfig } from 'payload'
+import { createSlugHook } from '@/lib/slug'
+import { publishedOrAuthenticated } from '@/lib/access-control'
 
 export const Posts: CollectionConfig = {
   slug: 'posts',
@@ -8,10 +10,7 @@ export const Posts: CollectionConfig = {
     defaultColumns: ['title', 'type', 'status', 'publishedAt'],
   },
   access: {
-    read: ({ req: { user } }) => {
-      if (user) return true
-      return { status: { equals: 'published' } }
-    },
+    read: publishedOrAuthenticated,
   },
   fields: [
     {
@@ -28,17 +27,7 @@ export const Posts: CollectionConfig = {
       unique: true,
       admin: { position: 'sidebar' },
       hooks: {
-        beforeValidate: [
-          ({ value, data }) => {
-            if (!value && data?.title) {
-              return data.title
-                .toLowerCase()
-                .replace(/[^a-z0-9]+/g, '-')
-                .replace(/(^-|-$)/g, '')
-            }
-            return value
-          },
-        ],
+        beforeValidate: [createSlugHook('title')],
       },
     },
     {
