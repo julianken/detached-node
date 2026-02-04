@@ -8,6 +8,7 @@
 import dotenv from 'dotenv'
 import fs from 'fs'
 import path from 'path'
+import { createRichText } from '../src/lib/rich-text.js'
 
 // Load environment variables from .env.local FIRST
 dotenv.config({ path: '.env.local' })
@@ -108,39 +109,6 @@ async function seedTestDatabase() {
   fs.unlinkSync(testImagePath)
 
   console.log('✓ Created 2 test media items')
-
-  // Helper to create Lexical rich text content
-  const createRichText = (text: string) => ({
-    root: {
-      type: 'root',
-      format: '',
-      indent: 0,
-      version: 1,
-      children: [
-        {
-          type: 'paragraph',
-          format: '',
-          indent: 0,
-          version: 1,
-          children: [
-            {
-              mode: 'normal',
-              text,
-              type: 'text',
-              style: '',
-              detail: 0,
-              format: 0,
-              version: 1,
-            },
-          ],
-          direction: 'ltr',
-          textStyle: '',
-          textFormat: 0,
-        },
-      ],
-      direction: 'ltr',
-    },
-  })
 
   // 4. Create posts (6 total)
   console.log('📝 Creating posts...')

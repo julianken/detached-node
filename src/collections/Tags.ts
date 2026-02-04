@@ -1,4 +1,6 @@
 import type { CollectionConfig } from 'payload'
+import { createSlugHook } from '@/lib/slug'
+import { publicRead } from '@/lib/access-control'
 
 export const Tags: CollectionConfig = {
   slug: 'tags',
@@ -7,7 +9,7 @@ export const Tags: CollectionConfig = {
     group: 'Content',
   },
   access: {
-    read: () => true,
+    read: publicRead,
   },
   fields: [
     {
@@ -25,17 +27,7 @@ export const Tags: CollectionConfig = {
         position: 'sidebar',
       },
       hooks: {
-        beforeValidate: [
-          ({ value, data }) => {
-            if (!value && data?.name) {
-              return data.name
-                .toLowerCase()
-                .replace(/[^a-z0-9]+/g, '-')
-                .replace(/(^-|-$)/g, '')
-            }
-            return value
-          },
-        ],
+        beforeValidate: [createSlugHook('name')],
       },
     },
     {
