@@ -31,6 +31,19 @@ export {
   clearAllRelationships,
 } from './relationship.helper'
 
+// Array field helpers
+export {
+  addArrayRow,
+  fillArrayField,
+  fillArrayDateField,
+  getArrayFieldValue,
+  removeArrayRow,
+  getArrayRowCount,
+  reorderArrayRow,
+  collapseArrayRow,
+  expandArrayRow,
+} from './array.helper'
+
 // Assertion helpers
 export {
   expectValidationError,
