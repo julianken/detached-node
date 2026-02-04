@@ -50,3 +50,4 @@ public/media/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+/tests/.auth/
