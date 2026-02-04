@@ -1,6 +1,10 @@
 import { Page } from '@playwright/test'
 import { AdminLoginPage } from './page-objects/admin/admin-login.page'
 import path from 'path'
+import { fileURLToPath } from 'url'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 /**
  * Storage state file for authenticated admin session
