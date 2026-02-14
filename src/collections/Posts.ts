@@ -27,7 +27,8 @@ export const Posts: CollectionConfig = {
       name: 'slug',
       type: 'text',
       required: true,
-      unique: true,
+      unique: true, // Creates unique index automatically
+      index: true, // Additional index for faster lookups
       admin: { position: 'sidebar' },
       hooks: {
         beforeValidate: [createSlugHook('title')],
@@ -92,6 +93,7 @@ export const Posts: CollectionConfig = {
         { label: 'Archived', value: 'archived' },
       ],
       admin: { position: 'sidebar' },
+      index: true, // Index for status filtering (published posts)
     },
     {
       name: 'publishedAt',
@@ -100,12 +102,14 @@ export const Posts: CollectionConfig = {
         position: 'sidebar',
         date: { pickerAppearance: 'dayAndTime' },
       },
+      index: true, // Index for sorting by publication date
     },
     {
       name: 'featured',
       type: 'checkbox',
       defaultValue: false,
       admin: { position: 'sidebar' },
+      index: true, // Index for featured post queries
     },
   ],
 }

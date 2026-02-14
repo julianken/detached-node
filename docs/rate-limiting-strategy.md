@@ -3,11 +3,14 @@
 **Issue**: CON-89
 **Author**: Backend Development Agent
 **Date**: 2026-02-12
-**Status**: Proposed (Pending Approval)
+**Status**: Phase 1 Implemented (GraphQL Only)
+**Last Updated**: 2026-02-13
 
 ## Executive Summary
 
-This document outlines a comprehensive rate limiting strategy for the Mind-Controlled Payload CMS API routes deployed on Vercel's serverless infrastructure. The recommended solution uses **Upstash Redis with @upstash/ratelimit** implemented via Next.js middleware to protect against brute force attacks, DoS attempts, and API abuse.
+This document outlines a comprehensive rate limiting strategy for the Mind-Controlled Payload CMS API routes deployed on Vercel's serverless infrastructure. The recommended solution uses **Upstash Redis with @upstash/ratelimit** with a **phased implementation approach**.
+
+**Current Status (Phase 1)**: GraphQL endpoint protection via route handler is IMPLEMENTED. Global middleware protection is planned for Phase 2.
 
 ## Table of Contents
 
@@ -21,6 +24,37 @@ This document outlines a comprehensive rate limiting strategy for the Mind-Contr
 8. [Monitoring & Observability](#monitoring--observability)
 9. [Cost Analysis](#cost-analysis)
 10. [Future Enhancements](#future-enhancements)
+
+---
+
+## Current Implementation (Phase 1)
+
+**Location**: `/src/app/(payload)/api/graphql/route.ts`
+
+**Protection Scope**: GraphQL endpoint only (`/api/graphql`)
+
+**Rate Limit**: 100 requests per hour per IP
+
+**Features Implemented**:
+- ✅ Rate limiting via Upstash Redis (with in-memory fallback for dev)
+- ✅ Standard rate limit headers (RateLimit-Limit, RateLimit-Remaining, RateLimit-Reset)
+- ✅ 429 error responses with retry information
+- ✅ Fail-open error handling (if Redis unavailable, allows requests)
+- ✅ Client IP detection via Vercel headers
+- ✅ GraphQL Playground protection (disabled in production)
+
+**What's NOT Protected Yet (Phase 2)**:
+- ❌ Authentication endpoints (`/api/users/login`, `/api/users/forgot-password`)
+- ❌ General API routes (`/api/*`)
+- ❌ Admin routes (`/admin/*`)
+
+**Rationale for Phased Approach**:
+1. GraphQL is the highest-risk endpoint (complex queries, public access)
+2. Auth endpoints don't exist yet in the application
+3. Iterative approach allows testing rate limiting in production before full rollout
+4. Route-level protection is simpler than middleware for single endpoint
+
+**Next Steps**: When authentication is added, implement Phase 2 global middleware as described below.
 
 ---
 
@@ -213,7 +247,30 @@ RateLimit-Reset: 1678886700   # Unix timestamp when limit resets
 
 ## Implementation Plan
 
-### Phase 1: Setup and Configuration
+### Implementation Status
+
+**Phase 1: GraphQL Endpoint Protection (✅ COMPLETED)**
+- Rate limiting library installed and configured
+- GraphQL route handler protection implemented
+- In-memory fallback for development
+- Rate limit headers and error responses implemented
+- **Status**: Production ready
+
+**Phase 2: Global Middleware Protection (📋 TODO)**
+- Create `/src/middleware.ts` for all API routes
+- Implement endpoint-specific rate limiters (auth, password reset, general API)
+- Add IP detection and identifier logic
+- Comprehensive testing across all endpoints
+- **Priority**: Medium (can be implemented when auth endpoints are added)
+
+**Phase 3: Advanced Features (📋 FUTURE)**
+- Per-user rate limiting
+- Tiered rate limits
+- GraphQL query complexity analysis
+- Adaptive rate limiting
+- **Priority**: Low (optimization phase)
+
+### Phase 1: Setup and Configuration (✅ COMPLETED)
 
 #### 1.1 Create Upstash Redis Database
 
@@ -246,11 +303,23 @@ UPSTASH_REDIS_REST_TOKEN="your-token-here"
 
 ---
 
-### Phase 2: Middleware Implementation
+### Phase 2: Middleware Implementation (TODO)
 
-#### 2.1 Create Rate Limiter Utility
+**Note**: Phase 2 will be implemented when authentication endpoints are added to the application. Currently, only the GraphQL endpoint requires rate limiting protection, which is handled via route handler in `/src/app/(payload)/api/graphql/route.ts`.
 
-Create `src/lib/rate-limit.ts`:
+#### 2.1 Create Rate Limiter Utility (✅ COMPLETED)
+
+The rate limiter utility already exists at `src/lib/rate-limit.ts` with the following features:
+- Upstash Redis integration with in-memory fallback
+- Pre-configured rate limiters for different endpoint types
+- Client IP extraction helper
+- Error handling with fail-open strategy
+
+**Current Implementation**: See `/src/lib/rate-limit.ts`
+
+#### 2.2 Create Global Middleware (TODO - Phase 2)
+
+When auth endpoints are added, create `src/middleware.ts`:
 
 ```typescript
 import { Ratelimit } from '@upstash/ratelimit';

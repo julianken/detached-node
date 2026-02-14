@@ -1,5 +1,5 @@
 import { Card } from "@/components/Card";
-import Link from "next/link";
+import { Button } from "@/components/Button";
 import { getFeaturedPosts } from "@/lib/queries/posts";
 
 // ISR: Revalidate every 30 minutes - featured posts change infrequently
@@ -20,18 +20,12 @@ export default async function Home() {
           system.
         </p>
         <div className="mt-6 flex flex-wrap gap-4">
-          <Link
-            className="rounded-full bg-zinc-900 dark:bg-zinc-100 px-5 py-2 text-sm font-medium text-white dark:text-zinc-900 transition hover:bg-zinc-800 dark:hover:bg-zinc-200 focus-ring"
-            href="/posts"
-          >
+          <Button href="/posts" asChild>
             Browse posts
-          </Link>
-          <Link
-            className="rounded-full border border-zinc-300 dark:border-zinc-700 px-5 py-2 text-sm font-medium text-zinc-600 dark:text-zinc-400 transition hover:border-zinc-400 dark:hover:border-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 focus-ring"
-            href="/about"
-          >
+          </Button>
+          <Button href="/about" variant="secondary" asChild>
             About the project
-          </Link>
+          </Button>
         </div>
       </section>
 
@@ -42,7 +36,7 @@ export default async function Home() {
         <p className="mt-2 text-base leading-6 text-zinc-600 dark:text-zinc-400">
           Recent highlights from the archive.
         </p>
-        <div className="mt-6 grid gap-6 md:grid-cols-3">
+        <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {featuredPosts.length > 0 ? (
             featuredPosts.map((post) => (
               <Card key={post.id} href={`/posts/${post.slug}`}>

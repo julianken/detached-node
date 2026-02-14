@@ -25,7 +25,8 @@ export const Tags: CollectionConfig = {
       name: 'slug',
       type: 'text',
       required: true,
-      unique: true,
+      unique: true, // Creates unique index automatically
+      index: true, // Additional index for faster lookups
       admin: {
         position: 'sidebar',
       },

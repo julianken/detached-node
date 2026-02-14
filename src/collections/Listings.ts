@@ -26,6 +26,7 @@ export const Listings: CollectionConfig = {
       type: 'text',
       required: true,
       unique: true,
+      index: true,
       admin: { position: 'sidebar' },
       hooks: {
         beforeValidate: [createSlugHook('title')],
@@ -56,6 +57,7 @@ export const Listings: CollectionConfig = {
         { label: 'Published', value: 'published' },
       ],
       admin: { position: 'sidebar' },
+      index: true,
     },
   ],
 }
