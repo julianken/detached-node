@@ -25,7 +25,8 @@ export const Pages: CollectionConfig = {
       name: 'slug',
       type: 'text',
       required: true,
-      unique: true,
+      unique: true, // Creates unique index automatically
+      index: true, // Additional index for faster lookups
       admin: { position: 'sidebar' },
       hooks: {
         beforeValidate: [createSlugHook('title')],
@@ -53,6 +54,7 @@ export const Pages: CollectionConfig = {
         { label: 'Published', value: 'published' },
       ],
       admin: { position: 'sidebar' },
+      index: true, // Index for status filtering (published pages)
     },
   ],
 }

@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import { PageHeader } from "@/components/PageHeader";
+import { PageLayout } from "@/components/PageLayout";
 import { getPageBySlug } from "@/lib/queries/pages";
 
 // Static generation - about page changes very rarely
@@ -28,7 +29,7 @@ export default async function AboutPage() {
 
   if (!page) {
     return (
-      <div className="flex flex-col gap-16">
+      <PageLayout>
         <PageHeader
           title="About"
           subtitle="This is a placeholder for the project overview, intent, and reading guide."
@@ -39,16 +40,16 @@ export default async function AboutPage() {
             layout is intentionally minimal so you can customize it later.
           </p>
         </section>
-      </div>
+      </PageLayout>
     );
   }
 
   return (
-    <div className="flex flex-col gap-16">
+    <PageLayout>
       <PageHeader title={page.title} subtitle={page.description ?? undefined} />
       <section className="prose prose-zinc dark:prose-invert max-w-none">
         <RichText data={page.body} />
       </section>
-    </div>
+    </PageLayout>
   );
 }

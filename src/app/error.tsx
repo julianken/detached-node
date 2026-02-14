@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { logError } from "@/lib/logging";
 import { ErrorIds } from "@/lib/error-ids";
+import { Button } from "@/components/Button";
 
 export default function Error({
   error,
@@ -39,7 +40,11 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="flex min-h-[50vh] items-center justify-center">
+    <div
+      className="flex min-h-[50vh] items-center justify-center"
+      role="alert"
+      aria-live="assertive"
+    >
       <div className="flex flex-col items-center gap-6 text-center">
         <div className="flex flex-col gap-2">
           <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
@@ -66,12 +71,9 @@ export default function Error({
             </details>
           )}
         </div>
-        <button
-          onClick={() => reset()}
-          className="rounded-full bg-zinc-900 dark:bg-zinc-100 px-5 py-2 text-sm font-medium text-white dark:text-zinc-900 transition-colors hover:bg-zinc-700 dark:hover:bg-zinc-300 focus-ring"
-        >
+        <Button onClick={() => reset()} aria-label="Retry loading the page">
           Try again
-        </button>
+        </Button>
       </div>
     </div>
   );

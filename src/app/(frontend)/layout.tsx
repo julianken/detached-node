@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import "../globals.css";
 
 const siteUrl = process.env.NEXT_PUBLIC_SERVER_URL || "https://mind-controlled.vercel.app";
@@ -44,32 +47,44 @@ export default function FrontendLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="min-h-screen antialiased">
-        <div className="mx-auto flex min-h-screen max-w-5xl flex-col px-6">
-          <header className="flex items-center justify-between py-8">
-            <Link href="/" className="text-lg font-semibold tracking-tight focus-ring">
-              Mind-Controlled
-            </Link>
-            <nav className="flex flex-wrap items-center gap-4 text-sm text-zinc-600 dark:text-zinc-400 sm:gap-6">
-              <Link className="hover:text-zinc-900 dark:hover:text-zinc-100 py-2 focus-ring" href="/">
-                Home
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-zinc-900 focus:text-white dark:focus:bg-zinc-100 dark:focus:text-zinc-900 focus-ring"
+        >
+          Skip to main content
+        </a>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <div className="mx-auto flex min-h-screen max-w-5xl flex-col px-4 sm:px-6 lg:px-8">
+            <header className="flex items-center justify-between py-8">
+              <Link href="/" className="text-lg font-semibold tracking-tight focus-ring">
+                Mind-Controlled
               </Link>
-              <Link className="hover:text-zinc-900 dark:hover:text-zinc-100 py-2 focus-ring" href="/posts">
-                Posts
-              </Link>
-              <Link className="hover:text-zinc-900 dark:hover:text-zinc-100 py-2 focus-ring" href="/about">
-                About
-              </Link>
-            </nav>
-          </header>
-          <main className="flex-1 pb-16">{children}</main>
-          <footer className="border-t border-zinc-200 dark:border-zinc-800 py-8 text-sm text-zinc-500 dark:text-zinc-400">
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-              <p>Mind-Controlled. All rights reserved.</p>
-              <p>A cynical examination of modern propaganda.</p>
-            </div>
-          </footer>
-        </div>
-        <Analytics />
+              <div className="flex items-center gap-4">
+                <nav className="flex flex-wrap items-center gap-4 text-sm text-zinc-600 dark:text-zinc-400 sm:gap-6" aria-label="Main navigation">
+                  <Link className="hover:text-zinc-900 dark:hover:text-zinc-100 py-2 focus-ring" href="/">
+                    Home
+                  </Link>
+                  <Link className="hover:text-zinc-900 dark:hover:text-zinc-100 py-2 focus-ring" href="/posts">
+                    Posts
+                  </Link>
+                  <Link className="hover:text-zinc-900 dark:hover:text-zinc-100 py-2 focus-ring" href="/about">
+                    About
+                  </Link>
+                </nav>
+                <ThemeToggle />
+              </div>
+            </header>
+            <main id="main-content" className="flex-1 pb-16">{children}</main>
+            <footer className="border-t border-zinc-200 dark:border-zinc-800 py-8 text-sm text-zinc-500 dark:text-zinc-400">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <p>Mind-Controlled. All rights reserved.</p>
+                <p>A cynical examination of modern propaganda.</p>
+              </div>
+            </footer>
+          </div>
+          <Analytics />
+          <SpeedInsights />
+        </ThemeProvider>
       </body>
     </html>
   );

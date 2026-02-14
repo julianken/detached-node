@@ -20,8 +20,8 @@ npm run lint     # Run ESLint
 
 - **Framework:** Next.js App Router (`src/app/`)
 - **Styling:** Tailwind CSS (utility classes, minimal custom CSS)
-- **Content:** Currently hardcoded; Phase 2 will add MDX or a CMS
-- **Deployment:** Not yet configured
+- **Content:** Payload CMS with Postgres backend
+- **Deployment:** Vercel (see `docs/deployment.md` for complete guide)
 
 ### Key Directories
 
@@ -57,12 +57,24 @@ The blog's editorial voice is still being defined. For now:
 - Prioritize clarity over cleverness
 - The subject matter is critical/analytical, not promotional
 
+## Design System
+
+**See `docs/design-system.md` for the complete design system specification.**
+
+Key points:
+- Page backgrounds use CSS custom properties (`--background`) - never add bg classes to body
+- Cards/surfaces use `bg-zinc-50 dark:bg-zinc-800`
+- Standard borders: `border-zinc-200 dark:border-zinc-700`
+- Subtle borders (footer, sections): `border-zinc-200 dark:border-zinc-800`
+- Text hierarchy: Primary (zinc-900/100), Secondary (zinc-600/400), Tertiary (zinc-500/500)
+- Interactive hover states: `hover:bg-zinc-50 dark:hover:bg-zinc-800`
+
 ## What Claude Should Know
 
 ### When writing components:
 - Use Tailwind utility classes; avoid inline styles
-- Follow existing patterns in `layout.tsx` for spacing and typography
-- The design system uses zinc grays with minimal accent colors
+- Follow the color system defined in `docs/design-system.md`
+- Cards use `dark:bg-zinc-800`, not `dark:bg-zinc-900` (unless intentionally recessed)
 - Prefer `Link` from `next/link` for internal navigation
 
 ### When adding features:
@@ -122,6 +134,8 @@ See `docs/README.md` for the full workflow.
 
 When starting a session, these provide the most context:
 1. `CLAUDE.md` (this file)
-2. `PROJECT_BRIEF.md` (goals and non-goals)
-3. `CONTENT_MODEL.md` (data structure)
-4. `src/app/layout.tsx` (design patterns)
+2. `docs/design-system.md` (color palette and component patterns)
+3. `docs/deployment.md` (Vercel deployment and production configuration)
+4. `PROJECT_BRIEF.md` (goals and non-goals)
+5. `CONTENT_MODEL.md` (data structure)
+6. `src/app/layout.tsx` (design patterns)
