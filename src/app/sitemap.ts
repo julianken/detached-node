@@ -1,6 +1,7 @@
 import { MetadataRoute } from "next";
-import { getPayload } from "payload";
-import config from "@payload-config";
+import { logWarning } from "@/lib/logging";
+import { getPublishedPosts } from "@/lib/queries/posts";
+import { getPublishedPages } from "@/lib/queries/pages";
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SERVER_URL || "https://mind-controlled.vercel.app";
@@ -28,46 +29,34 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   // Fetch published posts
-  let postRoutes: MetadataRoute.Sitemap = [];
-  try {
-    const payload = await getPayload({ config });
-    const posts = await payload.find({
-      collection: "posts",
-      where: { status: { equals: "published" } },
-      limit: 1000,
-    });
+  const posts = await getPublishedPosts();
+  const postRoutes: MetadataRoute.Sitemap = posts.map((post) => ({
+    url: `${siteUrl}/posts/${post.slug}`,
+    lastModified: new Date(post.updatedAt),
+    changeFrequency: "weekly" as const,
+    priority: 0.7,
+  }));
 
-    postRoutes = posts.docs.map((post) => ({
-      url: `${siteUrl}/posts/${post.slug}`,
-      lastModified: new Date(post.updatedAt),
-      changeFrequency: "weekly" as const,
-      priority: 0.7,
-    }));
-  } catch {
-    // Database may not be available during build
-  }
+  logWarning(
+    `Successfully added ${postRoutes.length} posts to sitemap`,
+    { count: postRoutes.length }
+  );
 
   // Fetch published pages
-  let pageRoutes: MetadataRoute.Sitemap = [];
-  try {
-    const payload = await getPayload({ config });
-    const pages = await payload.find({
-      collection: "pages",
-      where: { status: { equals: "published" } },
-      limit: 100,
-    });
+  const pages = await getPublishedPages();
+  const pageRoutes: MetadataRoute.Sitemap = pages
+    .filter((page) => page.slug !== "about") // About already in static routes
+    .map((page) => ({
+      url: `${siteUrl}/${page.slug}`,
+      lastModified: new Date(page.updatedAt),
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    }));
 
-    pageRoutes = pages.docs
-      .filter((page) => page.slug !== "about") // About already in static routes
-      .map((page) => ({
-        url: `${siteUrl}/${page.slug}`,
-        lastModified: new Date(page.updatedAt),
-        changeFrequency: "monthly" as const,
-        priority: 0.6,
-      }));
-  } catch {
-    // Database may not be available during build
-  }
+  logWarning(
+    `Successfully added ${pageRoutes.length} pages to sitemap`,
+    { count: pageRoutes.length }
+  );
 
   return [...staticRoutes, ...postRoutes, ...pageRoutes];
 }

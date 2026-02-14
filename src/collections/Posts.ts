@@ -11,6 +11,9 @@ export const Posts: CollectionConfig = {
   },
   access: {
     read: publishedOrAuthenticated,
+    create: ({ req: { user } }) => !!user,
+    update: ({ req: { user } }) => !!user,
+    delete: ({ req: { user } }) => !!user,
   },
   fields: [
     {

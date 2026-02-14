@@ -1,32 +1,13 @@
 import { Metadata } from "next";
-import { getPayload } from "payload";
-import config from "@payload-config";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import { PageHeader } from "@/components/PageHeader";
+import { getPageBySlug } from "@/lib/queries/pages";
 
-// Force dynamic rendering - database may not have tables during build
-export const dynamic = "force-dynamic";
-
-async function getAboutPage() {
-  try {
-    const payload = await getPayload({ config });
-    const { docs } = await payload.find({
-      collection: "pages",
-      where: {
-        slug: { equals: "about" },
-        status: { equals: "published" },
-      },
-      limit: 1,
-    });
-    return docs[0] ?? null;
-  } catch {
-    // Database tables may not exist yet
-    return null;
-  }
-}
+// Static generation - about page changes very rarely
+export const dynamic = "force-static";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const page = await getAboutPage();
+  const page = await getPageBySlug('about');
 
   if (!page) {
     return {
@@ -42,11 +23,12 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function AboutPage() {
-  const page = await getAboutPage();
+  // This query is cached - React deduplicates with generateMetadata call
+  const page = await getPageBySlug('about');
 
   if (!page) {
     return (
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-16">
         <PageHeader
           title="About"
           subtitle="This is a placeholder for the project overview, intent, and reading guide."
@@ -62,7 +44,7 @@ export default async function AboutPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-16">
       <PageHeader title={page.title} subtitle={page.description ?? undefined} />
       <section className="prose prose-zinc dark:prose-invert max-w-none">
         <RichText data={page.body} />

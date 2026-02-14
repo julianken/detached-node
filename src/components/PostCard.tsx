@@ -11,13 +11,16 @@ export function PostCard({ title, date, summary, href }: PostCardProps) {
   return (
     <Link
       href={href}
-      className="rounded-xl border border-zinc-200 dark:border-zinc-700 p-6 transition hover:border-zinc-400 dark:hover:border-zinc-500"
+      className="group rounded-xl border border-zinc-200 dark:border-zinc-700 p-6 transition-colors hover:border-zinc-400 dark:hover:border-zinc-500 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:shadow-sm focus-ring"
     >
-      <div className="flex items-center justify-between gap-4">
-        <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">{title}</h2>
-        {date && <span className="text-xs text-zinc-500 dark:text-zinc-400">{date}</span>}
+      <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+        <h2 className="text-lg font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">{title}</h2>
+        {date && <span className="text-xs text-zinc-500 dark:text-zinc-400 sm:whitespace-nowrap">{date}</span>}
       </div>
-      <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-400">{summary}</p>
+      <p className="mt-2 max-w-prose text-base leading-6 text-zinc-600 dark:text-zinc-400">{summary}</p>
+      <p className="mt-3 text-sm font-medium text-zinc-900 dark:text-zinc-100 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors">
+        Read more →
+      </p>
     </Link>
   );
 }

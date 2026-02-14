@@ -10,7 +10,7 @@ export function PageHeader({ title, subtitle }: PageHeaderProps) {
         {title}
       </h1>
       {subtitle && (
-        <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-600 dark:text-zinc-400">
+        <p className="mt-2 max-w-prose text-base leading-6 text-zinc-600 dark:text-zinc-400">
           {subtitle}
         </p>
       )}
