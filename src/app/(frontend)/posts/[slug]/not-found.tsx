@@ -15,7 +15,7 @@ export default function PostNotFound() {
         </div>
         <Link
           href="/posts"
-          className="text-sm text-zinc-600 dark:text-zinc-400 underline underline-offset-4 hover:text-zinc-900 dark:hover:text-zinc-100"
+          className="text-sm text-zinc-600 dark:text-zinc-400 underline underline-offset-4 hover:text-zinc-900 dark:hover:text-zinc-100 focus-ring"
         >
           Browse all posts
         </Link>

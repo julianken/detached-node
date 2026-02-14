@@ -26,7 +26,9 @@ export default buildConfig({
   },
   collections: [Users, Media, Pages, Tags, Posts, Listings],
   editor: lexicalEditor(),
-  secret: process.env.PAYLOAD_SECRET || '',
+  secret: process.env.PAYLOAD_SECRET || (() => {
+    throw new Error('PAYLOAD_SECRET environment variable is required but not set')
+  })(),
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },

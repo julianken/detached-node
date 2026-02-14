@@ -10,6 +10,9 @@ export const Tags: CollectionConfig = {
   },
   access: {
     read: publicRead,
+    create: ({ req: { user } }) => !!user,
+    update: ({ req: { user } }) => !!user,
+    delete: ({ req: { user } }) => !!user,
   },
   fields: [
     {

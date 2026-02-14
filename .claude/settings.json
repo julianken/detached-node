@@ -1,5 +1,22 @@
 {
   "enabledPlugins": {
     "explanatory-output-style@claude-plugins-official": true
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if echo \"$TOOL_INPUT\" | grep -q 'git commit'; then .claude/hooks/block-debug-artifacts.sh; fi"
+          },
+          {
+            "type": "command",
+            "command": "if echo \"$TOOL_INPUT\" | grep -q 'git commit'; then .claude/hooks/block-console-log.sh; fi"
+          }
+        ]
+      }
+    ]
   }
 }
