@@ -10,11 +10,11 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col gap-16">
-      <section className="rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 p-8">
-        <h1 className="text-4xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+      <section className="rounded-sm border border-border bg-surface p-8">
+        <h1 className="font-mono text-4xl font-semibold tracking-tight text-text-primary">
           A clean, repeatable structure for blog posts and analysis.
         </h1>
-        <p className="mt-4 max-w-xl text-lg leading-8 text-zinc-600 dark:text-zinc-400">
+        <p className="mt-4 max-w-xl text-lg leading-8 text-text-secondary">
           This is the Phase 1 shell. Navigation, layout, and placeholders are in
           place so you can plug in real content and iterate on the design
           system.
@@ -30,27 +30,27 @@ export default async function Home() {
       </section>
 
       <section>
-        <h2 className="text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+        <h2 className="font-mono text-xl font-semibold tracking-tight text-text-primary">
           Featured posts
         </h2>
-        <p className="mt-2 text-base leading-6 text-zinc-600 dark:text-zinc-400">
+        <p className="mt-2 text-base leading-6 text-text-secondary">
           Recent highlights from the archive.
         </p>
         <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {featuredPosts.length > 0 ? (
             featuredPosts.map((post) => (
-              <Card key={post.id} href={`/posts/${post.slug}`}>
-                <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
+              <Card key={post.id} href={`/posts/${post.slug}`} label="FIELD REPORT">
+                <h3 className="font-mono text-base font-semibold text-text-primary">
                   {post.title}
                 </h3>
-                <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
+                <p className="mt-2 text-sm leading-6 text-text-secondary">
                   {post.summary}
                 </p>
               </Card>
             ))
           ) : (
-            <div className="col-span-full rounded-xl border border-dashed border-zinc-300 dark:border-zinc-700 p-8 text-center">
-              <p className="text-sm text-zinc-500 dark:text-zinc-400">
+            <div className="col-span-full rounded-sm border border-dashed border-border p-8 text-center">
+              <p className="text-sm text-text-tertiary">
                 No featured posts yet. Check back soon.
               </p>
             </div>

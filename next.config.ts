@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
   experimental: {
     // Optimize package imports to reduce bundle size
     optimizePackageImports: ['@payloadcms/richtext-lexical'],
+    viewTransition: true,
   },
 
   // Image optimization configuration
@@ -21,6 +22,11 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: '**.public.blob.vercel-storage.com',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'mind-controlled.vercel.app',
+        pathname: '/api/media/**',
       },
     ],
   },

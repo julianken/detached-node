@@ -85,3 +85,41 @@ export function createRichText(text: string): LexicalEditorState {
     },
   };
 }
+
+/**
+ * Create a Lexical rich text structure with multiple paragraphs
+ * Each string in the array becomes a separate paragraph
+ */
+export function createRichTextMulti(paragraphs: string[]): LexicalEditorState {
+  return {
+    root: {
+      type: "root",
+      format: "",
+      indent: 0,
+      version: 1,
+      children: paragraphs.map(
+        (text): LexicalParagraphNode => ({
+          type: "paragraph",
+          format: "",
+          indent: 0,
+          version: 1,
+          children: [
+            {
+              mode: "normal",
+              text,
+              type: "text",
+              style: "",
+              detail: 0,
+              format: 0,
+              version: 1,
+            },
+          ],
+          direction: "ltr",
+          textStyle: "",
+          textFormat: 0,
+        })
+      ),
+      direction: "ltr",
+    },
+  };
+}
