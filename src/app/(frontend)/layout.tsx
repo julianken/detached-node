@@ -6,6 +6,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { StatusBar } from "@/components/StatusBar";
+import { ScrollToTop } from "@/components/ScrollToTop";
 import { TextureOverlay } from "@/components/TextureOverlay";
 import "../globals.css";
 
@@ -71,6 +72,7 @@ export default function FrontendLayout({
         </a>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ViewTransitions>
+          <ScrollToTop />
           <TextureOverlay />
           <div className="site-frame mx-auto my-4 flex min-h-[calc(100vh-2rem)] max-w-5xl flex-col rounded-sm border border-border sm:my-6 sm:min-h-[calc(100vh-3rem)]">
             <header className="flex items-center justify-between border-b border-border px-4 py-3 sm:px-6">

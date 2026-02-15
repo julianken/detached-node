@@ -514,6 +514,104 @@ main {
 }
 
 /* ──────────────────────────────────────────────
+   HERO GLOW
+   Slow-drifting radial gradient behind hero content.
+   GPU-accelerated via transform on pseudo-element.
+   20s cycle — slow enough to feel ambient, not distracting.
+   ────────────────────────────────────────────── */
+
+.hero-glow {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.hero-glow::before {
+  content: "";
+  position: absolute;
+  inset: -50%;
+  z-index: -1;
+  background: radial-gradient(
+    ellipse at center,
+    rgb(124 58 237 / 0.12) 0%,
+    transparent 40%,
+    transparent 70%,
+    rgb(0 0 0 / 0.12) 100%
+  );
+  animation: glow-drift 20s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.dark .hero-glow::before {
+  background: radial-gradient(
+    ellipse at center,
+    rgb(180 156 255 / 0.18) 0%,
+    transparent 40%,
+    transparent 70%,
+    rgb(0 0 0 / 0.4) 100%
+  );
+}
+
+@keyframes glow-drift {
+  0%, 100% {
+    transform: translate(0%, 0%) scale(1);
+  }
+  33% {
+    transform: translate(15%, -10%) scale(1.1);
+  }
+  66% {
+    transform: translate(-10%, 12%) scale(0.95);
+  }
+}
+
+/* ──────────────────────────────────────────────
+   CARD PRESS FEEDBACK
+   Pure CSS :active press + fade + spinner.
+   No JS, no race conditions with view transitions.
+   ────────────────────────────────────────────── */
+
+.card-press {
+  transition: transform 100ms ease-out;
+}
+
+.card-spinner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.is-navigating {
+  transform: scale(0.98);
+}
+
+.is-navigating > .card-content {
+  opacity: 0.2;
+}
+
+.is-navigating > .card-spinner {
+  opacity: 1;
+  transition: opacity 250ms ease-out;
+}
+
+.nav-spinner {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: conic-gradient(transparent 270deg, var(--accent) 360deg);
+  mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+  animation: nav-spin 0.7s linear infinite;
+}
+
+@keyframes nav-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ──────────────────────────────────────────────
    REDUCED MOTION
    Disable all animations and transitions when
    the user has reduced motion preference enabled.
