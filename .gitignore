@@ -45,9 +45,17 @@ next-env.d.ts
 # payload media uploads
 public/media/
 
+# seed script temp files
+scripts/.tmp-seed-images/
+
 # Playwright
 /test-results/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
 /tests/.auth/
+
+# Tool configs
+.claude/hooks/
+.playwright-mcp/
+.serena/

@@ -8,10 +8,10 @@ export default function Loading() {
     >
       <div className="flex flex-col items-center gap-4">
         <div
-          className="h-8 w-8 animate-spin rounded-full border-4 border-zinc-200 border-t-zinc-900 dark:border-zinc-700 dark:border-t-zinc-100"
+          className="h-8 w-8 animate-spin rounded-full border-4 border-border border-t-accent"
           aria-hidden="true"
         />
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="text-sm text-text-tertiary">
           Loading...
         </p>
         <span className="sr-only">Loading content, please wait</span>
