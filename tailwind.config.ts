@@ -8,10 +8,6 @@ export default {
   darkMode: 'class',
   theme: {
     extend: {
-      colors: {
-        // Formalize zinc as the primary palette
-        // Using Tailwind's default zinc scale
-      },
       fontFamily: {
         sans: ['var(--font-sans-stack)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         mono: ['var(--font-mono-stack)', 'ui-monospace', 'monospace'],
@@ -20,38 +16,51 @@ export default {
         DEFAULT: {
           css: {
             maxWidth: 'none',
-            color: 'var(--tw-prose-body)',
-            '--tw-prose-body': 'rgb(82 82 91)', // zinc-600
-            '--tw-prose-headings': 'rgb(24 24 27)', // zinc-900
-            '--tw-prose-links': 'rgb(24 24 27)', // zinc-900
-            '--tw-prose-bold': 'rgb(24 24 27)', // zinc-900
-            '--tw-prose-counters': 'rgb(113 113 122)', // zinc-500
-            '--tw-prose-bullets': 'rgb(212 212 216)', // zinc-300
-            '--tw-prose-hr': 'rgb(228 228 231)', // zinc-200
-            '--tw-prose-quotes': 'rgb(24 24 27)', // zinc-900
-            '--tw-prose-quote-borders': 'rgb(228 228 231)', // zinc-200
-            '--tw-prose-captions': 'rgb(113 113 122)', // zinc-500
-            '--tw-prose-code': 'rgb(24 24 27)', // zinc-900
-            '--tw-prose-pre-code': 'rgb(228 228 231)', // zinc-200
-            '--tw-prose-pre-bg': 'rgb(39 39 42)', // zinc-800
-            '--tw-prose-th-borders': 'rgb(212 212 216)', // zinc-300
-            '--tw-prose-td-borders': 'rgb(228 228 231)', // zinc-200
-            // Invert colors for dark mode
-            '--tw-prose-invert-body': 'rgb(161 161 170)', // zinc-400
-            '--tw-prose-invert-headings': 'rgb(244 244 245)', // zinc-100
-            '--tw-prose-invert-links': 'rgb(244 244 245)', // zinc-100
-            '--tw-prose-invert-bold': 'rgb(244 244 245)', // zinc-100
-            '--tw-prose-invert-counters': 'rgb(161 161 170)', // zinc-400
-            '--tw-prose-invert-bullets': 'rgb(63 63 70)', // zinc-700
-            '--tw-prose-invert-hr': 'rgb(63 63 70)', // zinc-700
-            '--tw-prose-invert-quotes': 'rgb(244 244 245)', // zinc-100
-            '--tw-prose-invert-quote-borders': 'rgb(63 63 70)', // zinc-700
-            '--tw-prose-invert-captions': 'rgb(161 161 170)', // zinc-400
-            '--tw-prose-invert-code': 'rgb(244 244 245)', // zinc-100
-            '--tw-prose-invert-pre-code': 'rgb(212 212 216)', // zinc-300
-            '--tw-prose-invert-pre-bg': 'rgb(0 0 0 / 0.5)',
-            '--tw-prose-invert-th-borders': 'rgb(63 63 70)', // zinc-700
-            '--tw-prose-invert-td-borders': 'rgb(63 63 70)', // zinc-700
+            color: 'var(--prose-body)',
+            '--tw-prose-body': 'var(--prose-body)',
+            '--tw-prose-headings': 'var(--prose-headings)',
+            '--tw-prose-links': 'var(--prose-links)',
+            '--tw-prose-bold': 'var(--prose-bold)',
+            '--tw-prose-counters': 'var(--prose-counters)',
+            '--tw-prose-bullets': 'var(--prose-bullets)',
+            '--tw-prose-hr': 'var(--prose-hr)',
+            '--tw-prose-quotes': 'var(--prose-quotes)',
+            '--tw-prose-quote-borders': 'var(--prose-quote-borders)',
+            '--tw-prose-captions': 'var(--prose-captions)',
+            '--tw-prose-code': 'var(--prose-code)',
+            '--tw-prose-pre-code': 'var(--prose-pre-code)',
+            '--tw-prose-pre-bg': 'var(--prose-pre-bg)',
+            '--tw-prose-th-borders': 'var(--prose-th-borders)',
+            '--tw-prose-td-borders': 'var(--prose-td-borders)',
+            // Invert inherits from CSS vars — no separate dark values needed
+            '--tw-prose-invert-body': 'var(--prose-body)',
+            '--tw-prose-invert-headings': 'var(--prose-headings)',
+            '--tw-prose-invert-links': 'var(--prose-links)',
+            '--tw-prose-invert-bold': 'var(--prose-bold)',
+            '--tw-prose-invert-counters': 'var(--prose-counters)',
+            '--tw-prose-invert-bullets': 'var(--prose-bullets)',
+            '--tw-prose-invert-hr': 'var(--prose-hr)',
+            '--tw-prose-invert-quotes': 'var(--prose-quotes)',
+            '--tw-prose-invert-quote-borders': 'var(--prose-quote-borders)',
+            '--tw-prose-invert-captions': 'var(--prose-captions)',
+            '--tw-prose-invert-code': 'var(--prose-code)',
+            '--tw-prose-invert-pre-code': 'var(--prose-pre-code)',
+            '--tw-prose-invert-pre-bg': 'var(--prose-pre-bg)',
+            '--tw-prose-invert-th-borders': 'var(--prose-th-borders)',
+            '--tw-prose-invert-td-borders': 'var(--prose-td-borders)',
+            // Prose headings use mono font
+            h1: { fontFamily: 'var(--font-mono-stack)' },
+            h2: { fontFamily: 'var(--font-mono-stack)' },
+            h3: { fontFamily: 'var(--font-mono-stack)' },
+            h4: { fontFamily: 'var(--font-mono-stack)' },
+            a: {
+              color: 'var(--prose-links)',
+              textDecoration: 'underline',
+              textUnderlineOffset: '3px',
+              '&:hover': {
+                color: 'var(--accent-muted)',
+              },
+            },
           },
         },
       },
@@ -66,13 +75,8 @@ export default {
         '.focus-ring': {
           'outline': 'none',
           '&:focus-visible': {
-            'outline': 'none',
-            'ring': '2px solid',
-            'ring-color': 'rgb(24 24 27)',
-            'ring-offset': '2px',
-          },
-          '.dark &:focus-visible': {
-            'ring-color': 'rgb(250 250 250)',
+            'outline': '2px solid var(--focus-ring)',
+            'outline-offset': '2px',
           },
         },
       })

@@ -1,23 +1,36 @@
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 
 interface CardProps {
   children: React.ReactNode;
   href?: string;
   className?: string;
+  label?: string;
 }
 
-export function Card({ children, href, className = "" }: CardProps) {
+export function Card({ children, href, className = "", label }: CardProps) {
   const baseStyles =
-    "rounded-xl border border-zinc-200 dark:border-zinc-700 p-5 transition-colors hover:border-zinc-400 dark:hover:border-zinc-500 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:shadow-sm focus-ring";
+    "card-trace card-scanline relative rounded-sm border border-border bg-surface p-5 transition-colors hover:border-border-hover hover:bg-hover-bg hover:shadow-sm focus-ring";
   const combinedStyles = `${baseStyles} ${className}`.trim();
+
+  const labelEl = label ? (
+    <span className="frame-label" aria-hidden="true">
+      {label}
+    </span>
+  ) : null;
 
   if (href) {
     return (
       <Link href={href} className={combinedStyles}>
+        {labelEl}
         {children}
       </Link>
     );
   }
 
-  return <div className={combinedStyles}>{children}</div>;
+  return (
+    <div className={combinedStyles}>
+      {labelEl}
+      {children}
+    </div>
+  );
 }

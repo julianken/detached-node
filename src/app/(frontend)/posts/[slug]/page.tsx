@@ -3,9 +3,10 @@ import { notFound } from "next/navigation";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import type { SerializedEditorState } from "@payloadcms/richtext-lexical/lexical";
 import { formatDate, getTypeLabel } from "@/lib/formatting";
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 import { PageLayout } from "@/components/PageLayout";
 import { OptimizedImage } from "@/components/OptimizedImage";
+import { SignalInterference } from "@/components/SignalInterference";
 import { logWarning } from "@/lib/logging";
 import { ErrorIds } from "@/lib/error-ids";
 import { getPostBySlug, getPublishedPosts } from "@/lib/queries/posts";
@@ -45,14 +46,12 @@ export async function generateMetadata({
 }: PostPageProps): Promise<Metadata> {
   const { slug } = await params;
 
-  // Use centralized slug validation from branded types
   if (!isValidSlug(slug)) {
     return {
       title: "Post Not Found",
     };
   }
 
-  // getPostBySlug also validates internally, but we check here for early return
   const post = await getPostBySlug(slug);
 
   if (!post) {
@@ -87,13 +86,10 @@ export async function generateMetadata({
 export default async function PostPage({ params }: PostPageProps) {
   const { slug } = await params;
 
-  // Use centralized slug validation from branded types
   if (!isValidSlug(slug)) {
     notFound();
   }
 
-  // This query is cached - React deduplicates with generateMetadata call
-  // getPostBySlug also validates internally for defense in depth
   const post = await getPostBySlug(slug);
 
   if (!post) {
@@ -107,25 +103,25 @@ export default async function PostPage({ params }: PostPageProps) {
       <PageLayout maxWidth="prose">
         <Link
           href="/posts"
-          className="text-sm text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 transition-colors focus-ring"
+          className="text-sm text-text-tertiary hover:text-accent transition-colors focus-ring"
         >
           ← Back to Posts
         </Link>
 
         <header className="flex flex-col gap-2">
-          <p className="text-xs uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
+          <p className="font-mono text-xs uppercase tracking-[0.2em] text-text-tertiary">
             {typeLabel}
           </p>
-          <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+          <h1 className="font-mono text-3xl font-semibold tracking-tight text-text-primary">
             {post.title}
           </h1>
           {post.publishedAt && (
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">{formatDate(post.publishedAt)}</p>
+            <p className="text-sm tracking-[0.03em] text-text-tertiary">{formatDate(post.publishedAt)}</p>
           )}
         </header>
 
         {isMediaObject(post.featuredImage) && post.featuredImage.url && (
-          <div className="my-8 -mx-4 sm:-mx-8 overflow-hidden rounded-xl">
+          <div className="my-8 -mx-4 sm:-mx-8 overflow-hidden rounded-sm">
             <OptimizedImage
               src={post.featuredImage.url}
               alt={post.featuredImage.alt || post.title}
@@ -138,12 +134,14 @@ export default async function PostPage({ params }: PostPageProps) {
         )}
 
         {post.summary && (
-          <p className="text-lg leading-relaxed text-zinc-600 dark:text-zinc-400">{post.summary}</p>
+          <p className="text-lg leading-relaxed text-text-secondary">{post.summary}</p>
         )}
 
-        <section className="prose prose-zinc dark:prose-invert max-w-none">
-          <RichText data={post.body as SerializedEditorState} />
-        </section>
+        <SignalInterference>
+          <section className="prose dark:prose-invert max-w-none">
+            <RichText data={post.body as SerializedEditorState} />
+          </section>
+        </SignalInterference>
       </PageLayout>
     </article>
   );

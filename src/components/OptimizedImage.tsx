@@ -33,6 +33,19 @@ interface OptimizedImageProps {
  * />
  * ```
  */
+/**
+ * Convert absolute URLs from our own server to relative paths.
+ * Payload generates full URLs using NEXT_PUBLIC_SERVER_URL, but in dev
+ * the images are served locally — relative paths let Next.js resolve them.
+ */
+function toRelativeSrc(src: string): string {
+  const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL;
+  if (serverUrl && src.startsWith(serverUrl)) {
+    return src.slice(serverUrl.length);
+  }
+  return src;
+}
+
 export function OptimizedImage({
   src,
   alt,
@@ -44,7 +57,7 @@ export function OptimizedImage({
 }: OptimizedImageProps) {
   return (
     <Image
-      src={src}
+      src={toRelativeSrc(src)}
       alt={alt}
       width={width}
       height={height}
