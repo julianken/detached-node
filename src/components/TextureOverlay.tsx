@@ -6,8 +6,8 @@ const SCANLINES_BG = `repeating-linear-gradient(
   0deg,
   transparent,
   transparent 2px,
-  rgba(180, 156, 255, 0.015) 2px,
-  rgba(180, 156, 255, 0.015) 4px
+  rgb(180 156 255 / var(--scanline-intensity, 0.015)) 2px,
+  rgb(180 156 255 / var(--scanline-intensity, 0.015)) 4px
 )`;
 
 export function TextureOverlay() {

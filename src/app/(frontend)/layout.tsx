@@ -72,7 +72,7 @@ export default function FrontendLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ViewTransitions>
           <TextureOverlay />
-          <div className="mx-auto my-4 flex min-h-[calc(100vh-2rem)] max-w-5xl flex-col rounded-sm border border-border sm:my-6 sm:min-h-[calc(100vh-3rem)]">
+          <div className="site-frame mx-auto my-4 flex min-h-[calc(100vh-2rem)] max-w-5xl flex-col rounded-sm border border-border sm:my-6 sm:min-h-[calc(100vh-3rem)]">
             <header className="flex items-center justify-between border-b border-border px-4 py-3 sm:px-6">
               <Link href="/" className="font-mono text-lg font-semibold tracking-tight text-accent focus-ring">
                 Mind-Controlled

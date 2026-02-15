@@ -179,6 +179,9 @@
   --prose-th-borders: #d0c8e0;
   --prose-td-borders: #e0daea;
 
+  /* Scanline overlay intensity (overridden by contrast modes) */
+  --scanline-intensity: 0.015;
+
   /* Font stacks — Crimson Pro (serif body) + JetBrains Mono (headings/nav) */
   --font-sans-stack: var(--font-crimson), Georgia, "Times New Roman", serif;
   --font-mono-stack: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo,
@@ -260,6 +263,10 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans-stack);
+}
+
+.site-frame {
+  filter: brightness(var(--brightness, 1));
 }
 
 /* ──────────────────────────────────────────────
