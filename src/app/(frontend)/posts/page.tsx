@@ -30,7 +30,7 @@ export default async function PostsPage() {
       />
       <div className="flex flex-col gap-6">
         {posts.length === 0 ? (
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">
+          <p className="text-sm text-text-tertiary">
             No posts yet. Check back soon.
           </p>
         ) : (
@@ -42,6 +42,7 @@ export default async function PostsPage() {
               summary={post.summary}
               href={`/posts/${post.slug}`}
               featuredImage={isMediaObject(post.featuredImage) ? post.featuredImage : null}
+              label="ARCHIVE"
             />
           ))
         )}

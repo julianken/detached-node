@@ -1,40 +1,18 @@
-/**
- * Button component with consistent styling across the app
- *
- * @example
- * // Primary button (default)
- * <Button onClick={handleClick}>Click me</Button>
- *
- * @example
- * // Secondary button
- * <Button variant="secondary">Cancel</Button>
- *
- * @example
- * // Button as Link
- * <Button href="/posts" asChild>View Posts</Button>
- *
- * @example
- * // Different sizes
- * <Button size="sm">Small</Button>
- * <Button size="lg">Large</Button>
- */
-
 import { cva, type VariantProps } from "class-variance-authority";
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 import { ButtonHTMLAttributes, AnchorHTMLAttributes, forwardRef } from "react";
 
 const buttonVariants = cva(
-  // Base styles shared by all buttons
-  "inline-flex items-center justify-center rounded-full font-medium transition-colors focus-ring disabled:opacity-50 disabled:pointer-events-none",
+  "inline-flex items-center justify-center rounded-sm font-medium transition-colors focus-ring disabled:opacity-50 disabled:pointer-events-none",
   {
     variants: {
       variant: {
         primary:
-          "bg-zinc-900 text-white hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300",
+          "bg-accent text-background hover:bg-accent-muted",
         secondary:
-          "border border-zinc-300 bg-transparent text-zinc-600 hover:border-zinc-400 hover:text-zinc-900 dark:border-zinc-700 dark:text-zinc-400 dark:hover:border-zinc-500 dark:hover:text-zinc-100",
+          "border border-border bg-transparent text-text-secondary hover:border-border-hover hover:text-text-primary",
         ghost:
-          "text-zinc-900 hover:bg-zinc-100 dark:text-zinc-100 dark:hover:bg-zinc-800",
+          "text-text-primary hover:bg-hover-bg",
       },
       size: {
         sm: "px-4 py-1.5 text-sm",

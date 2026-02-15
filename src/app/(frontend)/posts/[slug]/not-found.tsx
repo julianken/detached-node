@@ -5,17 +5,17 @@ export default function PostNotFound() {
     <div className="flex min-h-[50vh] items-center justify-center">
       <div className="flex flex-col items-center gap-6 text-center">
         <div className="flex flex-col gap-2">
-          <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">404</p>
-          <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+          <p className="text-sm font-medium font-mono text-text-tertiary">404</p>
+          <h1 className="font-mono text-2xl font-semibold tracking-tight text-text-primary">
             Post not found
           </h1>
-          <p className="text-sm text-zinc-600 dark:text-zinc-400">
+          <p className="text-sm text-text-secondary">
             This post does not exist, or may have been removed.
           </p>
         </div>
         <Link
           href="/posts"
-          className="text-sm text-zinc-600 dark:text-zinc-400 underline underline-offset-4 hover:text-zinc-900 dark:hover:text-zinc-100 focus-ring"
+          className="text-sm text-text-secondary underline underline-offset-4 hover:text-accent focus-ring"
         >
           Browse all posts
         </Link>
