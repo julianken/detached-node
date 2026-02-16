@@ -169,7 +169,7 @@ test.describe('Dark Mode / Color Scheme', () => {
       expectColorMatch(borderColor, '#e4e4e7')
 
       // Check footer text color (text-zinc-600)
-      const copyright = footer.getByText(/Mind-Controlled.*All rights reserved/i)
+      const copyright = footer.getByText(/Detached Node.*All rights reserved/i)
       const textColor = await getColorAsHex(copyright, 'color')
 
       expectColorMatch(textColor, '#52525b')
@@ -251,7 +251,7 @@ test.describe('Dark Mode / Color Scheme', () => {
       expectColorMatch(borderColor, '#27272a')
 
       // Check footer text color (dark:text-zinc-400)
-      const copyright = footer.getByText(/Mind-Controlled.*All rights reserved/i)
+      const copyright = footer.getByText(/Detached Node.*All rights reserved/i)
       const textColor = await getColorAsHex(copyright, 'color')
 
       expectColorMatch(textColor, '#a1a1aa')

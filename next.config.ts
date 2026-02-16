@@ -25,7 +25,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'mind-controlled.vercel.app',
+        hostname: 'detached-node.vercel.app',
         pathname: '/api/media/**',
       },
     ],

@@ -1,7 +1,7 @@
 export default function Loading() {
   return (
     <div
-      className="flex min-h-[50vh] items-center justify-center"
+      className="glitch-reveal flex min-h-[50vh] items-center justify-center"
       role="status"
       aria-live="polite"
       aria-label="Loading content"

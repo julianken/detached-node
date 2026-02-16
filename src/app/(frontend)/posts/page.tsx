@@ -16,17 +16,18 @@ export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Posts",
-  description: "Essays and analysis on propaganda, conditioning, and the mechanics of mind control.",
+  description: "Writing on agentic AI workflows, autonomous systems, and machine intelligence.",
 };
 
 export default async function PostsPage() {
   const posts = await getPublishedPosts();
 
   return (
+    <div className="glitch-reveal">
     <PageLayout>
       <PageHeader
         title="Posts"
-        subtitle="Essays and analysis on propaganda, conditioning, and the mechanics of mind control."
+        subtitle="Writing on agentic AI workflows, autonomous systems, and machine intelligence."
       />
       <div className="flex flex-col gap-6">
         {posts.length === 0 ? (
@@ -48,5 +49,6 @@ export default async function PostsPage() {
         )}
       </div>
     </PageLayout>
+    </div>
   );
 }

@@ -4,7 +4,7 @@ import { getPublishedPosts } from "@/lib/queries/posts";
 import { getPublishedPages } from "@/lib/queries/pages";
 
 const siteUrl =
-  process.env.NEXT_PUBLIC_SERVER_URL || "https://mind-controlled.vercel.app";
+  process.env.NEXT_PUBLIC_SERVER_URL || "https://detached-node.vercel.app";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = [

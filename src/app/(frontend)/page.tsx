@@ -1,5 +1,6 @@
 import { Card } from "@/components/Card";
 import { Button } from "@/components/Button";
+import { FadeReveal } from "@/components/FadeReveal";
 import { getFeaturedPosts } from "@/lib/queries/posts";
 
 // ISR: Revalidate every 30 minutes - featured posts change infrequently
@@ -9,13 +10,14 @@ export default async function Home() {
   const featuredPosts = await getFeaturedPosts(3);
 
   return (
+    <FadeReveal>
     <div className="flex flex-col gap-16">
       <section className="hero-glow rounded-sm border border-border bg-surface p-8">
         <h1 className="font-mono text-4xl font-semibold tracking-tight text-text-primary [text-wrap:balance]">
-          You are being controlled through your devices.
+          Thoughts on autonomous systems and the agents that run them.
         </h1>
         <p className="mt-4 max-w-xl text-lg leading-8 text-text-secondary">
-          You are being conditioned through the device in your hand.
+          Exploring agentic AI workflows, tool use, and the philosophy of machine intelligence.
         </p>
         <div className="mt-6 flex flex-wrap gap-4">
           <Button href="/posts" asChild>
@@ -29,10 +31,10 @@ export default async function Home() {
 
       <section>
         <h2 className="font-mono text-xl font-semibold tracking-tight text-text-primary">
-          Recent transmissions
+          Latest posts
         </h2>
         <p className="mt-2 text-base leading-6 text-text-secondary">
-          Field reports and analysis from the archive.
+          Recent writing on AI agents, workflows, and systems.
         </p>
         <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {featuredPosts.length > 0 ? (
@@ -56,5 +58,6 @@ export default async function Home() {
         </div>
       </section>
     </div>
+    </FadeReveal>
   );
 }

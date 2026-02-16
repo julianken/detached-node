@@ -23,7 +23,7 @@ function scrambleText(text: string): string {
  * Wraps content and intermittently glitches a random word every 45-90s.
  * Always active unless the user prefers reduced motion.
  */
-export function SignalInterference({ children }: { children: ReactNode }) {
+export function TextGlitch({ children }: { children: ReactNode }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const prefersReducedMotion = useReducedMotion();

@@ -195,13 +195,13 @@ Retry-After: 45
 ## Files Modified/Created
 
 ### Created Files
-1. `/Users/j/repos/mind-controlled/src/lib/rate-limit.ts` - Core rate limiting module
-2. `/Users/j/repos/mind-controlled/scripts/test-rate-limit.ts` - Test script
-3. `/Users/j/repos/mind-controlled/docs/rate-limiting-implementation.md` - Implementation docs
-4. `/Users/j/repos/mind-controlled/docs/rate-limiting-validation.md` - This file
+1. `/Users/j/repos/tech-blog/src/lib/rate-limit.ts` - Core rate limiting module
+2. `/Users/j/repos/tech-blog/scripts/test-rate-limit.ts` - Test script
+3. `/Users/j/repos/tech-blog/docs/rate-limiting-implementation.md` - Implementation docs
+4. `/Users/j/repos/tech-blog/docs/rate-limiting-validation.md` - This file
 
 ### Modified Files
-1. `/Users/j/repos/mind-controlled/src/app/(payload)/api/graphql/route.ts` - Added rate limiting
+1. `/Users/j/repos/tech-blog/src/app/(payload)/api/graphql/route.ts` - Added rate limiting
 
 ### Dependencies
 Already installed in `package.json`:
@@ -276,7 +276,7 @@ The implementation:
 
 ## References
 
-- [Rate Limiting Strategy](/Users/j/repos/mind-controlled/docs/rate-limiting-strategy.md)
-- [Implementation Guide](/Users/j/repos/mind-controlled/docs/rate-limiting-implementation.md)
+- [Rate Limiting Strategy](/Users/j/repos/tech-blog/docs/rate-limiting-strategy.md)
+- [Implementation Guide](/Users/j/repos/tech-blog/docs/rate-limiting-implementation.md)
 - [Upstash Ratelimit Docs](https://upstash.com/docs/oss/sdks/ts/ratelimit/overview)
 - [IETF Rate Limit Headers](https://datatracker.ietf.org/doc/html/draft-ietf-httpapi-ratelimit-headers)

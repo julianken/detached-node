@@ -6,7 +6,7 @@
 
 ## Overview
 
-This document describes the database indexing strategy for the Mind-Controlled CMS, optimizing query performance for common access patterns while minimizing index maintenance overhead.
+This document describes the database indexing strategy for the Detached Node CMS, optimizing query performance for common access patterns while minimizing index maintenance overhead.
 
 ## Index Categories
 

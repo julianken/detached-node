@@ -1,7 +1,7 @@
-# Mind-Controlled
+# Detached Node
 
 ## Goal
-Create a blog with a distinctive editorial voice and a clear, repeatable content structure. The site should be easy to publish to, easy to navigate, and ready for future customization.
+Create a tech blog exploring modern agentic AI workflows, autonomous systems, and the philosophy of machine intelligence. The site should have a distinctive editorial voice, a clear and repeatable content structure, be easy to publish to, easy to navigate, and ready for future customization.
 
 ## Audience
 Define during content planning. For Phase 1, assume a general reader and focus on clarity.

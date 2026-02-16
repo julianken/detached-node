@@ -33,7 +33,7 @@ DATABASE_URL="postgres://postgres.[PROJECT_REF]:[PASSWORD]@aws-0-[REGION].pooler
 PAYLOAD_SECRET="your-cryptographically-random-secret-min-32-chars"
 
 # Server URL (update with your production domain)
-NEXT_PUBLIC_SERVER_URL="https://mind-controlled.vercel.app"
+NEXT_PUBLIC_SERVER_URL="https://detached-node.vercel.app"
 ```
 
 **Important Notes**:
@@ -72,7 +72,7 @@ Copy `.env.example` to `.env.local` and configure for local development.
 
 ```bash
 # Local Postgres (or Supabase)
-DATABASE_URL="postgresql://localhost:5432/mindcontrolled"
+DATABASE_URL="postgresql://localhost:5432/detachednode"
 
 # Development secret (generate a unique one, don't use production secret)
 PAYLOAD_SECRET="dev-secret-min-32-chars-long-string-here"
@@ -96,7 +96,7 @@ NEXT_PUBLIC_SERVER_URL="http://localhost:3000"
 1. Push to `main` branch triggers automatic production deployment
 2. Vercel runs `npm run build` (which includes `payload migrate` via `build:production` script)
 3. Database migrations execute automatically
-4. Build completes and deploys to `mind-controlled.vercel.app`
+4. Build completes and deploys to `detached-node.vercel.app`
 5. Deployment is live within 1-2 minutes
 
 **Preview** (Pull Requests):
@@ -104,7 +104,7 @@ NEXT_PUBLIC_SERVER_URL="http://localhost:3000"
 1. Opening a PR creates a unique preview deployment
 2. Each commit to the PR branch triggers a new preview build
 3. Preview uses preview environment variables (if configured separately)
-4. Preview URL format: `mind-controlled-git-[branch]-[team].vercel.app`
+4. Preview URL format: `detached-node-git-[branch]-[team].vercel.app`
 5. Preview deployments are automatically deleted after PR merge/close
 
 **Branch Protection**:
@@ -562,7 +562,7 @@ db: postgresAdapter({
 
 **Diagnosis**:
 
-1. Test GraphQL endpoint directly: `https://mind-controlled.vercel.app/api/graphql`
+1. Test GraphQL endpoint directly: `https://detached-node.vercel.app/api/graphql`
 2. Check function logs for errors
 3. Verify query syntax in GraphQL Playground (local: `http://localhost:3000/api/graphql`)
 
@@ -853,10 +853,10 @@ async headers() {
 
 ### Custom Domain
 
-- [ ] Register custom domain (e.g., mindcontrolled.com)
+- [ ] Register custom domain (e.g., detachednode.com)
 - [ ] Configure DNS with Vercel
 - [ ] Update NEXT_PUBLIC_SERVER_URL to custom domain
-- [ ] Set up email forwarding for contact@mindcontrolled.com
+- [ ] Set up email forwarding for contact@detachednode.com
 
 ### Documentation
 

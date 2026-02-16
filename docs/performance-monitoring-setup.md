@@ -2,19 +2,19 @@
 
 ## Implementation Summary
 
-Performance monitoring with Vercel Speed Insights has been successfully configured for the Mind-Controlled application.
+Performance monitoring with Vercel Speed Insights has been successfully configured for the Detached Node application.
 
 ## Components Installed
 
 ### 1. Vercel Analytics
 - **Package**: `@vercel/analytics@1.6.1`
-- **Location**: `/Users/j/repos/mind-controlled/src/app/(frontend)/layout.tsx` (line 85)
+- **Location**: `/Users/j/repos/tech-blog/src/app/(frontend)/layout.tsx` (line 85)
 - **Status**: ✅ Active
 - **Environment**: Production only (automatically disabled in development)
 
 ### 2. Vercel Speed Insights
 - **Package**: `@vercel/speed-insights@1.3.1`
-- **Location**: `/Users/j/repos/mind-controlled/src/app/(frontend)/layout.tsx` (line 86)
+- **Location**: `/Users/j/repos/tech-blog/src/app/(frontend)/layout.tsx` (line 86)
 - **Status**: ✅ Active
 - **Environment**: Production only (automatically disabled in development)
 
@@ -64,14 +64,14 @@ NODE_OPTIONS='--max-old-space-size=4096' npm run build
 After deployment to Vercel, access performance data at:
 
 1. **Speed Insights Dashboard**
-   - URL: `https://vercel.com/[team]/mind-controlled/speed-insights`
+   - URL: `https://vercel.com/[team]/detached-node/speed-insights`
    - Metrics: LCP, FID/INP, CLS, TTFB
    - Real User Monitoring (RUM) from production traffic
    - P75 percentile tracking
    - Geographic distribution
 
 2. **Analytics Dashboard**
-   - URL: `https://vercel.com/[team]/mind-controlled/analytics`
+   - URL: `https://vercel.com/[team]/detached-node/analytics`
    - Page views and unique visitors
    - User flows and behavior
    - Referrer sources
@@ -84,7 +84,7 @@ After deployment to Vercel, access performance data at:
 
 ## Performance Targets
 
-See `/Users/j/repos/mind-controlled/docs/performance-targets.md` for:
+See `/Users/j/repos/tech-blog/docs/performance-targets.md` for:
 - Core Web Vitals targets (LCP < 2.5s, INP < 100ms, CLS < 0.1)
 - TTFB targets by page type
 - Bundle size budgets
@@ -196,16 +196,16 @@ npm run build
 
 ## Files Modified
 
-1. `/Users/j/repos/mind-controlled/next.config.ts`
+1. `/Users/j/repos/tech-blog/next.config.ts`
    - Added `experimental.optimizePackageImports`
 
-2. `/Users/j/repos/mind-controlled/src/app/(frontend)/layout.tsx`
+2. `/Users/j/repos/tech-blog/src/app/(frontend)/layout.tsx`
    - Already had `<Analytics />` and `<SpeedInsights />` (verified present)
 
-3. `/Users/j/repos/mind-controlled/docs/performance-targets.md`
+3. `/Users/j/repos/tech-blog/docs/performance-targets.md`
    - Created comprehensive performance targets and strategies
 
-4. `/Users/j/repos/mind-controlled/src/components/ThemeProvider.tsx`
+4. `/Users/j/repos/tech-blog/src/components/ThemeProvider.tsx`
    - Fixed TypeScript import for `ThemeProviderProps`
 
 ## Related Documentation

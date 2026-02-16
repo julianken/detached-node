@@ -1,4 +1,4 @@
-import { CardLink } from "./CardLink";
+import { Link } from "next-view-transitions";
 
 interface CardProps {
   children: React.ReactNode;
@@ -20,10 +20,10 @@ export function Card({ children, href, className = "", label }: CardProps) {
 
   if (href) {
     return (
-      <CardLink href={href} className={combinedStyles}>
+      <Link href={href} className={combinedStyles}>
         {labelEl}
         {children}
-      </CardLink>
+      </Link>
     );
   }
 

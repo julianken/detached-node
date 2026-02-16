@@ -10,7 +10,7 @@ Created comprehensive design system documentation and validated consistency acro
 ## Deliverables
 
 ### 1. Design System Documentation
-**File:** `/Users/j/repos/mind-controlled/docs/design-system.md`
+**File:** `/Users/j/repos/tech-blog/docs/design-system.md`
 
 Complete specification including:
 - Color palette tables (light and dark mode)
@@ -20,7 +20,7 @@ Complete specification including:
 - Special case documentation
 
 ### 2. Audit Report
-**File:** `/Users/j/repos/mind-controlled/docs/dark-mode-audit-2026-02-13.md`
+**File:** `/Users/j/repos/tech-blog/docs/dark-mode-audit-2026-02-13.md`
 
 Comprehensive audit documenting:
 - All background color usage
@@ -31,7 +31,7 @@ Comprehensive audit documenting:
 - Future audit checklist
 
 ### 3. CLAUDE.md Updates
-**File:** `/Users/j/repos/mind-controlled/CLAUDE.md`
+**File:** `/Users/j/repos/tech-blog/CLAUDE.md`
 
 Updated to:
 - Reference design system documentation
@@ -91,10 +91,10 @@ No inconsistencies found. No code changes required.
 
 ## Files Changed
 
-1. `/Users/j/repos/mind-controlled/docs/design-system.md` (created)
-2. `/Users/j/repos/mind-controlled/docs/dark-mode-audit-2026-02-13.md` (created)
-3. `/Users/j/repos/mind-controlled/CLAUDE.md` (updated)
-4. `/Users/j/repos/mind-controlled/docs/CON-124-summary.md` (this file)
+1. `/Users/j/repos/tech-blog/docs/design-system.md` (created)
+2. `/Users/j/repos/tech-blog/docs/dark-mode-audit-2026-02-13.md` (created)
+3. `/Users/j/repos/tech-blog/CLAUDE.md` (updated)
+4. `/Users/j/repos/tech-blog/docs/CON-124-summary.md` (this file)
 
 ## Future Recommendations
 

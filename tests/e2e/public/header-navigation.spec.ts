@@ -17,7 +17,7 @@ test.describe('Header Navigation', () => {
     test('should navigate to homepage when clicking logo from homepage', async ({ homePage }) => {
       await homePage.goto()
 
-      const logo = homePage.page.getByRole('link', { name: /^Mind-Controlled$/i })
+      const logo = homePage.page.getByRole('link', { name: /^Detached Node$/i })
       await expectVisible(logo)
 
       await logo.click()
@@ -27,7 +27,7 @@ test.describe('Header Navigation', () => {
     test('should navigate to homepage when clicking logo from posts page', async ({ postsPage }) => {
       await postsPage.goto()
 
-      const logo = postsPage.page.getByRole('link', { name: /^Mind-Controlled$/i })
+      const logo = postsPage.page.getByRole('link', { name: /^Detached Node$/i })
       await expectVisible(logo)
 
       await logo.click()
@@ -37,7 +37,7 @@ test.describe('Header Navigation', () => {
     test('should navigate to homepage when clicking logo from about page', async ({ aboutPage }) => {
       await aboutPage.goto()
 
-      const logo = aboutPage.page.getByRole('link', { name: /^Mind-Controlled$/i })
+      const logo = aboutPage.page.getByRole('link', { name: /^Detached Node$/i })
       await expectVisible(logo)
 
       await logo.click()
@@ -192,7 +192,7 @@ test.describe('Header Navigation', () => {
       const homeHeader = page.locator('header').first()
       await expectVisible(homeHeader)
 
-      const homeLogo = homeHeader.getByRole('link', { name: /^Mind-Controlled$/i })
+      const homeLogo = homeHeader.getByRole('link', { name: /^Detached Node$/i })
       const homeNav = homeHeader.locator('nav')
       await expectVisible(homeLogo)
       await expectVisible(homeNav)
@@ -204,7 +204,7 @@ test.describe('Header Navigation', () => {
       const postsHeader = page.locator('header').first()
       await expectVisible(postsHeader)
 
-      const postsLogo = postsHeader.getByRole('link', { name: /^Mind-Controlled$/i })
+      const postsLogo = postsHeader.getByRole('link', { name: /^Detached Node$/i })
       const postsNav = postsHeader.locator('nav')
       await expectVisible(postsLogo)
       await expectVisible(postsNav)
@@ -217,7 +217,7 @@ test.describe('Header Navigation', () => {
       const aboutHeader = page.locator('header').first()
       await expectVisible(aboutHeader)
 
-      const aboutLogo = aboutHeader.getByRole('link', { name: /^Mind-Controlled$/i })
+      const aboutLogo = aboutHeader.getByRole('link', { name: /^Detached Node$/i })
       const aboutNav = aboutHeader.locator('nav')
       await expectVisible(aboutLogo)
       await expectVisible(aboutNav)

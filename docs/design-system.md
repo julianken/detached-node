@@ -1,6 +1,6 @@
 # Design System Documentation
 
-This document defines the visual design system for Mind-Controlled, ensuring consistency across all pages and components.
+This document defines the visual design system for Detached Node, ensuring consistency across all pages and components.
 
 ## Color Palette
 

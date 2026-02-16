@@ -87,9 +87,9 @@ describe("Slug branded type", () => {
     });
 
     it("handles real-world blog slugs", () => {
-      expect(isValidSlug("the-architecture-of-persuasion")).toBe(true);
-      expect(isValidSlug("decoding-corporate-newspeak")).toBe(true);
-      expect(isValidSlug("notes-from-the-attention-economy")).toBe(true);
+      expect(isValidSlug("the-architecture-of-agent-systems")).toBe(true);
+      expect(isValidSlug("decoding-tool-use-patterns")).toBe(true);
+      expect(isValidSlug("notes-on-autonomous-workflows")).toBe(true);
       expect(isValidSlug("2024-review")).toBe(true);
     });
   });

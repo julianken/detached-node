@@ -113,7 +113,7 @@ test.describe('API Failure Handling', () => {
       await expectVisible(pageTitle)
 
       // Verify page subtitle is visible
-      const subtitle = page.getByText(/Essays and analysis on propaganda/i)
+      const subtitle = page.getByText(/Writing on agentic AI workflows/i)
       await expectVisible(subtitle)
 
       // Verify empty state element exists (may or may not be visible)
@@ -223,7 +223,7 @@ test.describe('API Failure Handling', () => {
       await expect(page).toHaveURL(/\/about$/)
 
       // Test navigation back to Home
-      const homeLink = page.getByRole('link', { name: /Mind-Controlled/i }).first()
+      const homeLink = page.getByRole('link', { name: /Detached Node/i }).first()
       await expectVisible(homeLink)
       await homeLink.click()
       await page.waitForLoadState('networkidle')

@@ -1,10 +1,10 @@
 # Claude Configuration
 
-Project context and guidance for AI-assisted development on Mind-Controlled.
+Project context and guidance for AI-assisted development on Detached Node.
 
 ## Project Overview
 
-A cynical philosophy blog exploring propaganda, conditioning, and the mechanics of mind control (in the Ellul sense). Built with Next.js 16, React 19, TypeScript, and Tailwind CSS 4.
+A tech blog exploring modern agentic AI workflows, autonomous systems, and the philosophy of machine intelligence. Built with Next.js 16, React 19, TypeScript, and Tailwind CSS 4.
 
 **Current phase:** Phase 1 (shell site with navigation and placeholders)
 
@@ -55,7 +55,7 @@ Three page types defined in `CONTENT_MODEL.md`:
 The blog's editorial voice is still being defined. For now:
 - Assume a general reader
 - Prioritize clarity over cleverness
-- The subject matter is critical/analytical, not promotional
+- The subject matter is technical/analytical, not promotional
 
 ## Design System
 

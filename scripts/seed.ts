@@ -22,17 +22,17 @@ async function seed() {
     await payload.create({
       collection: 'users',
       data: {
-        email: 'admin@mind-controlled.com',
-        password: 'MindControl2026!',
+        email: 'admin@detached-node.dev',
+        password: 'DetachedNode2026!',
       },
     })
-    console.log('✓ Admin user created: admin@mind-controlled.com')
+    console.log('✓ Admin user created: admin@detached-node.dev')
   } else {
     console.log(`ℹ Admin user already exists (${userCount} users found)`)
   }
 
   // Create tags
-  const tagNames = ['propaganda', 'conditioning', 'media', 'theory']
+  const tagNames = ['agentic-ai', 'workflows', 'philosophy', 'systems', 'tool-use', 'autonomy']
   const tags: Record<string, string | number> = {}
 
   for (const name of tagNames) {
@@ -84,7 +84,7 @@ async function seed() {
                 children: [
                   {
                     mode: 'normal',
-                    text: 'Mind-Controlled explores the mechanics of propaganda, conditioning, and persuasion in modern society. This is a space for critical analysis of how ideas spread and take hold—not to promote cynicism, but to cultivate discernment.',
+                    text: 'Detached Node explores the emerging world of agentic AI — autonomous systems that reason, plan, and act. Through essays and analysis, this site examines how AI agents work, how they\'re orchestrated, and what it means when machines begin to operate with increasing independence.',
                     type: 'text',
                     style: '',
                     detail: 0,
@@ -104,7 +104,7 @@ async function seed() {
                 children: [
                   {
                     mode: 'normal',
-                    text: 'The name references Jacques Ellul\'s work on propaganda—the idea that modern humans are shaped by forces we rarely examine. By making these forces visible, we reclaim some agency over our own thinking.',
+                    text: 'The name refers to a node that operates outside the main cluster — autonomous, self-directed, yet still connected to the broader network. It\'s a metaphor for how modern AI agents work: independently reasoning while remaining part of larger systems.',
                     type: 'text',
                     style: '',
                     detail: 0,
@@ -138,14 +138,14 @@ async function seed() {
     await payload.create({
       collection: 'posts',
       data: {
-        title: 'The Architecture of Belief',
-        slug: 'the-architecture-of-belief',
+        title: 'The Architecture of Agent Systems',
+        slug: 'the-architecture-of-agent-systems',
         type: 'essay',
-        summary: 'How do ideas become convictions? An examination of the structural elements that transform information into belief—and belief into identity.',
+        summary: 'How do autonomous agents coordinate? An examination of the structural elements that transform simple tools into reasoning systems—and systems into autonomous workflows.',
         status: 'published',
         featured: true,
         publishedAt: new Date().toISOString(),
-        tags: [tags.propaganda, tags.conditioning],
+        tags: [tags['agentic-ai'], tags.systems],
         body: {
           root: {
             type: 'root',
@@ -161,7 +161,7 @@ async function seed() {
                 children: [
                   {
                     mode: 'normal',
-                    text: 'Every belief we hold has an architecture. It was constructed—sometimes deliberately, sometimes through cultural osmosis, sometimes through personal experience. Understanding this construction process is the first step toward intellectual autonomy.',
+                    text: 'Every agent system has an architecture. It was constructed—sometimes through deliberate design, sometimes through emergent behavior, sometimes through iterative refinement. Understanding this construction process is the first step toward building truly autonomous workflows.',
                     type: 'text',
                     style: '',
                     detail: 0,
@@ -181,7 +181,7 @@ async function seed() {
                 children: [
                   {
                     mode: 'normal',
-                    text: 'This is not to suggest that all beliefs are equally valid or that skepticism should lead to paralysis. Rather, the goal is to become a conscious participant in our own belief formation rather than a passive recipient.',
+                    text: 'This is not to suggest that all architectures are equally effective or that complexity should be pursued for its own sake. Rather, the goal is to become a deliberate designer of agent systems rather than a passive consumer of black-box solutions.',
                     type: 'text',
                     style: '',
                     detail: 0,
@@ -199,20 +199,20 @@ async function seed() {
         },
       },
     })
-    console.log('✓ Created featured post: The Architecture of Belief')
+    console.log('✓ Created featured post: The Architecture of Agent Systems')
 
     // Second post
     await payload.create({
       collection: 'posts',
       data: {
-        title: 'Manufacturing Consent in the Algorithm Age',
-        slug: 'manufacturing-consent-algorithm-age',
+        title: 'Orchestrating Agents in the LLM Age',
+        slug: 'orchestrating-agents-llm-age',
         type: 'essay',
-        summary: 'Chomsky and Herman\'s framework updated for an era where the filters are computational and the propaganda is personalized.',
+        summary: 'Multi-agent frameworks examined for an era where the reasoning is distributed and the tool use is autonomous.',
         status: 'published',
         featured: false,
         publishedAt: new Date(Date.now() - 86400000).toISOString(), // Yesterday
-        tags: [tags.media, tags.theory],
+        tags: [tags.workflows, tags['tool-use']],
         body: {
           root: {
             type: 'root',
@@ -228,7 +228,7 @@ async function seed() {
                 children: [
                   {
                     mode: 'normal',
-                    text: 'In 1988, Chomsky and Herman identified five filters through which news passes before reaching audiences. Today, those filters have been augmented—and in some cases replaced—by algorithmic curation that operates at a scale and speed impossible for human editors.',
+                    text: 'In 2023, the first wave of agent frameworks identified core patterns through which LLM reasoning passes before producing actions. Today, those patterns have been augmented—and in some cases replaced—by autonomous orchestration that operates at a scale and speed impossible for human operators.',
                     type: 'text',
                     style: '',
                     detail: 0,
@@ -246,15 +246,15 @@ async function seed() {
         },
       },
     })
-    console.log('✓ Created post: Manufacturing Consent in the Algorithm Age')
+    console.log('✓ Created post: Orchestrating Agents in the LLM Age')
   } else {
     console.log(`ℹ Posts exist (${existingPosts.totalDocs} found)`)
   }
 
   console.log('\n✅ Seed complete!')
   console.log('\nAdmin credentials:')
-  console.log('  Email: admin@mind-controlled.com')
-  console.log('  Password: MindControl2026!')
+  console.log('  Email: admin@detached-node.dev')
+  console.log('  Password: DetachedNode2026!')
 
   process.exit(0)
 }

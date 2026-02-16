@@ -7,13 +7,13 @@
 
 ## Overview
 
-Rate limiting has been successfully implemented for the Mind-Controlled API using a hybrid approach with Upstash Redis for production and an in-memory fallback for development.
+Rate limiting has been successfully implemented for the Detached Node API using a hybrid approach with Upstash Redis for production and an in-memory fallback for development.
 
 ## Implementation Details
 
 ### Files Created/Modified
 
-1. **`/Users/j/repos/mind-controlled/src/lib/rate-limit.ts`**
+1. **`/Users/j/repos/tech-blog/src/lib/rate-limit.ts`**
    - Core rate limiting module
    - Implements both Upstash Redis and in-memory rate limiters
    - Provides rate limiter instances for different endpoints:
@@ -22,7 +22,7 @@ Rate limiting has been successfully implemented for the Mind-Controlled API usin
      - `authRateLimiter`: 5 requests/minute
      - `passwordResetRateLimiter`: 3 requests/hour
 
-2. **`/Users/j/repos/mind-controlled/src/app/(payload)/api/graphql/route.ts`**
+2. **`/Users/j/repos/tech-blog/src/app/(payload)/api/graphql/route.ts`**
    - Applied rate limiting to GraphQL API endpoints
    - Both GET (playground) and POST (queries) handlers protected
    - Returns proper 429 responses when rate limit exceeded
@@ -99,7 +99,7 @@ curl -i -X POST http://localhost:3000/api/graphql \
 
 ### Test Script
 
-A test script has been created at `/Users/j/repos/mind-controlled/scripts/test-rate-limit.ts`:
+A test script has been created at `/Users/j/repos/tech-blog/scripts/test-rate-limit.ts`:
 
 ```bash
 # Start dev server
@@ -201,8 +201,8 @@ Following the rate limiting strategy document:
 
 ## Related Documents
 
-- `/Users/j/repos/mind-controlled/docs/rate-limiting-strategy.md` - Comprehensive strategy
-- `/Users/j/repos/mind-controlled/scripts/test-rate-limit.ts` - Test script
+- `/Users/j/repos/tech-blog/docs/rate-limiting-strategy.md` - Comprehensive strategy
+- `/Users/j/repos/tech-blog/scripts/test-rate-limit.ts` - Test script
 
 ## Verification Status
 

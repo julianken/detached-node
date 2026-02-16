@@ -1,4 +1,4 @@
-# Motion Design System: Mind-Controlled
+# Motion Design System: Detached Node
 
 **Status:** Concept
 **Source:** Design exploration, February 2026
@@ -91,7 +91,7 @@ On focus (keyboard navigation), the same cursor appears without requiring hover.
 
 ### 1C. Site Title Decode Effect (Initial Load Only)
 
-**Description:** On the very first page load of a session, the "Mind-Controlled" site title in the header briefly displays as scrambled characters before resolving to the actual text. The scramble uses characters from a curated set: `01./\|{}[]<>$#@`. Each character resolves left-to-right over approximately 400ms total, with each character taking 2-3 "rolls" before settling.
+**Description:** On the very first page load of a session, the "Detached Node" site title in the header briefly displays as scrambled characters before resolving to the actual text. The scramble uses characters from a curated set: `01./\|{}[]<>$#@`. Each character resolves left-to-right over approximately 400ms total, with each character taking 2-3 "rolls" before settling.
 
 On subsequent navigations within the session, the title is static. This only fires once.
 
@@ -113,7 +113,7 @@ On subsequent navigations within the session, the title is static. This only fir
 import { useEffect, useRef, useState } from 'react';
 
 const CHARS = '01./\\|{}[]<>$#@';
-const TARGET = 'Mind-Controlled';
+const TARGET = 'Detached Node';
 
 export function DecodingTitle() {
   const [display, setDisplay] = useState(TARGET);

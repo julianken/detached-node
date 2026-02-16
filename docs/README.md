@@ -1,6 +1,6 @@
 # Docs
 
-This folder contains brainstorming and concept development for Mind-Controlled.
+This folder contains brainstorming and concept development for Detached Node.
 
 ## Structure
 
@@ -56,7 +56,7 @@ When an idea from a brainstorm feels solid enough to stand on its own:
 
 Use hashtags in the Tags field. Some suggested categories:
 
-- Topics: `#propaganda` `#ellul` `#conditioning` `#media`
+- Topics: `#agentic-ai` `#autonomous-systems` `#machine-intelligence` `#workflows`
 - Types: `#post-idea` `#structure` `#voice` `#design`
 - Meta: `#process` `#direction` `#question`
 
@@ -69,7 +69,7 @@ grep -r "keyword" docs/brainstorms/
 
 List all files with a specific tag:
 ```bash
-grep -l "#propaganda" docs/brainstorms/*.md
+grep -l "#agentic-ai" docs/brainstorms/*.md
 ```
 
 ## Tips

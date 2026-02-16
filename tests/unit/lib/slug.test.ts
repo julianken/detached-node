@@ -47,14 +47,14 @@ describe("generateSlug", () => {
   });
 
   it("handles real-world title examples", () => {
-    expect(generateSlug("The Architecture of Persuasion")).toBe(
-      "the-architecture-of-persuasion"
+    expect(generateSlug("The Architecture of Agent Systems")).toBe(
+      "the-architecture-of-agent-systems"
     );
-    expect(generateSlug("Decoding Corporate Newspeak")).toBe(
-      "decoding-corporate-newspeak"
+    expect(generateSlug("Decoding Tool Use Patterns")).toBe(
+      "decoding-tool-use-patterns"
     );
-    expect(generateSlug("Notes from the Attention Economy")).toBe(
-      "notes-from-the-attention-economy"
+    expect(generateSlug("Notes on Autonomous Workflows")).toBe(
+      "notes-on-autonomous-workflows"
     );
   });
 
@@ -130,10 +130,10 @@ describe("createSlugHook", () => {
     it("generates slug from name field", () => {
       const result = hook({
         value: "",
-        data: { name: "Propaganda" },
+        data: { name: "Automation" },
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any);
-      expect(result).toBe("propaganda");
+      expect(result).toBe("automation");
     });
 
     it("does not use title field when name is the source", () => {

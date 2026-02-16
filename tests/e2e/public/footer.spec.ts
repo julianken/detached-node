@@ -41,7 +41,7 @@ test.describe('Site Footer', () => {
       await homePage.goto()
 
       const footer = homePage.page.locator('footer')
-      const copyright = footer.getByText(/Mind-Controlled.*All rights reserved/i)
+      const copyright = footer.getByText(/Detached Node.*All rights reserved/i)
 
       await expectVisible(copyright)
     })
@@ -50,7 +50,7 @@ test.describe('Site Footer', () => {
       await postsPage.goto()
 
       const footer = postsPage.page.locator('footer')
-      const copyright = footer.getByText(/Mind-Controlled.*All rights reserved/i)
+      const copyright = footer.getByText(/Detached Node.*All rights reserved/i)
 
       await expectVisible(copyright)
     })
@@ -59,7 +59,7 @@ test.describe('Site Footer', () => {
       await aboutPage.goto()
 
       const footer = aboutPage.page.locator('footer')
-      const copyright = footer.getByText(/Mind-Controlled.*All rights reserved/i)
+      const copyright = footer.getByText(/Detached Node.*All rights reserved/i)
 
       await expectVisible(copyright)
     })
@@ -180,7 +180,7 @@ test.describe('Site Footer', () => {
       const homeFooter = page.locator('footer')
       await expectVisible(homeFooter)
 
-      const homeCopyright = homeFooter.getByText(/Mind-Controlled.*All rights reserved/i)
+      const homeCopyright = homeFooter.getByText(/Detached Node.*All rights reserved/i)
       await expectVisible(homeCopyright)
 
       const homeLinksCount = await homeFooter.getByRole('link').count()
@@ -190,7 +190,7 @@ test.describe('Site Footer', () => {
       const postsFooter = page.locator('footer')
       await expectVisible(postsFooter)
 
-      const postsCopyright = postsFooter.getByText(/Mind-Controlled.*All rights reserved/i)
+      const postsCopyright = postsFooter.getByText(/Detached Node.*All rights reserved/i)
       await expectVisible(postsCopyright)
 
       const postsLinksCount = await postsFooter.getByRole('link').count()
@@ -201,7 +201,7 @@ test.describe('Site Footer', () => {
       const aboutFooter = page.locator('footer')
       await expectVisible(aboutFooter)
 
-      const aboutCopyright = aboutFooter.getByText(/Mind-Controlled.*All rights reserved/i)
+      const aboutCopyright = aboutFooter.getByText(/Detached Node.*All rights reserved/i)
       await expectVisible(aboutCopyright)
 
       const aboutLinksCount = await aboutFooter.getByRole('link').count()

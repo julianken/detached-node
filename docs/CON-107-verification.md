@@ -110,13 +110,13 @@ npm run dev
 After deployment, access monitoring dashboards:
 
 ### Speed Insights
-- **URL**: https://vercel.com/[team]/mind-controlled/speed-insights
+- **URL**: https://vercel.com/[team]/detached-node/speed-insights
 - **Metrics**: LCP, FID/INP, CLS, TTFB
 - **Data Retention**: 30 days (varies by plan)
 - **First Data**: 10-15 minutes after deployment
 
 ### Analytics
-- **URL**: https://vercel.com/[team]/mind-controlled/analytics
+- **URL**: https://vercel.com/[team]/detached-node/analytics
 - **Metrics**: Page views, sessions, user flows
 - **Data Retention**: 30 days (varies by plan)
 - **First Data**: Real-time
@@ -187,27 +187,27 @@ After deployment, access monitoring dashboards:
 ## Files Changed
 
 ### Modified
-1. `/Users/j/repos/mind-controlled/next.config.ts`
+1. `/Users/j/repos/tech-blog/next.config.ts`
    - Added experimental package import optimization
 
-2. `/Users/j/repos/mind-controlled/src/components/ThemeProvider.tsx`
+2. `/Users/j/repos/tech-blog/src/components/ThemeProvider.tsx`
    - Fixed TypeScript import path
 
 ### Created
-1. `/Users/j/repos/mind-controlled/docs/performance-targets.md`
+1. `/Users/j/repos/tech-blog/docs/performance-targets.md`
    - Comprehensive performance targets and strategies
 
-2. `/Users/j/repos/mind-controlled/docs/performance-monitoring-setup.md`
+2. `/Users/j/repos/tech-blog/docs/performance-monitoring-setup.md`
    - Setup guide and dashboard instructions
 
-3. `/Users/j/repos/mind-controlled/docs/CON-107-verification.md`
+3. `/Users/j/repos/tech-blog/docs/CON-107-verification.md`
    - This verification document
 
 ### Verified (No Changes Needed)
-1. `/Users/j/repos/mind-controlled/src/app/(frontend)/layout.tsx`
+1. `/Users/j/repos/tech-blog/src/app/(frontend)/layout.tsx`
    - Already has `<Analytics />` and `<SpeedInsights />` components
 
-2. `/Users/j/repos/mind-controlled/package.json`
+2. `/Users/j/repos/tech-blog/package.json`
    - Already has both packages installed at correct versions
 
 ## Sign-off

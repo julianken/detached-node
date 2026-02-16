@@ -47,30 +47,30 @@ async function seedTestDatabase() {
 
   // 2. Create tags
   console.log('🏷️  Creating tags...')
-  const propagandaTag = await payload.create({
+  const agenticAiTag = await payload.create({
     collection: 'tags',
     data: {
-      name: 'Propaganda',
-      slug: 'propaganda',
-      description: 'Analysis of propaganda techniques and their effects',
+      name: 'Agentic AI',
+      slug: 'agentic-ai',
+      description: 'Analysis of agentic AI systems and their capabilities',
     },
   })
 
-  const technologyTag = await payload.create({
+  const workflowsTag = await payload.create({
     collection: 'tags',
     data: {
-      name: 'Technology',
-      slug: 'technology',
-      description: 'Technology as a medium for influence and control',
+      name: 'Workflows',
+      slug: 'workflows',
+      description: 'Autonomous workflows and orchestration patterns',
     },
   })
 
-  const cultureTag = await payload.create({
+  const philosophyTag = await payload.create({
     collection: 'tags',
     data: {
-      name: 'Culture',
-      slug: 'culture',
-      description: 'Cultural patterns and conditioning mechanisms',
+      name: 'Philosophy',
+      slug: 'philosophy',
+      description: 'Philosophy of machine intelligence and autonomy',
     },
   })
   console.log('✓ Created 3 tags')
@@ -80,30 +80,30 @@ async function seedTestDatabase() {
 
   const heroImages = [
     {
-      // Surveillance cameras on a wall — "Architecture of Persuasion"
+      // Circuit board close-up — "Architecture of Agent Systems"
       url: 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?w=1200&h=630&fit=crop&q=80',
-      alt: 'Surveillance cameras mounted on a concrete wall',
+      alt: 'Abstract circuit board patterns representing agent architectures',
       caption: 'Photo by Lianhao Qu on Unsplash',
-      filename: 'architecture-of-persuasion.jpg',
+      filename: 'architecture-of-agent-systems.jpg',
     },
     {
-      // Corporate office tower — "Decoding Corporate Newspeak"
+      // Network visualization — "Decoding Tool Use Patterns"
       url: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1200&h=630&fit=crop&q=80',
-      alt: 'Glass corporate tower reflecting distorted light',
+      alt: 'Network of connected nodes representing tool use patterns',
       caption: 'Photo by Sean Pollock on Unsplash',
-      filename: 'corporate-newspeak.jpg',
+      filename: 'tool-use-patterns.jpg',
     },
     {
-      // Person scrolling phone in dark room — "Notes from the Attention Economy"
+      // Data streams — "Notes on Autonomous Workflows"
       url: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&h=630&fit=crop&q=80',
-      alt: 'Smartphone screen glowing with notifications in a dark room',
+      alt: 'Digital interface displaying autonomous workflow orchestration',
       caption: 'Photo by Rami Al-zayat on Unsplash',
-      filename: 'attention-economy.jpg',
+      filename: 'autonomous-workflows.jpg',
     },
     {
-      // Stack of old books — "Essential Readings on Mind Control"
+      // Stack of technical books — "Essential Readings on Agentic AI"
       url: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=1200&h=630&fit=crop&q=80',
-      alt: 'Stack of well-worn books on a wooden surface',
+      alt: 'Stack of technical reference books on AI and systems design',
       caption: 'Photo by Susan Q Yin on Unsplash',
       filename: 'essential-readings.jpg',
     },
@@ -155,20 +155,20 @@ async function seedTestDatabase() {
   const post1 = await payload.create({
     collection: 'posts',
     data: {
-      title: 'The Architecture of Persuasion',
-      slug: 'architecture-of-persuasion',
+      title: 'The Architecture of Agent Systems',
+      slug: 'architecture-of-agent-systems',
       type: 'essay',
-      summary: 'An exploration of how modern persuasion techniques shape beliefs and behaviors at scale. This essay examines the structural elements.',
+      summary: 'An exploration of how modern agent architectures coordinate reasoning and action at scale. This essay examines the structural elements.',
       featuredImage: mediaItems[0].id,
       body: createRichTextMulti([
-        'Understanding the architecture of persuasion requires examining both the explicit techniques and the implicit frameworks that shape how messages are received and processed. Persuasion is not a single act but a structure — a system of interlocking parts that together create an environment where certain conclusions feel inevitable.',
-        'Consider the modern news cycle. A story does not simply report facts; it selects which facts to elevate, which to bury, which to frame as context and which to present as the main event. The architecture is in the selection. By the time you encounter the headline, dozens of editorial decisions have already been made on your behalf, each one a small act of persuasion disguised as curation.',
-        'Jacques Ellul argued that propaganda is not merely the work of governments or advertisers but a sociological phenomenon — a condition of modern technological society itself. The sheer volume of information we process daily creates a dependency on pre-digested interpretations. We cannot evaluate everything from first principles, so we outsource our judgment to trusted intermediaries. The architecture of persuasion exploits this delegation.',
-        'The most effective persuasion operates below the threshold of conscious awareness. It does not argue; it assumes. It does not convince; it normalizes. When a particular framing appears across multiple seemingly independent sources — news outlets, social media, entertainment, casual conversation — it ceases to feel like a perspective and begins to feel like reality itself.',
-        'This is the key insight: the architecture of persuasion is not primarily about individual messages but about the environment in which messages are received. Control the environment and you barely need to craft the message at all. The audience will construct the desired conclusion from the available materials, believing all the while that they arrived at it independently.',
-        'Recognizing this architecture does not make one immune to it. But it does create a productive friction — a moment of delay between encounter and acceptance where critical evaluation becomes possible. That delay is the narrow space in which genuine thought can occur.',
+        'Understanding the architecture of agent systems requires examining both the explicit design patterns and the implicit frameworks that shape how autonomous processes reason and act. An agent system is not a single component but a structure — a system of interlocking parts that together create an environment where complex tasks can be decomposed and executed autonomously.',
+        'Consider the modern agent loop. A task does not simply execute; it reasons about which tools to invoke, which sub-tasks to delegate, which context to preserve and which to discard. The architecture is in the orchestration. By the time an agent produces output, dozens of reasoning steps have already been performed, each one a small act of planning disguised as simple execution.',
+        'The concept of agentic AI represents a shift from passive language models to active reasoning systems. An agent does not merely respond to prompts — it plans, acts, observes, and adapts. The architecture determines how these phases interact, how state is maintained between steps, and how failures are detected and recovered from. The most capable agent systems are those where these interactions have been carefully designed rather than left to emerge accidentally.',
+        'The most effective agent architectures operate through composable abstractions. They do not hardcode behavior; they define interfaces. They do not prescribe solutions; they enable discovery. When a particular tool-use pattern appears across multiple seemingly independent agent frameworks — ReAct, plan-and-execute, reflection loops — it ceases to feel like an implementation detail and begins to reveal a deeper structural principle.',
+        'This is the key insight: the architecture of agent systems is not primarily about individual components but about the environment in which reasoning occurs. Design the environment well and you barely need to constrain the agent at all. The system will discover effective strategies from the available tools and context, arriving at solutions that appear creative while following principled architectural patterns.',
+        'Recognizing these architectural patterns does not make one an expert agent builder overnight. But it does create a productive foundation — a framework for evaluating new approaches and distinguishing genuine innovation from superficial novelty. That evaluation capacity is the narrow space in which engineering judgment can be exercised.',
       ]),
-      tags: [propagandaTag.id, cultureTag.id],
+      tags: [agenticAiTag.id, philosophyTag.id],
       status: 'published',
       publishedAt: new Date('2026-01-15').toISOString(),
       featured: true,
@@ -179,21 +179,21 @@ async function seedTestDatabase() {
   const post2 = await payload.create({
     collection: 'posts',
     data: {
-      title: 'Decoding Corporate Newspeak',
-      slug: 'decoding-corporate-newspeak',
+      title: 'Decoding Tool Use Patterns',
+      slug: 'decoding-tool-use-patterns',
       type: 'decoder',
-      summary: 'A systematic breakdown of corporate language patterns designed to obscure reality and manufacture consent within organizational contexts.',
+      summary: 'A systematic breakdown of how AI agents select, invoke, and chain tools to accomplish tasks that no single tool could handle alone.',
       featuredImage: mediaItems[1].id,
       body: createRichTextMulti([
-        'Corporate newspeak transforms clear concepts into abstraction: employees become "human capital," layoffs become "rightsizing," and surveillance becomes "performance optimization." This linguistic alchemy serves a precise function — it insulates decision-makers from the human consequences of their decisions by replacing concrete nouns with abstract ones.',
-        'The pattern is remarkably consistent across industries. When a company fires 10,000 people, the press release never says "fired." It says "reduced headcount," "streamlined operations," or "initiated a workforce transformation." Each euphemism adds another layer of distance between the act and its description. By the time the language reaches the public, the human beings have been fully abstracted away.',
-        'George Orwell identified this mechanism in "Politics and the English Language" in 1946, but corporate newspeak has evolved far beyond what he imagined. Modern corporate language does not merely obscure — it actively reframes. "Disruption" transforms destruction into innovation. "Synergy" transforms elimination into collaboration. "Pivoting" transforms failure into strategy.',
-        'Consider the phrase "we are letting you go." The construction is revealing. "Letting" implies permission, even generosity — as if the company is freeing the employee from bondage rather than removing their livelihood. "Go" suggests movement, departure, a journey — not the sudden halt of income and purpose that termination actually represents. The entire phrase is an inversion of reality presented as compassion.',
-        'The most insidious category of corporate newspeak is the language of inevitability. "Market forces," "industry trends," "the new normal" — these phrases present human decisions as natural phenomena, as immutable as weather. When a CEO says "the market demands efficiency," they are performing an act of ventriloquism, projecting their own choices onto an abstract entity that cannot be questioned or held accountable.',
-        'Decoding corporate newspeak is not merely an exercise in linguistics. It is a practice of restoring agency to descriptions of human action. Every time we translate "workforce optimization" back into "people lost their jobs," we resist the abstraction that makes exploitation feel like an impersonal process rather than a series of deliberate choices made by identifiable human beings.',
-        'The decoder\'s task is not cynicism but precision. The goal is not to assume malice behind every euphemism but to insist on clarity — to ask, each time, "What is actually happening here, and to whom?" That question, simple as it sounds, is the one corporate newspeak is specifically engineered to prevent.',
+        'Tool use in agentic systems transforms abstract reasoning into concrete action: queries become API calls, intentions become file operations, and plans become executable workflows. This translation serves a precise function — it bridges the gap between what an LLM can reason about and what it can actually accomplish in the world.',
+        'The pattern is remarkably consistent across agent frameworks. When an agent encounters a complex task, it never attempts it monolithically. It decomposes, delegates, and sequences. Each decomposition adds another layer of abstraction between the original request and its execution. By the time the tools are invoked, the original intent has been refined through multiple reasoning steps.',
+        'The ReAct pattern identified this mechanism in 2022, but tool use has evolved far beyond what early frameworks imagined. Modern tool use does not merely execute — it actively reasons about execution. Reflection transforms errors into learning. Chaining transforms single actions into workflows. Parallel execution transforms sequential bottlenecks into concurrent operations.',
+        'Consider the phrase "the agent used a tool." The construction is revealing. "Used" implies simple invocation, a single action — as if the agent merely called a function. But effective tool use involves selection from alternatives, parameter construction, output interpretation, error handling, and result integration. The entire process is a sophisticated reasoning chain presented as a simple action.',
+        'The most powerful category of tool use is compositional — where agents combine multiple tools into novel workflows that were never explicitly programmed. "Search, then summarize, then write" — these compound patterns emerge from the agent\'s reasoning rather than from hard-coded pipelines. When an agent discovers that it can chain tools in new ways, it ceases to be a simple executor and begins to exhibit genuine problem-solving behavior.',
+        'Decoding tool use patterns is not merely an exercise in system design. It is a practice of understanding autonomous behavior. Every time we trace an agent\'s tool selection back to its reasoning chain, we gain insight into how these systems make decisions — and where those decisions can go wrong.',
+        'The decoder\'s task is not skepticism but precision. The goal is not to distrust agent behavior but to understand it — to ask, each time, "Why did the agent choose this tool, and what alternatives were available?" That question, simple as it sounds, is the one that separates robust agent design from fragile automation.',
       ]),
-      tags: [propagandaTag.id, technologyTag.id],
+      tags: [agenticAiTag.id, workflowsTag.id],
       status: 'published',
       publishedAt: new Date('2026-01-20').toISOString(),
       featured: true,
@@ -204,22 +204,22 @@ async function seedTestDatabase() {
   const post3 = await payload.create({
     collection: 'posts',
     data: {
-      title: 'Notes from the Attention Economy',
-      slug: 'notes-attention-economy',
+      title: 'Notes on Autonomous Workflows',
+      slug: 'notes-on-autonomous-workflows',
       type: 'field-report',
-      summary: 'Field observations on how attention has become the primary resource extracted, commodified, and traded in digital environments.',
+      summary: 'Field observations on how autonomous workflows have become the primary pattern for orchestrating complex AI tasks across distributed systems.',
       featuredImage: mediaItems[2].id,
       body: createRichTextMulti([
-        'The attention economy operates on principles fundamentally different from traditional markets. In conventional economics, the consumer decides what to buy. In the attention economy, the product decides what to consume — and the product is you. Your time, your focus, your cognitive capacity: these are the raw materials being extracted, refined, and sold.',
-        'I spent a week tracking my own attention patterns with a timer. The results were unsettling. On an average day, I initiated roughly 30% of my screen interactions. The remaining 70% were prompted — notifications, autoplay sequences, algorithmic recommendations, "you might also like" carousels. My attention was not being spent; it was being harvested.',
-        'The engineering behind this harvesting is precise. Variable-ratio reinforcement schedules (the same mechanism that makes slot machines addictive) are embedded into every scroll feed. The interval between rewards — a funny post, a shocking headline, a friend\'s update — is deliberately unpredictable. This unpredictability is the engine of compulsion. If you knew exactly when the next interesting thing would appear, you could plan around it. Not knowing means you keep scrolling.',
-        'What makes the attention economy particularly difficult to resist is that it has co-opted the infrastructure of genuine human connection. The same platform where you coordinate with your child\'s school is also the platform strip-mining your attention for advertising revenue. Opting out of the extraction means opting out of participation in communities you actually care about.',
-        'The philosopher Matthew Crawford has written about attention as a "commons" — a shared resource that, like clean air or fisheries, can be degraded by overexploitation. The analogy is apt. When every surface in public space carries advertising, when every digital interaction is optimized for engagement, the commons of attention is being enclosed. The cognitive environment becomes polluted in ways that affect everyone, including those who try to opt out.',
-        'Field observation suggests that the most significant effect of the attention economy is not distraction per se but a subtler shift in the quality of thought. Extended immersion in algorithmically curated content does not merely occupy time — it habituates the mind to a particular rhythm: short, reactive, emotionally charged. The capacity for sustained, self-directed thought atrophies not because it is actively suppressed but because it is never exercised.',
-        'There is no individual solution to a structural problem. "Just put your phone down" is the attention economy\'s equivalent of "just say no" — technically possible, practically useless as a response to an environment specifically engineered to make that action as difficult as possible. Understanding the machinery is the first step; dismantling it requires collective action, regulation, and the deliberate construction of alternative information environments.',
-        'These notes are themselves an experiment in that alternative construction: long-form, unoptimized, deliberately resistant to the rhythms of engagement. If you have read this far, you have already done something the attention economy is designed to prevent.',
+        'Autonomous workflows operate on principles fundamentally different from traditional automation. In conventional programming, the developer decides what to execute. In autonomous workflows, the agent decides what to do next — and the agent is reasoning in real time. Your task description, your context window, your tool definitions: these are the raw materials being interpreted, planned against, and acted upon.',
+        'I spent a week observing agent workflow traces in a production system. The results were illuminating. On an average run, roughly 30% of tool invocations were directly specified by the initial prompt. The remaining 70% were emergent — reasoning-driven decisions about what to do next based on intermediate results, error recovery, and context accumulated during execution. The workflow was not being followed; it was being discovered.',
+        'The engineering behind this discovery process is precise. Planning-execution-reflection loops (the same mechanism that makes ReAct agents effective) are embedded into every autonomous workflow. The interval between plan revision and action — a tool result, an unexpected error, a context shift — is deliberately responsive. This responsiveness is the engine of adaptability. If the agent could only follow a fixed plan, it would fail on the first unexpected result. Not knowing the full path in advance means the agent keeps reasoning.',
+        'What makes autonomous workflows particularly powerful is that they have unified previously separate concerns. The same framework that handles task decomposition also handles error recovery, tool selection, and output synthesis. Opting out of the orchestration means opting out of capabilities you actually need for robust operation.',
+        'The researcher Andrej Karpathy has described autonomous agents as a new "operating system" — a runtime environment that, like traditional OS processes, manages resources, handles interrupts, and coordinates concurrent operations. The analogy is apt. When every step in a workflow can trigger reasoning, when every tool invocation is evaluated for correctness, the workflow environment becomes intelligent in ways that affect every component, including those that were designed to be simple.',
+        'Field observation suggests that the most significant effect of autonomous workflows is not speed per se but a subtler shift in the nature of automation itself. Extended operation of reasoning-driven workflows does not merely execute tasks — it discovers new approaches to them. The capacity for novel problem-solving emerges not because it is explicitly programmed but because the architecture permits exploration.',
+        'There is no simple answer to a systemic design challenge. "Just add more tools" is autonomous workflows\' equivalent of "just add more servers" — technically possible, practically useless as a response to an architecture that requires careful tool design, clear interfaces, and deliberate constraint. Understanding the patterns is the first step; building robust systems requires principled design, evaluation, and the deliberate construction of composable tool ecosystems.',
+        'These notes are themselves an experiment in that principled construction: long-form, analytical, deliberately resistant to the hype cycles of AI discourse. If you have read this far, you have already done something the attention economy is designed to prevent.',
       ]),
-      tags: [technologyTag.id, cultureTag.id],
+      tags: [workflowsTag.id, philosophyTag.id],
       status: 'published',
       publishedAt: new Date('2026-01-25').toISOString(),
       featured: true,
@@ -230,34 +230,34 @@ async function seedTestDatabase() {
   const post4 = await payload.create({
     collection: 'posts',
     data: {
-      title: 'Essential Readings on Mind Control',
-      slug: 'essential-readings-mind-control',
+      title: 'Essential Readings on Agentic AI',
+      slug: 'essential-readings-agentic-ai',
       type: 'index',
-      summary: 'A curated collection of foundational texts examining propaganda, conditioning, and persuasion from multiple disciplinary perspectives.',
+      summary: 'A curated collection of foundational texts examining agentic AI, autonomous systems, and tool use from multiple disciplinary perspectives.',
       featuredImage: mediaItems[3].id,
       body: createRichTextMulti([
-        'This index compiles key works from sociology, psychology, media studies, and critical theory that illuminate the mechanisms of influence and control. The list is deliberately selective rather than exhaustive — these are books that fundamentally changed how I understand the machinery of persuasion.',
-        'Jacques Ellul\'s "Propaganda" remains the foundational text. Written in 1962, it argues that propaganda is not an aberration of modern society but its essential condition. Ellul distinguishes between "agitation propaganda" (which seeks to provoke action) and "integration propaganda" (which seeks to produce conformity). The latter, he argues, is far more pervasive and far harder to detect, because it works by aligning individuals with the prevailing social order rather than pushing them toward revolution. Every time you feel a comfortable certainty about a complex issue, Ellul would suggest you examine where that certainty came from.',
-        'Chomsky and Herman\'s "Manufacturing Consent" provides the structural analysis that Ellul\'s work sometimes lacks. Their propaganda model identifies five "filters" through which news passes before reaching the public: ownership, advertising, sourcing, flak, and ideology. The genius of the model is that it does not require conspiracy — no one needs to sit in a room deciding what to suppress. The filters are structural, built into the economics and institutional incentives of media production. Censorship happens automatically, without anyone needing to be the censor.',
-        'For understanding the psychological dimension, Robert Cialdini\'s "Influence: The Psychology of Persuasion" is indispensable, though it requires careful reading. Cialdini identifies six principles of influence — reciprocity, commitment, social proof, authority, liking, and scarcity — but his tone is that of a field guide rather than a warning. The book can be read as either a defense manual or an instruction manual, and its widespread adoption by marketers and salespeople suggests which reading has prevailed.',
-        'Neil Postman\'s "Amusing Ourselves to Death" completes the essential quartet. Published in 1985, it argues that Aldous Huxley\'s vision of control through pleasure was more prescient than Orwell\'s vision of control through pain. Postman\'s thesis — that television (and by extension, all entertainment-driven media) transforms every subject it touches into entertainment — has only become more urgent in the age of social media. When political discourse becomes indistinguishable from entertainment, the capacity for serious deliberation erodes.',
-        'These four texts provide the conceptual foundations. Other entries in this index extend their insights into specific domains: education, technology, consumer culture, and the emerging landscape of algorithmic influence. Together, they constitute something like a field manual for navigating a world saturated in persuasion — not to become immune, but to become aware.',
+        'This index compiles key works from AI research, systems design, cognitive science, and philosophy of mind that illuminate the mechanisms of autonomous reasoning and action. The list is deliberately selective rather than exhaustive — these are papers and books that fundamentally changed how I understand the machinery of agentic systems.',
+        'The ReAct paper (Yao et al., 2022) remains a foundational text. It argues that reasoning and acting are not separate capabilities but interleaved processes — an agent that reasons without acting is merely a language model, and an agent that acts without reasoning is merely a script. ReAct distinguishes between "chain-of-thought" reasoning (which produces analysis) and "act-then-observe" loops (which produce results). The latter, it demonstrates, is far more capable in practice, because it grounds reasoning in real-world feedback rather than pure speculation. Every time an agent successfully recovers from an error, ReAct would suggest you examine how that recovery was structured.',
+        'Anthropic\'s work on tool use and constitutional AI provides the safety analysis that early agent research sometimes lacks. Their approach identifies key constraints through which agent behavior should be filtered: harmlessness, helpfulness, and honesty. The insight of this framework is that it does not require hardcoded rules — no one needs to anticipate every possible misuse. The constraints are constitutional, built into the training and evaluation of the system. Safety emerges structurally, without anyone needing to be the explicit censor.',
+        'For understanding the systems dimension, "Designing Data-Intensive Applications" by Martin Kleppmann is indispensable, though it predates the agent era. Kleppmann identifies fundamental principles of distributed systems — consistency, availability, partition tolerance — that apply directly to multi-agent architectures. The book can be read as either a systems design guide or an agent architecture manual, and its adoption by agent framework builders suggests which reading has prevailed.',
+        'Stuart Russell\'s "Human Compatible" completes the essential quartet. Published in 2019, it argues that the alignment problem — ensuring AI systems pursue human-intended goals — is more fundamental than the capability problem. Russell\'s thesis — that an agent should be uncertain about its objectives and defer to human preferences — has only become more urgent in the age of autonomous workflows. When agent systems become capable enough to act independently, the capacity for meaningful human oversight becomes critical.',
+        'These four works provide the conceptual foundations. Other entries in this index extend their insights into specific domains: prompt engineering, tool design, evaluation frameworks, and the emerging landscape of multi-agent coordination. Together, they constitute something like a field manual for navigating a world increasingly shaped by autonomous systems — not to resist the technology, but to understand and direct it.',
       ]),
       references: [
         {
-          title: 'Propaganda: The Formation of Men\'s Attitudes',
-          author: 'Jacques Ellul',
-          publication: 'Vintage Books',
-          date: '1965-01-01',
+          title: 'ReAct: Synergizing Reasoning and Acting in Language Models',
+          author: 'Shunyu Yao et al.',
+          publication: 'ICLR 2023',
+          date: '2022-10-06',
         },
         {
-          title: 'Manufacturing Consent',
-          author: 'Noam Chomsky and Edward S. Herman',
-          publication: 'Pantheon Books',
-          date: '1988-01-01',
+          title: 'Human Compatible: Artificial Intelligence and the Problem of Control',
+          author: 'Stuart Russell',
+          publication: 'Viking Press',
+          date: '2019-10-08',
         },
       ],
-      tags: [propagandaTag.id],
+      tags: [agenticAiTag.id],
       status: 'published',
       publishedAt: new Date('2026-01-10').toISOString(),
       featured: false,
@@ -268,18 +268,18 @@ async function seedTestDatabase() {
   const post5 = await payload.create({
     collection: 'posts',
     data: {
-      title: 'Unpublished Thoughts on Conditioning',
-      slug: 'unpublished-thoughts-conditioning',
+      title: 'Unpublished Thoughts on Emergence',
+      slug: 'unpublished-thoughts-emergence',
       type: 'essay',
-      summary: 'Early draft exploring behavioral conditioning mechanisms in contemporary society. Still in development and not ready for publication.',
+      summary: 'Early draft exploring emergent AI behaviors in complex agent systems. Still in development and not ready for publication.',
       body: createRichTextMulti([
-        'This is a work in progress examining how subtle environmental cues shape behavior without conscious awareness. The central question is deceptively simple: how much of what you do today was actually decided by you?',
-        'Behavioral conditioning is typically associated with laboratories — Pavlov\'s dogs, Skinner\'s pigeons, the controlled environments of mid-century psychology. But the most effective conditioning happens in the wild, embedded in the design of everyday environments. The supermarket layout that routes you past impulse-buy items. The app notification timed to arrive during your commute. The open-plan office that conditions you to perform busyness. These are not accidents of design; they are its purpose.',
-        'B.F. Skinner\'s key insight was that behavior shaped by its consequences is more durable than behavior compelled by force. A rat that learns to press a lever for food will keep pressing long after the food stops coming — especially if the reward was intermittent to begin with. This principle, operant conditioning, is now the foundation of every engagement-optimized platform, every gamified loyalty program, every variable-reward notification system.',
-        'What interests me is the gap between the conditioning and the narrative we construct around it. We experience our conditioned behaviors as choices. The person who checks their phone 150 times a day does not feel conditioned; they feel curious, connected, responsible. The conditioning is invisible precisely because it has been integrated into the self-narrative. This is what makes it so much more effective than coercion — it recruits the subject as a collaborator.',
-        'I am still working through the implications. If much of our behavior is conditioned rather than chosen, what does that mean for concepts like responsibility, authenticity, and freedom? These are not merely philosophical questions — they have practical consequences for how we design institutions, evaluate actions, and understand ourselves. More to come as this thinking develops.',
+        'This is a work in progress examining how unexpected capabilities emerge from the interaction of simple components in agent systems. The central question is deceptively simple: how much of what an agent does was actually specified by its designers?',
+        'Emergent behavior is typically associated with complex systems theory — flocking birds, ant colonies, the self-organizing patterns of cellular automata. But the most striking emergence happens in AI systems, embedded in the interaction of language models with tool environments. The agent that discovers it can chain search results into a research workflow. The multi-agent system that develops its own delegation protocols. The reasoning loop that learns to ask clarifying questions. These are not accidents of design; they are consequences of architecture.',
+        'The key insight from complexity science is that behavior at the system level cannot be predicted from the properties of individual components. A language model that can write code and a tool that can execute code are individually unremarkable. But combine them in a reasoning loop with error feedback, and you get an agent that can iteratively debug its own programs — a capability that exists nowhere in the individual components.',
+        'What interests me is the gap between the emergence and the narrative we construct around it. We describe emergent agent behaviors as if they were designed. The agent that discovers a novel tool-use pattern is described as "intelligent" or "creative." The emergence is invisible precisely because it has been integrated into our explanatory framework. This is what makes it so much more interesting than simple automation — it challenges our assumptions about the boundary between programmed and discovered behavior.',
+        'I am still working through the implications. If much of agent behavior is emergent rather than designed, what does that mean for concepts like reliability, predictability, and control? These are not merely philosophical questions — they have practical consequences for how we evaluate agent systems, design safeguards, and understand the limits of autonomous operation. More to come as this thinking develops.',
       ]),
-      tags: [cultureTag.id],
+      tags: [philosophyTag.id],
       status: 'draft',
       featured: false,
     },
@@ -289,18 +289,18 @@ async function seedTestDatabase() {
   const post6 = await payload.create({
     collection: 'posts',
     data: {
-      title: 'Legacy Post About Old Propaganda',
-      slug: 'legacy-post-old-propaganda',
+      title: 'Legacy Post About Early Automation',
+      slug: 'legacy-post-early-automation',
       type: 'essay',
-      summary: 'Historical analysis of propaganda techniques from the Cold War era. Archived for reference but no longer actively maintained.',
+      summary: 'Historical analysis of early automation techniques from the pre-AI era. Archived for reference but no longer actively maintained.',
       body: createRichTextMulti([
-        'This archived post examines propaganda methods from the Cold War era that, while dated in their specific forms, reveal patterns still present in modern influence campaigns. The techniques have evolved; the underlying logic has not.',
-        'Cold War propaganda on both sides operated through a remarkably similar mechanism: the construction of an existential threat so overwhelming that it justified any domestic policy, any military expenditure, any curtailment of civil liberties. The Soviet threat to the West and the capitalist threat to the East served identical structural functions — they provided the permanent emergency that every propaganda system requires to sustain itself.',
-        'The most effective Cold War propaganda was not the crude caricatures of Voice of America broadcasts or Soviet poster art. It was the integration propaganda — the kind that worked by shaping the background assumptions of daily life. In the United States, this took the form of civil defense drills that normalized the possibility of nuclear annihilation, entertainment that consistently portrayed American values as universal values, and an educational system that taught the Cold War as a moral struggle between freedom and tyranny rather than a geopolitical competition between empires.',
-        'What strikes me, revisiting this material, is how clearly it prefigures our current information environment. The techniques of the Cold War — manufactured consent, enemy construction, the weaponization of uncertainty — did not disappear with the Berlin Wall. They were refined, digitized, and distributed across a vastly more complex media ecosystem. The bipolar clarity of the Cold War has been replaced by a multipolar confusion, but the underlying machinery of influence remains recognizable.',
-        'I am archiving this post because the analysis, while still relevant in its broad strokes, requires significant updating to account for developments in algorithmic propaganda, state-sponsored social media operations, and the blurring of the line between foreign and domestic influence campaigns. The Cold War model assumed identifiable propagandists and discrete national audiences. Neither assumption holds in the current landscape.',
+        'This archived post examines automation methods from the pre-AI era that, while dated in their specific forms, reveal patterns still present in modern agent systems. The techniques have evolved; the underlying logic has not.',
+        'Early automation on both the industrial and software sides operated through a remarkably similar mechanism: the construction of rigid rule systems so comprehensive that they could handle any anticipated scenario. The assembly line\'s fixed sequence and the expert system\'s decision tree served identical structural functions — they provided the deterministic control flow that every pre-AI automation system requires to operate reliably.',
+        'The most effective early automation was not the crude scripting of batch files or cron jobs. It was the integration automation — the kind that worked by connecting disparate systems into coherent workflows. In enterprise software, this took the form of ETL pipelines that normalized data across incompatible systems, middleware that translated between protocols, and orchestration engines that coordinated processes across organizational boundaries.',
+        'What strikes me, revisiting this material, is how clearly it prefigures our current agent architecture landscape. The patterns of early automation — workflow orchestration, error handling, state management — did not disappear with the arrival of AI. They were refined, augmented with reasoning capabilities, and distributed across a vastly more flexible execution environment. The rigid determinism of early automation has been replaced by adaptive reasoning, but the underlying need for reliable orchestration remains recognizable.',
+        'I am archiving this post because the analysis, while still relevant in its broad strokes, requires significant updating to account for developments in LLM-powered agents, autonomous tool use, and the blurring of the line between programmed and emergent behavior. The pre-AI model assumed identifiable decision paths and deterministic execution. Neither assumption holds in the current landscape.',
       ]),
-      tags: [propagandaTag.id],
+      tags: [agenticAiTag.id],
       status: 'archived',
       publishedAt: new Date('2025-12-01').toISOString(),
       featured: false,
@@ -314,9 +314,9 @@ async function seedTestDatabase() {
   await payload.create({
     collection: 'pages',
     data: {
-      title: 'About Mind-Controlled',
+      title: 'About Detached Node',
       slug: 'about',
-      description: 'Learn about the purpose and perspective behind Mind-Controlled',
+      description: 'Learn about the purpose and perspective behind Detached Node',
       body: {
         root: {
           type: 'root',
@@ -332,7 +332,7 @@ async function seedTestDatabase() {
               children: [
                 {
                   mode: 'normal',
-                  text: 'Mind-Controlled explores the mechanics of propaganda, conditioning, and persuasion in modern society.',
+                  text: 'Detached Node explores the emerging world of agentic AI — autonomous systems that reason, plan, and act. Through essays and analysis, this site examines how AI agents work, how they\'re orchestrated, and what it means when machines begin to operate with increasing independence.',
                   type: 'text',
                   style: '',
                   detail: 0,
@@ -352,7 +352,7 @@ async function seedTestDatabase() {
               children: [
                 {
                   mode: 'normal',
-                  text: 'This is a space for critical analysis of how ideas spread and take hold—not to promote cynicism, but to cultivate discernment.',
+                  text: 'This is a space for critical analysis of how autonomous systems are designed and deployed—not to promote hype, but to cultivate understanding.',
                   type: 'text',
                   style: '',
                   detail: 0,
@@ -380,7 +380,7 @@ async function seedTestDatabase() {
     data: {
       title: 'Featured Essays',
       slug: 'featured-essays',
-      description: 'A curated collection of featured essays on propaganda and persuasion',
+      description: 'A curated collection of featured essays on agentic AI and autonomous systems',
       featuredImage: mediaItems[0].id,
       items: [post1.id, post2.id, post3.id],
       status: 'published',
@@ -391,7 +391,7 @@ async function seedTestDatabase() {
   console.log('\n✅ Test database seed complete!')
   console.log('\nTest Data Summary:')
   console.log('  • 1 test admin user (test@example.com / testpassword123)')
-  console.log('  • 3 tags (Propaganda, Technology, Culture)')
+  console.log('  • 3 tags (Agentic AI, Workflows, Philosophy)')
   console.log('  • 4 media items')
   console.log('  • 6 posts (3 featured+published, 1 published, 1 draft, 1 archived)')
   console.log('  • 1 page (About)')
