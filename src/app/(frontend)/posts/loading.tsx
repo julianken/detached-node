@@ -1,7 +1,7 @@
 export default function PostsLoading() {
   return (
     <div
-      className="flex flex-col gap-16 animate-pulse"
+      className="glitch-reveal flex flex-col gap-16 animate-pulse"
       role="status"
       aria-label="Loading posts"
     >

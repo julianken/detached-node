@@ -1,7 +1,7 @@
 # Matrix/Terminal Aesthetic: Advanced CSS Techniques (2025/2026)
 
 **Research Date:** February 14, 2026
-**Purpose:** Sophisticated, subtle terminal/cyberpunk aesthetic for Mind-Controlled blog
+**Purpose:** Sophisticated, subtle terminal/cyberpunk aesthetic for Detached Node blog
 **Key Constraint:** EXTREMELY impressive but subtle — not cheesy green-on-black cosplay
 
 ---
@@ -736,7 +736,7 @@ body::before {
 
 ---
 
-## 11. RECOMMENDED RECIPE FOR MIND-CONTROLLED
+## 11. RECOMMENDED RECIPE FOR DETACHED NODE
 
 **Goal**: Subtle, sophisticated, extremely impressive — not cheesy.
 

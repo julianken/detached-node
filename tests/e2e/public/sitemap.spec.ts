@@ -13,16 +13,16 @@ import { test, expect } from '../fixtures'
  *
  * Test data from seed-test-db.ts:
  * Published posts:
- * - architecture-of-persuasion
- * - decoding-corporate-newspeak
- * - notes-attention-economy
- * - essential-readings-mind-control
+ * - architecture-of-agent-systems
+ * - decoding-tool-use-patterns
+ * - notes-on-autonomous-workflows
+ * - essential-readings-agentic-ai
  *
  * Draft post (should NOT be in sitemap):
- * - unpublished-thoughts-conditioning
+ * - unpublished-thoughts-emergence
  *
  * Archived post (should NOT be in sitemap):
- * - legacy-post-old-propaganda
+ * - legacy-post-early-automation
  */
 
 test.describe('Sitemap', () => {
@@ -75,7 +75,7 @@ test.describe('Sitemap', () => {
 
       // Homepage URL should be present
       const siteUrl =
-        process.env.NEXT_PUBLIC_SERVER_URL || 'https://mind-controlled.vercel.app'
+        process.env.NEXT_PUBLIC_SERVER_URL || 'https://detached-node.vercel.app'
       expect(content).toContain(`<loc>${siteUrl}</loc>`)
 
       // Extract the homepage entry
@@ -97,7 +97,7 @@ test.describe('Sitemap', () => {
 
       // Posts listing URL should be present
       const siteUrl =
-        process.env.NEXT_PUBLIC_SERVER_URL || 'https://mind-controlled.vercel.app'
+        process.env.NEXT_PUBLIC_SERVER_URL || 'https://detached-node.vercel.app'
       expect(content).toContain(`<loc>${siteUrl}/posts</loc>`)
 
       // Extract the posts listing entry
@@ -119,7 +119,7 @@ test.describe('Sitemap', () => {
 
       // About page URL should be present
       const siteUrl =
-        process.env.NEXT_PUBLIC_SERVER_URL || 'https://mind-controlled.vercel.app'
+        process.env.NEXT_PUBLIC_SERVER_URL || 'https://detached-node.vercel.app'
       expect(content).toContain(`<loc>${siteUrl}/about</loc>`)
 
       // Extract the about page entry
@@ -142,14 +142,14 @@ test.describe('Sitemap', () => {
       const content = await response!.text()
 
       const siteUrl =
-        process.env.NEXT_PUBLIC_SERVER_URL || 'https://mind-controlled.vercel.app'
+        process.env.NEXT_PUBLIC_SERVER_URL || 'https://detached-node.vercel.app'
 
       // Published posts from seed data
       const publishedPosts = [
-        'architecture-of-persuasion',
-        'decoding-corporate-newspeak',
-        'notes-attention-economy',
-        'essential-readings-mind-control',
+        'architecture-of-agent-systems',
+        'decoding-tool-use-patterns',
+        'notes-on-autonomous-workflows',
+        'essential-readings-agentic-ai',
       ]
 
       for (const slug of publishedPosts) {
@@ -162,12 +162,12 @@ test.describe('Sitemap', () => {
       const content = await response!.text()
 
       const siteUrl =
-        process.env.NEXT_PUBLIC_SERVER_URL || 'https://mind-controlled.vercel.app'
+        process.env.NEXT_PUBLIC_SERVER_URL || 'https://detached-node.vercel.app'
 
       // Check one published post has correct priority
       const postUrlMatch = content.match(
         new RegExp(
-          `<url>.*?<loc>${siteUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}/posts/architecture-of-persuasion</loc>.*?</url>`,
+          `<url>.*?<loc>${siteUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}/posts/architecture-of-agent-systems</loc>.*?</url>`,
           's'
         )
       )
@@ -187,11 +187,11 @@ test.describe('Sitemap', () => {
       const content = await response!.text()
 
       const siteUrl =
-        process.env.NEXT_PUBLIC_SERVER_URL || 'https://mind-controlled.vercel.app'
+        process.env.NEXT_PUBLIC_SERVER_URL || 'https://detached-node.vercel.app'
 
       // Draft post from seed data (should NOT be in sitemap)
       expect(content).not.toContain(
-        `<loc>${siteUrl}/posts/unpublished-thoughts-conditioning</loc>`
+        `<loc>${siteUrl}/posts/unpublished-thoughts-emergence</loc>`
       )
     })
   })
@@ -202,10 +202,10 @@ test.describe('Sitemap', () => {
       const content = await response!.text()
 
       const siteUrl =
-        process.env.NEXT_PUBLIC_SERVER_URL || 'https://mind-controlled.vercel.app'
+        process.env.NEXT_PUBLIC_SERVER_URL || 'https://detached-node.vercel.app'
 
       // Archived post from seed data (should NOT be in sitemap)
-      expect(content).not.toContain(`<loc>${siteUrl}/posts/legacy-post-old-propaganda</loc>`)
+      expect(content).not.toContain(`<loc>${siteUrl}/posts/legacy-post-early-automation</loc>`)
     })
   })
 
@@ -215,7 +215,7 @@ test.describe('Sitemap', () => {
       const content = await response!.text()
 
       const siteUrl =
-        process.env.NEXT_PUBLIC_SERVER_URL || 'https://mind-controlled.vercel.app'
+        process.env.NEXT_PUBLIC_SERVER_URL || 'https://detached-node.vercel.app'
 
       // Count URL entries
       const urlCount = (content.match(/<url>/g) || []).length
@@ -232,10 +232,10 @@ test.describe('Sitemap', () => {
         siteUrl,
         `${siteUrl}/posts`,
         `${siteUrl}/about`,
-        `${siteUrl}/posts/architecture-of-persuasion`,
-        `${siteUrl}/posts/decoding-corporate-newspeak`,
-        `${siteUrl}/posts/notes-attention-economy`,
-        `${siteUrl}/posts/essential-readings-mind-control`,
+        `${siteUrl}/posts/architecture-of-agent-systems`,
+        `${siteUrl}/posts/decoding-tool-use-patterns`,
+        `${siteUrl}/posts/notes-on-autonomous-workflows`,
+        `${siteUrl}/posts/essential-readings-agentic-ai`,
       ]
 
       for (const url of expectedUrls) {
@@ -248,12 +248,12 @@ test.describe('Sitemap', () => {
       const content = await response!.text()
 
       const siteUrl =
-        process.env.NEXT_PUBLIC_SERVER_URL || 'https://mind-controlled.vercel.app'
+        process.env.NEXT_PUBLIC_SERVER_URL || 'https://detached-node.vercel.app'
 
       // URLs that should NOT be present
       const forbiddenUrls = [
-        `${siteUrl}/posts/unpublished-thoughts-conditioning`, // draft
-        `${siteUrl}/posts/legacy-post-old-propaganda`, // archived
+        `${siteUrl}/posts/unpublished-thoughts-emergence`, // draft
+        `${siteUrl}/posts/legacy-post-early-automation`, // archived
       ]
 
       for (const url of forbiddenUrls) {

@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-This document outlines a comprehensive rate limiting strategy for the Mind-Controlled Payload CMS API routes deployed on Vercel's serverless infrastructure. The recommended solution uses **Upstash Redis with @upstash/ratelimit** with a **phased implementation approach**.
+This document outlines a comprehensive rate limiting strategy for the Detached Node Payload CMS API routes deployed on Vercel's serverless infrastructure. The recommended solution uses **Upstash Redis with @upstash/ratelimit** with a **phased implementation approach**.
 
 **Current Status (Phase 1)**: GraphQL endpoint protection via route handler is IMPLEMENTED. Global middleware protection is planned for Phase 2.
 

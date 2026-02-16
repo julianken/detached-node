@@ -1,4 +1,4 @@
-# Animation & Visual Effects Research for Mind-Controlled Blog
+# Animation & Visual Effects Research for Detached Node Blog
 **Terminal/Matrix Aesthetic for Next.js 16 + React 19 + Tailwind CSS 4**
 
 Research Date: February 14, 2026
@@ -21,7 +21,7 @@ This document provides research-backed recommendations for implementing a sophis
 - **Workaround:** Import from `"motion/react"` instead of `"framer-motion"` for better compatibility
 - **Production Recommendation:** Either wait for stable React 19 support or use alternative libraries
 
-### Recommended Library Stack for Mind-Controlled
+### Recommended Library Stack for Detached Node
 
 #### **GSAP (GreenSock Animation Platform)** — PRIMARY RECOMMENDATION
 
@@ -167,7 +167,7 @@ npm install lenis @studio-freight/react-lenis
 - More complex implementation
 - Potential mobile battery drain
 
-**Recommendation for Mind-Controlled:**
+**Recommendation for Detached Node:**
 **Only use WebGL if you want truly impressive background effects that justify the complexity.**
 
 For a content-first blog, consider:
@@ -325,7 +325,7 @@ npm install @fontsource/jetbrains-mono
 
 ### Variable Fonts for Weight Animation
 
-**Why Variable Fonts for Mind-Controlled:**
+**Why Variable Fonts for Detached Node:**
 
 1. **Performance:** One 100-200KB file vs. four 400-800KB static files
 2. **Core Web Vitals:** Fewer HTTP requests; faster LCP; lower CLS
@@ -603,7 +603,7 @@ new Lenis({
 - Rapid scrolling source code
 - Security camera feed grids
 
-**Application for Mind-Controlled:** Consider subtle "data stream" visualization in header/footer.
+**Application for Detached Node:** Consider subtle "data stream" visualization in header/footer.
 
 **Source:**
 - [Hacker Screen Builder](https://itnext.io/hacker-screen-builder-29ef8700ee14)
@@ -781,7 +781,7 @@ npm install react-type-animation
 
 ## 9. Final Recommendations
 
-### For Mind-Controlled Blog Specifically
+### For Detached Node Blog Specifically
 
 **DO:**
 1. **Start with CSS-only effects** (scanlines, phosphor glow, monospace font)

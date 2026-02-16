@@ -23,32 +23,32 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SERVER_URL || "https://mind-controlled.vercel.app";
+const siteUrl = process.env.NEXT_PUBLIC_SERVER_URL || "https://detached-node.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Mind-Controlled",
-    template: "%s | Mind-Controlled",
+    default: "Detached Node",
+    template: "%s | Detached Node",
   },
   description:
-    "Exploring the mechanics of propaganda, conditioning, and persuasion in modern society.",
-  keywords: ["propaganda", "media criticism", "conditioning", "Ellul", "philosophy"],
-  authors: [{ name: "Mind-Controlled" }],
+    "Exploring modern agentic AI workflows, autonomous systems, and the philosophy of machine intelligence.",
+  keywords: ["agentic AI", "autonomous systems", "AI workflows", "machine intelligence", "AI philosophy", "tool use"],
+  authors: [{ name: "Detached Node" }],
   openGraph: {
     type: "website",
     locale: "en_US",
     url: siteUrl,
-    siteName: "Mind-Controlled",
-    title: "Mind-Controlled",
+    siteName: "Detached Node",
+    title: "Detached Node",
     description:
-      "Exploring the mechanics of propaganda, conditioning, and persuasion in modern society.",
+      "Exploring modern agentic AI workflows, autonomous systems, and the philosophy of machine intelligence.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Mind-Controlled",
+    title: "Detached Node",
     description:
-      "Exploring the mechanics of propaganda, conditioning, and persuasion in modern society.",
+      "Exploring modern agentic AI workflows, autonomous systems, and the philosophy of machine intelligence.",
   },
   robots: {
     index: true,
@@ -77,7 +77,7 @@ export default function FrontendLayout({
           <div className="site-frame mx-auto my-4 flex min-h-[calc(100vh-2rem)] max-w-5xl flex-col rounded-sm border border-border sm:my-6 sm:min-h-[calc(100vh-3rem)]">
             <header className="flex items-center justify-between border-b border-border px-4 py-3 sm:px-6">
               <Link href="/" className="font-mono text-lg font-semibold tracking-tight text-accent focus-ring">
-                Mind-Controlled
+                Detached Node
               </Link>
               <div className="flex items-center gap-4">
                 <nav className="flex flex-wrap items-center gap-4 text-sm font-mono tracking-[0.04em] text-text-secondary sm:gap-6" aria-label="Main navigation">
@@ -102,14 +102,14 @@ export default function FrontendLayout({
           <svg className="hidden" aria-hidden="true">
             <defs>
               <filter id="rgb-split">
-                <feOffset in="SourceGraphic" dx="3" dy="0" result="red-shift" />
+                <feOffset in="SourceGraphic" dx="2" dy="0" result="red-shift" />
                 <feColorMatrix
                   in="red-shift"
                   type="matrix"
                   values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0"
                   result="red"
                 />
-                <feOffset in="SourceGraphic" dx="-3" dy="0" result="cyan-shift" />
+                <feOffset in="SourceGraphic" dx="-2" dy="0" result="cyan-shift" />
                 <feColorMatrix
                   in="cyan-shift"
                   type="matrix"

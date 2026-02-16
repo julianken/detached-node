@@ -18,7 +18,7 @@ test.describe('Keyboard Navigation - Tab Key', () => {
 
     // Focus first element (logo)
     await homePage.page.keyboard.press('Tab')
-    const logo = homePage.page.getByRole('link', { name: /^Mind-Controlled$/i })
+    const logo = homePage.page.getByRole('link', { name: /^Detached Node$/i })
     await expect(logo).toBeFocused()
 
     // Tab to Home link
@@ -96,7 +96,7 @@ test.describe('Keyboard Navigation - Tab Key', () => {
 
     // Verify header links are focusable
     await postsPage.page.keyboard.press('Tab')
-    const logo = postsPage.page.getByRole('link', { name: /^Mind-Controlled$/i })
+    const logo = postsPage.page.getByRole('link', { name: /^Detached Node$/i })
     await expect(logo).toBeFocused()
 
     await postsPage.page.keyboard.press('Tab')
@@ -117,7 +117,7 @@ test.describe('Keyboard Navigation - Tab Key', () => {
 
     // Verify header links are focusable
     await aboutPage.page.keyboard.press('Tab')
-    const logo = aboutPage.page.getByRole('link', { name: /^Mind-Controlled$/i })
+    const logo = aboutPage.page.getByRole('link', { name: /^Detached Node$/i })
     await expect(logo).toBeFocused()
 
     await aboutPage.page.keyboard.press('Tab')
@@ -215,7 +215,7 @@ test.describe('Focus Visibility', () => {
 
     // Tab to first link
     await homePage.page.keyboard.press('Tab')
-    const logo = homePage.page.getByRole('link', { name: /^Mind-Controlled$/i })
+    const logo = homePage.page.getByRole('link', { name: /^Detached Node$/i })
 
     // Verify focus ring is visible (outline should be set)
     const outlineStyle = await logo.evaluate((el) => {

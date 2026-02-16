@@ -63,14 +63,14 @@
 
 ### Real User Monitoring (RUM)
 - **Vercel Speed Insights**: Production-only Web Vitals tracking
-  - Dashboard: https://vercel.com/[team]/mind-controlled/speed-insights
+  - Dashboard: https://vercel.com/[team]/detached-node/speed-insights
   - Metrics: LCP, FID/INP, CLS, TTFB
   - P75 percentile tracking
   - Geographic distribution
 
 ### Analytics
 - **Vercel Analytics**: Page views and user behavior
-  - Dashboard: https://vercel.com/[team]/mind-controlled/analytics
+  - Dashboard: https://vercel.com/[team]/detached-node/analytics
   - Traffic patterns
   - User flows
   - Referrer sources

@@ -6,15 +6,15 @@ import { expectVisible } from '../helpers'
  * Tests verify that each post type displays the correct badge with consistent styling
  *
  * Test data from seed-test-db.ts:
- * - "The Architecture of Persuasion" (essay) - slug: architecture-of-persuasion
- * - "Decoding Corporate Newspeak" (decoder) - slug: decoding-corporate-newspeak
- * - "Notes from the Attention Economy" (field-report) - slug: notes-attention-economy
- * - "Essential Readings on Mind Control" (index) - slug: essential-readings-mind-control
+ * - "The Architecture of Agent Systems" (essay) - slug: architecture-of-agent-systems
+ * - "Decoding Tool Use Patterns" (decoder) - slug: decoding-tool-use-patterns
+ * - "Notes on Autonomous Workflows" (field-report) - slug: notes-on-autonomous-workflows
+ * - "Essential Readings on Agentic AI" (index) - slug: essential-readings-agentic-ai
  */
 
 test.describe('Post Type Badges', () => {
   test('should display "Essay" badge for essay posts', async ({ postDetailPage }) => {
-    await postDetailPage.goto('architecture-of-persuasion')
+    await postDetailPage.goto('architecture-of-agent-systems')
 
     // Verify badge is visible
     await expectVisible(postDetailPage.postType)
@@ -25,7 +25,7 @@ test.describe('Post Type Badges', () => {
   })
 
   test('should display "Decoder" badge for decoder posts', async ({ postDetailPage }) => {
-    await postDetailPage.goto('decoding-corporate-newspeak')
+    await postDetailPage.goto('decoding-tool-use-patterns')
 
     // Verify badge is visible
     await expectVisible(postDetailPage.postType)
@@ -38,7 +38,7 @@ test.describe('Post Type Badges', () => {
   test('should display "Field Report" badge for field-report posts', async ({
     postDetailPage,
   }) => {
-    await postDetailPage.goto('notes-attention-economy')
+    await postDetailPage.goto('notes-on-autonomous-workflows')
 
     // Verify badge is visible
     await expectVisible(postDetailPage.postType)
@@ -49,7 +49,7 @@ test.describe('Post Type Badges', () => {
   })
 
   test('should display "Index" badge for index posts', async ({ postDetailPage }) => {
-    await postDetailPage.goto('essential-readings-mind-control')
+    await postDetailPage.goto('essential-readings-agentic-ai')
 
     // Verify badge is visible
     await expectVisible(postDetailPage.postType)
@@ -61,10 +61,10 @@ test.describe('Post Type Badges', () => {
 
   test('should have consistent styling across all badge types', async ({ postDetailPage }) => {
     const posts = [
-      { slug: 'architecture-of-persuasion', type: 'essay' },
-      { slug: 'decoding-corporate-newspeak', type: 'decoder' },
-      { slug: 'notes-attention-economy', type: 'field-report' },
-      { slug: 'essential-readings-mind-control', type: 'index' },
+      { slug: 'architecture-of-agent-systems', type: 'essay' },
+      { slug: 'decoding-tool-use-patterns', type: 'decoder' },
+      { slug: 'notes-on-autonomous-workflows', type: 'field-report' },
+      { slug: 'essential-readings-agentic-ai', type: 'index' },
     ]
 
     const badgeStyles: Array<{
@@ -111,7 +111,7 @@ test.describe('Post Type Badges', () => {
   })
 
   test('should have accessible badge typography', async ({ postDetailPage }) => {
-    await postDetailPage.goto('architecture-of-persuasion')
+    await postDetailPage.goto('architecture-of-agent-systems')
 
     const badge = postDetailPage.postType
     await expectVisible(badge)

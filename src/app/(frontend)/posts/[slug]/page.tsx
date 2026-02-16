@@ -6,11 +6,12 @@ import { formatDate, getTypeLabel } from "@/lib/formatting";
 import { Link } from "next-view-transitions";
 import { PageLayout } from "@/components/PageLayout";
 import { OptimizedImage } from "@/components/OptimizedImage";
-import { SignalInterference } from "@/components/SignalInterference";
+import { TextGlitch } from "@/components/TextGlitch";
 import { logWarning } from "@/lib/logging";
 import { ErrorIds } from "@/lib/error-ids";
 import { getPostBySlug, getPublishedPosts } from "@/lib/queries/posts";
 import { isValidSlug } from "@/lib/types/branded";
+import { FadeReveal } from "@/components/FadeReveal";
 import type { Media } from "@/payload-types";
 
 // Type guard for Media objects
@@ -99,6 +100,7 @@ export default async function PostPage({ params }: PostPageProps) {
   const typeLabel = getTypeLabel(post.type);
 
   return (
+    <FadeReveal>
     <article>
       <PageLayout maxWidth="prose">
         <Link
@@ -137,12 +139,13 @@ export default async function PostPage({ params }: PostPageProps) {
           <p className="text-lg leading-relaxed text-text-secondary">{post.summary}</p>
         )}
 
-        <SignalInterference>
+        <TextGlitch>
           <section className="prose dark:prose-invert max-w-none">
             <RichText data={post.body as SerializedEditorState} />
           </section>
-        </SignalInterference>
+        </TextGlitch>
       </PageLayout>
     </article>
+    </FadeReveal>
   );
 }

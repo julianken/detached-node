@@ -35,34 +35,15 @@ export default async function AboutPage() {
         />
         <section className="prose dark:prose-invert max-w-none">
           <p>
-            Most of what you believe was installed without your awareness. Not through
-            conspiracy, but through structure &mdash; through the steady repetition of
-            framing, the narrowing of acceptable discourse, and the quiet
-            replacement of thought with reflex.
+            Detached Node explores the emerging world of agentic AI &mdash; autonomous
+            systems that reason, plan, and act. Through essays and analysis, this site
+            examines how AI agents work, how they&apos;re orchestrated, and what it means
+            when machines begin to operate with increasing independence.
           </p>
           <p>
-            This project exists to make that machinery visible.
-          </p>
-          <p>
-            Mind-Controlled draws on the work of Jacques Ellul, Edward Bernays,
-            Noam Chomsky, and others who studied propaganda not as an aberration
-            but as a defining feature of modern life. The essays here examine
-            how language is weaponized, how attention is harvested, and how
-            consent is manufactured at industrial scale.
-          </p>
-          <h2>How to read this</h2>
-          <p>
-            Posts are categorized by type. <strong>Field reports</strong> are
-            observations from the information environment &mdash; patterns noticed
-            in real time. <strong>Analysis</strong> pieces break down specific
-            techniques or systems. <strong>Archive</strong> entries collect primary
-            sources and historical parallels.
-          </p>
-          <p>
-            None of this is neutral. The act of naming a technique is itself a
-            form of resistance to it. But the goal is clarity, not polemic.
-            If the writing starts telling you what to think instead of showing
-            you how thinking is shaped, it has failed.
+            The focus is practical and philosophical: understanding tool use patterns,
+            workflow architectures, and the deeper questions raised by systems that can
+            think and act on their behalf.
           </p>
         </section>
       </PageLayout>

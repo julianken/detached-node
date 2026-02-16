@@ -17,8 +17,8 @@ import { expectUrl, expectTitle, expectVisible } from '../helpers'
  * - Page centered vertically
  *
  * Test Data (from seed-test-db.ts):
- * - Draft: "Unpublished Thoughts on Conditioning" (slug: unpublished-thoughts-conditioning)
- * - Archived: "Legacy Post About Old Propaganda" (slug: legacy-post-old-propaganda)
+ * - Draft: "Unpublished Thoughts on Emergence" (slug: unpublished-thoughts-emergence)
+ * - Archived: "Legacy Post About Early Automation" (slug: legacy-post-early-automation)
  *
  * Note: These tests run WITHOUT authentication to verify public 404 behavior
  */
@@ -111,14 +111,14 @@ test.describe('Post Not Found (404) Page', () => {
   test.describe('Draft Post - Returns 404 for Public Users', () => {
     test('should return 404 when navigating to draft post URL', async ({ page }) => {
       // Navigate to draft post URL
-      const response = await page.goto('/posts/unpublished-thoughts-conditioning')
+      const response = await page.goto('/posts/unpublished-thoughts-emergence')
 
       // Verify 404 response
       expect(response?.status()).toBe(404)
     })
 
     test('should display 404 page for draft post', async ({ page }) => {
-      await page.goto('/posts/unpublished-thoughts-conditioning')
+      await page.goto('/posts/unpublished-thoughts-emergence')
 
       // Verify 404 indicator displays
       const indicator = page.getByText('404', { exact: true })
@@ -134,18 +134,18 @@ test.describe('Post Not Found (404) Page', () => {
     })
 
     test('should not leak draft post metadata in 404 response', async ({ page }) => {
-      await page.goto('/posts/unpublished-thoughts-conditioning')
+      await page.goto('/posts/unpublished-thoughts-emergence')
 
       // Verify draft post title does not appear
       const pageContent = await page.textContent('body')
-      expect(pageContent).not.toContain('Unpublished Thoughts on Conditioning')
+      expect(pageContent).not.toContain('Unpublished Thoughts on Emergence')
 
       // Verify draft post summary does not appear
-      expect(pageContent).not.toContain('Early draft exploring behavioral conditioning')
+      expect(pageContent).not.toContain('Early draft exploring emergent AI behaviors')
     })
 
     test('should provide recovery link to browse all posts', async ({ page }) => {
-      await page.goto('/posts/unpublished-thoughts-conditioning')
+      await page.goto('/posts/unpublished-thoughts-emergence')
 
       // Verify "Browse all posts" link is available
       const link = page.getByRole('link', { name: /Browse all posts/i })
@@ -160,14 +160,14 @@ test.describe('Post Not Found (404) Page', () => {
   test.describe('Archived Post - Returns 404 for Public Users', () => {
     test('should return 404 when navigating to archived post URL', async ({ page }) => {
       // Navigate to archived post URL
-      const response = await page.goto('/posts/legacy-post-old-propaganda')
+      const response = await page.goto('/posts/legacy-post-early-automation')
 
       // Verify 404 response
       expect(response?.status()).toBe(404)
     })
 
     test('should display 404 page for archived post', async ({ page }) => {
-      await page.goto('/posts/legacy-post-old-propaganda')
+      await page.goto('/posts/legacy-post-early-automation')
 
       // Verify 404 indicator displays
       const indicator = page.getByText('404', { exact: true })
@@ -183,20 +183,20 @@ test.describe('Post Not Found (404) Page', () => {
     })
 
     test('should not leak archived post metadata in 404 response', async ({ page }) => {
-      await page.goto('/posts/legacy-post-old-propaganda')
+      await page.goto('/posts/legacy-post-early-automation')
 
       // Verify archived post title does not appear
       const pageContent = await page.textContent('body')
-      expect(pageContent).not.toContain('Legacy Post About Old Propaganda')
+      expect(pageContent).not.toContain('Legacy Post About Early Automation')
 
       // Verify archived post summary does not appear
       expect(pageContent).not.toContain(
-        'Historical analysis of propaganda techniques from the Cold War',
+        'Historical analysis of early automation techniques from the pre-AI era',
       )
     })
 
     test('should provide recovery link to browse all posts', async ({ page }) => {
-      await page.goto('/posts/legacy-post-old-propaganda')
+      await page.goto('/posts/legacy-post-early-automation')
 
       // Verify "Browse all posts" link is available
       const link = page.getByRole('link', { name: /Browse all posts/i })
@@ -216,12 +216,12 @@ test.describe('Post Not Found (404) Page', () => {
       await expectVisible(container1)
 
       // Test draft post
-      await page.goto('/posts/unpublished-thoughts-conditioning')
+      await page.goto('/posts/unpublished-thoughts-emergence')
       const container2 = page.locator('div.flex.min-h-\\[50vh\\].items-center.justify-center')
       await expectVisible(container2)
 
       // Test archived post
-      await page.goto('/posts/legacy-post-old-propaganda')
+      await page.goto('/posts/legacy-post-early-automation')
       const container3 = page.locator('div.flex.min-h-\\[50vh\\].items-center.justify-center')
       await expectVisible(container3)
     })

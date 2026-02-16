@@ -14,9 +14,9 @@ import { expectVisible, expectUrl } from '../helpers'
  *
  * Test Data (from seed-test-db.ts):
  * - 3 featured published posts:
- *   1. "The Architecture of Persuasion" (essay, 2026-01-15)
- *   2. "Decoding Corporate Newspeak" (decoder, 2026-01-20)
- *   3. "Notes from the Attention Economy" (field-report, 2026-01-25)
+ *   1. "The Architecture of Agent Systems" (essay, 2026-01-15)
+ *   2. "Decoding Tool Use Patterns" (decoder, 2026-01-20)
+ *   3. "Notes on Autonomous Workflows" (field-report, 2026-01-25)
  * - These should all appear in the featured section
  */
 
@@ -50,37 +50,37 @@ test.describe('Featured Posts Section', () => {
       // Get all featured post cards
       const cards = homePage.featuredPostCards
 
-      // Card 1: The Architecture of Persuasion
+      // Card 1: The Architecture of Agent Systems
       const card1 = cards.nth(0)
       await expectVisible(card1)
 
       const title1 = card1.locator('h3')
       await expectVisible(title1)
-      await expect(title1).toHaveText('The Architecture of Persuasion')
+      await expect(title1).toHaveText('The Architecture of Agent Systems')
 
-      const summary1 = card1.getByText(/An exploration of how modern persuasion techniques/)
+      const summary1 = card1.getByText(/An exploration of how modern agent architectures/)
       await expectVisible(summary1)
 
-      // Card 2: Decoding Corporate Newspeak
+      // Card 2: Decoding Tool Use Patterns
       const card2 = cards.nth(1)
       await expectVisible(card2)
 
       const title2 = card2.locator('h3')
       await expectVisible(title2)
-      await expect(title2).toHaveText('Decoding Corporate Newspeak')
+      await expect(title2).toHaveText('Decoding Tool Use Patterns')
 
-      const summary2 = card2.getByText(/A systematic breakdown of corporate language/)
+      const summary2 = card2.getByText(/A systematic breakdown of tool use patterns/)
       await expectVisible(summary2)
 
-      // Card 3: Notes from the Attention Economy
+      // Card 3: Notes on Autonomous Workflows
       const card3 = cards.nth(2)
       await expectVisible(card3)
 
       const title3 = card3.locator('h3')
       await expectVisible(title3)
-      await expect(title3).toHaveText('Notes from the Attention Economy')
+      await expect(title3).toHaveText('Notes on Autonomous Workflows')
 
-      const summary3 = card3.getByText(/Field observations on how attention has become/)
+      const summary3 = card3.getByText(/Field observations on how autonomous AI workflows/)
       await expectVisible(summary3)
     })
 
@@ -94,9 +94,9 @@ test.describe('Featured Posts Section', () => {
 
       // The order should match the query results (featured + published)
       // Based on seed data, these are the 3 featured posts
-      expect(titles).toContain('The Architecture of Persuasion')
-      expect(titles).toContain('Decoding Corporate Newspeak')
-      expect(titles).toContain('Notes from the Attention Economy')
+      expect(titles).toContain('The Architecture of Agent Systems')
+      expect(titles).toContain('Decoding Tool Use Patterns')
+      expect(titles).toContain('Notes on Autonomous Workflows')
     })
   })
 
@@ -109,8 +109,8 @@ test.describe('Featured Posts Section', () => {
       await homePage.page.waitForLoadState('networkidle')
 
       // Verify navigation to post detail page
-      // The first card should be "The Architecture of Persuasion"
-      await expectUrl(homePage.page, /\/posts\/architecture-of-persuasion$/)
+      // The first card should be "The Architecture of Agent Systems"
+      await expectUrl(homePage.page, /\/posts\/architecture-of-agent-systems$/)
     })
 
     test('should navigate to correct post detail when clicking second card', async ({ homePage }) => {
@@ -121,8 +121,8 @@ test.describe('Featured Posts Section', () => {
       await homePage.page.waitForLoadState('networkidle')
 
       // Verify navigation to post detail page
-      // The second card should be "Decoding Corporate Newspeak"
-      await expectUrl(homePage.page, /\/posts\/decoding-corporate-newspeak$/)
+      // The second card should be "Decoding Tool Use Patterns"
+      await expectUrl(homePage.page, /\/posts\/decoding-tool-use-patterns$/)
     })
 
     test('should navigate to correct post detail when clicking third card', async ({ homePage }) => {
@@ -133,8 +133,8 @@ test.describe('Featured Posts Section', () => {
       await homePage.page.waitForLoadState('networkidle')
 
       // Verify navigation to post detail page
-      // The third card should be "Notes from the Attention Economy"
-      await expectUrl(homePage.page, /\/posts\/notes-attention-economy$/)
+      // The third card should be "Notes on Autonomous Workflows"
+      await expectUrl(homePage.page, /\/posts\/notes-on-autonomous-workflows$/)
     })
 
     test('should verify all card links point to /posts/[slug] format', async ({ homePage }) => {
@@ -242,14 +242,14 @@ test.describe('Featured Posts Section', () => {
       expect(titles).toHaveLength(3)
 
       // These should be present
-      expect(titles).toContain('The Architecture of Persuasion')
-      expect(titles).toContain('Decoding Corporate Newspeak')
-      expect(titles).toContain('Notes from the Attention Economy')
+      expect(titles).toContain('The Architecture of Agent Systems')
+      expect(titles).toContain('Decoding Tool Use Patterns')
+      expect(titles).toContain('Notes on Autonomous Workflows')
 
       // These should NOT be present (draft, archived, or not featured)
-      expect(titles).not.toContain('Unpublished Thoughts on Conditioning') // Draft
-      expect(titles).not.toContain('Legacy Post About Old Propaganda') // Archived
-      expect(titles).not.toContain('Essential Readings on Mind Control') // Published but not featured
+      expect(titles).not.toContain('Unpublished Thoughts on Emergence') // Draft
+      expect(titles).not.toContain('Legacy Post About Early Automation') // Archived
+      expect(titles).not.toContain('Essential Readings on Agentic AI') // Published but not featured
     })
 
     test('should limit display to maximum of 3 featured posts', async ({ homePage }) => {

@@ -1,6 +1,6 @@
 # Database Migrations
 
-This directory contains Payload CMS database migrations for the Mind-Controlled project.
+This directory contains Payload CMS database migrations for the Detached Node project.
 
 ## ⚠️ Current Status: Development Setup
 

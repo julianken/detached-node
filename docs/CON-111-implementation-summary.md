@@ -7,7 +7,7 @@
 
 ## Overview
 
-Implemented composite database indexes to optimize frequently executed queries in the Mind-Controlled CMS. This addresses performance concerns for post listings, featured posts, and sitemap generation.
+Implemented composite database indexes to optimize frequently executed queries in the Detached Node CMS. This addresses performance concerns for post listings, featured posts, and sitemap generation.
 
 ## Changes Made
 

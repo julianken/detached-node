@@ -1,6 +1,6 @@
-# Mind-Controlled
+# Detached Node
 
-This repo houses a cynical philosophy blog about propaganda, conditioning, and the mechanics of mind control (in the Ellul sense).
+This repo houses a tech blog exploring modern agentic AI workflows, autonomous systems, and the philosophy of machine intelligence.
 
 ## Phases
 - Phase 1: deployed shell site + initial config

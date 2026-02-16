@@ -11,7 +11,7 @@ test.describe('Homepage Hero Section', () => {
     await homePage.goto()
 
     // Verify page title
-    await expectTitle(homePage.page, /Mind-Controlled/)
+    await expectTitle(homePage.page, /Detached Node/)
 
     // Verify "Signal Feed" label is visible
     const signalFeedLabel = homePage.page.getByText('Signal Feed')

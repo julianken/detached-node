@@ -53,7 +53,7 @@ This research explores advanced CSS techniques for creating a high-quality "Matr
 
 **Performance Note:** Very large pattern sizes (500+) can impact performance. Stick to 50-300px for best balance. Keep opacity low (0.02-0.05) for subtlety.
 
-**Implementation for Mind-Controlled:** Apply to main content area only, not navigation. Consider toggle for accessibility.
+**Implementation for Detached Node:** Apply to main content area only, not navigation. Consider toggle for accessibility.
 
 ---
 
@@ -194,7 +194,7 @@ setInterval(draw, 33); // ~30fps for subtle effect
 - Lower frame rate (30fps) for background effect
 - Consider using Web Workers for heavy computation
 
-**Implementation for Mind-Controlled:** Place behind content at very low opacity (0.05-0.1). Use dark grey (`#111`) instead of pure black background for the canvas.
+**Implementation for Detached Node:** Place behind content at very low opacity (0.05-0.1). Use dark grey (`#111`) instead of pure black background for the canvas.
 
 **Alternative:** [React Matrix Shaders](https://www.shadcn.io/shaders/matrix) provides GPU-accelerated implementation via fragment shaders.
 
@@ -252,7 +252,7 @@ setInterval(draw, 33); // ~30fps for subtle effect
 
 **Performance Warning:** Pattern sizes over 500px impact performance. Stick to 50-300px. Very fast refresh intervals (< 100ms) cause CPU issues on older devices.
 
-**Implementation for Mind-Controlled:** Apply to body or main content wrapper at very low opacity (0.02-0.04). Use `mix-blend-soft-light` for sophistication.
+**Implementation for Detached Node:** Apply to body or main content wrapper at very low opacity (0.02-0.04). Use `mix-blend-soft-light` for sophistication.
 
 ---
 
@@ -304,7 +304,7 @@ setInterval(draw, 33); // ~30fps for subtle effect
 }
 ```
 
-**Implementation for Mind-Controlled:** Use on main background. Layer with grain texture for depth.
+**Implementation for Detached Node:** Use on main background. Layer with grain texture for depth.
 
 ---
 
@@ -364,7 +364,7 @@ setInterval(draw, 33); // ~30fps for subtle effect
 
 **Performance:** Dramatically smoother than JavaScript. [Research indicates](https://www.builder.io/blog/parallax-scrolling-effect) the shift from JS to CSS parallax was "the single most important factor in its rehabilitation."
 
-**Implementation for Mind-Controlled:** Use for post entry animations, section reveals, and subtle parallax on hero elements.
+**Implementation for Detached Node:** Use for post entry animations, section reveals, and subtle parallax on hero elements.
 
 ---
 
@@ -430,7 +430,7 @@ setInterval(draw, 33); // ~30fps for subtle effect
 
 **Advanced Implementation:** Use JavaScript to split text into individual `<span>` elements with staggered animation delays. See [W3Schools example](https://www.w3schools.com/howto/howto_js_typewriter.asp).
 
-**Implementation for Mind-Controlled:** Use sparingly on hero headings or key quotes. Consider IntersectionObserver to trigger only when visible.
+**Implementation for Detached Node:** Use sparingly on hero headings or key quotes. Consider IntersectionObserver to trigger only when visible.
 
 ---
 
@@ -569,7 +569,7 @@ animateTrail();
 
 **Warning:** [Research shows](https://www.jhkinfotech.com/blog/cursor-animations-with-css-javascript-code-snippets) that cursor trails aren't suitable for every site. Use only if it enhances the terminal aesthetic without distracting from content.
 
-**Implementation for Mind-Controlled:** Consider a very subtle trail (low opacity, small size) or skip entirely to maintain focus on content.
+**Implementation for Detached Node:** Consider a very subtle trail (low opacity, small size) or skip entirely to maintain focus on content.
 
 ---
 
@@ -665,7 +665,7 @@ animateTrail();
 }
 ```
 
-**Implementation for Mind-Controlled:** Use very sparingly, perhaps on logo or specific CTAs. Make it a quick, one-time effect on hover, not continuous.
+**Implementation for Detached Node:** Use very sparingly, perhaps on logo or specific CTAs. Make it a quick, one-time effect on hover, not continuous.
 
 ---
 
@@ -685,7 +685,7 @@ From [terminal color research](https://gainos.org/~elf/sgi/nekonomicon/forum/8/1
 
 #### Recommended Sophisticated Palettes
 
-**Palette 1: Cyan Noir** (Recommended for Mind-Controlled)
+**Palette 1: Cyan Noir** (Recommended for Detached Node)
 ```css
 :root {
   /* Base colors */
@@ -804,7 +804,7 @@ From [comprehensive research](https://blog.logrocket.com/best-react-animation-li
 - **GSAP (23KB core):** Industry standard for timeline-based animations, bulletproof performance
 - **Pure CSS:** Always fastest for supported effects
 
-**Recommendation for Mind-Controlled:** Start with pure CSS for 90% of effects. Use Framer Motion selectively for scroll-triggered reveals and complex sequences. Avoid GSAP unless you need advanced timeline control.
+**Recommendation for Detached Node:** Start with pure CSS for 90% of effects. Use Framer Motion selectively for scroll-triggered reveals and complex sequences. Avoid GSAP unless you need advanced timeline control.
 
 ---
 
@@ -1019,6 +1019,6 @@ The sophisticated Matrix/terminal aesthetic for 2026 favors **layered subtlety o
 
 **The key differentiator:** Modern CSS has matured to the point where most terminal aesthetic effects can be achieved without JavaScript, resulting in better performance and simpler maintenance. Use JavaScript only for effects that truly require it (Matrix rain, complex sequences), and keep those effects toggleable and optimized.
 
-**For Mind-Controlled specifically:** Start with Phase 1 (foundation) to establish the sophisticated dark aesthetic. Add scroll enhancements in Phase 2. Consider Phase 3 effects only if they genuinely enhance the blog's philosophical tone without distracting from content.
+**For Detached Node specifically:** Start with Phase 1 (foundation) to establish the sophisticated dark aesthetic. Add scroll enhancements in Phase 2. Consider Phase 3 effects only if they genuinely enhance the blog's philosophical tone without distracting from content.
 
 The goal is **atmospheric immersion, not technical showmanship.**

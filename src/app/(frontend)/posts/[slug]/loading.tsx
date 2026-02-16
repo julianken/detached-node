@@ -1,7 +1,7 @@
 export default function PostLoading() {
   return (
     <div
-      className="mx-auto flex max-w-3xl flex-col gap-16 animate-pulse"
+      className="glitch-reveal mx-auto flex max-w-3xl flex-col gap-16 animate-pulse"
       role="status"
       aria-label="Loading article"
     >

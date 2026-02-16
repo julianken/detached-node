@@ -10,6 +10,7 @@
 .prose {
   color: var(--prose-body);
   line-height: 1.75;
+  transition: color 150ms ease;
   font-size: 1.125rem;
 }
 
@@ -263,10 +264,63 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans-stack);
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+/* ──────────────────────────────────────────────
+   CRT GLOW (dark mode only)
+   Faint phosphor bloom on text and borders.
+   ────────────────────────────────────────────── */
+
+.dark body {
+  text-shadow: 0 0 4px rgba(196, 176, 255, 0.12);
+}
+
+.dark .site-frame {
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.06);
+}
+
+.dark h1,
+.dark h2,
+.dark h3,
+.dark h4 {
+  text-shadow: 0 0 6px rgba(196, 176, 255, 0.18);
+}
+
+.dark .font-mono {
+  text-shadow: 0 0 4px rgba(196, 176, 255, 0.15);
+}
+
+/* Content glow bleeds toward the chrome borders, not the other way around */
+.dark .site-frame > main {
+  box-shadow: 0 0 12px rgba(139, 92, 246, 0.04);
+}
+
+/* CRT flicker — two overlapping cycles with prime durations (17s × 23s = 391s before repeat) */
+.dark .site-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(139, 92, 246, 0.008);
+  pointer-events: none;
+  animation: crt-drift-a 17s ease-in-out infinite, crt-drift-b 23s ease-in-out infinite;
+  z-index: 0;
+}
+
+@keyframes crt-drift-a {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+@keyframes crt-drift-b {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
 }
 
 .site-frame {
+  position: relative;
   filter: brightness(var(--brightness, 1));
+  transition: filter 150ms ease, background-color 150ms ease, border-color 150ms ease, color 150ms ease;
 }
 
 /* ──────────────────────────────────────────────
@@ -278,7 +332,7 @@ body {
 
 ::view-transition-old(theme-transition),
 ::view-transition-new(theme-transition) {
-  animation-duration: 500ms;
+  animation-duration: 400ms;
   animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -341,6 +395,40 @@ main {
   100% {
     opacity: 1;
     filter: none;
+  }
+}
+
+/* ──────────────────────────────────────────────
+   GLITCH REVEAL
+   Plays the glitch-in animation when streamed
+   content replaces a Suspense skeleton. Uses the
+   same keyframes as the view-transition glitch.
+   ────────────────────────────────────────────── */
+
+.glitch-reveal {
+  animation: glitch-reveal 400ms ease-out both;
+}
+
+@keyframes glitch-reveal {
+  0% {
+    opacity: 0;
+    filter: url(#rgb-split);
+    transform: translateX(var(--gr-jitter-1, 1px));
+  }
+  30% {
+    opacity: var(--gr-mid-opacity, 0.6);
+    filter: url(#rgb-split);
+    transform: translateX(var(--gr-jitter-2, -0.5px));
+  }
+  60% {
+    opacity: 0.9;
+    filter: none;
+    transform: translateX(var(--gr-jitter-3, 0.3px));
+  }
+  100% {
+    opacity: 1;
+    filter: none;
+    transform: translateX(0);
   }
 }
 
@@ -427,7 +515,7 @@ main {
 
 .card-scanline:hover::after {
   opacity: 0.6;
-  animation: scanline-sweep 300ms ease-out forwards;
+  animation: scanline-sweep 150ms ease-out forwards;
 }
 
 @keyframes scanline-sweep {
@@ -441,7 +529,7 @@ main {
 
 /* ──────────────────────────────────────────────
    TEXT GLITCH ANIMATION
-   Used by SignalInterference component for
+   Used by TextGlitch component for
    intermittent word scramble + shift effect.
    ────────────────────────────────────────────── */
 
@@ -510,7 +598,7 @@ main {
 }
 
 .epoch-pulse {
-  animation: epoch-pulse 1s ease-out forwards;
+  animation: epoch-pulse 400ms ease-out forwards;
 }
 
 /* ──────────────────────────────────────────────
@@ -565,50 +653,16 @@ main {
 }
 
 /* ──────────────────────────────────────────────
-   CARD PRESS FEEDBACK
-   Pure CSS :active press + fade + spinner.
-   No JS, no race conditions with view transitions.
+   CARD ACTIVE PRESS FEEDBACK
+   Simple CSS-only press state for card links.
+   The glitch page transition provides loading feedback.
    ────────────────────────────────────────────── */
 
-.card-press {
-  transition: transform 100ms ease-out;
-}
-
-.card-spinner {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-  opacity: 0;
-}
-
-.is-navigating {
+a.card-trace:active,
+a.card-scanline:active {
   transform: scale(0.98);
-}
-
-.is-navigating > .card-content {
-  opacity: 0.2;
-}
-
-.is-navigating > .card-spinner {
-  opacity: 1;
-  transition: opacity 250ms ease-out;
-}
-
-.nav-spinner {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: conic-gradient(transparent 270deg, var(--accent) 360deg);
-  mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
-  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
-  animation: nav-spin 0.7s linear infinite;
-}
-
-@keyframes nav-spin {
-  to { transform: rotate(360deg); }
+  opacity: 0.9;
+  transition: transform 100ms ease-out, opacity 100ms ease-out;
 }
 
 /* ──────────────────────────────────────────────

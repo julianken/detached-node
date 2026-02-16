@@ -14,12 +14,12 @@ import { expectVisible, expectUrl } from '../helpers'
  * - Draft and archived posts are NOT displayed
  *
  * Test Data (from seed-test-db.ts):
- * - 4 Published: "The Architecture of Persuasion" (2026-01-15),
- *                "Decoding Corporate Newspeak" (2026-01-20),
- *                "Notes from the Attention Economy" (2026-01-25),
- *                "Essential Readings on Mind Control" (2026-01-10)
- * - 1 Draft: "Unpublished Thoughts on Conditioning" (should NOT appear)
- * - 1 Archived: "Legacy Post About Old Propaganda" (should NOT appear)
+ * - 4 Published: "The Architecture of Agent Systems" (2026-01-15),
+ *                "Decoding Tool Use Patterns" (2026-01-20),
+ *                "Notes on Autonomous Workflows" (2026-01-25),
+ *                "Essential Readings on Agentic AI" (2026-01-10)
+ * - 1 Draft: "Unpublished Thoughts on Emergence" (should NOT appear)
+ * - 1 Archived: "Legacy Post About Early Automation" (should NOT appear)
  */
 
 test.describe('Posts Listing Page', () => {
@@ -50,47 +50,47 @@ test.describe('Posts Listing Page', () => {
       const titles = await postsPage.getPostTitles()
 
       // Expected order: newest to oldest
-      // 2026-01-25: "Notes from the Attention Economy"
-      // 2026-01-20: "Decoding Corporate Newspeak"
-      // 2026-01-15: "The Architecture of Persuasion"
-      // 2026-01-10: "Essential Readings on Mind Control"
-      expect(titles[0]).toBe('Notes from the Attention Economy')
-      expect(titles[1]).toBe('Decoding Corporate Newspeak')
-      expect(titles[2]).toBe('The Architecture of Persuasion')
-      expect(titles[3]).toBe('Essential Readings on Mind Control')
+      // 2026-01-25: "Notes on Autonomous Workflows"
+      // 2026-01-20: "Decoding Tool Use Patterns"
+      // 2026-01-15: "The Architecture of Agent Systems"
+      // 2026-01-10: "Essential Readings on Agentic AI"
+      expect(titles[0]).toBe('Notes on Autonomous Workflows')
+      expect(titles[1]).toBe('Decoding Tool Use Patterns')
+      expect(titles[2]).toBe('The Architecture of Agent Systems')
+      expect(titles[3]).toBe('Essential Readings on Agentic AI')
     })
 
     test('should verify each post card displays title, formatted date, and summary', async ({ postsPage }) => {
       await postsPage.goto()
 
-      // Check first post card (Notes from the Attention Economy)
+      // Check first post card (Notes on Autonomous Workflows)
       const firstPost = postsPage.postCards.nth(0)
       await expectVisible(firstPost)
 
       // Verify title
       const firstTitle = firstPost.locator('h2')
       await expectVisible(firstTitle)
-      await expect(firstTitle).toHaveText('Notes from the Attention Economy')
+      await expect(firstTitle).toHaveText('Notes on Autonomous Workflows')
 
       // Verify date is formatted and visible
       const firstDate = firstPost.getByText(/Jan(uary)?\s+25,?\s+2026/i)
       await expectVisible(firstDate)
 
       // Verify summary is visible
-      const firstSummary = firstPost.getByText(/Field observations on how attention has become/)
+      const firstSummary = firstPost.getByText(/Field observations on how autonomous AI workflows/)
       await expectVisible(firstSummary)
 
-      // Check second post card (Decoding Corporate Newspeak)
+      // Check second post card (Decoding Tool Use Patterns)
       const secondPost = postsPage.postCards.nth(1)
       await expectVisible(secondPost)
 
       const secondTitle = secondPost.locator('h2')
-      await expect(secondTitle).toHaveText('Decoding Corporate Newspeak')
+      await expect(secondTitle).toHaveText('Decoding Tool Use Patterns')
 
       const secondDate = secondPost.getByText(/Jan(uary)?\s+20,?\s+2026/i)
       await expectVisible(secondDate)
 
-      const secondSummary = secondPost.getByText(/A systematic breakdown of corporate language/)
+      const secondSummary = secondPost.getByText(/A systematic breakdown of tool use patterns/)
       await expectVisible(secondSummary)
     })
   })
@@ -103,28 +103,28 @@ test.describe('Posts Listing Page', () => {
       await postsPage.clickPost(0)
 
       // Verify navigation to the correct post detail page
-      await expectUrl(postsPage.page, /\/posts\/notes-attention-economy$/)
+      await expectUrl(postsPage.page, /\/posts\/notes-on-autonomous-workflows$/)
     })
 
     test('should navigate to different posts correctly', async ({ postsPage }) => {
       await postsPage.goto()
 
-      // Test clicking the third post (The Architecture of Persuasion)
-      const thirdPost = await postsPage.getPostByTitle('The Architecture of Persuasion')
+      // Test clicking the third post (The Architecture of Agent Systems)
+      const thirdPost = await postsPage.getPostByTitle('The Architecture of Agent Systems')
       await thirdPost.click()
       await postsPage.page.waitForLoadState('networkidle')
 
-      await expectUrl(postsPage.page, /\/posts\/architecture-of-persuasion$/)
+      await expectUrl(postsPage.page, /\/posts\/architecture-of-agent-systems$/)
 
       // Navigate back to posts listing
       await postsPage.goto()
 
       // Test clicking the fourth post (Essential Readings)
-      const fourthPost = await postsPage.getPostByTitle('Essential Readings on Mind Control')
+      const fourthPost = await postsPage.getPostByTitle('Essential Readings on Agentic AI')
       await fourthPost.click()
       await postsPage.page.waitForLoadState('networkidle')
 
-      await expectUrl(postsPage.page, /\/posts\/essential-readings-mind-control$/)
+      await expectUrl(postsPage.page, /\/posts\/essential-readings-agentic-ai$/)
     })
   })
 
@@ -154,12 +154,12 @@ test.describe('Posts Listing Page', () => {
     test('should NOT display draft posts to public users', async ({ postsPage }) => {
       await postsPage.goto()
 
-      // Verify draft post "Unpublished Thoughts on Conditioning" is not visible
-      const draftTitle = postsPage.page.getByRole('heading', { name: /Unpublished Thoughts on Conditioning/i })
+      // Verify draft post "Unpublished Thoughts on Emergence" is not visible
+      const draftTitle = postsPage.page.getByRole('heading', { name: /Unpublished Thoughts on Emergence/i })
       await expect(draftTitle).not.toBeVisible()
 
       // Double check: search for partial text from draft post
-      const draftSummary = postsPage.page.getByText(/Early draft exploring behavioral conditioning/)
+      const draftSummary = postsPage.page.getByText(/Early draft exploring emergent AI behaviors/)
       await expect(draftSummary).not.toBeVisible()
 
       // Verify we only have 4 posts, not 5 (which would include the draft)
@@ -170,12 +170,12 @@ test.describe('Posts Listing Page', () => {
     test('should NOT display archived posts to public users', async ({ postsPage }) => {
       await postsPage.goto()
 
-      // Verify archived post "Legacy Post About Old Propaganda" is not visible
-      const archivedTitle = postsPage.page.getByRole('heading', { name: /Legacy Post About Old Propaganda/i })
+      // Verify archived post "Legacy Post About Early Automation" is not visible
+      const archivedTitle = postsPage.page.getByRole('heading', { name: /Legacy Post About Early Automation/i })
       await expect(archivedTitle).not.toBeVisible()
 
       // Double check: search for partial text from archived post
-      const archivedSummary = postsPage.page.getByText(/Historical analysis of propaganda techniques from the Cold War/)
+      const archivedSummary = postsPage.page.getByText(/Historical analysis of early automation techniques from the pre-AI era/)
       await expect(archivedSummary).not.toBeVisible()
 
       // Verify we only have 4 posts, not 5 or 6
@@ -190,14 +190,14 @@ test.describe('Posts Listing Page', () => {
       const titles = await postsPage.getPostTitles()
 
       // Verify only published posts are shown
-      expect(titles).toContain('Notes from the Attention Economy')
-      expect(titles).toContain('Decoding Corporate Newspeak')
-      expect(titles).toContain('The Architecture of Persuasion')
-      expect(titles).toContain('Essential Readings on Mind Control')
+      expect(titles).toContain('Notes on Autonomous Workflows')
+      expect(titles).toContain('Decoding Tool Use Patterns')
+      expect(titles).toContain('The Architecture of Agent Systems')
+      expect(titles).toContain('Essential Readings on Agentic AI')
 
       // Verify draft and archived are NOT shown
-      expect(titles).not.toContain('Unpublished Thoughts on Conditioning')
-      expect(titles).not.toContain('Legacy Post About Old Propaganda')
+      expect(titles).not.toContain('Unpublished Thoughts on Emergence')
+      expect(titles).not.toContain('Legacy Post About Early Automation')
 
       // Verify total count
       expect(titles).toHaveLength(4)

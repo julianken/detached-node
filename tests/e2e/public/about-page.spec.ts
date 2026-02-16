@@ -6,7 +6,7 @@ import { expectVisible, expectTitle } from '../helpers'
  * Tests verify that the About page loads correctly with CMS content and handles fallback state
  *
  * Test data from seed-test-db.ts:
- * - "About Mind-Controlled" page with rich text body
+ * - "About Detached Node" page with rich text body
  */
 
 test.describe('About Page - CMS Content', () => {

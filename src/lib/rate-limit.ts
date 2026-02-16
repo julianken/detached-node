@@ -2,12 +2,12 @@ import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 
 /**
- * Rate limiting configuration for Mind-Controlled API routes.
+ * Rate limiting configuration for Detached Node API routes.
  *
  * Uses Upstash Redis for production rate limiting with in-memory fallback
  * for development when Redis credentials are not available.
  *
- * @see /Users/j/repos/mind-controlled/docs/rate-limiting-strategy.md
+ * @see docs/rate-limiting-strategy.md
  */
 
 // Check if Upstash Redis credentials are available

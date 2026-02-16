@@ -4,7 +4,7 @@ Related Linear issue: CON-111
 
 ## Overview
 
-This document describes the database indexing strategy for optimizing query performance across the Mind-Controlled CMS.
+This document describes the database indexing strategy for optimizing query performance across the Detached Node CMS.
 
 ## Query Patterns
 
