@@ -17,8 +17,8 @@ import { expectVisible, expectNotVisible, expectUrl } from '../../helpers/assert
  * 3. Delete published post: verify removal from list
  *
  * Test Data:
- * - "Unpublished Thoughts on Conditioning" (draft essay)
- * - "Legacy Post About Old Propaganda" (archived essay)
+ * - "Unpublished Thoughts on Emergence" (draft essay)
+ * - "Legacy Post About Early Automation" (archived essay)
  * - Multiple published posts
  */
 
@@ -33,7 +33,7 @@ test.describe('Delete Post', () => {
 
   test('should display delete button in post edit view', async ({ adminCollectionPage, adminEditorPage, page }) => {
     // Open a draft post for editing
-    const draftRow = await adminCollectionPage.getRowByText('Unpublished Thoughts on Conditioning')
+    const draftRow = await adminCollectionPage.getRowByText('Unpublished Thoughts on Emergence')
     await draftRow.click()
     await page.waitForLoadState('networkidle')
 
@@ -50,7 +50,7 @@ test.describe('Delete Post', () => {
     page,
   }) => {
     // Open a draft post for editing
-    const draftRow = await adminCollectionPage.getRowByText('Unpublished Thoughts on Conditioning')
+    const draftRow = await adminCollectionPage.getRowByText('Unpublished Thoughts on Emergence')
     await draftRow.click()
     await page.waitForLoadState('networkidle')
 
@@ -78,7 +78,7 @@ test.describe('Delete Post', () => {
     page,
   }) => {
     // Open a draft post for editing
-    const draftRow = await adminCollectionPage.getRowByText('Unpublished Thoughts on Conditioning')
+    const draftRow = await adminCollectionPage.getRowByText('Unpublished Thoughts on Emergence')
     await draftRow.click()
     await page.waitForLoadState('networkidle')
 
@@ -105,11 +105,11 @@ test.describe('Delete Post', () => {
 
     // Verify the post title is still visible in the form
     const titleField = page.locator('input[name="title"]')
-    await expect(titleField).toHaveValue('Unpublished Thoughts on Conditioning')
+    await expect(titleField).toHaveValue('Unpublished Thoughts on Emergence')
 
     // Navigate back to list and verify post still exists
     await adminCollectionPage.goto('posts')
-    const postRow = await adminCollectionPage.getRowByText('Unpublished Thoughts on Conditioning')
+    const postRow = await adminCollectionPage.getRowByText('Unpublished Thoughts on Emergence')
     await expectVisible(postRow)
   })
 
@@ -119,7 +119,7 @@ test.describe('Delete Post', () => {
     page,
   }) => {
     // Open the draft post for editing
-    const draftRow = await adminCollectionPage.getRowByText('Unpublished Thoughts on Conditioning')
+    const draftRow = await adminCollectionPage.getRowByText('Unpublished Thoughts on Emergence')
     await draftRow.click()
     await page.waitForLoadState('networkidle')
 
@@ -142,7 +142,7 @@ test.describe('Delete Post', () => {
 
     // Verify the deleted post is no longer in the list
     const deletedRow = adminCollectionPage.tableRows.filter({
-      hasText: 'Unpublished Thoughts on Conditioning',
+      hasText: 'Unpublished Thoughts on Emergence',
     })
     await expect(deletedRow).toHaveCount(0)
   })
@@ -190,7 +190,7 @@ test.describe('Delete Post', () => {
     page,
   }) => {
     // Open an archived post for editing
-    const archivedRow = await adminCollectionPage.getRowByText('Legacy Post About Old Propaganda')
+    const archivedRow = await adminCollectionPage.getRowByText('Legacy Post About Early Automation')
     await archivedRow.click()
     await page.waitForLoadState('networkidle')
 
@@ -217,7 +217,7 @@ test.describe('Delete Post', () => {
 
     // Verify the deleted post is no longer in the list
     const deletedRow = adminCollectionPage.tableRows.filter({
-      hasText: 'Legacy Post About Old Propaganda',
+      hasText: 'Legacy Post About Early Automation',
     })
     await expect(deletedRow).toHaveCount(0)
   })

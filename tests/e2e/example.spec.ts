@@ -15,7 +15,7 @@ test.describe('Homepage', () => {
     await expectVisible(homePage.navigation)
 
     // Verify title
-    await expect(homePage.page).toHaveTitle(/Mind-Controlled/)
+    await expect(homePage.page).toHaveTitle(/Detached Node/)
   })
 
   test('should show featured posts section', async ({ homePage }) => {

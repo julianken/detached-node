@@ -46,7 +46,7 @@ test.describe('Create New Post', () => {
     await expectUrl(page, /\/admin\/collections\/posts\/create/)
 
     // Fill in title
-    const testTitle = 'Test Post: The Psychology of Digital Propaganda'
+    const testTitle = 'Test Post: The Psychology of Digital Agents'
     await adminEditorPage.fillField('title', testTitle)
 
     // Wait for slug to auto-generate
@@ -58,12 +58,12 @@ test.describe('Create New Post', () => {
 
     // Fill in summary
     const testSummary =
-      'An in-depth exploration of how digital platforms weaponize psychological mechanisms to shape public opinion and behavior patterns.'
+      'An in-depth exploration of how digital agents leverage autonomous workflows to shape system behavior and emergent patterns.'
     await adminEditorPage.fillField('summary', testSummary)
 
     // Fill in body using Lexical rich text editor
     const testBody =
-      'This essay examines the intersection of propaganda techniques and digital technology. Modern social media platforms have created unprecedented opportunities for manipulating collective consciousness through algorithmic amplification and targeted messaging.'
+      'This essay examines the intersection of automation techniques and digital technology. Modern agentic AI platforms have created unprecedented opportunities for autonomous decision-making through algorithmic reasoning and targeted tool use.'
     await fillRichText(page, testBody, 'body')
 
     // Save the post
@@ -81,7 +81,7 @@ test.describe('Create New Post', () => {
     await adminCollectionPage.clickCreateNew()
 
     // Fill in title
-    const testTitle = 'Understanding Mind Control Through Media'
+    const testTitle = 'Understanding Agent Control Through Workflows'
     await adminEditorPage.fillField('title', testTitle)
 
     // Wait for slug auto-generation
@@ -93,7 +93,7 @@ test.describe('Create New Post', () => {
 
     // Slug should be generated from title
     expect(slugValue).toBeTruthy()
-    expect(slugValue).toMatch(/understanding-mind-control/)
+    expect(slugValue).toMatch(/understanding-agent-control/)
     expect(slugValue).not.toContain(' ')
     expect(slugValue).toBe(slugValue.toLowerCase())
   })
@@ -107,7 +107,7 @@ test.describe('Create New Post', () => {
     await adminCollectionPage.clickCreateNew()
 
     // Fill in required fields first
-    const testTitle = 'Decoder: Breaking Down Propaganda Techniques'
+    const testTitle = 'Decoder: Breaking Down Automation Techniques'
     await adminEditorPage.fillField('title', testTitle)
 
     // Select "decoder" type
@@ -116,10 +116,10 @@ test.describe('Create New Post', () => {
 
     // Fill in other required fields
     const testSummary =
-      'A systematic breakdown of common propaganda techniques used in contemporary media and political discourse.'
+      'A systematic breakdown of common automation techniques used in contemporary agentic AI and autonomous systems.'
     await adminEditorPage.fillField('summary', testSummary)
 
-    const testBody = 'This decoder analyzes key propaganda mechanisms and their real-world applications.'
+    const testBody = 'This decoder analyzes key automation mechanisms and their real-world applications.'
     await fillRichText(page, testBody, 'body')
 
     // Save the post
@@ -143,20 +143,20 @@ test.describe('Create New Post', () => {
     await adminCollectionPage.clickCreateNew()
 
     // Fill in required fields
-    const testTitle = 'Technology and the Conditioning of Society'
+    const testTitle = 'Workflows and the Emergence of Autonomous Systems'
     await adminEditorPage.fillField('title', testTitle)
 
     const testSummary =
-      'An examination of how technological systems create new forms of social conditioning and behavioral modification.'
+      'An examination of how technological systems create new forms of autonomous emergence and behavioral adaptation.'
     await adminEditorPage.fillField('summary', testSummary)
 
     const testBody =
-      'Modern technology serves not just as a tool but as a medium for reshaping human consciousness and social relationships.'
+      'Modern technology serves not just as a tool but as a medium for reshaping autonomous workflows and agent relationships.'
     await fillRichText(page, testBody, 'body')
 
     // Select multiple tags using the relationship helper
-    // Seeded tags: "Propaganda", "Technology", "Culture"
-    await selectMultipleRelationships(page, 'tags', ['Propaganda', 'Technology'])
+    // Seeded tags: "Agentic AI", "Workflows", "Philosophy"
+    await selectMultipleRelationships(page, 'tags', ['Agentic AI', 'Workflows'])
 
     // Save the post
     await adminEditorPage.save()
@@ -166,8 +166,8 @@ test.describe('Create New Post', () => {
 
     // Verify tags are still selected after save
     const tagsContainer = page.locator('[data-field="tags"]')
-    await expect(tagsContainer).toContainText('Propaganda')
-    await expect(tagsContainer).toContainText('Technology')
+    await expect(tagsContainer).toContainText('Agentic AI')
+    await expect(tagsContainer).toContainText('Workflows')
   })
 
   test('should allow adding featured image via media picker', async ({
@@ -179,11 +179,11 @@ test.describe('Create New Post', () => {
     await adminCollectionPage.clickCreateNew()
 
     // Fill in required fields
-    const testTitle = 'Visual Rhetoric in Modern Propaganda'
+    const testTitle = 'Visual Architecture of Agent Pipelines'
     await adminEditorPage.fillField('title', testTitle)
 
     const testSummary =
-      'Analyzing how visual elements are weaponized in contemporary propaganda campaigns to bypass rational thought.'
+      'Analyzing how visual diagrams and architecture maps help engineers reason about complex agent pipeline designs.'
     await adminEditorPage.fillField('summary', testSummary)
 
     const testBody = 'Images communicate faster than words and evade critical analysis more easily.'

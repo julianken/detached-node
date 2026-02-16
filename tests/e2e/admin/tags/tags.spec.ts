@@ -123,14 +123,14 @@ test.describe('Tags Collection - CRUD Operations', () => {
     adminEditorPage,
     page,
   }) => {
-    // The seeded database has a tag with name "Propaganda"
+    // The seeded database has a tag with name "Agentic AI"
     // Try to create a new tag with the same name
 
     // Navigate to create tag
     await adminEditorPage.gotoCreate('tags')
 
     // Fill in duplicate name
-    await adminEditorPage.fillField('name', 'Propaganda')
+    await adminEditorPage.fillField('name', 'Agentic AI')
 
     // Try to save the tag
     await adminEditorPage.save()
@@ -156,7 +156,7 @@ test.describe('Tags Collection - CRUD Operations', () => {
     adminEditorPage,
     page,
   }) => {
-    // The seeded database has a tag with slug "propaganda"
+    // The seeded database has a tag with slug "agentic-ai"
     // Try to create a new tag with the same slug
 
     // Navigate to create tag
@@ -166,7 +166,7 @@ test.describe('Tags Collection - CRUD Operations', () => {
     await adminEditorPage.fillField('name', 'Different Name')
 
     // Fill in duplicate slug
-    await adminEditorPage.fillField('slug', 'propaganda')
+    await adminEditorPage.fillField('slug', 'agentic-ai')
 
     // Try to save the tag
     await adminEditorPage.save()
@@ -267,9 +267,9 @@ test.describe('Tags Collection - List View', () => {
     await expectUrl(page, /\/admin\/collections\/tags/)
 
     // Verify seeded tags appear in the list
-    // Seeded tags: "Propaganda", "Technology", "Culture"
-    const propagandaRow = await adminCollectionPage.getRowByText('Propaganda')
-    await expect(propagandaRow).toBeVisible()
+    // Seeded tags: "Agentic AI", "Technology", "Culture"
+    const agenticAiRow = await adminCollectionPage.getRowByText('Agentic AI')
+    await expect(agenticAiRow).toBeVisible()
 
     const technologyRow = await adminCollectionPage.getRowByText('Technology')
     await expect(technologyRow).toBeVisible()
@@ -311,12 +311,12 @@ test.describe('Tags in Post Relationship Picker', () => {
 
     if (isModalVisible) {
       // Check if seeded tags appear in the modal
-      await expect(pickerModal).toContainText('Propaganda')
+      await expect(pickerModal).toContainText('Agentic AI')
       await expect(pickerModal).toContainText('Technology')
       await expect(pickerModal).toContainText('Culture')
     } else {
       // If no modal, tags might be in an inline list or dropdown
-      await expect(tagsField).toContainText('Propaganda')
+      await expect(tagsField).toContainText('Agentic AI')
       await expect(tagsField).toContainText('Technology')
       await expect(tagsField).toContainText('Culture')
     }

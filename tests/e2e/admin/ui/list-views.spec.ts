@@ -95,13 +95,13 @@ test.describe('Admin List Views', () => {
       const headerCount = await tableHeaders.count()
       expect(headerCount).toBeGreaterThan(0)
 
-      // Verify seeded page "About Mind-Controlled" is visible
-      const aboutPage = await adminCollectionPage.getRowByText('About Mind-Controlled')
+      // Verify seeded page "About Detached Node" is visible
+      const aboutPage = await adminCollectionPage.getRowByText('About Detached Node')
       await expectVisible(aboutPage)
 
       // Verify the row contains expected data (title, slug, status)
       const rowText = await aboutPage.textContent()
-      expect(rowText).toContain('About Mind-Controlled')
+      expect(rowText).toContain('About Detached Node')
       expect(rowText).toContain('about')
       expect(rowText).toMatch(/published/i)
     })

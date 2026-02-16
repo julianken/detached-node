@@ -243,8 +243,8 @@ test.describe('Pages Collection - List View', () => {
     // Verify we're on the collection page
     await expectUrl(page, /\/admin\/collections\/pages/)
 
-    // The seeded database has one page: "About Mind-Controlled"
-    const aboutRow = await adminCollectionPage.getRowByText('About Mind-Controlled')
+    // The seeded database has one page: "About Detached Node"
+    const aboutRow = await adminCollectionPage.getRowByText('About Detached Node')
     await expect(aboutRow).toBeVisible()
 
     // Verify row contains the expected data

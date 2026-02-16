@@ -8,7 +8,7 @@
 
 ## Design Philosophy
 
-The reader is someone who has stepped outside the signal. They can see the conditioning apparatus -- the loops, the repetition, the manufactured consensus. The interface should feel like a precision instrument for the awakened: a high-end terminal that treats the reader as an operator, not a consumer.
+The reader is someone who examines systems from the outside. They can see the architecture of autonomous agents -- the loops, the reasoning chains, the emergent behaviors. The interface should feel like a precision instrument for the technically curious: a high-end terminal that treats the reader as an operator, not a consumer.
 
 **Three governing principles:**
 
@@ -593,8 +593,9 @@ The effect references the idea that "the signal is not perfectly clean" -- the r
        You looked behind the curtain.
        Most people never do.
 
-       "The goal of propaganda is not to inform
-        but to mobilize." -- Jacques Ellul
+       "The question of whether machines can think
+        is about as relevant as whether submarines
+        can swim." -- Edsger Dijkstra
 
   ================================================================
 -->

@@ -9,7 +9,7 @@ import { test, expect } from '../fixtures'
  * - Media files accessible without authentication
  *
  * Test Data (from seed-test-db.ts):
- * - Tags: propaganda, technology, culture
+ * - Tags: agentic-ai, workflows, philosophy
  * - Media: 2 test images (Test featured image 1, Test featured image 2)
  *
  * Note: These tests run WITHOUT authentication to verify public access
@@ -41,7 +41,7 @@ test.describe('Public API Access to Tags and Media', () => {
       const tagSlugs = data.docs.map((tag: { slug: string }) => tag.slug)
 
       // Verify all expected tags are present
-      expect(tagSlugs).toContain('propaganda')
+      expect(tagSlugs).toContain('agentic-ai')
       expect(tagSlugs).toContain('technology')
       expect(tagSlugs).toContain('culture')
     })
@@ -50,14 +50,14 @@ test.describe('Public API Access to Tags and Media', () => {
       const response = await request.get('/api/tags')
       const data = await response.json()
 
-      // Find the propaganda tag for detailed verification
-      const propagandaTag = data.docs.find((tag: { slug: string }) => tag.slug === 'propaganda')
+      // Find the agentic-ai tag for detailed verification
+      const agenticAiTag = data.docs.find((tag: { slug: string }) => tag.slug === 'agentic-ai')
 
-      expect(propagandaTag).toBeDefined()
-      expect(propagandaTag.name).toBe('Propaganda')
-      expect(propagandaTag.slug).toBe('propaganda')
-      expect(propagandaTag.description).toBe('Analysis of propaganda techniques and their effects')
-      expect(propagandaTag.id).toBeDefined()
+      expect(agenticAiTag).toBeDefined()
+      expect(agenticAiTag.name).toBe('Agentic AI')
+      expect(agenticAiTag.slug).toBe('agentic-ai')
+      expect(agenticAiTag.description).toBe('Analysis of agentic AI patterns and architectures')
+      expect(agenticAiTag.id).toBeDefined()
     })
 
     test('should allow filtering tags by slug without authentication', async ({ request }) => {

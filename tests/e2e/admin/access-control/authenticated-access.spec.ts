@@ -12,9 +12,9 @@ import { TEST_ADMIN } from '../../fixtures/auth.fixture'
  * - Can edit archived content
  *
  * Test Data (from seed-test-db.ts):
- * - Draft: "Unpublished Thoughts on Conditioning" (slug: unpublished-thoughts-conditioning)
- * - Archived: "Legacy Post About Old Propaganda" (slug: legacy-post-old-propaganda)
- * - Published: Multiple posts including "The Architecture of Persuasion"
+ * - Draft: "Unpublished Thoughts on Emergence" (slug: unpublished-thoughts-emergence)
+ * - Archived: "Legacy Post About Early Automation" (slug: legacy-post-early-automation)
+ * - Published: Multiple posts including "The Architecture of Agent Systems"
  *
  * Note: These tests use authenticated admin session via storageState
  */
@@ -39,14 +39,14 @@ test.describe('Authenticated User Access to All Content', () => {
 
       // Verify draft post is visible in the list
       const pageContent = await page.textContent('body')
-      expect(pageContent).toContain('Unpublished Thoughts on Conditioning')
+      expect(pageContent).toContain('Unpublished Thoughts on Emergence')
 
       // Verify we can see the draft status indicator (if present)
       // This is a bonus verification - the main thing is the post is visible
       const draftIndicator = page.getByText(/draft/i).first()
       const isDraftVisible = await draftIndicator.isVisible()
       // At minimum, the post title should be visible
-      const draftTitle = page.getByText('Unpublished Thoughts on Conditioning').first()
+      const draftTitle = page.getByText('Unpublished Thoughts on Emergence').first()
       await expect(draftTitle).toBeVisible()
     })
 
@@ -62,10 +62,10 @@ test.describe('Authenticated User Access to All Content', () => {
 
       // Verify archived post is visible in the list
       const pageContent = await page.textContent('body')
-      expect(pageContent).toContain('Legacy Post About Old Propaganda')
+      expect(pageContent).toContain('Legacy Post About Early Automation')
 
       // Verify the post title is visible
-      const archivedTitle = page.getByText('Legacy Post About Old Propaganda').first()
+      const archivedTitle = page.getByText('Legacy Post About Early Automation').first()
       await expect(archivedTitle).toBeVisible()
     })
 
@@ -81,10 +81,10 @@ test.describe('Authenticated User Access to All Content', () => {
 
       // Verify published posts are visible
       const pageContent = await page.textContent('body')
-      expect(pageContent).toContain('The Architecture of Persuasion')
+      expect(pageContent).toContain('The Architecture of Agent Systems')
 
       // Verify the post title is visible
-      const publishedTitle = page.getByText('The Architecture of Persuasion').first()
+      const publishedTitle = page.getByText('The Architecture of Agent Systems').first()
       await expect(publishedTitle).toBeVisible()
     })
 
@@ -102,9 +102,9 @@ test.describe('Authenticated User Access to All Content', () => {
       const pageContent = await page.textContent('body')
 
       // Verify all three statuses are represented
-      expect(pageContent).toContain('Unpublished Thoughts on Conditioning') // draft
-      expect(pageContent).toContain('Legacy Post About Old Propaganda') // archived
-      expect(pageContent).toContain('The Architecture of Persuasion') // published
+      expect(pageContent).toContain('Unpublished Thoughts on Emergence') // draft
+      expect(pageContent).toContain('Legacy Post About Early Automation') // archived
+      expect(pageContent).toContain('The Architecture of Agent Systems') // published
 
       // This demonstrates that admin users see ALL posts regardless of status
     })
@@ -120,7 +120,7 @@ test.describe('Authenticated User Access to All Content', () => {
       await page.waitForLoadState('networkidle')
 
       // Click on the draft post
-      await page.getByText('Unpublished Thoughts on Conditioning').first().click()
+      await page.getByText('Unpublished Thoughts on Emergence').first().click()
       await page.waitForLoadState('networkidle')
 
       // Verify we're in the editor
@@ -128,7 +128,7 @@ test.describe('Authenticated User Access to All Content', () => {
 
       // Verify title field has correct value
       const titleField = page.locator('input[name="title"]')
-      await expect(titleField).toHaveValue('Unpublished Thoughts on Conditioning')
+      await expect(titleField).toHaveValue('Unpublished Thoughts on Emergence')
 
       // Verify status is set to draft
       const statusSelect = page.locator('select[name="status"], [name="status"]')
@@ -144,14 +144,14 @@ test.describe('Authenticated User Access to All Content', () => {
       await page.waitForLoadState('networkidle')
 
       // Click on the draft post
-      await page.getByText('Unpublished Thoughts on Conditioning').first().click()
+      await page.getByText('Unpublished Thoughts on Emergence').first().click()
       await page.waitForLoadState('networkidle')
 
       // Get the summary field
       const summaryField = page.locator('textarea[name="summary"]')
 
       // Verify current summary
-      await expect(summaryField).toHaveValue(/Early draft exploring behavioral conditioning/)
+      await expect(summaryField).toHaveValue(/Early draft exploring emergent AI behaviors/)
 
       // Edit the summary (append text to verify edit capability)
       const originalSummary = await summaryField.inputValue()
@@ -186,7 +186,7 @@ test.describe('Authenticated User Access to All Content', () => {
       await page.waitForLoadState('networkidle')
 
       // Click on the draft post
-      await page.getByText('Unpublished Thoughts on Conditioning').first().click()
+      await page.getByText('Unpublished Thoughts on Emergence').first().click()
       await page.waitForLoadState('networkidle')
 
       // Verify current status is draft
@@ -210,7 +210,7 @@ test.describe('Authenticated User Access to All Content', () => {
       await page.waitForLoadState('networkidle')
 
       // Click on the archived post
-      await page.getByText('Legacy Post About Old Propaganda').first().click()
+      await page.getByText('Legacy Post About Early Automation').first().click()
       await page.waitForLoadState('networkidle')
 
       // Verify we're in the editor
@@ -218,7 +218,7 @@ test.describe('Authenticated User Access to All Content', () => {
 
       // Verify title field has correct value
       const titleField = page.locator('input[name="title"]')
-      await expect(titleField).toHaveValue('Legacy Post About Old Propaganda')
+      await expect(titleField).toHaveValue('Legacy Post About Early Automation')
 
       // Verify status is set to archived
       const statusSelect = page.locator('select[name="status"], [name="status"]')
@@ -234,14 +234,14 @@ test.describe('Authenticated User Access to All Content', () => {
       await page.waitForLoadState('networkidle')
 
       // Click on the archived post
-      await page.getByText('Legacy Post About Old Propaganda').first().click()
+      await page.getByText('Legacy Post About Early Automation').first().click()
       await page.waitForLoadState('networkidle')
 
       // Get the summary field
       const summaryField = page.locator('textarea[name="summary"]')
 
       // Verify current summary
-      await expect(summaryField).toHaveValue(/Historical analysis of propaganda techniques/)
+      await expect(summaryField).toHaveValue(/Historical analysis of early automation techniques/)
 
       // Edit the summary (append text to verify edit capability)
       const originalSummary = await summaryField.inputValue()
@@ -276,7 +276,7 @@ test.describe('Authenticated User Access to All Content', () => {
       await page.waitForLoadState('networkidle')
 
       // Click on the archived post
-      await page.getByText('Legacy Post About Old Propaganda').first().click()
+      await page.getByText('Legacy Post About Early Automation').first().click()
       await page.waitForLoadState('networkidle')
 
       // Verify current status is archived
@@ -294,7 +294,7 @@ test.describe('Authenticated User Access to All Content', () => {
     test('should return draft posts via API when authenticated', async ({ request }) => {
       // Fetch draft post via API using query string
       const whereQuery = JSON.stringify({
-        slug: { equals: 'unpublished-thoughts-conditioning' },
+        slug: { equals: 'unpublished-thoughts-emergence' },
       })
       const response = await request.get(`/api/posts?where=${encodeURIComponent(whereQuery)}`)
 
@@ -306,14 +306,14 @@ test.describe('Authenticated User Access to All Content', () => {
 
       // Verify it's the draft post
       const draftPost = data.docs[0]
-      expect(draftPost.title).toBe('Unpublished Thoughts on Conditioning')
+      expect(draftPost.title).toBe('Unpublished Thoughts on Emergence')
       expect(draftPost.status).toBe('draft')
     })
 
     test('should return archived posts via API when authenticated', async ({ request }) => {
       // Fetch archived post via API using query string
       const whereQuery = JSON.stringify({
-        slug: { equals: 'legacy-post-old-propaganda' },
+        slug: { equals: 'legacy-post-early-automation' },
       })
       const response = await request.get(`/api/posts?where=${encodeURIComponent(whereQuery)}`)
 
@@ -325,7 +325,7 @@ test.describe('Authenticated User Access to All Content', () => {
 
       // Verify it's the archived post
       const archivedPost = data.docs[0]
-      expect(archivedPost.title).toBe('Legacy Post About Old Propaganda')
+      expect(archivedPost.title).toBe('Legacy Post About Early Automation')
       expect(archivedPost.status).toBe('archived')
     })
 
@@ -344,7 +344,7 @@ test.describe('Authenticated User Access to All Content', () => {
 
       // Verify it's the published post
       const publishedPost = data.docs[0]
-      expect(publishedPost.title).toBe('The Architecture of Persuasion')
+      expect(publishedPost.title).toBe('The Architecture of Agent Systems')
       expect(publishedPost.status).toBe('published')
     })
 
@@ -391,7 +391,7 @@ test.describe('Authenticated User Access to All Content', () => {
       // Should return 1 draft post
       expect(data.docs.length).toBe(1)
       expect(data.docs[0].status).toBe('draft')
-      expect(data.docs[0].title).toBe('Unpublished Thoughts on Conditioning')
+      expect(data.docs[0].title).toBe('Unpublished Thoughts on Emergence')
     })
 
     test('should allow filtering by archived status via API', async ({ request }) => {
@@ -407,7 +407,7 @@ test.describe('Authenticated User Access to All Content', () => {
       // Should return 1 archived post
       expect(data.docs.length).toBe(1)
       expect(data.docs[0].status).toBe('archived')
-      expect(data.docs[0].title).toBe('Legacy Post About Old Propaganda')
+      expect(data.docs[0].title).toBe('Legacy Post About Early Automation')
     })
   })
 
@@ -422,9 +422,9 @@ test.describe('Authenticated User Access to All Content', () => {
       await page.waitForLoadState('networkidle')
 
       const pageContent = await page.textContent('body')
-      expect(pageContent).toContain('Unpublished Thoughts on Conditioning') // draft
-      expect(pageContent).toContain('Legacy Post About Old Propaganda') // archived
-      expect(pageContent).toContain('The Architecture of Persuasion') // published
+      expect(pageContent).toContain('Unpublished Thoughts on Emergence') // draft
+      expect(pageContent).toContain('Legacy Post About Early Automation') // archived
+      expect(pageContent).toContain('The Architecture of Agent Systems') // published
 
       // 2. Verify API returns all statuses
       const apiResponse = await request.get('/api/posts')
@@ -432,27 +432,27 @@ test.describe('Authenticated User Access to All Content', () => {
       expect(apiData.docs.length).toBe(6) // 4 published + 1 draft + 1 archived
 
       const slugs = apiData.docs.map((post: { slug: string }) => post.slug)
-      expect(slugs).toContain('unpublished-thoughts-conditioning') // draft
-      expect(slugs).toContain('legacy-post-old-propaganda') // archived
+      expect(slugs).toContain('unpublished-thoughts-emergence') // draft
+      expect(slugs).toContain('legacy-post-early-automation') // archived
       expect(slugs).toContain('architecture-of-persuasion') // published
 
       // 3. Verify can edit draft post
-      await page.getByText('Unpublished Thoughts on Conditioning').first().click()
+      await page.getByText('Unpublished Thoughts on Emergence').first().click()
       await page.waitForLoadState('networkidle')
 
       const titleField = page.locator('input[name="title"]')
-      await expect(titleField).toHaveValue('Unpublished Thoughts on Conditioning')
+      await expect(titleField).toHaveValue('Unpublished Thoughts on Emergence')
       await expect(titleField).toBeEnabled()
 
       // 4. Navigate back and verify can edit archived post
       await page.goBack()
       await page.waitForLoadState('networkidle')
 
-      await page.getByText('Legacy Post About Old Propaganda').first().click()
+      await page.getByText('Legacy Post About Early Automation').first().click()
       await page.waitForLoadState('networkidle')
 
       const archivedTitleField = page.locator('input[name="title"]')
-      await expect(archivedTitleField).toHaveValue('Legacy Post About Old Propaganda')
+      await expect(archivedTitleField).toHaveValue('Legacy Post About Early Automation')
       await expect(archivedTitleField).toBeEnabled()
     })
   })

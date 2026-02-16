@@ -25,7 +25,7 @@ import {
  * 4. Add new tags: select different tags, verify update
  *
  * Test Data:
- * - Tags: "Propaganda", "Technology", "Culture"
+ * - Tags: "Agentic AI", "Technology", "Culture"
  * - Posts with tags already assigned for testing removal
  */
 
@@ -73,11 +73,11 @@ test.describe('Post Tags Relationship', () => {
     )
 
     // Select multiple tags
-    await selectMultipleRelationships(page, 'tags', ['Propaganda', 'Technology'])
+    await selectMultipleRelationships(page, 'tags', ['Agentic AI', 'Technology'])
 
     // Verify the selected tags are displayed
     const tagsField = page.locator('[data-field="tags"]')
-    await expect(tagsField).toContainText(/Propaganda/i)
+    await expect(tagsField).toContainText(/Agentic AI/i)
     await expect(tagsField).toContainText(/Technology/i)
 
     // Verify we have 2 tags selected
@@ -132,21 +132,21 @@ test.describe('Post Tags Relationship', () => {
     adminEditorPage,
     page,
   }) => {
-    // Open a post that has multiple tags (Post 1: Propaganda, Culture)
+    // Open a post that has multiple tags (Post 1: Agentic AI, Culture)
     const architectureRow = await adminCollectionPage.getRowByText('The Architecture of Persuasion')
     await architectureRow.click()
     await page.waitForLoadState('networkidle')
 
     // Verify the post has tags
     const tagsField = page.locator('[data-field="tags"]')
-    await expect(tagsField).toContainText(/Propaganda/i)
+    await expect(tagsField).toContainText(/Agentic AI/i)
     await expect(tagsField).toContainText(/Culture/i)
 
     // Remove one tag
-    await removeRelationship(page, 'tags', 'Propaganda')
+    await removeRelationship(page, 'tags', 'Agentic AI')
 
     // Verify the tag was removed from display
-    await expect(tagsField).not.toContainText(/Propaganda/i)
+    await expect(tagsField).not.toContainText(/Agentic AI/i)
     await expect(tagsField).toContainText(/Culture/i)
 
     // Save the changes
@@ -155,7 +155,7 @@ test.describe('Post Tags Relationship', () => {
     await page.waitForTimeout(1000)
 
     // Verify the tag is still removed after save
-    await expect(tagsField).not.toContainText(/Propaganda/i)
+    await expect(tagsField).not.toContainText(/Agentic AI/i)
     await expect(tagsField).toContainText(/Culture/i)
   })
 
@@ -164,14 +164,14 @@ test.describe('Post Tags Relationship', () => {
     adminEditorPage,
     page,
   }) => {
-    // Open a post that has multiple tags (Post 2: Propaganda, Technology)
+    // Open a post that has multiple tags (Post 2: Agentic AI, Technology)
     const decoderRow = await adminCollectionPage.getRowByText('Decoding Corporate Newspeak')
     await decoderRow.click()
     await page.waitForLoadState('networkidle')
 
     // Verify the post has tags
     const tagsField = page.locator('[data-field="tags"]')
-    await expect(tagsField).toContainText(/Propaganda/i)
+    await expect(tagsField).toContainText(/Agentic AI/i)
     await expect(tagsField).toContainText(/Technology/i)
 
     // Remove all tags
@@ -196,17 +196,17 @@ test.describe('Post Tags Relationship', () => {
     adminEditorPage,
     page,
   }) => {
-    // Open a post that has one tag (Post 4: Propaganda)
-    const readingsRow = await adminCollectionPage.getRowByText('Essential Readings on Mind Control')
+    // Open a post that has one tag (Post 4: Agentic AI)
+    const readingsRow = await adminCollectionPage.getRowByText('Essential Readings on Agentic AI')
     await readingsRow.click()
     await page.waitForLoadState('networkidle')
 
-    // Verify the post currently has Propaganda tag
+    // Verify the post currently has Agentic AI tag
     const tagsField = page.locator('[data-field="tags"]')
-    await expect(tagsField).toContainText(/Propaganda/i)
+    await expect(tagsField).toContainText(/Agentic AI/i)
 
     // Remove the existing tag
-    await removeRelationship(page, 'tags', 'Propaganda')
+    await removeRelationship(page, 'tags', 'Agentic AI')
 
     // Add different tags
     await selectMultipleRelationships(page, 'tags', ['Culture', 'Technology'])
@@ -214,7 +214,7 @@ test.describe('Post Tags Relationship', () => {
     // Verify the new tags are displayed
     await expect(tagsField).toContainText(/Culture/i)
     await expect(tagsField).toContainText(/Technology/i)
-    await expect(tagsField).not.toContainText(/Propaganda/i)
+    await expect(tagsField).not.toContainText(/Agentic AI/i)
 
     // Save the changes
     await adminEditorPage.save()
@@ -224,7 +224,7 @@ test.describe('Post Tags Relationship', () => {
     // Verify the tags persisted correctly
     await expect(tagsField).toContainText(/Culture/i)
     await expect(tagsField).toContainText(/Technology/i)
-    await expect(tagsField).not.toContainText(/Propaganda/i)
+    await expect(tagsField).not.toContainText(/Agentic AI/i)
   })
 
   test('should select all three available tags on a post', async ({
@@ -234,17 +234,17 @@ test.describe('Post Tags Relationship', () => {
   }) => {
     // Open a post with only one tag (Post 5: Culture)
     const unpublishedRow = await adminCollectionPage.getRowByText(
-      'Unpublished Thoughts on Conditioning'
+      'Unpublished Thoughts on Emergence'
     )
     await unpublishedRow.click()
     await page.waitForLoadState('networkidle')
 
     // Add the other two tags
-    await selectMultipleRelationships(page, 'tags', ['Propaganda', 'Technology'])
+    await selectMultipleRelationships(page, 'tags', ['Agentic AI', 'Technology'])
 
     // Verify all three tags are displayed
     const tagsField = page.locator('[data-field="tags"]')
-    await expect(tagsField).toContainText(/Propaganda/i)
+    await expect(tagsField).toContainText(/Agentic AI/i)
     await expect(tagsField).toContainText(/Technology/i)
     await expect(tagsField).toContainText(/Culture/i)
 
@@ -254,7 +254,7 @@ test.describe('Post Tags Relationship', () => {
     await page.waitForTimeout(1000)
 
     // Verify all three tags persisted
-    await expect(tagsField).toContainText(/Propaganda/i)
+    await expect(tagsField).toContainText(/Agentic AI/i)
     await expect(tagsField).toContainText(/Technology/i)
     await expect(tagsField).toContainText(/Culture/i)
   })
@@ -279,16 +279,16 @@ test.describe('Post Tags Relationship', () => {
     await expectVisible(tagsField)
 
     // Select tags
-    await selectMultipleRelationships(page, 'tags', ['Propaganda'])
+    await selectMultipleRelationships(page, 'tags', ['Agentic AI'])
 
     // Verify tag is displayed
-    await expect(tagsField).toContainText(/Propaganda/i)
+    await expect(tagsField).toContainText(/Agentic AI/i)
 
     // Add another tag
     await selectMultipleRelationships(page, 'tags', ['Culture'])
 
     // Verify both tags are displayed
-    await expect(tagsField).toContainText(/Propaganda/i)
+    await expect(tagsField).toContainText(/Agentic AI/i)
     await expect(tagsField).toContainText(/Culture/i)
 
     // Save the post
@@ -297,7 +297,7 @@ test.describe('Post Tags Relationship', () => {
     await page.waitForTimeout(1000)
 
     // Verify tags persisted on the new post
-    await expect(tagsField).toContainText(/Propaganda/i)
+    await expect(tagsField).toContainText(/Agentic AI/i)
     await expect(tagsField).toContainText(/Culture/i)
   })
 })

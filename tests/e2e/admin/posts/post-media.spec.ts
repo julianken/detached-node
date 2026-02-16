@@ -197,7 +197,7 @@ test.describe('Post Featured Image Relationship', () => {
     page,
   }) => {
     // Open a post that doesn't have a featured image (Post 4: Essential Readings)
-    const readingsRow = await adminCollectionPage.getRowByText('Essential Readings on Mind Control')
+    const readingsRow = await adminCollectionPage.getRowByText('Essential Readings on Agentic AI')
     await readingsRow.click()
     await page.waitForLoadState('networkidle')
 
@@ -222,7 +222,7 @@ test.describe('Post Featured Image Relationship', () => {
 
     // Navigate back to the post list and return to verify
     await adminCollectionPage.goto('posts')
-    const testRow = await adminCollectionPage.getRowByText('Essential Readings on Mind Control')
+    const testRow = await adminCollectionPage.getRowByText('Essential Readings on Agentic AI')
     await testRow.click()
     await page.waitForLoadState('networkidle')
 
