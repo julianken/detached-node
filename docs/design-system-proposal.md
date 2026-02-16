@@ -179,7 +179,7 @@ All three palettes share a common structure:
 | `--border-subtle` | `#dbe2ea` | Section dividers |
 | `--surface-hover` | `#dce4ec` | Hover background |
 
-**Character:** Analytical detachment. The feeling of running a diagnostic on a system from the outside. This is the palette for a blog that treats propaganda like a pathogen to be identified and catalogued.
+**Character:** Analytical detachment. The feeling of running a diagnostic on a system from the outside. This is the palette for a blog that treats complex systems as objects to be analyzed and understood.
 
 ---
 
@@ -498,7 +498,7 @@ Used sparingly for emphasis. The accent color at low opacity creates a warm/cool
 
 ## Thematic Alignment
 
-The blog is about seeing through propaganda and conditioning. Every visual choice should subtly reinforce the act of *decoding, analyzing, and seeing clearly.* Here is how each system contributes:
+The blog is about understanding complex systems and autonomous agents. Every visual choice should subtly reinforce the act of *decoding, analyzing, and seeing clearly.* Here is how each system contributes:
 
 ### Color as metaphor
 
@@ -523,7 +523,7 @@ The blog is about seeing through propaganda and conditioning. Every visual choic
 ### Specific UI element concepts
 
 1. **Post dates displayed in monospace** with wider tracking: `2026.02.14` instead of "February 14, 2026"
-2. **Tag labels** in uppercase mono with heavy tracking: `PROPAGANDA` `ELLUL` `CONDITIONING`
+2. **Tag labels** in uppercase mono with heavy tracking: `AGENTIC AI` `WORKFLOWS` `SYSTEMS`
 3. **Blockquotes** with a left border in the accent color and a faint accent-glow background -- suggesting highlighted/flagged text
 4. **Footnotes/references** styled like terminal output: monospace, slightly smaller, numbered with a different color
 5. **The "Read more" link** could include a blinking cursor or a `>` prefix to suggest a terminal prompt

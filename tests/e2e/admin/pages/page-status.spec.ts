@@ -84,12 +84,12 @@ test.describe('Page Status Workflow', () => {
       adminEditorPage,
       adminCollectionPage,
     }) => {
-      // Navigate to the seeded "About Mind-Controlled" page (currently published)
+      // Navigate to the seeded "About Detached Node" page (currently published)
       await adminCollectionPage.goto('pages')
       await page.waitForLoadState('networkidle')
 
       // Click on the About page
-      await page.getByText('About Mind-Controlled').first().click()
+      await page.getByText('About Detached Node').first().click()
       await page.waitForLoadState('networkidle')
 
       // Verify current status is published
@@ -213,9 +213,9 @@ test.describe('Page Status - Admin Visibility', () => {
       await adminCollectionPage.goto('pages')
       await page.waitForLoadState('networkidle')
 
-      // Verify published page is visible (seeded "About Mind-Controlled")
+      // Verify published page is visible (seeded "About Detached Node")
       const pageContent = await page.textContent('body')
-      expect(pageContent).toContain('About Mind-Controlled')
+      expect(pageContent).toContain('About Detached Node')
     })
   })
 })

@@ -22,7 +22,7 @@ import { removeRelationship, selectRelationship } from '../../helpers/relationsh
  *
  * Test Data:
  * - Published post: "The Architecture of Persuasion" (essay, published, featured)
- * - Draft post: "Unpublished Thoughts on Conditioning" (essay, draft)
+ * - Draft post: "Unpublished Thoughts on Emergence" (essay, draft)
  */
 
 test.describe('Edit Existing Post', () => {
@@ -97,17 +97,17 @@ test.describe('Edit Existing Post', () => {
     page,
   }) => {
     // Open the draft post for editing
-    const draftRow = await adminCollectionPage.getRowByText('Unpublished Thoughts on Conditioning')
+    const draftRow = await adminCollectionPage.getRowByText('Unpublished Thoughts on Emergence')
     await draftRow.click()
     await page.waitForLoadState('networkidle')
 
     // Edit the title
-    const newTitle = 'Updated: Thoughts on Modern Conditioning'
+    const newTitle = 'Updated: Thoughts on Modern Emergence'
     await adminEditorPage.fillField('title', newTitle)
 
     // Edit the summary
     const newSummary =
-      'A comprehensive examination of behavioral conditioning mechanisms in contemporary society, exploring how subtle environmental cues shape our actions without conscious awareness.'
+      'A comprehensive examination of emergent AI behaviors in contemporary systems, exploring how subtle environmental cues shape autonomous actions without explicit programming.'
     await adminEditorPage.fillField('summary', newSummary)
 
     // Save the changes
@@ -136,7 +136,7 @@ test.describe('Edit Existing Post', () => {
     page,
   }) => {
     // Open the draft post
-    const draftRow = await adminCollectionPage.getRowByText('Unpublished Thoughts on Conditioning')
+    const draftRow = await adminCollectionPage.getRowByText('Unpublished Thoughts on Emergence')
     await draftRow.click()
     await page.waitForLoadState('networkidle')
 
@@ -163,7 +163,7 @@ test.describe('Edit Existing Post', () => {
     await adminCollectionPage.goto('posts')
 
     // Verify the post now shows as published in the list
-    const updatedRow = await adminCollectionPage.getRowByText('Unpublished Thoughts on Conditioning')
+    const updatedRow = await adminCollectionPage.getRowByText('Unpublished Thoughts on Emergence')
     await expect(updatedRow).toContainText(/published/i)
   })
 
@@ -173,15 +173,15 @@ test.describe('Edit Existing Post', () => {
     page,
   }) => {
     // Open the draft post
-    const draftRow = await adminCollectionPage.getRowByText('Unpublished Thoughts on Conditioning')
+    const draftRow = await adminCollectionPage.getRowByText('Unpublished Thoughts on Emergence')
     await draftRow.click()
     await page.waitForLoadState('networkidle')
 
     // Verify current slug
-    await expectFieldValue(page, 'slug', 'unpublished-thoughts-conditioning')
+    await expectFieldValue(page, 'slug', 'unpublished-thoughts-emergence')
 
     // Change slug to a new unique value
-    const newSlug = 'modern-conditioning-analysis'
+    const newSlug = 'modern-emergence-analysis'
     await adminEditorPage.fillField('slug', newSlug)
 
     // Save the changes
@@ -202,7 +202,7 @@ test.describe('Edit Existing Post', () => {
     page,
   }) => {
     // Open the draft post (which doesn't have a featured image)
-    const draftRow = await adminCollectionPage.getRowByText('Unpublished Thoughts on Conditioning')
+    const draftRow = await adminCollectionPage.getRowByText('Unpublished Thoughts on Emergence')
     await draftRow.click()
     await page.waitForLoadState('networkidle')
 
@@ -275,7 +275,7 @@ test.describe('Edit Existing Post', () => {
     page,
   }) => {
     // Open the draft post
-    const draftRow = await adminCollectionPage.getRowByText('Unpublished Thoughts on Conditioning')
+    const draftRow = await adminCollectionPage.getRowByText('Unpublished Thoughts on Emergence')
     await draftRow.click()
     await page.waitForLoadState('networkidle')
 
@@ -298,7 +298,7 @@ test.describe('Edit Existing Post', () => {
     await adminCollectionPage.goto('posts')
 
     // Verify the post now shows the new type in the list
-    const updatedRow = await adminCollectionPage.getRowByText('Unpublished Thoughts on Conditioning')
+    const updatedRow = await adminCollectionPage.getRowByText('Unpublished Thoughts on Emergence')
     await expect(updatedRow).toContainText(/field-report|Field Report/i)
   })
 })

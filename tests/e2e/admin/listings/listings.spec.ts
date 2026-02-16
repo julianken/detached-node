@@ -50,7 +50,7 @@ test.describe('Listings CRUD Operations', () => {
     await page.waitForTimeout(500)
 
     // Fill in description (optional field)
-    const testDescription = 'A curated collection of essential readings on propaganda and mind control'
+    const testDescription = 'A curated collection of essential readings on agentic AI and autonomous systems'
     await adminEditorPage.fillField('description', testDescription)
 
     // Select multiple posts for the items relationship
@@ -111,7 +111,7 @@ test.describe('Listings CRUD Operations', () => {
     await adminCollectionPage.clickCreateNew()
 
     // Fill in required title
-    const testTitle = 'Visual Propaganda Analysis'
+    const testTitle = 'Visual Agent Architecture'
     await adminEditorPage.fillField('title', testTitle)
 
     // Wait for slug generation

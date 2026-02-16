@@ -33,10 +33,10 @@ test.describe('Post Status Workflow', () => {
 
       // Look for the draft post in the list (using a more flexible approach)
       const pageContent = await page.textContent('body')
-      expect(pageContent).toContain('Unpublished Thoughts on Conditioning')
+      expect(pageContent).toContain('Unpublished Thoughts on Emergence')
 
       // Click on the post link/title
-      await page.getByText('Unpublished Thoughts on Conditioning').first().click()
+      await page.getByText('Unpublished Thoughts on Emergence').first().click()
       await page.waitForLoadState('networkidle')
 
       // Verify we're in the editor
@@ -44,7 +44,7 @@ test.describe('Post Status Workflow', () => {
 
       // Verify title field has correct value
       const titleField = page.locator('input[name="title"]')
-      await expect(titleField).toHaveValue('Unpublished Thoughts on Conditioning')
+      await expect(titleField).toHaveValue('Unpublished Thoughts on Emergence')
     })
 
     test('should change draft post to published status', async ({
@@ -56,7 +56,7 @@ test.describe('Post Status Workflow', () => {
       await page.waitForLoadState('networkidle')
 
       // Click on the draft post
-      await page.getByText('Unpublished Thoughts on Conditioning').first().click()
+      await page.getByText('Unpublished Thoughts on Emergence').first().click()
       await page.waitForLoadState('networkidle')
 
       // Change status to published
@@ -91,7 +91,7 @@ test.describe('Post Status Workflow', () => {
       await page.waitForLoadState('networkidle')
 
       // Click on the archived post
-      await page.getByText('Legacy Post About Old Propaganda').first().click()
+      await page.getByText('Legacy Post About Early Automation').first().click()
       await page.waitForLoadState('networkidle')
 
       // Verify current status is archived
@@ -146,10 +146,10 @@ test.describe('Post Status Workflow', () => {
       const pageContent = await page.textContent('body')
 
       // Verify draft post is NOT visible
-      expect(pageContent).not.toContain('Unpublished Thoughts on Conditioning')
+      expect(pageContent).not.toContain('Unpublished Thoughts on Emergence')
 
       // Try to access draft post directly by URL
-      await page.goto('/posts/unpublished-thoughts-conditioning')
+      await page.goto('/posts/unpublished-thoughts-emergence')
       await page.waitForLoadState('networkidle')
 
       // Should either show 404 or not render content
@@ -158,7 +158,7 @@ test.describe('Post Status Workflow', () => {
 
       // Either should be 404, or content should not be visible
       if (!is404) {
-        expect(bodyContent).not.toContain('work in progress examining')
+        expect(bodyContent).not.toContain('work in progress exploring')
       }
     })
 
@@ -195,10 +195,10 @@ test.describe('Post Status Workflow', () => {
       const pageContent = await page.textContent('body')
 
       // Verify archived post is NOT visible
-      expect(pageContent).not.toContain('Legacy Post About Old Propaganda')
+      expect(pageContent).not.toContain('Legacy Post About Early Automation')
 
       // Try to access archived post directly by URL
-      await page.goto('/posts/legacy-post-old-propaganda')
+      await page.goto('/posts/legacy-post-early-automation')
       await page.waitForLoadState('networkidle')
 
       // Should either show 404 or not render content
@@ -207,7 +207,7 @@ test.describe('Post Status Workflow', () => {
 
       // Either should be 404, or archived content should not be visible
       if (!is404) {
-        expect(bodyContent).not.toContain('propaganda methods that, while dated')
+        expect(bodyContent).not.toContain('automation methods that, while dated')
       }
     })
 
@@ -251,7 +251,7 @@ test.describe('Post Status Workflow', () => {
 
       // Verify draft post is visible
       const pageContent = await page.textContent('body')
-      expect(pageContent).toContain('Unpublished Thoughts on Conditioning')
+      expect(pageContent).toContain('Unpublished Thoughts on Emergence')
     })
 
     test('should show archived posts in admin posts collection', async ({
@@ -264,7 +264,7 @@ test.describe('Post Status Workflow', () => {
 
       // Verify archived post is visible
       const pageContent = await page.textContent('body')
-      expect(pageContent).toContain('Legacy Post About Old Propaganda')
+      expect(pageContent).toContain('Legacy Post About Early Automation')
     })
 
     test('should show published posts in admin posts collection', async ({

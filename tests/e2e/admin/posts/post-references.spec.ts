@@ -29,9 +29,9 @@ import {
  * 5. Delete reference: verify deletion
  *
  * Test Data:
- * - Reference 1: "Propaganda: The Formation of Men's Attitudes" by Jacques Ellul
- * - Reference 2: "Manufacturing Consent" by Chomsky & Herman
- * - Reference 3: "The Society of the Spectacle" by Guy Debord
+ * - Reference 1: "Human Compatible: Artificial Intelligence and the Problem of Control" by Stuart Russell
+ * - Reference 2: "Artificial Intelligence: A Modern Approach" by Russell & Norvig
+ * - Reference 3: "The Alignment Problem" by Brian Christian
  */
 
 test.describe('Post References Array', () => {
@@ -70,8 +70,8 @@ test.describe('Post References Array', () => {
     await addArrayRow(page, 'references')
 
     // Fill reference fields
-    await fillArrayField(page, 'references', 0, 'title', 'Propaganda: The Formation of Men\'s Attitudes')
-    await fillArrayField(page, 'references', 0, 'url', 'https://example.com/propaganda-ellul')
+    await fillArrayField(page, 'references', 0, 'title', 'Human Compatible: Artificial Intelligence and the Problem of Control')
+    await fillArrayField(page, 'references', 0, 'url', 'https://example.com/human-compatible-russell')
 
     // Save the post
     await adminEditorPage.save()
@@ -80,10 +80,10 @@ test.describe('Post References Array', () => {
 
     // Verify reference was saved
     const titleValue = await getArrayFieldValue(page, 'references', 0, 'title')
-    expect(titleValue).toBe('Propaganda: The Formation of Men\'s Attitudes')
+    expect(titleValue).toBe('Human Compatible: Artificial Intelligence and the Problem of Control')
 
     const urlValue = await getArrayFieldValue(page, 'references', 0, 'url')
-    expect(urlValue).toBe('https://example.com/propaganda-ellul')
+    expect(urlValue).toBe('https://example.com/human-compatible-russell')
   })
 
   test('should add multiple references and maintain order', async ({
@@ -103,17 +103,17 @@ test.describe('Post References Array', () => {
 
     // Add first reference
     await addArrayRow(page, 'references')
-    await fillArrayField(page, 'references', 0, 'title', 'Propaganda: The Formation of Men\'s Attitudes')
-    await fillArrayField(page, 'references', 0, 'url', 'https://example.com/propaganda-ellul')
+    await fillArrayField(page, 'references', 0, 'title', 'Human Compatible: Artificial Intelligence and the Problem of Control')
+    await fillArrayField(page, 'references', 0, 'url', 'https://example.com/human-compatible-russell')
 
     // Add second reference
     await addArrayRow(page, 'references')
-    await fillArrayField(page, 'references', 1, 'title', 'Manufacturing Consent')
+    await fillArrayField(page, 'references', 1, 'title', 'Artificial Intelligence: A Modern Approach')
     await fillArrayField(page, 'references', 1, 'url', 'https://example.com/manufacturing-consent')
 
     // Add third reference
     await addArrayRow(page, 'references')
-    await fillArrayField(page, 'references', 2, 'title', 'The Society of the Spectacle')
+    await fillArrayField(page, 'references', 2, 'title', 'The Alignment Problem')
     await fillArrayField(page, 'references', 2, 'url', 'https://example.com/society-spectacle')
 
     // Verify we have 3 references
@@ -126,9 +126,9 @@ test.describe('Post References Array', () => {
     await page.waitForTimeout(1000)
 
     // Verify all references are saved in order
-    expect(await getArrayFieldValue(page, 'references', 0, 'title')).toBe('Propaganda: The Formation of Men\'s Attitudes')
-    expect(await getArrayFieldValue(page, 'references', 1, 'title')).toBe('Manufacturing Consent')
-    expect(await getArrayFieldValue(page, 'references', 2, 'title')).toBe('The Society of the Spectacle')
+    expect(await getArrayFieldValue(page, 'references', 0, 'title')).toBe('Human Compatible: Artificial Intelligence and the Problem of Control')
+    expect(await getArrayFieldValue(page, 'references', 1, 'title')).toBe('Artificial Intelligence: A Modern Approach')
+    expect(await getArrayFieldValue(page, 'references', 2, 'title')).toBe('The Alignment Problem')
   })
 
   test('should add a reference with all fields populated', async ({
@@ -148,9 +148,9 @@ test.describe('Post References Array', () => {
 
     // Add a reference with all fields
     await addArrayRow(page, 'references')
-    await fillArrayField(page, 'references', 0, 'title', 'Propaganda: The Formation of Men\'s Attitudes')
-    await fillArrayField(page, 'references', 0, 'url', 'https://example.com/propaganda-ellul')
-    await fillArrayField(page, 'references', 0, 'author', 'Jacques Ellul')
+    await fillArrayField(page, 'references', 0, 'title', 'Human Compatible: Artificial Intelligence and the Problem of Control')
+    await fillArrayField(page, 'references', 0, 'url', 'https://example.com/human-compatible-russell')
+    await fillArrayField(page, 'references', 0, 'author', 'Stuart Russell')
     await fillArrayField(page, 'references', 0, 'publication', 'Vintage Books')
     await fillArrayDateField(page, 'references', 0, 'date', '1973-01-01')
 
@@ -160,9 +160,9 @@ test.describe('Post References Array', () => {
     await page.waitForTimeout(1000)
 
     // Verify all fields were saved
-    expect(await getArrayFieldValue(page, 'references', 0, 'title')).toBe('Propaganda: The Formation of Men\'s Attitudes')
-    expect(await getArrayFieldValue(page, 'references', 0, 'url')).toBe('https://example.com/propaganda-ellul')
-    expect(await getArrayFieldValue(page, 'references', 0, 'author')).toBe('Jacques Ellul')
+    expect(await getArrayFieldValue(page, 'references', 0, 'title')).toBe('Human Compatible: Artificial Intelligence and the Problem of Control')
+    expect(await getArrayFieldValue(page, 'references', 0, 'url')).toBe('https://example.com/human-compatible-russell')
+    expect(await getArrayFieldValue(page, 'references', 0, 'author')).toBe('Stuart Russell')
     expect(await getArrayFieldValue(page, 'references', 0, 'publication')).toBe('Vintage Books')
 
     // Date field value may be formatted, so check it contains the year

@@ -752,7 +752,7 @@ npm install react-type-animation
 
 **Considerations:**
 - Does the blog's content justify this level of polish?
-- Can effects be tied to content themes (e.g., more glitch on "propaganda" posts)?
+- Can effects be tied to content themes (e.g., more glitch on technical deep-dive posts)?
 - Mobile performance: Can we maintain 60fps?
 
 **Decision Point:** After Phase 3 analytics (bounce rate, time-on-page, device breakdown).
