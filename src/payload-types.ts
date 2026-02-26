@@ -278,6 +278,18 @@ export interface Post {
   status: 'draft' | 'published' | 'archived';
   publishedAt?: string | null;
   featured?: boolean | null;
+  /**
+   * Cluster theme for pillar page grouping.
+   */
+  theme?: ('isolation' | 'signal' | 'architecture') | null;
+  /**
+   * Search-optimized title. Falls back to title if blank.
+   */
+  seoTitle?: string | null;
+  /**
+   * Meta description for search results. Falls back to summary if blank.
+   */
+  metaDescription?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -511,6 +523,9 @@ export interface PostsSelect<T extends boolean = true> {
   status?: T;
   publishedAt?: T;
   featured?: T;
+  theme?: T;
+  seoTitle?: T;
+  metaDescription?: T;
   updatedAt?: T;
   createdAt?: T;
 }

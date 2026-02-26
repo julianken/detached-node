@@ -2,14 +2,12 @@ import { Metadata } from "next";
 import { PageHeader } from "@/components/PageHeader";
 import { PageLayout } from "@/components/PageLayout";
 import { PostCard } from "@/components/PostCard";
+import { SchemaScript } from "@/components/SchemaScript";
+import { generateCollectionPageSchema } from "@/lib/schema";
 import { formatDate } from "@/lib/formatting";
 import { getPublishedPosts } from "@/lib/queries/posts";
-import type { Media } from "@/payload-types";
-
-// Type guard for Media objects
-function isMediaObject(media: number | Media | null | undefined): media is Media {
-  return typeof media === 'object' && media !== null && 'url' in media;
-}
+import { isMediaObject } from "@/lib/types/media";
+import { siteUrl } from "@/lib/site-config";
 
 // ISR: Revalidate every hour - post list changes with new publications
 export const revalidate = 3600;
@@ -17,6 +15,9 @@ export const revalidate = 3600;
 export const metadata: Metadata = {
   title: "Posts",
   description: "Writing on agentic AI workflows, autonomous systems, and machine intelligence.",
+  alternates: {
+    canonical: siteUrl + "/posts",
+  },
 };
 
 export default async function PostsPage() {
@@ -24,6 +25,7 @@ export default async function PostsPage() {
 
   return (
     <div className="glitch-reveal">
+    <SchemaScript schema={generateCollectionPageSchema()} />
     <PageLayout>
       <PageHeader
         title="Posts"

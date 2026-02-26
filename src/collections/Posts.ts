@@ -111,5 +111,37 @@ export const Posts: CollectionConfig = {
       admin: { position: 'sidebar' },
       index: true, // Index for featured post queries
     },
+    {
+      name: 'theme',
+      type: 'select',
+      options: [
+        { label: 'Isolation', value: 'isolation' },
+        { label: 'Signal', value: 'signal' },
+        { label: 'Architecture', value: 'architecture' },
+      ],
+      index: true,
+      admin: {
+        position: 'sidebar',
+        description: 'Cluster theme for pillar page grouping.',
+      },
+    },
+    {
+      name: 'seoTitle',
+      type: 'text',
+      maxLength: 160,
+      admin: {
+        position: 'sidebar',
+        description: 'Search-optimized title. Falls back to title if blank.',
+      },
+    },
+    {
+      name: 'metaDescription',
+      type: 'textarea',
+      maxLength: 320,
+      admin: {
+        position: 'sidebar',
+        description: 'Meta description for search results. Falls back to summary if blank.',
+      },
+    },
   ],
 }
