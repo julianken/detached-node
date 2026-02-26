@@ -7,17 +7,15 @@ import { Link } from "next-view-transitions";
 import { PageLayout } from "@/components/PageLayout";
 import { OptimizedImage } from "@/components/OptimizedImage";
 import { TextGlitch } from "@/components/TextGlitch";
+import { SchemaScript } from "@/components/SchemaScript";
+import { generateBlogPostingSchema, generateBreadcrumbSchema } from "@/lib/schema";
 import { logWarning } from "@/lib/logging";
 import { ErrorIds } from "@/lib/error-ids";
 import { getPostBySlug, getPublishedPosts } from "@/lib/queries/posts";
 import { isValidSlug } from "@/lib/types/branded";
+import { isMediaObject } from "@/lib/types/media";
 import { FadeReveal } from "@/components/FadeReveal";
-import type { Media } from "@/payload-types";
-
-// Type guard for Media objects
-function isMediaObject(media: number | Media | null | undefined): media is Media {
-  return typeof media === 'object' && media !== null && 'url' in media;
-}
+import { siteUrl, ogDefaultImage } from "@/lib/site-config";
 
 // ISR: Revalidate every hour - post content changes infrequently
 export const revalidate = 3600;
@@ -66,20 +64,30 @@ export async function generateMetadata({
     };
   }
 
-  return {
-    title: post.title,
-    description: post.summary,
-    openGraph: {
-      title: post.title,
-      description: post.summary,
-      images: isMediaObject(post.featuredImage) && post.featuredImage.url ? [
+  const title = post.seoTitle || post.title;
+  const description = post.metaDescription || post.summary;
+
+  const ogImages = isMediaObject(post.featuredImage) && post.featuredImage.url
+    ? [
         {
           url: post.featuredImage.url,
           width: post.featuredImage.width || 1200,
           height: post.featuredImage.height || 630,
           alt: post.featuredImage.alt || post.title,
-        }
-      ] : undefined,
+        },
+      ]
+    : [{ url: ogDefaultImage, width: 1200, height: 630, alt: post.title }];
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: siteUrl + "/posts/" + post.slug,
+    },
+    openGraph: {
+      title,
+      description,
+      images: ogImages,
     },
   };
 }
@@ -101,6 +109,7 @@ export default async function PostPage({ params }: PostPageProps) {
 
   return (
     <FadeReveal>
+    <SchemaScript schema={[generateBlogPostingSchema(post), generateBreadcrumbSchema(post.slug, post.title)]} />
     <article>
       <PageLayout maxWidth="prose">
         <Link

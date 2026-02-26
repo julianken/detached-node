@@ -8,6 +8,13 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { StatusBar } from "@/components/StatusBar";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { TextureOverlay } from "@/components/TextureOverlay";
+import {
+  siteUrl,
+  siteName,
+  siteDescription,
+  siteKeywords,
+  ogDefaultImage,
+} from "@/lib/site-config";
 import "../globals.css";
 
 
@@ -23,32 +30,38 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SERVER_URL || "https://detached-node.vercel.app";
-
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Detached Node",
-    template: "%s | Detached Node",
+    default: siteName,
+    template: `%s | ${siteName}`,
   },
-  description:
-    "Exploring modern agentic AI workflows, autonomous systems, and the philosophy of machine intelligence.",
-  keywords: ["agentic AI", "autonomous systems", "AI workflows", "machine intelligence", "AI philosophy", "tool use"],
-  authors: [{ name: "Detached Node" }],
+  description: siteDescription,
+  keywords: siteKeywords,
+  authors: [{ name: siteName }],
+  // RSS autodiscovery is rendered as a direct <link> tag in <head> below,
+  // not via alternates.types, because page-level alternates.canonical
+  // would clobber it (Next.js metadata merging replaces alternates entirely).
   openGraph: {
     type: "website",
     locale: "en_US",
     url: siteUrl,
-    siteName: "Detached Node",
-    title: "Detached Node",
-    description:
-      "Exploring modern agentic AI workflows, autonomous systems, and the philosophy of machine intelligence.",
+    siteName: siteName,
+    title: siteName,
+    description: siteDescription,
+    images: [
+      {
+        url: ogDefaultImage,
+        width: 1200,
+        height: 630,
+        alt: siteName,
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Detached Node",
-    description:
-      "Exploring modern agentic AI workflows, autonomous systems, and the philosophy of machine intelligence.",
+    title: siteName,
+    description: siteDescription,
   },
   robots: {
     index: true,
@@ -63,6 +76,9 @@ export default function FrontendLayout({
 }>) {
   return (
     <html lang="en" className={`${crimsonPro.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
+      <head>
+        <link rel="alternate" type="application/rss+xml" title="Detached Node" href={`${siteUrl}/feed.xml`} />
+      </head>
       <body className="min-h-screen antialiased bg-background text-text-primary">
         <a
           href="#main-content"

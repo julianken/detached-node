@@ -1,10 +1,7 @@
 import { MetadataRoute } from "next";
-import { logWarning } from "@/lib/logging";
 import { getPublishedPosts } from "@/lib/queries/posts";
 import { getPublishedPages } from "@/lib/queries/pages";
-
-const siteUrl =
-  process.env.NEXT_PUBLIC_SERVER_URL || "https://detached-node.vercel.app";
+import { siteUrl } from "@/lib/site-config";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -13,6 +10,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 1,
+    },
+    {
+      url: `${siteUrl}/failure-modes`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.95,
     },
     {
       url: `${siteUrl}/posts`,
@@ -37,11 +40,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  logWarning(
-    `Successfully added ${postRoutes.length} posts to sitemap`,
-    { count: postRoutes.length }
-  );
-
   // Fetch published pages
   const pages = await getPublishedPages();
   const pageRoutes: MetadataRoute.Sitemap = pages
@@ -52,11 +50,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly" as const,
       priority: 0.6,
     }));
-
-  logWarning(
-    `Successfully added ${pageRoutes.length} pages to sitemap`,
-    { count: pageRoutes.length }
-  );
 
   return [...staticRoutes, ...postRoutes, ...pageRoutes];
 }
