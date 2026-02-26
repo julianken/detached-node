@@ -43,38 +43,38 @@ export async function up({ db }: MigrateUpArgs): Promise<void> {
   // Posts: Composite index for published posts sorted by date
   // Covers the most common query pattern across the site
   await db.execute(sql`
-    CREATE INDEX IF NOT EXISTS idx_posts_status_publishedAt
-    ON posts(status, "publishedAt" DESC)
+    CREATE INDEX IF NOT EXISTS idx_posts_status_published_at
+    ON posts(status, "published_at" DESC)
   `)
 
   // Posts: Partial composite index for featured posts
   // Only indexes rows where featured = true to minimize index size
   // More efficient than scanning all posts for the few featured ones
   await db.execute(sql`
-    CREATE INDEX IF NOT EXISTS idx_posts_featured_status_publishedAt
-    ON posts(featured, status, "publishedAt" DESC)
+    CREATE INDEX IF NOT EXISTS idx_posts_featured_status_published_at
+    ON posts(featured, status, "published_at" DESC)
     WHERE featured = true
   `)
 
   // Posts: Composite index for sitemap and admin list views
   // Used when displaying recently updated posts regardless of publish date
   await db.execute(sql`
-    CREATE INDEX IF NOT EXISTS idx_posts_status_updatedAt
-    ON posts(status, "updatedAt" DESC)
+    CREATE INDEX IF NOT EXISTS idx_posts_status_updated_at
+    ON posts(status, "updated_at" DESC)
   `)
 
   // Pages: Composite index for published pages sorted by update date
   // Optimizes both page listing and sitemap generation
   await db.execute(sql`
-    CREATE INDEX IF NOT EXISTS idx_pages_status_updatedAt
-    ON pages(status, "updatedAt" DESC)
+    CREATE INDEX IF NOT EXISTS idx_pages_status_updated_at
+    ON pages(status, "updated_at" DESC)
   `)
 }
 
 export async function down({ db }: MigrateDownArgs): Promise<void> {
   // Remove composite indexes in reverse order
-  await db.execute(sql`DROP INDEX IF EXISTS idx_pages_status_updatedAt`)
-  await db.execute(sql`DROP INDEX IF EXISTS idx_posts_status_updatedAt`)
-  await db.execute(sql`DROP INDEX IF EXISTS idx_posts_featured_status_publishedAt`)
-  await db.execute(sql`DROP INDEX IF EXISTS idx_posts_status_publishedAt`)
+  await db.execute(sql`DROP INDEX IF EXISTS idx_pages_status_updated_at`)
+  await db.execute(sql`DROP INDEX IF EXISTS idx_posts_status_updated_at`)
+  await db.execute(sql`DROP INDEX IF EXISTS idx_posts_featured_status_published_at`)
+  await db.execute(sql`DROP INDEX IF EXISTS idx_posts_status_published_at`)
 }
