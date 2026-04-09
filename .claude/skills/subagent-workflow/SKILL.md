@@ -11,11 +11,11 @@ description: MANDATORY for all multi-step tasks - parallel task execution with s
 
 1. **One Linear issue = one worktree = one PR** — never split an issue across multiple PRs
 2. **Always query Linear before starting** — Linear is the source of truth
-3. **Both spec + quality reviews required** — no exceptions, no shortcuts
+3. **Both spec + quality reviews required for each pull request** — no exceptions, no shortcuts
 4. **E2E tests must pass before PR** — GitHub Actions are disabled; local validation is mandatory
 5. **All work via dispatched agents** — lead agent orchestrates, never edits code directly
 6. **Fixes stay in the same worktree/PR** — never create a new PR for review fixes
-7. **Update Linear at every state transition** — full audit trail required
+7. **Update Linear at every state transition** — full audit trail required - clean, templated status updates with status bars and recently completed items
 8. **Clean debug artifacts before PR** — no debug-*.spec.ts, *.bak, or console.log leftovers
 
 ## Linear State Definitions
@@ -157,7 +157,7 @@ Update Linear: `state: "In Progress"` for each issue. Post comment: `"Starting w
 
 # Step 4: Dispatch Spec Reviewers
 
-Only after ALL implementers complete. One reviewer per issue/PR.
+One reviewer per issue/PR.
 
 **Role-specific instructions for SPEC COMPLIANCE REVIEWER:**
 

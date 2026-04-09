@@ -62,3 +62,10 @@ scripts/.tmp-seed-images/
 .claude/hooks/
 .playwright-mcp/
 .serena/
+
+# Working directories (drafts, analysis, brainstorming)
+/analysis-output/
+/blog-ideas/
+/creative-output/
+/launch-plan/
+/docs/brainstorms/
