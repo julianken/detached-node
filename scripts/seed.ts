@@ -22,8 +22,8 @@ async function seed() {
     await payload.create({
       collection: 'users',
       data: {
-        email: 'admin@detached-node.dev',
-        password: 'DetachedNode2026!',
+        email: process.env.SEED_ADMIN_EMAIL || 'admin@detached-node.dev',
+        password: process.env.SEED_ADMIN_PASSWORD || 'change-me-immediately',
       },
     })
     console.log('✓ Admin user created: admin@detached-node.dev')
@@ -253,8 +253,8 @@ async function seed() {
 
   console.log('\n✅ Seed complete!')
   console.log('\nAdmin credentials:')
-  console.log('  Email: admin@detached-node.dev')
-  console.log('  Password: DetachedNode2026!')
+  console.log(`  Email: ${process.env.SEED_ADMIN_EMAIL || 'admin@detached-node.dev'}`)
+  console.log('  Password: (see SEED_ADMIN_PASSWORD env var)')
 
   process.exit(0)
 }

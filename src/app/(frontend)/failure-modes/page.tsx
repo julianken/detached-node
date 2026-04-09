@@ -1,19 +1,8 @@
-// src/app/(frontend)/failure-modes/page.tsx
-//
 // Pillar page: Failure Modes of AI-Assisted Development
 //
-// Hardcoded static page grouping cluster articles under three themes:
-// Isolation, Signal, and Architecture. Each cluster maps to the `theme`
-// field on the Posts collection.
-//
-// TODO: Replace hardcoded article lists with dynamic content via
-// getPostsByTheme() when that query function is implemented. Each cluster
-// section should fetch posts where posts.theme === clusterKey.
-//
-// Schema strategy: Article (not BlogPosting) because this is a pillar/hub page,
-// not an individual blog post. No generateArticleSchema() generator exists in
-// the schema library — schema is constructed inline here. If pillar pages become
-// a pattern, extract a generateArticleSchema() generator to src/lib/schema/article.ts.
+// Groups planned articles under three thematic clusters (Isolation, Signal,
+// Architecture). Articles are listed statically until the content pipeline
+// delivers them as Posts with a `theme` field.
 
 import type { Metadata } from "next";
 import { Link } from "next-view-transitions";
@@ -79,9 +68,6 @@ const breadcrumbSchema: Record<string, unknown> = {
 };
 
 // Cluster definitions — each maps to a theme value in the Posts collection.
-// TODO: Replace placeholder article lists with getPostsByTheme(theme) queries
-// once the query function is available. Articles listed here are representative
-// placeholders for the content plan.
 const clusters = [
   {
     theme: "isolation" as const,
@@ -89,13 +75,12 @@ const clusters = [
     heading: "Context Isolation Failures",
     description:
       "When agents lose track of state, operate with stale context, or fail to communicate across boundaries. The system does the right thing in the wrong environment.",
-    // TODO: Replace with dynamic: const posts = await getPostsByTheme('isolation')
     articles: [
       {
         title: "The Stale Context Problem",
         summary:
           "How agents degrade when operating on cached or partial world-state.",
-        slug: null, // TODO: link once published
+        slug: null,
       },
       {
         title: "Boundary Failures in Multi-Agent Systems",

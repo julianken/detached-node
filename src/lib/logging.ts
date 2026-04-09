@@ -58,15 +58,6 @@ export function logError(
   }
 
   console.error(`[ERROR]${errorId ? ` [${errorId}]` : ''} ${message}`, errorData)
-
-  // TODO: Integrate with error tracking service
-  // Example Sentry integration:
-  // if (typeof window !== 'undefined' && window.Sentry) {
-  //   window.Sentry.captureException(error, {
-  //     tags: { errorId, ...context },
-  //     extra: { message },
-  //   });
-  // }
 }
 
 /**
@@ -80,12 +71,6 @@ export function logEvent(eventName: string, properties?: LogContext): void {
   if (process.env.NODE_ENV === 'development') {
     console.log(`[EVENT] ${eventName}`, properties || '')
   }
-
-  // TODO: Integrate with analytics service
-  // Example PostHog integration:
-  // if (typeof window !== 'undefined' && window.posthog) {
-  //   window.posthog.capture(eventName, properties);
-  // }
 }
 
 /**

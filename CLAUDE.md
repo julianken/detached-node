@@ -87,41 +87,27 @@ Key points:
 - The current hardcoded data is placeholder only
 - Content structure should align with `CONTENT_MODEL.md`
 
-## Brainstorming System
+## Worktree Branch Management
 
-The project includes a structured system for ideation in `docs/`:
+Subagent workflows create temporary `worktree-agent-*` branches. These are local-only development artifacts that must never be pushed to the remote.
 
-```
-docs/
-├── brainstorms/    # Dated session files (raw ideation)
-├── concepts/       # Graduated ideas (refined, reusable)
-└── README.md       # Full workflow documentation
-```
+**Safeguards:**
+- A PreToolUse hook blocks `git push` commands referencing worktree-agent branches
+- Cleanup script: `bash .claude/hooks/clean-worktree-branches.sh`
+- These branches should be deleted after each session
 
-### When brainstorming with the user:
-1. Create a new file: `docs/brainstorms/YYYY-MM-DD-topic.md` (copy from `_TEMPLATE.md`)
-2. Capture ideas freely — don't over-organize during the session
-3. Note interesting threads and questions as they emerge
-4. After the session, update status and tags
-
-### When an idea matures:
-1. Create a concept file in `docs/concepts/`
-2. Link back to the source brainstorm(s)
-3. Mark the brainstorm as `graduated`
-
-See `docs/README.md` for the full workflow.
+**Convention:** If worktree branches accumulate, run the cleanup script before starting new work.
 
 ## Common Tasks
 
 | Task | Approach |
 |------|----------|
-| Start a brainstorm | Copy `docs/brainstorms/_TEMPLATE.md` to a dated file |
-| Graduate an idea | Move to `docs/concepts/`, link back to source |
 | Add a new page | Create `src/app/[route]/page.tsx`, follow existing patterns |
 | Modify layout | Edit `src/app/layout.tsx` |
-| Add a component | Create in `src/components/` (not yet created) |
+| Add a component | Create in `src/components/` |
 | Update styles | Prefer Tailwind utilities; update `globals.css` sparingly |
 | Add content types | Update `CONTENT_MODEL.md` first, then implement |
+| Clean worktree branches | `bash .claude/hooks/clean-worktree-branches.sh` |
 
 ## Phase Roadmap
 
