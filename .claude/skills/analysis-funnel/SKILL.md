@@ -566,9 +566,9 @@ Write all phase outputs to an organized directory structure:
     └── phase-3-packet.md
 ```
 
-**Artifact root: `docs/{topic-slug}/`** where `{topic-slug}` is a short kebab-case name derived from the analysis topic (e.g., `docs/auth-audit/`, `docs/performance-analysis/`, `docs/codebase-health/`). This keeps analysis artifacts alongside project documentation and makes them discoverable by future sessions.
+**Artifact root: `analysis-output/{topic-slug}/`** where `{topic-slug}` is a short kebab-case name derived from the analysis topic (e.g., `analysis-output/auth-audit/`, `analysis-output/performance-analysis/`). This directory is gitignored — analysis artifacts stay local unless the author copies them into tracked docs deliberately.
 
-If the user specifies a different location (e.g., `tmp/`), use that instead.
+If the user specifies a different location, use that instead.
 
 ### Recovery Manifest: STATUS.md
 
@@ -728,8 +728,8 @@ When starting a new conversation after a crash, or when the user says "recover" 
 #### Step 1: Find the artifact root
 
 ```
-Look for STATUS.md in docs/ subdirectories:
-  docs/*/STATUS.md
+Look for STATUS.md under analysis-output (default artifact root):
+  analysis-output/*/STATUS.md
 If multiple exist, show the user the list and ask which to resume.
 ```
 
@@ -828,7 +828,7 @@ Read `{ARTIFACT_ROOT}/STATUS.md`. It contains the full recovery state. Follow th
 Scan the artifact root directory. Check which phase folders exist and which contain complete artifacts. Look at file timestamps to determine order. Reconstruct STATUS.md from what you find, write it, then proceed with recovery. **This situation means the DISK CHECKPOINT rules were violated in the previous session.** After recovering, ensure all missing checkpoint artifacts (analysis-brief.md, context packets) are reconstructed before dispatching any new agents.
 
 **Multiple funnel artifact roots exist:**
-List all `docs/*/STATUS.md` files, show the user their topics and states, and ask which to resume.
+List all `analysis-output/*/STATUS.md` files (and any user-specified roots from STATUS.md paths), show the user their topics and states, and ask which to resume.
 
 **Analysis produced actionable recommendations — now what?**
 The analysis report is the final deliverable. It's up to the user to decide what to do with the recommendations.

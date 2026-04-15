@@ -64,6 +64,7 @@ scripts/.tmp-seed-images/
 .serena/
 
 # Working directories (drafts, analysis, brainstorming)
+# analysis-funnel default ARTIFACT_ROOT — keep out of version control
 /analysis-output/
 /blog-ideas/
 /creative-output/
