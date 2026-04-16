@@ -2,10 +2,7 @@ queue_rules:
   - name: default
     merge_method: merge
     update_method: rebase
-
-pull_request_rules:
-  - name: Queue when approved and CI passes
-    conditions:
+    queue_conditions:
       - "#approved-reviews-by >= 1"
       - base = main
       - -draft
@@ -16,6 +13,3 @@ pull_request_rules:
       - "check-success = Next.js Build"
       - "check-success = Analyze Bundle"
       - "check-success = CodeQL Analysis"
-    actions:
-      queue:
-        name: default
