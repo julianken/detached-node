@@ -20,6 +20,9 @@ import { siteUrl, ogDefaultImage } from "@/lib/site-config";
 // ISR: Revalidate every hour - post content changes infrequently
 export const revalidate = 3600;
 
+// Allow dynamic rendering of posts not pre-rendered at build time
+export const dynamicParams = true;
+
 type PostPageProps = {
   params: Promise<{
     slug: string;
