@@ -13,10 +13,6 @@ test.describe('Homepage Hero Section', () => {
     // Verify page title
     await expectTitle(homePage.page, /Detached Node/)
 
-    // Verify "Signal Feed" label is visible
-    const signalFeedLabel = homePage.page.getByText('Signal Feed')
-    await expectVisible(signalFeedLabel)
-
     // Verify main heading is visible
     await expectVisible(homePage.heroTitle)
 

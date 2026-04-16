@@ -77,7 +77,7 @@ test.describe('Posts Listing Page', () => {
       await expectVisible(firstDate)
 
       // Verify summary is visible
-      const firstSummary = firstPost.getByText(/Field observations on how autonomous AI workflows/)
+      const firstSummary = firstPost.getByText(/Field observations on how autonomous workflows/)
       await expectVisible(firstSummary)
 
       // Check second post card (Decoding Tool Use Patterns)
@@ -90,7 +90,7 @@ test.describe('Posts Listing Page', () => {
       const secondDate = secondPost.getByText(/Jan(uary)?\s+20,?\s+2026/i)
       await expectVisible(secondDate)
 
-      const secondSummary = secondPost.getByText(/A systematic breakdown of tool use patterns/)
+      const secondSummary = secondPost.getByText(/A systematic breakdown of how AI agents select/)
       await expectVisible(secondSummary)
     })
   })
@@ -112,7 +112,7 @@ test.describe('Posts Listing Page', () => {
       // Test clicking the third post (The Architecture of Agent Systems)
       const thirdPost = await postsPage.getPostByTitle('The Architecture of Agent Systems')
       await thirdPost.click()
-      await postsPage.page.waitForLoadState('networkidle')
+      await postsPage.page.waitForLoadState('domcontentloaded')
 
       await expectUrl(postsPage.page, /\/posts\/architecture-of-agent-systems$/)
 
@@ -122,7 +122,7 @@ test.describe('Posts Listing Page', () => {
       // Test clicking the fourth post (Essential Readings)
       const fourthPost = await postsPage.getPostByTitle('Essential Readings on Agentic AI')
       await fourthPost.click()
-      await postsPage.page.waitForLoadState('networkidle')
+      await postsPage.page.waitForLoadState('domcontentloaded')
 
       await expectUrl(postsPage.page, /\/posts\/essential-readings-agentic-ai$/)
     })

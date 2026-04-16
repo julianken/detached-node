@@ -19,14 +19,14 @@ export class PostDetailPage {
     this.postType = page.locator('article header p').first()
     this.postTitle = page.locator('article h1').first()
     this.postDate = page.locator('article header p').last()
-    this.postSummary = page.locator('article > p').first()
+    this.postSummary = page.locator('article p.text-lg').first()
     this.postContent = page.locator('article section.prose')
     this.backToPostsLink = page.getByRole('link', { name: /back to posts/i })
   }
 
   async goto(slug: string) {
     await this.page.goto(`/posts/${slug}`)
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async getPostTitle() {
