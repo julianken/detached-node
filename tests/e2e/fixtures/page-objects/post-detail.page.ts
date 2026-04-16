@@ -26,7 +26,7 @@ export class PostDetailPage {
 
   async goto(slug: string) {
     await this.page.goto(`/posts/${slug}`)
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async getPostTitle() {
