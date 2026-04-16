@@ -40,5 +40,10 @@ jobs:
         with:
           node-version: 22
           cache: 'pnpm'
+      - name: Debug pnpm
+        run: |
+          pnpm --version
+          head -5 pnpm-lock.yaml
+          wc -l pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
       - run: pnpm tsc --noEmit
