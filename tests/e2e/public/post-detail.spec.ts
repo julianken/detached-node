@@ -32,7 +32,7 @@ test.describe('Post Detail Page', () => {
     // Verify published date displays
     await expectVisible(postDetailPage.postDate)
     const date = await postDetailPage.getPostDate()
-    test.expect(date).toMatch(/January (14|15), 2026/)
+    test.expect(date).toMatch(/Jan (14|15), 2026/)
 
     // Verify summary displays
     await expectVisible(postDetailPage.postSummary)
@@ -59,7 +59,7 @@ test.describe('Post Detail Page', () => {
     // Verify published date displays
     await expectVisible(postDetailPage.postDate)
     const date = await postDetailPage.getPostDate()
-    test.expect(date).toMatch(/January (19|20), 2026/)
+    test.expect(date).toMatch(/Jan (19|20), 2026/)
 
     // Verify summary displays
     await expectVisible(postDetailPage.postSummary)
@@ -88,7 +88,7 @@ test.describe('Post Detail Page', () => {
     // Verify published date displays
     await expectVisible(postDetailPage.postDate)
     const date = await postDetailPage.getPostDate()
-    test.expect(date).toMatch(/January (24|25), 2026/)
+    test.expect(date).toMatch(/Jan (24|25), 2026/)
 
     // Verify summary displays
     await expectVisible(postDetailPage.postSummary)
@@ -115,7 +115,7 @@ test.describe('Post Detail Page', () => {
     // Verify published date displays
     await expectVisible(postDetailPage.postDate)
     const date = await postDetailPage.getPostDate()
-    test.expect(date).toMatch(/January (9|10), 2026/)
+    test.expect(date).toMatch(/Jan (9|10), 2026/)
 
     // Verify summary displays
     await expectVisible(postDetailPage.postSummary)
