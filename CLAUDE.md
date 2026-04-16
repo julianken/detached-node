@@ -98,6 +98,14 @@ Subagent workflows create temporary `worktree-agent-*` branches. These are local
 
 **Convention:** If worktree branches accumulate, run the cleanup script before starting new work.
 
+## Merge Queue (Mergify)
+
+**After approving a PR, comment `@mergifyio queue` on it to add it to the merge queue.** Mergify will rebase onto main, re-run CI, and auto-merge if checks pass.
+
+Required checks: ESLint, TypeScript, Vitest, Next.js Build, Analyze Bundle, CodeQL Analysis + 1 approval.
+
+Config: `.mergify.yml` at repo root. Dashboard: https://dashboard.mergify.com
+
 ## Common Tasks
 
 | Task | Approach |
@@ -107,6 +115,7 @@ Subagent workflows create temporary `worktree-agent-*` branches. These are local
 | Add a component | Create in `src/components/` |
 | Update styles | Prefer Tailwind utilities; update `globals.css` sparingly |
 | Add content types | Update `CONTENT_MODEL.md` first, then implement |
+| Queue a PR to merge | Comment `@mergifyio queue` on the approved PR |
 | Clean worktree branches | `bash .claude/hooks/clean-worktree-branches.sh` |
 
 ## Phase Roadmap
