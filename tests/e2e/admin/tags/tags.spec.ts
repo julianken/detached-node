@@ -267,15 +267,15 @@ test.describe('Tags Collection - List View', () => {
     await expectUrl(page, /\/admin\/collections\/tags/)
 
     // Verify seeded tags appear in the list
-    // Seeded tags: "Agentic AI", "Technology", "Culture"
+    // Seeded tags: "Agentic AI", "Workflows", "Philosophy"
     const agenticAiRow = await adminCollectionPage.getRowByText('Agentic AI')
     await expect(agenticAiRow).toBeVisible()
 
-    const technologyRow = await adminCollectionPage.getRowByText('Technology')
-    await expect(technologyRow).toBeVisible()
+    const workflowsRow = await adminCollectionPage.getRowByText('Workflows')
+    await expect(workflowsRow).toBeVisible()
 
-    const cultureRow = await adminCollectionPage.getRowByText('Culture')
-    await expect(cultureRow).toBeVisible()
+    const philosophyRow = await adminCollectionPage.getRowByText('Philosophy')
+    await expect(philosophyRow).toBeVisible()
   })
 })
 
@@ -312,13 +312,13 @@ test.describe('Tags in Post Relationship Picker', () => {
     if (isModalVisible) {
       // Check if seeded tags appear in the modal
       await expect(pickerModal).toContainText('Agentic AI')
-      await expect(pickerModal).toContainText('Technology')
-      await expect(pickerModal).toContainText('Culture')
+      await expect(pickerModal).toContainText('Workflows')
+      await expect(pickerModal).toContainText('Philosophy')
     } else {
       // If no modal, tags might be in an inline list or dropdown
       await expect(tagsField).toContainText('Agentic AI')
-      await expect(tagsField).toContainText('Technology')
-      await expect(tagsField).toContainText('Culture')
+      await expect(tagsField).toContainText('Workflows')
+      await expect(tagsField).toContainText('Philosophy')
     }
   })
 })
