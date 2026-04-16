@@ -77,7 +77,7 @@ test.describe('Posts Listing Page', () => {
       await expectVisible(firstDate)
 
       // Verify summary is visible
-      const firstSummary = firstPost.getByText(/Field observations on how autonomous AI workflows/)
+      const firstSummary = firstPost.getByText(/Field observations on how autonomous workflows/)
       await expectVisible(firstSummary)
 
       // Check second post card (Decoding Tool Use Patterns)
@@ -90,7 +90,7 @@ test.describe('Posts Listing Page', () => {
       const secondDate = secondPost.getByText(/Jan(uary)?\s+20,?\s+2026/i)
       await expectVisible(secondDate)
 
-      const secondSummary = secondPost.getByText(/A systematic breakdown of tool use patterns/)
+      const secondSummary = secondPost.getByText(/A systematic breakdown of how AI agents select/)
       await expectVisible(secondSummary)
     })
   })
