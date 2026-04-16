@@ -49,7 +49,7 @@ export async function expectRequiredError(page: Page, fieldName: string) {
  * @param page - Playwright page instance
  * @param errorMessage - Expected error message
  */
-export async function expectFormError(page: Page, errorMessage: string) {
+export async function expectFormError(page: Page, errorMessage: string | RegExp) {
   const formError = page.locator('[class*="form-error"], [class*="toast"], [role="alert"]')
 
   await expect(formError).toBeVisible()
