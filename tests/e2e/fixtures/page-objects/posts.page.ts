@@ -15,14 +15,14 @@ export class PostsPage {
     this.page = page
     this.navigation = page.locator('nav')
     this.pageTitle = page.getByRole('heading', { name: /^Posts$/i })
-    this.pageSubtitle = page.getByText(/Essays and analysis/)
-    this.postCards = page.locator('article')
+    this.pageSubtitle = page.getByText(/Writing on agentic AI/)
+    this.postCards = page.locator('a[href^="/posts/"]')
     this.emptyState = page.getByText(/No posts yet/)
   }
 
   async goto() {
     await this.page.goto('/posts')
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async getPostCount() {
@@ -31,7 +31,7 @@ export class PostsPage {
 
   async clickPost(index: number) {
     await this.postCards.nth(index).click()
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async getPostTitles() {
