@@ -1,7 +1,7 @@
 queue_rules:
   - name: default
     merge_method: squash
-    update_method: rebase
+    update_method: merge
     queue_conditions:
       - "#approved-reviews-by >= 1"
       - base = main
