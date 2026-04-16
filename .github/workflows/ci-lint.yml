@@ -20,6 +20,7 @@ jobs:
       - uses: pnpm/action-setup@v6
         with:
           version: 9.15.9
+          standalone: true
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -36,6 +37,7 @@ jobs:
       - uses: pnpm/action-setup@v6
         with:
           version: 9.15.9
+          standalone: true
       - uses: actions/setup-node@v4
         with:
           node-version: 22
