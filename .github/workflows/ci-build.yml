@@ -45,4 +45,8 @@ jobs:
           node-version: 20
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
+      - name: Generate Payload types
+        run: pnpm payload generate:types
+      - name: Run database migrations
+        run: pnpm payload migrate
       - run: pnpm build
