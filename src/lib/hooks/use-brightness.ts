@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useSyncExternalStore, useState } from 'react';
 
 export type BrightnessLevel = 'norm' | 'high' | 'low';
 
@@ -22,15 +22,22 @@ function apply(level: BrightnessLevel) {
   }
 }
 
+function readStored(): BrightnessLevel {
+  const stored = localStorage.getItem(STORAGE_KEY) as BrightnessLevel | null;
+  return stored && CYCLE.includes(stored) ? stored : 'norm';
+}
+
 export function useBrightness() {
-  const [level, setLevel] = useState<BrightnessLevel>('norm');
+  const initial = useSyncExternalStore(
+    () => () => {},
+    readStored,
+    () => 'norm' as BrightnessLevel,
+  );
+  const [level, setLevel] = useState(initial);
 
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY) as BrightnessLevel | null;
-    const initial = stored && CYCLE.includes(stored) ? stored : 'norm';
-    setLevel(initial);
-    apply(initial);
-  }, []);
+    apply(level);
+  }, [level]);
 
   const cycle = useCallback(() => {
     setLevel((prev) => {

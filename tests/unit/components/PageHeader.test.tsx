@@ -54,7 +54,7 @@ describe("PageHeader", () => {
 
     const subtitle = screen.getByText("Subtitle text");
     expect(subtitle).toHaveClass("mt-2");
-    expect(subtitle).toHaveClass("text-sm");
+    expect(subtitle).toHaveClass("text-base");
   });
 
   it("handles special characters in title", () => {
