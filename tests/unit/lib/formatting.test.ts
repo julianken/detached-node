@@ -18,7 +18,7 @@ describe("formatDate", () => {
     // Use a datetime in the middle of the day to avoid timezone edge cases
     const result = formatDate("2026-01-15T12:00:00.000Z");
     expect(result).toContain("2026");
-    expect(result).toContain("January");
+    expect(result).toContain("Jan");
     expect(result).toContain("15");
   });
 
@@ -26,25 +26,25 @@ describe("formatDate", () => {
     const result = formatDate("2026-01-15T10:30:00.000Z");
     // Note: exact output depends on timezone, but should contain the date parts
     expect(result).toContain("2026");
-    expect(result).toContain("January");
+    expect(result).toContain("Jan");
   });
 
   it("handles different months correctly", () => {
     // Use midday times to avoid timezone edge cases
     const june = formatDate("2026-06-15T12:00:00.000Z");
-    expect(june).toContain("June");
+    expect(june).toContain("Jun");
     expect(june).toContain("2026");
 
     const december = formatDate("2026-12-25T12:00:00.000Z");
-    expect(december).toContain("December");
+    expect(december).toContain("Dec");
     expect(december).toContain("25");
     expect(december).toContain("2026");
   });
 
   it("uses en-US locale formatting", () => {
-    // en-US format: Month Day, Year
+    // en-US short format: Mon Day, Year
     const result = formatDate("2026-03-15");
-    expect(result).toMatch(/March \d+, 2026/);
+    expect(result).toMatch(/Mar \d+, 2026/);
   });
 });
 

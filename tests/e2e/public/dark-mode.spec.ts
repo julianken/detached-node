@@ -1,3 +1,4 @@
+import { Locator } from '@playwright/test'
 import { test, expect } from '../fixtures'
 import { expectVisible } from '../helpers'
 
@@ -52,9 +53,12 @@ function colorToHex(color: string): string {
  * Helper to get computed color as hex
  * Handles both RGB and LAB color space formats
  */
-async function getColorAsHex(element: any, property: 'backgroundColor' | 'color' | 'borderTopColor'): Promise<string> {
-  return await element.evaluate((el: HTMLElement, prop: string) => {
-    const color = window.getComputedStyle(el)[prop as any]
+async function getColorAsHex(element: Locator, property: 'backgroundColor' | 'color' | 'borderTopColor'): Promise<string> {
+  return await element.evaluate((el: HTMLElement, prop: typeof property) => {
+    const styles = window.getComputedStyle(el)
+    const color = prop === 'backgroundColor' ? styles.backgroundColor
+      : prop === 'borderTopColor' ? styles.borderTopColor
+      : styles.color
 
     // Parse RGB format
     const rgbMatch = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/)
