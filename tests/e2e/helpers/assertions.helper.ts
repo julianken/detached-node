@@ -50,7 +50,7 @@ export async function expectRequiredError(page: Page, fieldName: string) {
  * @param errorMessage - Expected error message
  */
 export async function expectFormError(page: Page, errorMessage: string | RegExp) {
-  const formError = page.locator('[class*="form-error"], [class*="toast"], [role="alert"]')
+  const formError = page.locator('[class*="form-error"], [class*="toast"], [role="alert"]').first()
 
   await expect(formError).toBeVisible()
   await expect(formError).toContainText(errorMessage)
