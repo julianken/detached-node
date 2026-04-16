@@ -15,7 +15,7 @@ export class PostsPage {
     this.page = page
     this.navigation = page.locator('nav')
     this.pageTitle = page.getByRole('heading', { name: /^Posts$/i })
-    this.pageSubtitle = page.getByText(/Essays and analysis/)
+    this.pageSubtitle = page.getByText(/Writing on agentic AI/)
     this.postCards = page.locator('a[href^="/posts/"]')
     this.emptyState = page.getByText(/No posts yet/)
   }
