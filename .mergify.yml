@@ -1,0 +1,21 @@
+queue_rules:
+  - name: default
+    merge_method: merge
+    update_method: rebase
+
+pull_request_rules:
+  - name: Queue when approved and CI passes
+    conditions:
+      - "#approved-reviews-by >= 1"
+      - base = main
+      - -draft
+      - -conflict
+      - "check-success = ESLint"
+      - "check-success = TypeScript"
+      - "check-success = Vitest"
+      - "check-success = Next.js Build"
+      - "check-success = Analyze Bundle"
+      - "check-success = CodeQL Analysis"
+    actions:
+      queue:
+        name: default
