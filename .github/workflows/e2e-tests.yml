@@ -26,10 +26,16 @@ env:
 
 jobs:
   e2e:
-    name: Playwright E2E Tests
+    name: E2E Shard ${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
     if: github.event_name == 'workflow_dispatch' || github.event.pull_request.draft != true
+
+    strategy:
+      fail-fast: false
+      matrix:
+        shardIndex: [1, 2, 3, 4]
+        shardTotal: [4]
 
     services:
       postgres:
@@ -81,14 +87,14 @@ jobs:
           if [ -n "${{ github.event.inputs.test_pattern }}" ]; then
             pnpm test:e2e tests/e2e/${{ github.event.inputs.test_pattern }}
           else
-            pnpm test:e2e
+            pnpm test:e2e --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
           fi
 
       - name: Upload Playwright report
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: playwright-report
+          name: playwright-report-${{ matrix.shardIndex }}
           path: playwright-report/
           retention-days: 14
 
@@ -96,6 +102,6 @@ jobs:
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: test-results
+          name: test-results-${{ matrix.shardIndex }}
           path: test-results/
           retention-days: 14
