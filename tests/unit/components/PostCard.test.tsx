@@ -48,9 +48,9 @@ describe("PostCard", () => {
     render(<PostCard {...defaultProps} />);
 
     const link = screen.getByRole("link");
-    expect(link).toHaveClass("rounded-xl");
+    expect(link).toHaveClass("rounded-sm");
     expect(link).toHaveClass("border");
-    expect(link).toHaveClass("transition");
+    expect(link).toHaveClass("transition-colors");
   });
 
   it("title has correct heading semantics", () => {
