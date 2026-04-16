@@ -22,12 +22,12 @@ export class AdminCollectionPage {
 
   async goto(collectionName: string) {
     await this.page.goto(`/admin/collections/${collectionName}`)
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async clickCreateNew() {
     await this.createNewButton.click()
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async getRowCount() {
@@ -36,12 +36,12 @@ export class AdminCollectionPage {
 
   async clickRow(index: number) {
     await this.tableRows.nth(index).click()
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async searchFor(query: string) {
     await this.searchInput.fill(query)
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async getRowByText(text: string) {

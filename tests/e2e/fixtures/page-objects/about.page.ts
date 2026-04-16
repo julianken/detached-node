@@ -18,7 +18,7 @@ export class AboutPage {
 
   async goto() {
     await this.page.goto('/about')
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async getPageTitle() {

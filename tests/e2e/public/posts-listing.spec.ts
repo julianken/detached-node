@@ -112,7 +112,7 @@ test.describe('Posts Listing Page', () => {
       // Test clicking the third post (The Architecture of Agent Systems)
       const thirdPost = await postsPage.getPostByTitle('The Architecture of Agent Systems')
       await thirdPost.click()
-      await postsPage.page.waitForLoadState('networkidle')
+      await postsPage.page.waitForLoadState('domcontentloaded')
 
       await expectUrl(postsPage.page, /\/posts\/architecture-of-agent-systems$/)
 
@@ -122,7 +122,7 @@ test.describe('Posts Listing Page', () => {
       // Test clicking the fourth post (Essential Readings)
       const fourthPost = await postsPage.getPostByTitle('Essential Readings on Agentic AI')
       await fourthPost.click()
-      await postsPage.page.waitForLoadState('networkidle')
+      await postsPage.page.waitForLoadState('domcontentloaded')
 
       await expectUrl(postsPage.page, /\/posts\/essential-readings-agentic-ai$/)
     })

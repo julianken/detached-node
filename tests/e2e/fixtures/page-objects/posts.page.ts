@@ -22,7 +22,7 @@ export class PostsPage {
 
   async goto() {
     await this.page.goto('/posts')
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async getPostCount() {
@@ -31,7 +31,7 @@ export class PostsPage {
 
   async clickPost(index: number) {
     await this.postCards.nth(index).click()
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async getPostTitles() {
