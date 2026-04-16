@@ -1,16 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useSyncExternalStore } from 'react';
 import { useThemeToggle } from '@/lib/hooks/use-theme-toggle';
 
-export function ThemeToggle() {
-  const [mounted, setMounted] = useState(false);
-  const { resolvedTheme, toggle } = useThemeToggle();
+const subscribe = () => () => {};
 
-  // Prevent hydration mismatch
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+export function ThemeToggle() {
+  const mounted = useSyncExternalStore(subscribe, () => true, () => false);
+  const { resolvedTheme, toggle } = useThemeToggle();
 
   if (!mounted) {
     return (

@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useSyncExternalStore, useState } from 'react';
 
 export type ContrastLevel = 'norm' | 'high' | 'ultra' | 'low';
 
@@ -208,21 +208,25 @@ function applyOverrides(level: ContrastLevel) {
   }
 }
 
-export function useContrast() {
-  const [level, setLevel] = useState<ContrastLevel>('norm');
+function readStored(): ContrastLevel {
+  const stored = localStorage.getItem(STORAGE_KEY) as ContrastLevel | null;
+  return stored && CYCLE.includes(stored) ? stored : 'norm';
+}
 
-  // Initialise from localStorage and apply
+export function useContrast() {
+  const initial = useSyncExternalStore(
+    () => () => {},
+    readStored,
+    () => 'norm' as ContrastLevel,
+  );
+  const [level, setLevel] = useState(initial);
+
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY) as ContrastLevel | null;
-    const initial = stored && CYCLE.includes(stored) ? stored : 'norm';
-    setLevel(initial);
-    applyOverrides(initial);
+    applyOverrides(level);
 
     // Re-apply when theme changes (dark class toggled by next-themes)
     const observer = new MutationObserver(() => {
-      const current =
-        (localStorage.getItem(STORAGE_KEY) as ContrastLevel) || 'norm';
-      applyOverrides(current);
+      applyOverrides(level);
     });
     observer.observe(document.documentElement, {
       attributes: true,
@@ -230,7 +234,7 @@ export function useContrast() {
     });
 
     return () => observer.disconnect();
-  }, []);
+  }, [level]);
 
   const cycle = useCallback(() => {
     setLevel((prev) => {

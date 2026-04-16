@@ -136,11 +136,7 @@ test.describe('Draft and Archived Access Control (Public)', () => {
       // Attempt to fetch draft post via API
       const response = await request.get('/api/posts', {
         params: {
-          where: {
-            slug: {
-              equals: 'unpublished-thoughts-emergence',
-            },
-          },
+          'where[slug][equals]': 'unpublished-thoughts-emergence',
         },
       })
 
@@ -156,11 +152,7 @@ test.describe('Draft and Archived Access Control (Public)', () => {
       // Attempt to fetch archived post via API
       const response = await request.get('/api/posts', {
         params: {
-          where: {
-            slug: {
-              equals: 'legacy-post-early-automation',
-            },
-          },
+          'where[slug][equals]': 'legacy-post-early-automation',
         },
       })
 
@@ -200,11 +192,7 @@ test.describe('Draft and Archived Access Control (Public)', () => {
       // Attempt to explicitly fetch draft posts
       const draftResponse = await request.get('/api/posts', {
         params: {
-          where: {
-            _status: {
-              equals: 'draft',
-            },
-          },
+          'where[_status][equals]': 'draft',
         },
       })
 
@@ -215,11 +203,7 @@ test.describe('Draft and Archived Access Control (Public)', () => {
       // Attempt to explicitly fetch archived posts
       const archivedResponse = await request.get('/api/posts', {
         params: {
-          where: {
-            _status: {
-              equals: 'archived',
-            },
-          },
+          'where[_status][equals]': 'archived',
         },
       })
 
