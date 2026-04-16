@@ -64,7 +64,7 @@ test.describe('Post Detail Page', () => {
     // Verify summary displays
     await expectVisible(postDetailPage.postSummary)
     const summary = await postDetailPage.getPostSummary()
-    test.expect(summary).toContain('systematic breakdown of tool use patterns')
+    test.expect(summary).toContain('systematic breakdown of how AI agents select')
   })
 
   test('should display Field Report post type badge for field-report posts', async ({
@@ -93,7 +93,7 @@ test.describe('Post Detail Page', () => {
     // Verify summary displays
     await expectVisible(postDetailPage.postSummary)
     const summary = await postDetailPage.getPostSummary()
-    test.expect(summary).toContain('Field observations on how autonomous AI workflows')
+    test.expect(summary).toContain('Field observations on how autonomous workflows')
   })
 
   test('should display Index post type badge for index posts', async ({ postDetailPage }) => {
@@ -120,7 +120,7 @@ test.describe('Post Detail Page', () => {
     // Verify summary displays
     await expectVisible(postDetailPage.postSummary)
     const summary = await postDetailPage.getPostSummary()
-    test.expect(summary).toContain('curated collection of foundational resources')
+    test.expect(summary).toContain('curated collection of foundational texts')
   })
 
   test('should render rich text body content correctly', async ({ postDetailPage }) => {
@@ -152,6 +152,6 @@ test.describe('Post Detail Page', () => {
     const metaDescription = await postDetailPage.page
       .locator('meta[name="description"]')
       .getAttribute('content')
-    test.expect(metaDescription).toContain('systematic breakdown of tool use patterns')
+    test.expect(metaDescription).toContain('systematic breakdown of how AI agents select')
   })
 })
