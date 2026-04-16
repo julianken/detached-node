@@ -214,64 +214,55 @@ describe("ISODateString branded type", () => {
 // =============================================================================
 
 describe("DocumentId branded type", () => {
+  const validUuid = "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d";
+  const anotherUuid = "12345678-1234-4abc-9def-123456789abc";
+
   describe("isValidDocumentId", () => {
-    it("accepts positive integers", () => {
-      expect(isValidDocumentId(1)).toBe(true);
-      expect(isValidDocumentId(42)).toBe(true);
-      expect(isValidDocumentId(1000000)).toBe(true);
+    it("accepts valid UUID v4 strings", () => {
+      expect(isValidDocumentId(validUuid)).toBe(true);
+      expect(isValidDocumentId(anotherUuid)).toBe(true);
     });
 
-    it("rejects zero", () => {
-      expect(isValidDocumentId(0)).toBe(false);
+    it("rejects non-UUID strings", () => {
+      expect(isValidDocumentId("not-a-uuid")).toBe(false);
+      expect(isValidDocumentId("12345")).toBe(false);
+      expect(isValidDocumentId("")).toBe(false);
     });
 
-    it("rejects negative numbers", () => {
-      expect(isValidDocumentId(-1)).toBe(false);
-      expect(isValidDocumentId(-100)).toBe(false);
-    });
-
-    it("rejects non-integers", () => {
-      expect(isValidDocumentId(1.5)).toBe(false);
-      expect(isValidDocumentId(0.1)).toBe(false);
-    });
-
-    it("rejects non-numbers", () => {
-      expect(isValidDocumentId("1")).toBe(false);
+    it("rejects non-string values", () => {
+      expect(isValidDocumentId(42)).toBe(false);
       expect(isValidDocumentId(null)).toBe(false);
       expect(isValidDocumentId(undefined)).toBe(false);
       expect(isValidDocumentId({})).toBe(false);
     });
 
-    it("rejects Infinity and NaN", () => {
-      expect(isValidDocumentId(Infinity)).toBe(false);
-      expect(isValidDocumentId(-Infinity)).toBe(false);
-      expect(isValidDocumentId(NaN)).toBe(false);
+    it("rejects UUIDs with wrong version", () => {
+      // Version 1 UUID (third group starts with 1, not 4)
+      expect(isValidDocumentId("a1b2c3d4-e5f6-1a7b-8c9d-0e1f2a3b4c5d")).toBe(false);
     });
   });
 
   describe("toDocumentId", () => {
     it("returns branded DocumentId for valid input", () => {
-      const id: DocumentId = toDocumentId(42);
-      expect(id).toBe(42);
+      const id: DocumentId = toDocumentId(validUuid);
+      expect(id).toBe(validUuid);
     });
 
     it("throws error for invalid input", () => {
-      expect(() => toDocumentId(0)).toThrow("Invalid document ID");
-      expect(() => toDocumentId(-1)).toThrow("Invalid document ID");
-      expect(() => toDocumentId(1.5)).toThrow("Invalid document ID");
+      expect(() => toDocumentId("not-a-uuid")).toThrow("Invalid document ID");
+      expect(() => toDocumentId("")).toThrow("Invalid document ID");
     });
   });
 
   describe("tryToDocumentId", () => {
     it("returns DocumentId for valid input", () => {
-      const result = tryToDocumentId(42);
-      expect(result).toBe(42);
+      const result = tryToDocumentId(validUuid);
+      expect(result).toBe(validUuid);
     });
 
     it("returns null for invalid input", () => {
-      expect(tryToDocumentId(0)).toBeNull();
-      expect(tryToDocumentId(-1)).toBeNull();
-      expect(tryToDocumentId(1.5)).toBeNull();
+      expect(tryToDocumentId("not-a-uuid")).toBeNull();
+      expect(tryToDocumentId("")).toBeNull();
     });
   });
 });
@@ -353,9 +344,9 @@ describe("Type safety", () => {
     const str: string = slug; // Should compile - Slug extends string
     expect(str).toBe("hello-world");
 
-    const id: DocumentId = toDocumentId(42);
-    const num: number = id; // Should compile - DocumentId extends number
-    expect(num).toBe(42);
+    const id: DocumentId = toDocumentId("a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d");
+    const str2: string = id; // Should compile - DocumentId extends string
+    expect(str2).toBe("a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d");
   });
 
   it("demonstrates type narrowing with type guards", () => {

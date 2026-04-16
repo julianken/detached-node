@@ -1,4 +1,6 @@
 import { Page, Locator } from '@playwright/test'
+import fs from 'fs'
+import os from 'os'
 import path from 'path'
 
 /**
@@ -95,8 +97,6 @@ export async function removeMedia(page: Page, fieldName?: string) {
  * @returns Absolute path to the created file
  */
 export async function createTestImage(filename: string = 'test-image.png'): Promise<string> {
-  const fs = require('fs')
-  const os = require('os')
 
   // Simple 1x1 red PNG in base64
   const pngData = Buffer.from(
