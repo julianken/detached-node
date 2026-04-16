@@ -24,12 +24,12 @@ export class AdminEditorPage {
 
   async goto(collectionName: string, documentId: string) {
     await this.page.goto(`/admin/collections/${collectionName}/${documentId}`)
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async gotoCreate(collectionName: string) {
     await this.page.goto(`/admin/collections/${collectionName}/create`)
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async fillField(fieldName: string, value: string) {
@@ -44,17 +44,17 @@ export class AdminEditorPage {
 
   async save() {
     await this.saveButton.click()
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async saveDraft() {
     await this.saveDraftButton.click()
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async publish() {
     await this.publishButton.click()
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async delete() {
@@ -62,7 +62,7 @@ export class AdminEditorPage {
     // Wait for confirmation dialog
     const confirmButton = this.page.getByRole('button', { name: /confirm|delete/i })
     await confirmButton.click()
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async getFieldValue(fieldName: string) {

@@ -9,18 +9,21 @@ import fs from 'fs'
 import path from 'path'
 
 async function globalSetup(config: FullConfig) {
-  console.log('🌱 Running test database seed...')
-
-  try {
-    // Run the seed script synchronously to ensure it completes before tests start
-    execSync('pnpm seed:test', {
-      stdio: 'inherit',
-      cwd: process.cwd(),
-    })
-    console.log('✅ Test database seeded successfully')
-  } catch (error) {
-    console.error('❌ Failed to seed test database:', error)
-    throw error
+  // Skip seeding if already done by CI workflow step
+  if (!process.env.CI) {
+    console.log('🌱 Running test database seed...')
+    try {
+      execSync('pnpm seed:test', {
+        stdio: 'inherit',
+        cwd: process.cwd(),
+      })
+      console.log('✅ Test database seeded successfully')
+    } catch (error) {
+      console.error('❌ Failed to seed test database:', error)
+      throw error
+    }
+  } else {
+    console.log('⏭️  Skipping seed (already done by CI workflow)')
   }
 
   // Set up authentication
