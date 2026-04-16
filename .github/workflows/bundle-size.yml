@@ -9,18 +9,31 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  DATABASE_URL: postgresql://dummy:dummy@localhost:5432/dummy
+  DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
   PAYLOAD_SECRET: ci-build-secret-not-real
-
-permissions:
-  contents: read
-  pull-requests: write
+  NODE_ENV: production
 
 jobs:
   analyze:
     name: Analyze Bundle
     runs-on: ubuntu-latest
     timeout-minutes: 15
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - uses: actions/checkout@v4
 
@@ -35,20 +48,24 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - name: Build
-        run: pnpm build
+      - name: Build and capture output
+        run: pnpm build 2>&1 | tee build-output.txt
 
-      - name: Analyze bundle size
+      - name: Report bundle size
         run: |
           echo "## Bundle Size Report" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Route Sizes" >> $GITHUB_STEP_SUMMARY
+          echo "### Route Sizes (from next build)" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
-          find .next -name '*.js' -path '*/pages/*' -o -name '*.js' -path '*/app/*' | head -50 | while read f; do
-            size=$(wc -c < "$f")
-            echo "$(basename $f): $(numfmt --to=iec $size)"
-          done >> $GITHUB_STEP_SUMMARY
+          sed -n '/Route (app)/,/^$/p' build-output.txt >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Total .next size" >> $GITHUB_STEP_SUMMARY
+          echo "### Client Bundle" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          du -sh .next/static/ >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Total Build Output" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
           du -sh .next/ >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
