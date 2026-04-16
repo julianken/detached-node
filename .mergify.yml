@@ -1,6 +1,6 @@
 queue_rules:
   - name: default
-    merge_method: merge
+    merge_method: squash
     update_method: rebase
     queue_conditions:
       - "#approved-reviews-by >= 1"
