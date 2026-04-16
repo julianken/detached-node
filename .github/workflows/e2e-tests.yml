@@ -64,7 +64,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -81,6 +81,9 @@ jobs:
 
       - name: Seed test database
         run: pnpm seed:test
+
+      - name: Build for production
+        run: pnpm build
 
       - name: Run E2E tests
         run: pnpm test:e2e --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
@@ -134,7 +137,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -151,6 +154,9 @@ jobs:
 
       - name: Seed test database
         run: pnpm seed:test
+
+      - name: Build for production
+        run: pnpm build
 
       - name: Run E2E tests
         run: pnpm test:e2e tests/e2e/${{ github.event.inputs.test_pattern }}
