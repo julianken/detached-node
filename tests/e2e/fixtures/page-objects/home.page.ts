@@ -17,10 +17,10 @@ export class HomePage {
   constructor(page: Page) {
     this.page = page
     this.navigation = page.locator('nav')
-    this.heroTitle = page.getByRole('heading', { name: /clean, repeatable structure/i })
-    this.heroSubtitle = page.locator('section').first().getByText(/Phase 1 shell/)
-    this.browsePostsButton = page.getByRole('link', { name: /browse posts/i })
-    this.aboutButton = page.getByRole('link', { name: /about the project/i })
+    this.heroTitle = page.getByRole('heading', { name: /autonomous systems/i })
+    this.heroSubtitle = page.locator('section').first().getByText(/agentic AI workflows/i)
+    this.browsePostsButton = page.getByRole('link', { name: /browse the archive/i })
+    this.aboutButton = page.getByRole('link', { name: /about this project/i })
     this.featuredPostsHeading = page.getByRole('heading', { name: /featured posts/i })
     this.featuredPostsSection = page.locator('section').last()
     this.featuredPostCards = page.locator('section').last().locator('a[href^="/posts/"]')

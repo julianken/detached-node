@@ -79,11 +79,11 @@ jobs:
       - name: Run database migrations
         run: pnpm payload migrate
 
-      - name: Seed test database
-        run: pnpm seed:test
-
       - name: Build for production
         run: pnpm build
+
+      - name: Seed test database
+        run: pnpm seed:test
 
       - name: Run E2E tests
         run: pnpm test:e2e --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
@@ -152,11 +152,11 @@ jobs:
       - name: Run database migrations
         run: pnpm payload migrate
 
-      - name: Seed test database
-        run: pnpm seed:test
-
       - name: Build for production
         run: pnpm build
+
+      - name: Seed test database
+        run: pnpm seed:test
 
       - name: Run E2E tests
         run: pnpm test:e2e tests/e2e/${{ github.event.inputs.test_pattern }}
