@@ -11,7 +11,6 @@ concurrency:
 env:
   DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
   PAYLOAD_SECRET: ci-build-secret-not-real
-  NODE_ENV: production
 
 jobs:
   analyze:
