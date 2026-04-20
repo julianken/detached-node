@@ -29,7 +29,7 @@
     "@payloadcms/richtext-lexical": "^3.74.0",
     "@payloadcms/storage-vercel-blob": "3.74.0",
     "@upstash/ratelimit": "^2.0.8",
-    "@upstash/redis": "^1.36.2",
+    "@upstash/redis": "^1.37.0",
     "@vercel/analytics": "^1.6.1",
     "@vercel/speed-insights": "^2.0.0",
     "graphql": "^16.12.0",
