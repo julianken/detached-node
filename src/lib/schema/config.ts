@@ -15,7 +15,7 @@
 const siteUrl =
   process.env.NEXT_PUBLIC_SERVER_URL || "https://detached-node.dev";
 
-const siteName = "Detached Node";
+const siteName = "detached-node";
 
 const siteDescription =
   "Exploring modern agentic AI workflows, autonomous systems, and the philosophy of machine intelligence.";

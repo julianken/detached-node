@@ -14,7 +14,7 @@ test.describe('Header Navigation', () => {
   test('should navigate to homepage when clicking logo', async ({ postsPage }) => {
     await postsPage.goto()
 
-    const logo = postsPage.page.getByRole('link', { name: /^Detached Node$/i })
+    const logo = postsPage.page.getByRole('link', { name: /^d-n$/i })
     await expectVisible(logo)
 
     await logo.click()
