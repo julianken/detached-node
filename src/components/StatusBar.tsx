@@ -86,7 +86,7 @@ export function StatusBar() {
           <span>{'//'}</span>
           <span className="inline-flex">{digits}</span>
         </div>
-        <span className="shrink-0 text-text-tertiary">&copy; DETACHED NODE</span>
+        <span className="shrink-0 text-text-tertiary">&copy; DETACHED-NODE</span>
       </div>
     </footer>
   );
