@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Card } from "@/components/Card";
-import { Button } from "@/components/Button";
 import { FadeReveal } from "@/components/FadeReveal";
 import { SchemaScript } from "@/components/SchemaScript";
 import { generateWebSiteSchema, generatePersonSchema } from "@/lib/schema";
@@ -23,24 +22,13 @@ export default async function Home() {
     <FadeReveal>
     <SchemaScript schema={[generateWebSiteSchema(), generatePersonSchema()]} />
     <div className="flex flex-col gap-16">
-      <section className="hero-glow rounded-sm border border-border bg-surface p-8">
-        <h1 className="font-mono text-4xl font-semibold tracking-tight text-text-primary [text-wrap:balance]">
-          Thoughts on autonomous systems and the agents that run them.
+      <section>
+        <h1 className="font-mono text-4xl font-semibold tracking-tight text-text-primary lowercase [text-wrap:balance]">
+          detached-node
         </h1>
-        <p className="text-zinc-500 dark:text-zinc-400 font-mono text-sm mt-2">
-          Exploring failure modes of AI-assisted development.
-        </p>
         <p className="mt-4 max-w-xl text-lg leading-8 text-text-secondary">
-          Exploring agentic AI workflows, tool use, and the philosophy of machine intelligence.
+          a diagnostic analysis of AI-assisted software engineering
         </p>
-        <div className="mt-6 flex flex-wrap gap-4">
-          <Button href="/posts" asChild>
-            Browse the archive
-          </Button>
-          <Button href="/about" variant="secondary" asChild>
-            About this project
-          </Button>
-        </div>
       </section>
 
       <section>
