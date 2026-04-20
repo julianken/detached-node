@@ -9,7 +9,7 @@
 export const siteUrl: string =
   process.env.NEXT_PUBLIC_SERVER_URL || "https://detached-node.dev";
 
-export const siteName = "Detached Node";
+export const siteName = "detached-node";
 
 export const siteDescription =
   "Exploring modern agentic AI workflows, autonomous systems, and the philosophy of machine intelligence.";

@@ -2,7 +2,7 @@ import { getPublishedPosts } from "@/lib/queries/posts";
 import { siteUrl } from "@/lib/site-config";
 import type { Post } from "@/payload-types";
 
-const SITE_TITLE = "Detached Node";
+const SITE_TITLE = "detached-node";
 const SITE_DESCRIPTION =
   "Exploring modern agentic AI workflows, autonomous systems, and the philosophy of machine intelligence.";
 
