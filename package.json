@@ -24,10 +24,10 @@
     "test:e2e:debug": "playwright test --debug"
   },
   "dependencies": {
-    "@payloadcms/db-postgres": "^3.74.0",
-    "@payloadcms/next": "^3.74.0",
-    "@payloadcms/richtext-lexical": "^3.74.0",
-    "@payloadcms/storage-vercel-blob": "3.74.0",
+    "@payloadcms/db-postgres": "^3.83.0",
+    "@payloadcms/next": "^3.83.0",
+    "@payloadcms/richtext-lexical": "^3.83.0",
+    "@payloadcms/storage-vercel-blob": "3.83.0",
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.36.2",
     "@vercel/analytics": "^1.6.1",
