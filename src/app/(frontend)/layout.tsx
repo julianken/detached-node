@@ -77,7 +77,7 @@ export default function FrontendLayout({
   return (
     <html lang="en" className={`${crimsonPro.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
       <head>
-        <link rel="alternate" type="application/rss+xml" title="Detached Node" href={`${siteUrl}/feed.xml`} />
+        <link rel="alternate" type="application/rss+xml" title="detached-node" href={`${siteUrl}/feed.xml`} />
       </head>
       <body className="min-h-screen antialiased bg-background text-text-primary">
         <a
@@ -92,8 +92,8 @@ export default function FrontendLayout({
           <TextureOverlay />
           <div className="site-frame mx-auto my-4 flex min-h-[calc(100vh-2rem)] max-w-5xl flex-col rounded-sm border border-border sm:my-6 sm:min-h-[calc(100vh-3rem)]">
             <header className="flex items-center justify-between border-b border-border px-4 py-3 sm:px-6">
-              <Link href="/" className="font-mono text-lg font-semibold tracking-tight text-accent focus-ring">
-                Detached Node
+              <Link href="/" className="font-mono text-lg font-semibold tracking-tight text-accent lowercase focus-ring">
+                d-n
               </Link>
               <div className="flex items-center gap-4">
                 <nav className="flex flex-wrap items-center gap-4 text-sm font-mono tracking-[0.04em] text-text-secondary sm:gap-6" aria-label="Main navigation">
