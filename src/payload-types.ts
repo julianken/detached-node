@@ -248,7 +248,14 @@ export interface Post {
   slug: string;
   type: 'essay' | 'decoder' | 'index' | 'field-report';
   summary: string;
-  featuredImage?: (number | null) | Media;
+  /**
+   * Light-mode hero image
+   */
+  featuredImageLight: number | Media;
+  /**
+   * Dark-mode hero image — match the light version's dimensions
+   */
+  featuredImageDark: number | Media;
   body: {
     root: {
       type: string;
@@ -507,7 +514,8 @@ export interface PostsSelect<T extends boolean = true> {
   slug?: T;
   type?: T;
   summary?: T;
-  featuredImage?: T;
+  featuredImageLight?: T;
+  featuredImageDark?: T;
   body?: T;
   references?:
     | T

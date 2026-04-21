@@ -44,7 +44,12 @@ export default async function PostsPage() {
               date={formatDate(post.publishedAt)}
               summary={post.summary}
               href={`/posts/${post.slug}`}
-              featuredImage={isMediaObject(post.featuredImage) ? post.featuredImage : null}
+              featuredImageLight={
+                isMediaObject(post.featuredImageLight) ? post.featuredImageLight : null
+              }
+              featuredImageDark={
+                isMediaObject(post.featuredImageDark) ? post.featuredImageDark : null
+              }
               label="ARCHIVE"
             />
           ))

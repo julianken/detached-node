@@ -28,7 +28,7 @@ export const getFeaturedPosts = cache(async (limit = 3): Promise<Post[]> => {
       },
       sort: '-publishedAt', // Sort by date to use composite index idx_posts_featured_status_publishedAt
       limit,
-      depth: 1, // Include featuredImage relationship
+      depth: 1, // Include featuredImageLight/Dark relationships
     });
     return result.docs;
   } catch (error) {
@@ -53,7 +53,7 @@ export const getPublishedPosts = cache(async (): Promise<Post[]> => {
       collection: 'posts',
       where: { status: { equals: 'published' } },
       sort: '-publishedAt',
-      depth: 1, // Include featuredImage relationship
+      depth: 1, // Include featuredImageLight/Dark relationships
     });
     return result.docs;
   } catch (error) {
@@ -102,7 +102,7 @@ export const getPostBySlug = cache(async (slug: string): Promise<Post | null> =>
         status: { equals: 'published' },
       },
       limit: 1,
-      depth: 1, // Include featuredImage relationship
+      depth: 1, // Include featuredImageLight/Dark relationships
     });
     return docs[0] || null;
   } catch (error) {
