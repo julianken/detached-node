@@ -23,6 +23,7 @@ import dotenv from 'dotenv'
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import type { Media } from '../src/payload-types'
 
 dotenv.config({ path: '.env.local' })
 
@@ -110,7 +111,7 @@ async function main() {
         depth: 0,
       })
 
-      let mediaDoc
+      let mediaDoc: Media
       if (existingMedia.length > 0) {
         console.log(`  ↻ Updating existing media #${existingMedia[0].id} (${filename})`)
         mediaDoc = await payload.update({

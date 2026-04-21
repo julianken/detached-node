@@ -4,8 +4,13 @@ import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-postgres'
  * Database Migration: Theme-aware hero images for Posts
  *
  * Replaces the single `featured_image_id` column on `posts` with two sibling
- * columns, `featured_image_light_id` and `featured_image_dark_id`, both
- * required (NOT NULL).
+ * columns, `featured_image_light_id` and `featured_image_dark_id`. Both
+ * columns are added as nullable — NOT NULL is enforced at the Payload
+ * application layer (required: true) but not in this migration, because the
+ * deploy sequence is migration-first-then-seed: existing rows will have NULL
+ * for both columns until `scripts/seed-theme-hero.ts` populates them.
+ * A follow-up migration should add the NOT NULL constraint once the seed has
+ * run in production.
  *
  * The two currently-published posts are re-seeded by a separate script
  * (`scripts/seed-theme-hero.ts`), so we do NOT need to preserve legacy data
@@ -38,13 +43,11 @@ export async function up({ db }: MigrateUpArgs): Promise<void> {
       DROP COLUMN IF EXISTS "featured_image_id";
   `)
 
-  // Add the two new columns. We add them as nullable first so the ALTER
-  // succeeds on any historical rows, then (below) promote them to NOT NULL.
-  // In the actual deploy sequence the seed script will populate the values
-  // before the NOT NULL constraint is enforced, but because this migration
-  // is run against a database where the two existing posts are going to be
-  // re-seeded, we can safely set NOT NULL immediately after dropping the
-  // column (rows will fail to save without values, which is the intent).
+  // Add the two new columns as nullable. Existing rows will have NULL until
+  // scripts/seed-theme-hero.ts runs. NOT NULL is enforced by Payload at the
+  // app layer (required: true); DB-level NOT NULL belongs in a post-seed
+  // follow-up migration.
+  // TODO: add a follow-up migration to SET NOT NULL after the seed runs in prod.
   await db.execute(sql`
     ALTER TABLE "posts"
       ADD COLUMN "featured_image_light_id" integer,
