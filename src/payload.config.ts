@@ -41,16 +41,23 @@ export default buildConfig({
     push: true,
   }),
   plugins: [
-    // Only enable Vercel Blob storage if token is configured
-    ...(process.env.BLOB_READ_WRITE_TOKEN
-      ? [
-          vercelBlobStorage({
-            collections: { media: true },
-            token: process.env.BLOB_READ_WRITE_TOKEN,
-            clientUploads: true, // Bypasses 4.5MB serverless limit
-          }),
-        ]
-      : []),
+    // Always include the plugin so its client upload handler is registered
+    // in the importMap at build time. When BLOB_READ_WRITE_TOKEN is absent
+    // (e.g. local dev without blob access, CI typecheck), the plugin
+    // internally detects `!token` and marks itself disabled (see
+    // @payloadcms/storage-vercel-blob/src/index.ts), which is safe.
+    //
+    // The previous env-gated conditional (`...(env ? [plugin] : [])`) caused
+    // the admin UI to crash in production with a missing importMap key
+    // (`@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler`)
+    // whenever the importMap had been generated in an environment without the
+    // token, because the plugin's initClientUploads call — which is what
+    // registers that handler — was skipped entirely at codegen time.
+    vercelBlobStorage({
+      collections: { media: true },
+      token: process.env.BLOB_READ_WRITE_TOKEN,
+      clientUploads: true, // Bypasses 4.5MB serverless limit
+    }),
   ],
   sharp,
 })
