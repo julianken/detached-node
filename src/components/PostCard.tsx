@@ -1,5 +1,5 @@
 import { Link } from "next-view-transitions";
-import { OptimizedImage } from "@/components/OptimizedImage";
+import { ThemeAwareHero } from "@/components/ThemeAwareHero";
 import type { Media } from "@/payload-types";
 
 interface PostCardProps {
@@ -7,11 +7,20 @@ interface PostCardProps {
   date?: string;
   summary: string;
   href: string;
-  featuredImage?: Media | null;
+  featuredImageLight?: Media | null;
+  featuredImageDark?: Media | null;
   label?: string;
 }
 
-export function PostCard({ title, date, summary, href, featuredImage, label }: PostCardProps) {
+export function PostCard({
+  title,
+  date,
+  summary,
+  href,
+  featuredImageLight,
+  featuredImageDark,
+  label,
+}: PostCardProps) {
   return (
     <Link
       href={href}
@@ -22,14 +31,14 @@ export function PostCard({ title, date, summary, href, featuredImage, label }: P
           {label}
         </span>
       )}
-      {featuredImage && featuredImage.url && (
+      {featuredImageLight && featuredImageDark && (
         <div className="mb-4 -mx-6 -mt-6 overflow-hidden rounded-t-sm">
-          <OptimizedImage
-            src={featuredImage.url}
-            alt={featuredImage.alt || title}
-            width={featuredImage.width || 800}
-            height={featuredImage.height || 450}
-            className="w-full transition-transform group-hover:scale-105"
+          <ThemeAwareHero
+            light={featuredImageLight}
+            dark={featuredImageDark}
+            alt={title}
+            className="transition-transform group-hover:scale-105"
+            sizes="(max-width: 768px) 100vw, 720px"
           />
         </div>
       )}

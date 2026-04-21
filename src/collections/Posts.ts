@@ -55,9 +55,20 @@ export const Posts: CollectionConfig = {
       maxLength: 500,
     },
     {
-      name: 'featuredImage',
+      name: 'featuredImageLight',
       type: 'upload',
       relationTo: 'media',
+      required: true,
+      admin: { description: 'Light-mode hero image' },
+    },
+    {
+      name: 'featuredImageDark',
+      type: 'upload',
+      relationTo: 'media',
+      required: true,
+      admin: {
+        description: "Dark-mode hero image — match the light version's dimensions",
+      },
     },
     {
       name: 'body',

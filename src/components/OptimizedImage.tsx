@@ -3,9 +3,11 @@ import Image from "next/image";
 interface OptimizedImageProps {
   src: string;
   alt: string;
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
   priority?: boolean;
+  fetchPriority?: "high" | "low" | "auto";
+  fill?: boolean;
   className?: string;
   sizes?: string;
 }
@@ -52,16 +54,22 @@ export function OptimizedImage({
   width,
   height,
   priority = false,
+  fetchPriority,
+  fill = false,
   className = "",
   sizes,
 }: OptimizedImageProps) {
+  const dimensionProps = fill
+    ? { fill: true as const }
+    : { width: width as number, height: height as number };
+
   return (
     <Image
       src={toRelativeSrc(src)}
       alt={alt}
-      width={width}
-      height={height}
+      {...dimensionProps}
       priority={priority}
+      fetchPriority={fetchPriority}
       sizes={sizes || "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"}
       className={className}
       placeholder="blur"
