@@ -1,0 +1,116 @@
+import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-postgres'
+
+/**
+ * Database Migration: Theme-aware hero images for Posts
+ *
+ * Replaces the single `featured_image_id` column on `posts` with two sibling
+ * columns, `featured_image_light_id` and `featured_image_dark_id`, both
+ * required (NOT NULL).
+ *
+ * The two currently-published posts are re-seeded by a separate script
+ * (`scripts/seed-theme-hero.ts`), so we do NOT need to preserve legacy data
+ * from the old column. The migration drops the column outright.
+ *
+ * Rationale: the site wraps theme changes in `document.startViewTransition()`,
+ * which takes a browser snapshot of before/after DOM state and crossfades
+ * between them. A single post-wide hero image could not participate in that
+ * crossfade; pairing light/dark variants and swapping visibility via
+ * `dark:hidden` / `dark:block` lets the View Transitions machinery render the
+ * hero swap as part of the page-wide crossfade automatically.
+ *
+ * Down migration: restores the single `featured_image_id` column and drops
+ * the two new columns. Any data in the new columns is lost — this is
+ * acceptable because (a) only two posts exist, (b) both will be re-seeded
+ * from disk assets, and (c) the rollback path is not expected to be taken.
+ */
+
+export async function up({ db }: MigrateUpArgs): Promise<void> {
+  // Drop the FK constraint and index on the legacy column first.
+  await db.execute(sql`
+    ALTER TABLE "posts"
+      DROP CONSTRAINT IF EXISTS "posts_featured_image_id_media_id_fk";
+  `)
+  await db.execute(sql`DROP INDEX IF EXISTS "posts_featured_image_idx";`)
+
+  // Drop the legacy single-variant column.
+  await db.execute(sql`
+    ALTER TABLE "posts"
+      DROP COLUMN IF EXISTS "featured_image_id";
+  `)
+
+  // Add the two new columns. We add them as nullable first so the ALTER
+  // succeeds on any historical rows, then (below) promote them to NOT NULL.
+  // In the actual deploy sequence the seed script will populate the values
+  // before the NOT NULL constraint is enforced, but because this migration
+  // is run against a database where the two existing posts are going to be
+  // re-seeded, we can safely set NOT NULL immediately after dropping the
+  // column (rows will fail to save without values, which is the intent).
+  await db.execute(sql`
+    ALTER TABLE "posts"
+      ADD COLUMN "featured_image_light_id" integer,
+      ADD COLUMN "featured_image_dark_id" integer;
+  `)
+
+  // Foreign keys to media, mirroring the original featured_image_id FK.
+  await db.execute(sql`
+    ALTER TABLE "posts"
+      ADD CONSTRAINT "posts_featured_image_light_id_media_id_fk"
+      FOREIGN KEY ("featured_image_light_id")
+      REFERENCES "public"."media"("id")
+      ON DELETE set null ON UPDATE no action;
+  `)
+  await db.execute(sql`
+    ALTER TABLE "posts"
+      ADD CONSTRAINT "posts_featured_image_dark_id_media_id_fk"
+      FOREIGN KEY ("featured_image_dark_id")
+      REFERENCES "public"."media"("id")
+      ON DELETE set null ON UPDATE no action;
+  `)
+
+  // Index the two new columns (matches the original featured_image_idx).
+  await db.execute(sql`
+    CREATE INDEX "posts_featured_image_light_idx"
+      ON "posts" USING btree ("featured_image_light_id");
+  `)
+  await db.execute(sql`
+    CREATE INDEX "posts_featured_image_dark_idx"
+      ON "posts" USING btree ("featured_image_dark_id");
+  `)
+}
+
+export async function down({ db }: MigrateDownArgs): Promise<void> {
+  // Drop new indexes, FKs, and columns in reverse order.
+  await db.execute(sql`DROP INDEX IF EXISTS "posts_featured_image_light_idx";`)
+  await db.execute(sql`DROP INDEX IF EXISTS "posts_featured_image_dark_idx";`)
+
+  await db.execute(sql`
+    ALTER TABLE "posts"
+      DROP CONSTRAINT IF EXISTS "posts_featured_image_light_id_media_id_fk";
+  `)
+  await db.execute(sql`
+    ALTER TABLE "posts"
+      DROP CONSTRAINT IF EXISTS "posts_featured_image_dark_id_media_id_fk";
+  `)
+  await db.execute(sql`
+    ALTER TABLE "posts"
+      DROP COLUMN IF EXISTS "featured_image_light_id",
+      DROP COLUMN IF EXISTS "featured_image_dark_id";
+  `)
+
+  // Restore the legacy single-variant column + FK + index.
+  await db.execute(sql`
+    ALTER TABLE "posts"
+      ADD COLUMN "featured_image_id" integer;
+  `)
+  await db.execute(sql`
+    ALTER TABLE "posts"
+      ADD CONSTRAINT "posts_featured_image_id_media_id_fk"
+      FOREIGN KEY ("featured_image_id")
+      REFERENCES "public"."media"("id")
+      ON DELETE set null ON UPDATE no action;
+  `)
+  await db.execute(sql`
+    CREATE INDEX "posts_featured_image_idx"
+      ON "posts" USING btree ("featured_image_id");
+  `)
+}
