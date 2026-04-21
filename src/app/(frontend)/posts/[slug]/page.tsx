@@ -5,7 +5,7 @@ import type { SerializedEditorState } from "@payloadcms/richtext-lexical/lexical
 import { formatDate, getTypeLabel } from "@/lib/formatting";
 import { Link } from "next-view-transitions";
 import { PageLayout } from "@/components/PageLayout";
-import { OptimizedImage } from "@/components/OptimizedImage";
+import { ThemeAwareHero } from "@/components/ThemeAwareHero";
 import { TextGlitch } from "@/components/TextGlitch";
 import { SchemaScript } from "@/components/SchemaScript";
 import { generateBlogPostingSchema, generateBreadcrumbSchema } from "@/lib/schema";
@@ -70,13 +70,13 @@ export async function generateMetadata({
   const title = post.seoTitle || post.title;
   const description = post.metaDescription || post.summary;
 
-  const ogImages = isMediaObject(post.featuredImage) && post.featuredImage.url
+  const ogImages = isMediaObject(post.featuredImageLight) && post.featuredImageLight.url
     ? [
         {
-          url: post.featuredImage.url,
-          width: post.featuredImage.width || 1200,
-          height: post.featuredImage.height || 630,
-          alt: post.featuredImage.alt || post.title,
+          url: post.featuredImageLight.url,
+          width: post.featuredImageLight.width || 1200,
+          height: post.featuredImageLight.height || 630,
+          alt: post.featuredImageLight.alt || post.title,
         },
       ]
     : [{ url: ogDefaultImage, width: 1200, height: 630, alt: post.title }];
@@ -134,15 +134,13 @@ export default async function PostPage({ params }: PostPageProps) {
           )}
         </header>
 
-        {isMediaObject(post.featuredImage) && post.featuredImage.url && (
+        {isMediaObject(post.featuredImageLight) && isMediaObject(post.featuredImageDark) && (
           <div className="my-8 -mx-4 sm:-mx-8 overflow-hidden rounded-sm">
-            <OptimizedImage
-              src={post.featuredImage.url}
-              alt={post.featuredImage.alt || post.title}
-              width={post.featuredImage.width || 1200}
-              height={post.featuredImage.height || 630}
-              priority
-              className="w-full"
+            <ThemeAwareHero
+              light={post.featuredImageLight}
+              dark={post.featuredImageDark}
+              alt={post.title}
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 720px, 768px"
             />
           </div>
         )}

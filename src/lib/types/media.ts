@@ -13,8 +13,8 @@ import type { Media, Tag } from "@/payload-types";
  * Use before accessing .url, .width, .height, or .alt.
  *
  * @example
- * if (isMediaObject(post.featuredImage) && post.featuredImage.url) {
- *   // safely access post.featuredImage.url
+ * if (isMediaObject(post.featuredImageLight) && post.featuredImageLight.url) {
+ *   // safely access post.featuredImageLight.url
  * }
  */
 export function isMediaObject(

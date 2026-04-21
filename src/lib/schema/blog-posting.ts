@@ -2,7 +2,7 @@
 //
 // Generates BlogPosting schema for individual post detail pages.
 // Requires a Post object with relations populated at depth:1
-// (featuredImage as Media object, tags as Tag objects).
+// (featuredImageLight/Dark as Media objects, tags as Tag objects).
 //
 // Google Article rich result requirements (to qualify for article card in SERPs):
 //   Required: headline, image (>700px wide), datePublished, dateModified, author
@@ -24,19 +24,21 @@ import type { Post } from "@/payload-types";
 export function generateBlogPostingSchema(post: Post): BlogPostingSchema {
   const postUrl = `${SITE_CONFIG.url}/posts/${post.slug}`;
 
-  // Image: only include if featuredImage is populated (not just an ID reference)
+  // Image: only include if featuredImageLight is populated (not just an ID reference)
   // and has a URL. Width and height fall back to standard OG dimensions (1200x630)
   // matching the pattern already used in the post detail page component.
   // Google requires >700px width for Article rich result thumbnails.
   // The hero image size (1920px) configured in Media.ts exceeds this requirement.
+  // We use the light variant for schema.org/JSON-LD because SERPs render on a
+  // neutral (light) background and a single canonical image is required.
   let image: ImageObjectSchema | undefined;
-  if (isMediaObject(post.featuredImage) && post.featuredImage.url) {
+  if (isMediaObject(post.featuredImageLight) && post.featuredImageLight.url) {
     image = {
       "@type": "ImageObject",
-      url: post.featuredImage.url,
-      width: post.featuredImage.width ?? 1200,
-      height: post.featuredImage.height ?? 630,
-      description: post.featuredImage.alt || undefined,
+      url: post.featuredImageLight.url,
+      width: post.featuredImageLight.width ?? 1200,
+      height: post.featuredImageLight.height ?? 630,
+      description: post.featuredImageLight.alt || undefined,
     };
   }
 
