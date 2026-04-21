@@ -52,6 +52,16 @@ export function FadeReveal({ children }: { children: ReactNode }) {
     };
 
     images.forEach((img) => {
+      // Hidden images (display:none, visibility:hidden) with loading="lazy"
+      // never fire load events — the browser correctly skips fetching them.
+      // Treat them as ready so we don't stall the reveal waiting on a load
+      // that will never happen (e.g. the inactive-theme variant in a stacked
+      // light/dark hero pair).
+      const cs = window.getComputedStyle(img);
+      if (cs.display === 'none' || cs.visibility === 'hidden') {
+        check();
+        return;
+      }
       if (img.complete) {
         check();
       } else {
