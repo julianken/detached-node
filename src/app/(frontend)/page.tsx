@@ -24,7 +24,7 @@ export default async function Home() {
     <div className="flex flex-col gap-16">
       <section>
         <h1 className="font-mono text-4xl font-semibold tracking-tight text-text-primary lowercase [text-wrap:balance]">
-          detached-node
+          detached<span className="text-accent">-</span>node
         </h1>
         <p className="mt-4 max-w-xl text-lg leading-8 text-text-secondary">
           a diagnostic analysis of AI-assisted software engineering
