@@ -2,12 +2,22 @@
  * Seeds (or updates) theme-aware hero image pairs for posts.
  *
  * Reads light + dark WebP files from `tmp/hero-pics/`, uploads via
- * Payload's local API to the Media collection, and links to the post
- * by slug. Idempotent: re-running with existing filenames updates the
- * bytes in place.
+ * Payload's local API to the Media collection, and links the resulting
+ * media IDs to the matching posts via `featuredImageLight` /
+ * `featuredImageDark`. Idempotent: media uploads are upserted by
+ * filename and post updates always overwrite both variant fields, so
+ * re-running refreshes bytes in place. Old media rows are NOT deleted
+ * automatically — remove them via the admin if cleanup is desired.
+ *
+ * Run: `pnpm tsx scripts/seed-theme-hero.ts`
  *
  * Run `pnpm tsx scripts/convert-hero-webp.ts` FIRST if you only have
  * PNG source assets.
+ *
+ * Requires `DATABASE_URL`, `PAYLOAD_SECRET`, and (for prod uploads to
+ * Vercel Blob) `BLOB_READ_WRITE_TOKEN` in `.env.local`.
+ *
+ * After a successful run, delete `tmp/hero-pics/`.
  */
 import 'dotenv/config'
 import dotenv from 'dotenv'
