@@ -9,7 +9,7 @@ interface CardProps {
 
 export function Card({ children, href, className = "", label }: CardProps) {
   const baseStyles =
-    "card-trace card-scanline relative rounded-sm border border-border bg-surface p-5 transition-colors hover:border-border-hover hover:bg-hover-bg hover:shadow-sm focus-ring";
+    "relative block transition-colors hover:text-accent focus-ring";
   const combinedStyles = `${baseStyles} ${className}`.trim();
 
   const labelEl = label ? (
