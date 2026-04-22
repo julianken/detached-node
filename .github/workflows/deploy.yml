@@ -7,10 +7,15 @@ permissions:
   contents: read
   id-token: write
 
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     environment: production
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -21,14 +26,6 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-
-      - name: Run Payload migrations
-        env:
-          DATABASE_URL: ${{ secrets.SUPABASE_SESSION_URL }}
-          PAYLOAD_SECRET: ${{ secrets.PAYLOAD_SECRET }}
-          NEXT_PUBLIC_SERVER_URL: ${{ vars.NEXT_PUBLIC_SERVER_URL }}
-        run: pnpm payload migrate
-        timeout-minutes: 5
 
       - uses: google-github-actions/auth@v2
         with:
@@ -44,10 +41,18 @@ jobs:
         run: |
           docker build \
             --build-arg NEXT_PUBLIC_SERVER_URL=${{ vars.NEXT_PUBLIC_SERVER_URL }} \
-            --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} \
+            --build-arg DATABASE_URL=${{ secrets.SUPABASE_SESSION_URL }} \
             --build-arg PAYLOAD_SECRET=${{ secrets.PAYLOAD_SECRET }} \
             -t ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/tech-blog/app:${{ github.sha }} .
           docker push ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/tech-blog/app:${{ github.sha }}
+
+      - name: Run Payload migrations
+        env:
+          DATABASE_URL: ${{ secrets.SUPABASE_SESSION_URL }}
+          PAYLOAD_SECRET: ${{ secrets.PAYLOAD_SECRET }}
+          NEXT_PUBLIC_SERVER_URL: ${{ vars.NEXT_PUBLIC_SERVER_URL }}
+        run: pnpm payload migrate
+        timeout-minutes: 5
 
       - name: Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@v2
@@ -55,3 +60,14 @@ jobs:
           service: detached-node
           image: ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/tech-blog/app:${{ github.sha }}
           region: ${{ vars.GCP_REGION }}
+          env_vars: |
+            NODE_ENV=production
+            NEXT_PUBLIC_SERVER_URL=${{ vars.NEXT_PUBLIC_SERVER_URL }}
+          secrets: |
+            DATABASE_URL=database-url:latest
+            PAYLOAD_SECRET=payload-secret:latest
+            UPSTASH_REDIS_REST_URL=upstash-redis-url:latest
+            UPSTASH_REDIS_REST_TOKEN=upstash-redis-token:latest
+            GCS_BUCKET=gcs-bucket:latest
+            GCS_HMAC_ACCESS_KEY=gcs-hmac-key:latest
+            GCS_HMAC_SECRET=gcs-hmac-secret:latest
