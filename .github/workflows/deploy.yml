@@ -40,7 +40,7 @@ jobs:
       - name: Build Docker image
         run: |
           docker build \
-            --build-arg NEXT_PUBLIC_SERVER_URL=${{ vars.NEXT_PUBLIC_SERVER_URL }} \
+            --build-arg "NEXT_PUBLIC_SERVER_URL=${{ vars.NEXT_PUBLIC_SERVER_URL }}" \
             --build-arg DATABASE_URL=${{ secrets.SUPABASE_SESSION_URL }} \
             --build-arg PAYLOAD_SECRET=${{ secrets.PAYLOAD_SECRET }} \
             -t ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/tech-blog/app:${{ github.sha }} .
