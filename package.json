@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "build:production": "pnpm payload migrate && pnpm build",
+    "build:production": "pnpm build",
     "start": "next start",
     "lint": "eslint",
     "payload": "payload",

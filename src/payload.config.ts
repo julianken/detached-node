@@ -41,9 +41,7 @@ export default buildConfig({
     pool: {
       connectionString: env.DATABASE_URL,
     },
-    // Enable schema push for initial deployment (creates tables automatically)
-    // Consider disabling after initial setup and using migrations instead
-    push: true,
+    push: false,
   }),
   plugins: [
     // Always include the plugin so its client upload handler is registered
