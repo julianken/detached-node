@@ -57,6 +57,7 @@ export default buildConfig({
       collections: { media: true },
       token: process.env.BLOB_READ_WRITE_TOKEN,
       clientUploads: true, // Bypasses 4.5MB serverless limit
+      addRandomSuffix: true,
     }),
   ],
   sharp,
