@@ -62,7 +62,7 @@ on a ready-to-merge PR. -->
 - [ ] New Playwright e2e spec added (if user-visible behavior changed) —
       `npm run test:e2e`
 - [ ] (UI only) Playwright MCP smoke — ran `npm run dev`, drove the feature
-      via `mcp__playwright__browser_*` at ≥1 mobile (390×844) and ≥1
+      via `mcp__plugin_playwright_playwright__browser_*` at ≥1 mobile (390×844) and ≥1
       desktop (1440×900) viewport, `browser_console_messages` returns no
       errors/warnings, and the Screenshots section was captured from those
       runs. Human-authored PRs may substitute direct browser interaction.
