@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Link, ViewTransitions } from "next-view-transitions";
 import { Crimson_Pro, JetBrains_Mono } from "next/font/google";
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { StatusBar } from "@/components/StatusBar";
@@ -137,8 +135,6 @@ export default function FrontendLayout({
             </defs>
           </svg>
 
-          <Analytics />
-          <SpeedInsights />
           </ViewTransitions>
         </ThemeProvider>
       </body>

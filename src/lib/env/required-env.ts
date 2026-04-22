@@ -7,14 +7,14 @@
  * surfaces as a confusing downstream failure (e.g. Postgres refusing an
  * empty connection string, Payload rejecting an empty secret).
  *
- * Deployment context: Vercel scopes some vars (e.g. `PAYLOAD_SECRET`) per
- * environment. A Production-only secret breaks Preview deploys; we want the
- * error to name every missing var at once and identify the phase, so the
- * fix is a single trip to the dashboard.
+ * Deployment context: Some hosting platforms scope env vars per environment.
+ * A production-only secret breaks staging deploys; we want the error to
+ * name every missing var at once and identify the phase, so the fix is
+ * a single trip to the dashboard or config.
  */
 
 function phaseFromEnv(): string {
-  return process.env.NEXT_PHASE ?? process.env.VERCEL_ENV ?? 'runtime'
+  return process.env.NEXT_PHASE ?? 'runtime'
 }
 
 export function assertRequiredEnv<const T extends readonly string[]>(

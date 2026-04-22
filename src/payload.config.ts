@@ -1,6 +1,6 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
-import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
+import { s3Storage } from '@payloadcms/storage-s3'
 import { buildConfig } from 'payload'
 import sharp from 'sharp'
 import path from 'path'
@@ -44,23 +44,19 @@ export default buildConfig({
     push: false,
   }),
   plugins: [
-    // Always include the plugin so its client upload handler is registered
-    // in the importMap at build time. When BLOB_READ_WRITE_TOKEN is absent
-    // (e.g. local dev without blob access, CI typecheck), the plugin
-    // internally detects `!token` and marks itself disabled (see
-    // @payloadcms/storage-vercel-blob/src/index.ts), which is safe.
-    //
-    // The previous env-gated conditional (`...(env ? [plugin] : [])`) caused
-    // the admin UI to crash in production with a missing importMap key
-    // (`@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler`)
-    // whenever the importMap had been generated in an environment without the
-    // token, because the plugin's initClientUploads call — which is what
-    // registers that handler — was skipped entirely at codegen time.
-    vercelBlobStorage({
-      collections: { media: true },
-      token: process.env.BLOB_READ_WRITE_TOKEN,
-      clientUploads: true, // Bypasses 4.5MB serverless limit
-      addRandomSuffix: true,
+    s3Storage({
+      collections: { media: { prefix: 'media' } },
+      bucket: process.env.GCS_BUCKET ?? '',
+      clientUploads: true,
+      config: {
+        region: 'auto',
+        endpoint: 'https://storage.googleapis.com',
+        forcePathStyle: true,
+        credentials: {
+          accessKeyId: process.env.GCS_HMAC_ACCESS_KEY ?? '',
+          secretAccessKey: process.env.GCS_HMAC_SECRET ?? '',
+        },
+      },
     }),
   ],
   sharp,
