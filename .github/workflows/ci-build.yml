@@ -13,6 +13,7 @@ concurrency:
 env:
   DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
   PAYLOAD_SECRET: ci-build-secret-not-real
+  NEXT_PUBLIC_SERVER_URL: http://localhost:3000
 
 jobs:
   build:
