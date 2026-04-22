@@ -67,24 +67,26 @@ export function StatusBar() {
           >
             {themeLabel}
           </button>
-          <span>{'//'}</span>
-          <button
-            onClick={cycleContrast}
-            className="hover:text-accent transition-colors cursor-pointer"
-            aria-label={`Contrast: ${contrast}. Click to cycle.`}
-          >
-            CTR:{mounted ? contrast.toUpperCase() : '----'}
-          </button>
-          <span>{'//'}</span>
-          <button
-            onClick={cycleBrightness}
-            className="hover:text-accent transition-colors cursor-pointer"
-            aria-label={`Brightness: ${brightness}. Click to cycle.`}
-          >
-            BRT:{mounted ? brightness.toUpperCase() : '----'}
-          </button>
-          <span>{'//'}</span>
-          <span className="inline-flex">{digits}</span>
+          <span className="hidden sm:flex items-center gap-1">
+            <span>{'//'}</span>
+            <button
+              onClick={cycleContrast}
+              className="hover:text-accent transition-colors cursor-pointer"
+              aria-label={`Contrast: ${contrast}. Click to cycle.`}
+            >
+              CTR:{mounted ? contrast.toUpperCase() : '----'}
+            </button>
+            <span>{'//'}</span>
+            <button
+              onClick={cycleBrightness}
+              className="hover:text-accent transition-colors cursor-pointer"
+              aria-label={`Brightness: ${brightness}. Click to cycle.`}
+            >
+              BRT:{mounted ? brightness.toUpperCase() : '----'}
+            </button>
+            <span>{'//'}</span>
+            <span className="inline-flex">{digits}</span>
+          </span>
         </div>
         <span className="shrink-0 text-text-tertiary">&copy; DETACHED-NODE</span>
       </div>
