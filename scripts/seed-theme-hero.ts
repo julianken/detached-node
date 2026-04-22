@@ -1,22 +1,23 @@
 /**
- * Seed script: theme-aware hero images for the two currently-published posts.
+ * Seeds (or updates) theme-aware hero image pairs for posts.
  *
- * Run with: pnpm tsx scripts/seed-theme-hero.ts
+ * Reads light + dark WebP files from `tmp/hero-pics/`, uploads via
+ * Payload's local API to the Media collection, and links the resulting
+ * media IDs to the matching posts via `featuredImageLight` /
+ * `featuredImageDark`. Idempotent: media uploads are upserted by
+ * filename and post updates always overwrite both variant fields, so
+ * re-running refreshes bytes in place. Old media rows are NOT deleted
+ * automatically — remove them via the admin if cleanup is desired.
  *
- * Uploads four source images from tmp/hero-pics/ (light + dark for each of
- * "rethinking-systems-in-the-agentic-age" and "what-tickets-and-prs-are-actually-for"),
- * then links the resulting media IDs to the matching posts via the new
- * featuredImageLight / featuredImageDark fields.
+ * Run: `pnpm tsx scripts/seed-theme-hero.ts`
  *
- * Safe to run more than once: media uploads are upserted by filename, and the
- * post update is idempotent (we always overwrite both variant fields with the
- * freshest upload IDs). Old media rows are NOT deleted — delete manually in
- * the admin if cleanup is desired.
+ * Run `pnpm tsx scripts/convert-hero-webp.ts` FIRST if you only have
+ * PNG source assets.
  *
- * Requires DATABASE_URL, PAYLOAD_SECRET, and (for prod uploads to Vercel Blob)
- * BLOB_READ_WRITE_TOKEN in .env.local.
+ * Requires `DATABASE_URL`, `PAYLOAD_SECRET`, and (for prod uploads to
+ * Vercel Blob) `BLOB_READ_WRITE_TOKEN` in `.env.local`.
  *
- * After a successful run, delete tmp/hero-pics/.
+ * After a successful run, delete `tmp/hero-pics/`.
  */
 import 'dotenv/config'
 import dotenv from 'dotenv'
@@ -47,16 +48,16 @@ const POSTS: PostAssets[] = [
     slug: 'rethinking-systems-in-the-agentic-age',
     title: 'Rethinking Systems in the Agentic Age',
     files: {
-      light: 'rethinking-systems-in-the-agentic-age-light.png',
-      dark: 'rethinking-systems-in-the-agentic-age-dark.png',
+      light: 'rethinking-systems-in-the-agentic-age-light.webp',
+      dark: 'rethinking-systems-in-the-agentic-age-dark.webp',
     },
   },
   {
     slug: 'what-tickets-and-prs-are-actually-for',
     title: 'What Tickets and PRs Are Actually For',
     files: {
-      light: 'what-tickets-and-prs-are-actually-for-light.png',
-      dark: 'what-tickets-and-prs-are-actually-for-dark.png',
+      light: 'what-tickets-and-prs-are-actually-for-light.webp',
+      dark: 'what-tickets-and-prs-are-actually-for-dark.webp',
     },
   },
 ]

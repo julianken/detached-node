@@ -70,3 +70,6 @@ scripts/.tmp-seed-images/
 /creative-output/
 /launch-plan/
 /docs/brainstorms/
+
+# Transient workspaces
+tmp/
