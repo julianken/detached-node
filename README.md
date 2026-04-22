@@ -79,3 +79,4 @@ See `CONTENT_MODEL.md` for the full schema specification.
 ## License
 
 All rights reserved.
+
