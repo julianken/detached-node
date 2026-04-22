@@ -30,27 +30,27 @@ describe("Card", () => {
     render(<Card>Styled content</Card>);
 
     const card = screen.getByText("Styled content");
-    expect(card).toHaveClass("rounded-sm");
-    expect(card).toHaveClass("border");
-    expect(card).toHaveClass("p-5");
+    expect(card).toHaveClass("relative");
+    expect(card).toHaveClass("block");
     expect(card).toHaveClass("transition-colors");
+    expect(card).toHaveClass("focus-ring");
   });
 
   it("applies base styling classes to links", () => {
     render(<Card href="/test">Link</Card>);
 
     const link = screen.getByRole("link");
-    expect(link).toHaveClass("rounded-sm");
-    expect(link).toHaveClass("border");
-    expect(link).toHaveClass("p-5");
+    expect(link).toHaveClass("relative");
+    expect(link).toHaveClass("block");
     expect(link).toHaveClass("transition-colors");
+    expect(link).toHaveClass("focus-ring");
   });
 
   it("merges custom className with base styles", () => {
     render(<Card className="custom-class another-class">Content</Card>);
 
     const card = screen.getByText("Content");
-    expect(card).toHaveClass("rounded-sm"); // base style
+    expect(card).toHaveClass("relative"); // base style
     expect(card).toHaveClass("custom-class"); // custom class
     expect(card).toHaveClass("another-class"); // custom class
   });
@@ -59,7 +59,7 @@ describe("Card", () => {
     render(<Card className="">Content</Card>);
 
     const card = screen.getByText("Content");
-    expect(card).toHaveClass("rounded-sm");
+    expect(card).toHaveClass("relative");
   });
 
   it("renders complex children correctly", () => {
