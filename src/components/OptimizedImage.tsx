@@ -1,16 +1,19 @@
 import Image from "next/image";
 
-interface OptimizedImageProps {
+interface CommonProps {
   src: string;
   alt: string;
-  width?: number;
-  height?: number;
   priority?: boolean;
   fetchPriority?: "high" | "low" | "auto";
-  fill?: boolean;
   className?: string;
   sizes?: string;
 }
+
+type OptimizedImageProps = CommonProps &
+  (
+    | { fill: true; width?: never; height?: never }
+    | { fill?: false; width: number; height: number }
+  );
 
 /**
  * Optimized image component using Next.js Image
@@ -48,20 +51,19 @@ function toRelativeSrc(src: string): string {
   return src;
 }
 
-export function OptimizedImage({
-  src,
-  alt,
-  width,
-  height,
-  priority = false,
-  fetchPriority,
-  fill = false,
-  className = "",
-  sizes,
-}: OptimizedImageProps) {
-  const dimensionProps = fill
+export function OptimizedImage(props: OptimizedImageProps) {
+  const {
+    src,
+    alt,
+    priority = false,
+    fetchPriority,
+    className = "",
+    sizes,
+  } = props;
+
+  const dimensionProps = props.fill
     ? { fill: true as const }
-    : { width: width as number, height: height as number };
+    : { width: props.width, height: props.height };
 
   return (
     <Image
