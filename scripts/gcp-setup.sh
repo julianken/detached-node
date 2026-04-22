@@ -108,6 +108,7 @@ create_gcs_bucket() {
   info "Step 4b: Applying CORS policy to bucket"
   local cors_json
   cors_json="$(mktemp /tmp/gcs-cors-XXXXXX.json)"
+  trap 'rm -f "${cors_json}"' RETURN
   cat > "${cors_json}" <<EOF
 [
   {
@@ -121,7 +122,6 @@ EOF
   gcloud storage buckets update "gs://${BUCKET_NAME}" \
     --cors-file="${cors_json}" \
     --quiet
-  rm -f "${cors_json}"
   info "CORS applied to gs://${BUCKET_NAME}"
 }
 
@@ -148,10 +148,10 @@ create_service_account() {
       --quiet
   done
 
-  info "Step 5b: Granting storage.admin on media bucket (for HMAC key creation)"
+  info "Step 5b: Granting storage.objectAdmin on media bucket"
   gcloud storage buckets add-iam-policy-binding "gs://${BUCKET_NAME}" \
     --member="serviceAccount:${sa_email}" \
-    --role="roles/storage.admin" \
+    --role="roles/storage.objectAdmin" \
     --quiet
 
   info "Service account configured: ${sa_email}"
