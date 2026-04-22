@@ -12,12 +12,19 @@ import { Pages } from './collections/Pages'
 import { Tags } from './collections/Tags'
 import { Posts } from './collections/Posts'
 import { Listings } from './collections/Listings'
+import { assertRequiredEnv } from './lib/env/required-env'
+
+const env = assertRequiredEnv([
+  'PAYLOAD_SECRET',
+  'DATABASE_URL',
+  'NEXT_PUBLIC_SERVER_URL',
+] as const)
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export default buildConfig({
-  serverURL: process.env.NEXT_PUBLIC_SERVER_URL || '',
+  serverURL: env.NEXT_PUBLIC_SERVER_URL,
   admin: {
     user: 'users',
     importMap: {
@@ -26,15 +33,13 @@ export default buildConfig({
   },
   collections: [Users, Media, Pages, Tags, Posts, Listings],
   editor: lexicalEditor(),
-  secret: process.env.PAYLOAD_SECRET || (() => {
-    throw new Error('PAYLOAD_SECRET environment variable is required but not set')
-  })(),
+  secret: env.PAYLOAD_SECRET,
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
   db: postgresAdapter({
     pool: {
-      connectionString: process.env.DATABASE_URL || '',
+      connectionString: env.DATABASE_URL,
     },
     // Enable schema push for initial deployment (creates tables automatically)
     // Consider disabling after initial setup and using migrations instead

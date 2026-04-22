@@ -22,6 +22,7 @@ concurrency:
 env:
   DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
   PAYLOAD_SECRET: test-secret-for-ci-environment-only
+  NEXT_PUBLIC_SERVER_URL: http://localhost:3000
   NODE_ENV: test
 
 jobs:

@@ -87,6 +87,46 @@ NEXT_PUBLIC_SERVER_URL="http://localhost:3000"
 
 **Never commit `.env.local` to git.** It's already in `.gitignore`.
 
+### Preview Environment
+
+Vercel scopes environment variables per environment (Production, Preview, Development). A variable set only in Production is **undefined during Preview builds**, which breaks every PR's preview deployment. See [issue #73](https://github.com/julianken/detached-node/issues/73) for the incident this section prevents.
+
+The following variables must be set in Vercel's **Preview** scope (in addition to Production):
+
+```bash
+# Payload CMS secret — MUST differ from Production (token-signing isolation)
+# Generate with: openssl rand -base64 32
+PAYLOAD_SECRET="preview-only-secret-min-32-chars"
+
+# Server URL — safe to reuse the Production canonical, or use a per-deployment URL
+NEXT_PUBLIC_SERVER_URL="https://detached-node.vercel.app"
+
+# Database — TODO: provision a dedicated Preview Postgres.
+# Do NOT point Preview at the Production DB: `payload migrate` runs on every
+# Preview build and would mutate production data.
+DATABASE_URL="postgres://..."
+```
+
+Vercel env vars are not inherited across scopes — Production and Preview are independent name-value maps.
+
+**Setting them via CLI**:
+
+```bash
+vercel env add PAYLOAD_SECRET preview
+# paste a fresh secret; do NOT reuse Production's
+vercel env add NEXT_PUBLIC_SERVER_URL preview
+vercel env add DATABASE_URL preview
+```
+
+**Verifying**:
+
+```bash
+vercel env ls | grep -E "PAYLOAD_SECRET|DATABASE_URL|NEXT_PUBLIC_SERVER_URL"
+# Expect each row to list "Preview" in its environments column
+```
+
+Missing any of these in Preview produces the error `Missing required environment variables: [...]` at build time (see `src/lib/env/required-env.ts`).
+
 ## Deployment Workflow
 
 ### Automatic Deployments
@@ -454,6 +494,7 @@ git push origin main
 - **Missing dependencies**: Add missing package to `package.json`, commit, push
 - **Migration failure**: Fix migration file, create new migration if needed
 - **Environment variable missing**: Add to Vercel project settings → Environment Variables
+- **`Missing required environment variables: [...]`**: The env-preflight validator caught one or more vars unset for this environment. If Production passes but Preview fails, it's almost certainly per-environment scope — see [Preview Environment](#preview-environment). Diagnose: `vercel env ls | grep -E "PAYLOAD_SECRET|DATABASE_URL|NEXT_PUBLIC_SERVER_URL"`
 
 **Verification**:
 
@@ -905,7 +946,7 @@ async headers() {
 
 ---
 
-**Document Version**: 1.0
-**Last Updated**: 2026-02-13
+**Document Version**: 1.1
+**Last Updated**: 2026-04-22
 **Maintained By**: Backend Development Agent
 **Linear Issue**: CON-113
