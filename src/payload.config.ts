@@ -20,6 +20,21 @@ const env = assertRequiredEnv([
   'NEXT_PUBLIC_SERVER_URL',
 ] as const)
 
+// In production runtime, GCS must be configured — otherwise the s3Storage
+// plugin silently disables and uploads go to ephemeral Cloud Run disk,
+// which vaporizes on the next revision. Skip during `next build` since
+// GCS vars are injected at Cloud Run runtime, not baked into the image.
+if (
+  process.env.NODE_ENV === 'production' &&
+  process.env.NEXT_PHASE !== 'phase-production-build'
+) {
+  assertRequiredEnv([
+    'GCS_BUCKET',
+    'GCS_HMAC_ACCESS_KEY',
+    'GCS_HMAC_SECRET',
+  ] as const)
+}
+
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 

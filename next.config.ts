@@ -18,16 +18,18 @@ const nextConfig: NextConfig = {
     deviceSizes: [640, 750, 828, 1080, 1200, 1920],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 31536000, // 1 year for immutable images
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'storage.googleapis.com',
-        // Restrict to our own GCS bucket + Payload's 'media' prefix.
-        // Without this, /_next/image becomes an open re-encoding proxy
-        // for any public bucket on storage.googleapis.com.
-        pathname: '/*-media/media/**',
-      },
-    ],
+    remotePatterns: process.env.GCS_BUCKET
+      ? [
+          {
+            protocol: 'https',
+            hostname: 'storage.googleapis.com',
+            // Pinned to our exact bucket name — prevents /_next/image from
+            // becoming an open re-encoding proxy. picomatch's `*` would match
+            // any -suffixed bucket, which an attacker can create.
+            pathname: `/${process.env.GCS_BUCKET}/media/**`,
+          },
+        ]
+      : [],
   },
 
   async headers() {

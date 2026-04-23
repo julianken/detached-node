@@ -130,8 +130,8 @@ test.describe('Theme-aware hero', () => {
       expect(darkDisplay).not.toBe('none')
 
       // No layout shift: the container bounding box must match.
-      // Tolerance of 1px absorbs sub-pixel rounding after the view transition
-      // without allowing real layout shift through.
+      // toBeCloseTo(x, 0) allows 0.5px tolerance — absorbs sub-pixel rounding
+      // after the view transition without letting real layout shift through.
       const boxAfter = await heroWrapper.boundingBox()
       expect(boxAfter).not.toBeNull()
       expect(boxAfter!.width).toBeCloseTo(boxBefore!.width, 0)
