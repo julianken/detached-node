@@ -66,8 +66,6 @@ jobs:
           secrets: |
             DATABASE_URL=database-url:latest
             PAYLOAD_SECRET=payload-secret:latest
-            UPSTASH_REDIS_REST_URL=upstash-redis-url:latest
-            UPSTASH_REDIS_REST_TOKEN=upstash-redis-token:latest
             GCS_BUCKET=gcs-bucket:latest
             GCS_HMAC_ACCESS_KEY=gcs-hmac-key:latest
             GCS_HMAC_SECRET=gcs-hmac-secret:latest
