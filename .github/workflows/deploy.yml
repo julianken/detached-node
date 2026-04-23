@@ -51,7 +51,30 @@ jobs:
           DATABASE_URL: ${{ secrets.SUPABASE_SESSION_URL }}
           PAYLOAD_SECRET: ${{ secrets.PAYLOAD_SECRET }}
           NEXT_PUBLIC_SERVER_URL: ${{ vars.NEXT_PUBLIC_SERVER_URL }}
-        run: pnpm payload migrate
+        run: |
+          # One-time reconciliation: the DB was populated via push: true,
+          # leaving only a batch = -1 dev-mode marker in payload_migrations.
+          # If we just delete that and run migrate, Payload would try to
+          # re-apply the initial CREATE TABLE migration, which would fail.
+          # Instead, seed the pre-existing migrations as already-applied,
+          # then delete the marker, then run migrate — only our new
+          # idempotent migrations (theme_field, seo_fields, media_prefix)
+          # will actually apply.
+          psql "$DATABASE_URL" <<'SQL'
+          DO $$
+          BEGIN
+            IF EXISTS (SELECT 1 FROM payload_migrations WHERE batch = -1) THEN
+              INSERT INTO payload_migrations (name, batch) VALUES
+                ('20260213_071339_add_composite_indexes', 1),
+                ('20260213_072000_add_composite_indexes', 1),
+                ('20260213_074055_mark_initial_schema_complete', 1),
+                ('20260421_205422_theme_aware_hero_images', 1),
+                ('20260422_022813_featured_image_not_null', 1);
+              DELETE FROM payload_migrations WHERE batch = -1;
+            END IF;
+          END $$;
+          SQL
+          pnpm payload migrate
         timeout-minutes: 5
 
       - name: Deploy to Cloud Run
