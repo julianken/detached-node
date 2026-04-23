@@ -47,7 +47,9 @@ async function setThemeAndGoto(
 }
 
 async function toggleTheme(page: import('@playwright/test').Page) {
-  await page.locator('button[aria-label*="mode"]').click()
+  // Use the header toggle (there may be additional theme toggles elsewhere,
+  // e.g. a text indicator button; .first() picks the canonical one).
+  await page.locator('button[aria-label*="mode"]').first().click()
   // The view-transition animation runs for 400ms; give it a little headroom
   // plus one extra frame for any settle effects.
   await page.waitForTimeout(500)
