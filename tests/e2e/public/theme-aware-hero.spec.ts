@@ -23,16 +23,19 @@ import { test, expect } from '../fixtures'
 
 const DETAIL_SLUG = 'architecture-of-agent-systems'
 
-async function setTheme(
+async function setThemeAndGoto(
   page: import('@playwright/test').Page,
   theme: 'light' | 'dark',
+  url: string,
 ) {
-  // Start from a known state: set the stored theme preference, reload, and
-  // wait for the next-themes 'class' attribute to apply to <html>.
+  // addInitScript runs on every new navigation, so set localStorage before
+  // the first goto. Reloading/waiting before any navigation has occurred
+  // (page is still about:blank) would time out — next-themes only runs
+  // once the app loads.
   await page.addInitScript((t) => {
     localStorage.setItem('theme', t)
   }, theme)
-  await page.reload()
+  await page.goto(url)
   await page.waitForFunction(
     (expected) =>
       document.documentElement.classList.contains(expected) ||
@@ -44,7 +47,9 @@ async function setTheme(
 }
 
 async function toggleTheme(page: import('@playwright/test').Page) {
-  await page.locator('button[aria-label*="mode"]').click()
+  // Use the header toggle (there may be additional theme toggles elsewhere,
+  // e.g. a text indicator button; .first() picks the canonical one).
+  await page.locator('button[aria-label*="mode"]').first().click()
   // The view-transition animation runs for 400ms; give it a little headroom
   // plus one extra frame for any settle effects.
   await page.waitForTimeout(500)
@@ -55,8 +60,7 @@ test.describe('Theme-aware hero', () => {
     test('renders the light hero visible and the dark hero hidden in light mode', async ({
       page,
     }) => {
-      await setTheme(page, 'light')
-      await page.goto(`/posts/${DETAIL_SLUG}`)
+      await setThemeAndGoto(page, 'light', `/posts/${DETAIL_SLUG}`)
       await page.waitForLoadState('domcontentloaded')
 
       const heroWrapper = page.locator('article div.relative').filter({
@@ -88,8 +92,7 @@ test.describe('Theme-aware hero', () => {
         if (msg.type() === 'error') consoleErrors.push(msg.text())
       })
 
-      await setTheme(page, 'light')
-      await page.goto(`/posts/${DETAIL_SLUG}`)
+      await setThemeAndGoto(page, 'light', `/posts/${DETAIL_SLUG}`)
       await page.waitForLoadState('domcontentloaded')
 
       const heroWrapper = page
@@ -127,12 +130,14 @@ test.describe('Theme-aware hero', () => {
       expect(darkDisplay).not.toBe('none')
 
       // No layout shift: the container bounding box must match.
+      // toBeCloseTo(x, 0) allows 0.5px tolerance — absorbs sub-pixel rounding
+      // after the view transition without letting real layout shift through.
       const boxAfter = await heroWrapper.boundingBox()
       expect(boxAfter).not.toBeNull()
-      expect(boxAfter!.width).toBe(boxBefore!.width)
-      expect(boxAfter!.height).toBe(boxBefore!.height)
-      expect(boxAfter!.x).toBe(boxBefore!.x)
-      expect(boxAfter!.y).toBe(boxBefore!.y)
+      expect(boxAfter!.width).toBeCloseTo(boxBefore!.width, 0)
+      expect(boxAfter!.height).toBeCloseTo(boxBefore!.height, 0)
+      expect(boxAfter!.x).toBeCloseTo(boxBefore!.x, 0)
+      expect(boxAfter!.y).toBeCloseTo(boxBefore!.y, 0)
 
       expect(consoleErrors).toEqual([])
     })
@@ -142,8 +147,7 @@ test.describe('Theme-aware hero', () => {
     test('renders theme-appropriate hero on PostCard and swaps on toggle', async ({
       page,
     }) => {
-      await setTheme(page, 'light')
-      await page.goto('/posts')
+      await setThemeAndGoto(page, 'light', '/posts')
       await page.waitForLoadState('domcontentloaded')
 
       // Find the first PostCard that actually has a hero (some seeded posts
@@ -180,8 +184,8 @@ test.describe('Theme-aware hero', () => {
 
       const boxAfter = await cardHero.boundingBox()
       expect(boxAfter).not.toBeNull()
-      expect(boxAfter!.width).toBe(boxBefore!.width)
-      expect(boxAfter!.height).toBe(boxBefore!.height)
+      expect(boxAfter!.width).toBeCloseTo(boxBefore!.width, 0)
+      expect(boxAfter!.height).toBeCloseTo(boxBefore!.height, 0)
     })
   })
 })
