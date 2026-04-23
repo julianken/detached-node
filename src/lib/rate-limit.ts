@@ -155,10 +155,10 @@ export const passwordResetRateLimiter = createRateLimiter(
 
 /**
  * Helper function to get client IP from request.
- * Extracts IP from Vercel headers with fallback chain.
+ * Extracts IP from proxy headers with fallback chain.
  */
 export function getClientIp(request: Request): string {
-  // Try x-forwarded-for first (Vercel provides this)
+  // Try x-forwarded-for first (reverse proxies provide this)
   const forwarded = request.headers.get("x-forwarded-for");
   if (forwarded) {
     return forwarded.split(",")[0].trim();

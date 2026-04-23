@@ -2,6 +2,7 @@ import { withPayload } from '@payloadcms/next/withPayload'
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+  output: 'standalone',
   reactCompiler: true,
 
   // Performance optimizations
@@ -17,18 +18,18 @@ const nextConfig: NextConfig = {
     deviceSizes: [640, 750, 828, 1080, 1200, 1920],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 31536000, // 1 year for immutable images
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**.public.blob.vercel-storage.com',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'detached-node.vercel.app',
-        pathname: '/api/media/**',
-      },
-    ],
+    remotePatterns: process.env.GCS_BUCKET
+      ? [
+          {
+            protocol: 'https',
+            hostname: 'storage.googleapis.com',
+            // Pinned to our exact bucket name — prevents /_next/image from
+            // becoming an open re-encoding proxy. picomatch's `*` would match
+            // any -suffixed bucket, which an attacker can create.
+            pathname: `/${process.env.GCS_BUCKET}/media/**`,
+          },
+        ]
+      : [],
   },
 
   async headers() {

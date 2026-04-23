@@ -9,7 +9,6 @@ describe("assertRequiredEnv", () => {
     delete process.env.FOO;
     delete process.env.BAR;
     delete process.env.NEXT_PHASE;
-    delete process.env.VERCEL_ENV;
   });
 
   afterEach(() => {
