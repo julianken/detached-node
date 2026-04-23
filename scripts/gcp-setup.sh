@@ -154,6 +154,18 @@ create_service_account() {
     --role="roles/storage.objectAdmin" \
     --quiet
 
+  info "Step 5c: Granting secretmanager.secretAccessor to Cloud Run runtime SA"
+  # Cloud Run containers run as the Compute Engine default SA by default.
+  # This SA needs Secret Manager access to inject secrets at runtime.
+  local project_number
+  project_number="$(gcloud projects describe "${GCP_PROJECT_ID}" --format='value(projectNumber)')"
+  local compute_sa="${project_number}-compute@developer.gserviceaccount.com"
+  gcloud projects add-iam-policy-binding "${GCP_PROJECT_ID}" \
+    --member="serviceAccount:${compute_sa}" \
+    --role="roles/secretmanager.secretAccessor" \
+    --condition=None \
+    --quiet
+
   info "Service account configured: ${sa_email}"
 }
 
