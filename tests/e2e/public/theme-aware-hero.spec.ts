@@ -130,12 +130,14 @@ test.describe('Theme-aware hero', () => {
       expect(darkDisplay).not.toBe('none')
 
       // No layout shift: the container bounding box must match.
+      // Tolerance of 1px absorbs sub-pixel rounding after the view transition
+      // without allowing real layout shift through.
       const boxAfter = await heroWrapper.boundingBox()
       expect(boxAfter).not.toBeNull()
-      expect(boxAfter!.width).toBe(boxBefore!.width)
-      expect(boxAfter!.height).toBe(boxBefore!.height)
-      expect(boxAfter!.x).toBe(boxBefore!.x)
-      expect(boxAfter!.y).toBe(boxBefore!.y)
+      expect(boxAfter!.width).toBeCloseTo(boxBefore!.width, 0)
+      expect(boxAfter!.height).toBeCloseTo(boxBefore!.height, 0)
+      expect(boxAfter!.x).toBeCloseTo(boxBefore!.x, 0)
+      expect(boxAfter!.y).toBeCloseTo(boxBefore!.y, 0)
 
       expect(consoleErrors).toEqual([])
     })
@@ -182,8 +184,8 @@ test.describe('Theme-aware hero', () => {
 
       const boxAfter = await cardHero.boundingBox()
       expect(boxAfter).not.toBeNull()
-      expect(boxAfter!.width).toBe(boxBefore!.width)
-      expect(boxAfter!.height).toBe(boxBefore!.height)
+      expect(boxAfter!.width).toBeCloseTo(boxBefore!.width, 0)
+      expect(boxAfter!.height).toBeCloseTo(boxBefore!.height, 0)
     })
   })
 })
