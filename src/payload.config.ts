@@ -44,10 +44,12 @@ export default buildConfig({
     push: false,
   }),
   plugins: [
-    // Always registered so Payload's importMap includes the S3 client upload handler.
-    // Empty-string fallback is intentional: in local dev without GCS, uploads use
-    // Payload's default local storage. The adapter only fails on actual S3 operations.
+    // Always registered so Payload's importMap includes the S3 client upload handler
+    // for the admin UI. `enabled` gates the actual storage operations — when GCS is
+    // not configured (local dev, E2E tests), uploads fall back to Payload's default
+    // local storage without the S3 adapter throwing on empty bucket names.
     s3Storage({
+      enabled: Boolean(process.env.GCS_BUCKET),
       collections: { media: { prefix: 'media' } },
       bucket: process.env.GCS_BUCKET ?? '',
       clientUploads: true,
