@@ -22,6 +22,10 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'storage.googleapis.com',
+        // Restrict to our own GCS bucket + Payload's 'media' prefix.
+        // Without this, /_next/image becomes an open re-encoding proxy
+        // for any public bucket on storage.googleapis.com.
+        pathname: '/*-media/media/**',
       },
     ],
   },
