@@ -23,16 +23,19 @@ import { test, expect } from '../fixtures'
 
 const DETAIL_SLUG = 'architecture-of-agent-systems'
 
-async function setTheme(
+async function setThemeAndGoto(
   page: import('@playwright/test').Page,
   theme: 'light' | 'dark',
+  url: string,
 ) {
-  // Start from a known state: set the stored theme preference, reload, and
-  // wait for the next-themes 'class' attribute to apply to <html>.
+  // addInitScript runs on every new navigation, so set localStorage before
+  // the first goto. Reloading/waiting before any navigation has occurred
+  // (page is still about:blank) would time out — next-themes only runs
+  // once the app loads.
   await page.addInitScript((t) => {
     localStorage.setItem('theme', t)
   }, theme)
-  await page.reload()
+  await page.goto(url)
   await page.waitForFunction(
     (expected) =>
       document.documentElement.classList.contains(expected) ||
@@ -55,8 +58,7 @@ test.describe('Theme-aware hero', () => {
     test('renders the light hero visible and the dark hero hidden in light mode', async ({
       page,
     }) => {
-      await setTheme(page, 'light')
-      await page.goto(`/posts/${DETAIL_SLUG}`)
+      await setThemeAndGoto(page, 'light', `/posts/${DETAIL_SLUG}`)
       await page.waitForLoadState('domcontentloaded')
 
       const heroWrapper = page.locator('article div.relative').filter({
@@ -88,8 +90,7 @@ test.describe('Theme-aware hero', () => {
         if (msg.type() === 'error') consoleErrors.push(msg.text())
       })
 
-      await setTheme(page, 'light')
-      await page.goto(`/posts/${DETAIL_SLUG}`)
+      await setThemeAndGoto(page, 'light', `/posts/${DETAIL_SLUG}`)
       await page.waitForLoadState('domcontentloaded')
 
       const heroWrapper = page
@@ -142,8 +143,7 @@ test.describe('Theme-aware hero', () => {
     test('renders theme-appropriate hero on PostCard and swaps on toggle', async ({
       page,
     }) => {
-      await setTheme(page, 'light')
-      await page.goto('/posts')
+      await setThemeAndGoto(page, 'light', '/posts')
       await page.waitForLoadState('domcontentloaded')
 
       // Find the first PostCard that actually has a hero (some seeded posts
