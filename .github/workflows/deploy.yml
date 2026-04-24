@@ -83,7 +83,7 @@ jobs:
           service: detached-node
           image: ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/tech-blog/app:${{ github.sha }}
           region: ${{ vars.GCP_REGION }}
-          flags: '--allow-unauthenticated --min-instances=0 --max-instances=3 --cpu=1 --memory=512Mi --port=8080 --timeout=60s'
+          flags: '--allow-unauthenticated --min-instances=1 --max-instances=3 --cpu=1 --memory=512Mi --port=8080 --timeout=60s'
           env_vars: |
             NODE_ENV=production
             NEXT_PUBLIC_SERVER_URL=${{ vars.NEXT_PUBLIC_SERVER_URL }}
