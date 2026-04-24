@@ -13,7 +13,31 @@ import { createRichText, createRichTextMulti, createRichTextWithMermaid } from '
 // Load environment variables from .env.local FIRST
 dotenv.config({ path: '.env.local' })
 
+function assertNonProductionDatabase(): void {
+  const raw = process.env.DATABASE_URL
+  if (!raw) throw new Error('DATABASE_URL is not set')
+
+  let host: string
+  try {
+    host = new URL(raw).hostname
+  } catch {
+    throw new Error('DATABASE_URL is not a valid URL')
+  }
+
+  const allowed = /^(localhost|127\.0\.0\.1|::1)$/.test(host) || /(^|[-.])test([-.]|$)/.test(host)
+  if (!allowed) {
+    throw new Error(
+      `seed-test-db refuses to run against host ${host}. This script deletes every row ` +
+        `from listings/posts/pages/media/tags/users. Point DATABASE_URL at a local or test-tier ` +
+        `database (hostname must be localhost/127.0.0.1/::1 or contain a "test" segment), or set ` +
+        `I_KNOW_THIS_IS_NOT_PROD=1 to override.`,
+    )
+  }
+}
+
 async function seedTestDatabase() {
+  if (process.env.I_KNOW_THIS_IS_NOT_PROD !== '1') assertNonProductionDatabase()
+
   console.log('🌱 Starting test database seed...')
 
   // Dynamic import to ensure env vars are loaded first
