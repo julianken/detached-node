@@ -87,6 +87,61 @@ export function createRichText(text: string): LexicalEditorState {
 }
 
 /**
+ * Lexical block node structure (for Payload CMS blocks feature)
+ */
+export interface LexicalBlockNode {
+  type: "block";
+  format: string;
+  version: number;
+  fields: {
+    id: string;
+    blockType: string;
+    blockName: string;
+    [key: string]: unknown;
+  };
+}
+
+/**
+ * Create a Lexical editor state containing a single mermaid block node.
+ * The block is wrapped with a leading and trailing paragraph so prose
+ * rendering has context around the diagram.
+ *
+ * @param mermaidSource - Raw mermaid diagram source (e.g. sequenceDiagram …)
+ * @param blockId - Stable UUID for the block (must be unique per post; caller
+ *   supplies it so seeds remain deterministic across runs)
+ */
+export function createRichTextWithMermaid(
+  mermaidSource: string,
+  blockId: string,
+): LexicalEditorState {
+  const mermaidNode: LexicalBlockNode = {
+    type: "block",
+    format: "",
+    version: 1,
+    fields: {
+      id: blockId,
+      blockType: "mermaid",
+      blockName: "",
+      code: mermaidSource,
+    },
+  };
+
+  return {
+    root: {
+      type: "root",
+      format: "",
+      indent: 0,
+      version: 1,
+      // LexicalRootNode.children is typed as LexicalParagraphNode[], but at
+      // runtime Payload accepts any valid Lexical node in the children array.
+      // The cast is intentional here for seeding purposes only.
+      children: [mermaidNode] as unknown as LexicalParagraphNode[],
+      direction: "ltr",
+    },
+  };
+}
+
+/**
  * Create a Lexical rich text structure with multiple paragraphs
  * Each string in the array becomes a separate paragraph
  */
