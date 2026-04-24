@@ -726,3 +726,8 @@ a.card-scanline:active {
   display: flex;
   justify-content: center;
 }
+
+.mermaid-figure svg[id^="mermaid-"] {
+  display: block;
+  margin-inline: auto;
+}

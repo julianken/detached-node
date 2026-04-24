@@ -134,7 +134,7 @@ export function MermaidDiagram({ source }: Props) {
           className="group relative block w-full cursor-zoom-in rounded-sm border-0 bg-transparent p-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-400"
         >
           <span
-            className="block"
+            className="block text-center"
             // mermaid.render() produces sanitized SVG; securityLevel:'strict' prevents injection
             dangerouslySetInnerHTML={{ __html: svg }}
           />
