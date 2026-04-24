@@ -218,6 +218,33 @@ Error pages display code in a distinct surface:
 </pre>
 ```
 
+## Mermaid diagrams
+
+### Authoring
+
+In the Payload admin, open a post and scroll to the body field. Click **Add block** and select **Mermaid diagram**. Paste valid Mermaid source (e.g. `sequenceDiagram`, `flowchart`, `classDiagram`) into the `code` textarea. Save and publish as normal. No additional configuration is required.
+
+### Rendering contract
+
+- **Loading:** The ~500 KB `mermaid` runtime ships in the client bundle for `/posts/[slug]` routes. Runtime execution is client-side (the component is `'use client'`) and the SVG is generated post-hydration. Lazy-loading via `next/dynamic` is a future optimization.
+- **Theme:** Follows `next-themes` `resolvedTheme`. The diagram re-renders on light/dark toggle; the SVG id regenerates each render.
+- **Security:** Initialized with `securityLevel: 'strict'`. Click handlers and raw HTML embedded in diagram source are disabled. Do not author diagrams that depend on interactive features.
+- **Error fallback:** Invalid Mermaid source renders as a styled `<pre>` block rather than throwing. The page remains functional.
+
+### Source locations
+
+| Artifact | Path |
+|----------|------|
+| Component | `src/components/MermaidDiagram.tsx` |
+| Lexical converter | `src/lib/lexical/mermaid-converter.tsx` |
+| Block config | `src/lib/lexical/blocks/mermaid.ts` |
+| Test helper | `createRichTextWithMermaid` in `src/lib/rich-text.ts` |
+
+### References
+
+- Mermaid documentation: https://mermaid.js.org/
+- Sequence diagram syntax: https://mermaid.js.org/syntax/sequenceDiagram.html
+
 ## Migration Notes
 
 ### Fixing Inconsistencies
