@@ -1,5 +1,5 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
-import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { BlocksFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
 import { s3Storage } from '@payloadcms/storage-s3'
 import { buildConfig } from 'payload'
 import sharp from 'sharp'
@@ -13,6 +13,7 @@ import { Tags } from './collections/Tags'
 import { Posts } from './collections/Posts'
 import { Listings } from './collections/Listings'
 import { assertRequiredEnv } from './lib/env/required-env'
+import { mermaidBlock } from './lib/lexical/blocks/mermaid'
 
 const env = assertRequiredEnv([
   'PAYLOAD_SECRET',
@@ -45,7 +46,12 @@ export default buildConfig({
     },
   },
   collections: [Users, Media, Pages, Tags, Posts, Listings],
-  editor: lexicalEditor(),
+  editor: lexicalEditor({
+    features: ({ defaultFeatures }) => [
+      ...defaultFeatures,
+      BlocksFeature({ blocks: [mermaidBlock] }),
+    ],
+  }),
   secret: env.PAYLOAD_SECRET,
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
