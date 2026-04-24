@@ -115,6 +115,7 @@ Config: `.mergify.yml` at repo root. Dashboard: https://dashboard.mergify.com
 | Add a component | Create in `src/components/` |
 | Update styles | Prefer Tailwind utilities; update `globals.css` sparingly |
 | Add content types | Update `CONTENT_MODEL.md` first, then implement |
+| Add a Mermaid diagram to a post | Insert "Mermaid diagram" block in the body field; see `docs/design-system.md#mermaid-diagrams` |
 | Queue a PR to merge | Comment `@mergifyio queue` on the approved PR |
 | Clean worktree branches | `bash .claude/hooks/clean-worktree-branches.sh` |
 
