@@ -333,6 +333,7 @@ async function seedTestDatabase() {
       ),
       tags: [agenticAiTag.id],
       status: 'published',
+      // do not add a pre-2022 seed without auditing posts-listing ordering asserts
       publishedAt: new Date('2022-01-01').toISOString(),
       featured: false,
     },

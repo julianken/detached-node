@@ -114,6 +114,17 @@ export function createRichTextWithMermaid(
   mermaidSource: string,
   blockId: string,
 ): LexicalEditorState {
+  const emptyParagraph = (): LexicalParagraphNode => ({
+    type: "paragraph",
+    format: "",
+    indent: 0,
+    version: 1,
+    direction: "ltr",
+    children: [],
+    textStyle: "",
+    textFormat: 0,
+  });
+
   const mermaidNode: LexicalBlockNode = {
     type: "block",
     format: "",
@@ -135,7 +146,11 @@ export function createRichTextWithMermaid(
       // LexicalRootNode.children is typed as LexicalParagraphNode[], but at
       // runtime Payload accepts any valid Lexical node in the children array.
       // The cast is intentional here for seeding purposes only.
-      children: [mermaidNode] as unknown as LexicalParagraphNode[],
+      children: [
+        emptyParagraph(),
+        mermaidNode,
+        emptyParagraph(),
+      ] as unknown as LexicalParagraphNode[],
       direction: "ltr",
     },
   };
