@@ -8,6 +8,20 @@ interface Props {
   source: string
 }
 
+// Cap each diagram's render scale to this value so text size is
+// consistent across diagrams of different intrinsic widths. With a
+// ~768px column, a sequence diagram of viewBox width ~1230 caps at
+// scale 0.624 — pinning the global cap there keeps narrow diagrams
+// from rendering at 1:1 (which would make their text visibly larger).
+const TARGET_SCALE = 0.625
+
+function capDiagramWidth(svgMarkup: string): string {
+  const vbMatch = svgMarkup.match(/viewBox="[^"]*?\s(\d+(?:\.\d+)?)\s+\d+(?:\.\d+)?"/)
+  if (!vbMatch) return svgMarkup
+  const cap = Math.round(parseFloat(vbMatch[1]) * TARGET_SCALE)
+  return svgMarkup.replace(/(style="[^"]*?max-width:\s*)\d+(?:\.\d+)?px/, `$1${cap}px`)
+}
+
 const subscribe = () => () => {}
 
 export function MermaidDiagram({ source }: Props) {
@@ -24,13 +38,25 @@ export function MermaidDiagram({ source }: Props) {
 
     async function render() {
       const id = `mermaid-${crypto.randomUUID()}`
-      const theme = resolvedTheme === 'dark' ? 'dark' : 'default'
+      const isDark = resolvedTheme === 'dark'
+      const theme = isDark ? 'dark' : 'default'
 
       if (lastInitializedTheme.current !== theme) {
         mermaid.initialize({
           startOnLoad: false,
           securityLevel: 'strict',
           theme,
+          sequence: { useMaxWidth: true },
+          flowchart: { useMaxWidth: true },
+          themeVariables: isDark
+            ? {
+                signalColor: '#d4d4d8',
+                signalTextColor: '#f4f4f5',
+                loopTextColor: '#18181b',
+                noteTextColor: '#f4f4f5',
+                actorTextColor: '#f4f4f5',
+              }
+            : undefined,
         })
         lastInitializedTheme.current = theme
       }
@@ -38,7 +64,7 @@ export function MermaidDiagram({ source }: Props) {
       try {
         const { svg: rendered } = await mermaid.render(id, source)
         if (!cancelled) {
-          setSvg(rendered)
+          setSvg(capDiagramWidth(rendered))
           setError(null)
         }
       } catch (err) {
@@ -72,7 +98,7 @@ export function MermaidDiagram({ source }: Props) {
   if (!mounted || svg === null) {
     return (
       <div
-        className="my-6 min-h-[12rem] animate-pulse rounded-sm bg-zinc-100 dark:bg-zinc-800"
+        className="my-10 min-h-[12rem] animate-pulse rounded-sm bg-zinc-100 dark:bg-zinc-800"
         aria-label="Loading diagram"
       />
     )
@@ -80,7 +106,7 @@ export function MermaidDiagram({ source }: Props) {
 
   return (
     <div
-      className="my-6 flex justify-center overflow-x-auto"
+      className="mermaid-figure my-10"
       // mermaid.render() produces sanitized SVG; securityLevel:'strict' prevents injection
       dangerouslySetInnerHTML={{ __html: svg }}
     />

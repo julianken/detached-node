@@ -705,3 +705,24 @@ a.card-scanline:active {
     opacity: 0.5;
   }
 }
+
+/* ──────────────────────────────────────────────
+   MERMAID — DARK MODE CONTRAST
+   Sequence-diagram rect bands have hardcoded
+   pale fills from `rect rgb(...)` in the source;
+   re-tint them in dark mode so light arrow text
+   stays readable.
+   ────────────────────────────────────────────── */
+
+.dark svg[aria-roledescription="sequence"] rect[fill="rgb(227, 242, 253)"] {
+  fill: rgba(96, 165, 250, 0.14) !important;
+}
+
+.dark svg[aria-roledescription="sequence"] rect[fill="rgb(232, 245, 233)"] {
+  fill: rgba(34, 197, 94, 0.12) !important;
+}
+
+.mermaid-figure {
+  display: flex;
+  justify-content: center;
+}
