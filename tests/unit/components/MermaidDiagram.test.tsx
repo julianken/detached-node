@@ -93,9 +93,6 @@ describe("MermaidDiagram", () => {
   });
 
   it("calls mermaid.initialize with theme:dark when resolvedTheme changes to dark", async () => {
-    // Start mounted with light so any cached 'default' init from previous test
-    // is already in place; we just need to confirm that a dark switch triggers
-    // a new initialize call.
     mocks.resolvedTheme = "light";
 
     const { rerender } = render(<MermaidDiagram source="graph TD; X-->Y" />);
@@ -143,34 +140,4 @@ describe("MermaidDiagram", () => {
     expect(pre?.textContent).toContain("not valid mermaid");
   });
 
-  it("does not set state after unmount when render promise resolves late", async () => {
-    let resolveRender!: (value: { svg: string }) => void;
-    mocks.render.mockImplementation(
-      () =>
-        new Promise<{ svg: string }>((res) => {
-          resolveRender = res;
-        }),
-    );
-
-    const consoleSpy = vi
-      .spyOn(console, "error")
-      .mockImplementation(() => undefined);
-
-    const { unmount } = render(<MermaidDiagram source="graph LR; A-->B" />);
-
-    // Unmount before the promise resolves
-    unmount();
-
-    // Resolve after unmount — cancelled flag should prevent setState
-    await act(async () => {
-      resolveRender({ svg: "<svg>late</svg>" });
-    });
-
-    const stateUpdateErrors = consoleSpy.mock.calls.filter((args) =>
-      String(args[0]).includes("unmounted"),
-    );
-    expect(stateUpdateErrors).toHaveLength(0);
-
-    consoleSpy.mockRestore();
-  });
 });

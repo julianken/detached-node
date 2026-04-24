@@ -1,15 +1,12 @@
 'use client'
 
 import mermaid from 'mermaid'
-import { useEffect, useState, useSyncExternalStore } from 'react'
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { useTheme } from 'next-themes'
 
 interface Props {
   source: string
 }
-
-// Tracks the last theme passed to mermaid.initialize so we only re-initialize on theme change.
-let lastInitializedTheme: string | undefined
 
 const subscribe = () => () => {}
 
@@ -18,6 +15,7 @@ export function MermaidDiagram({ source }: Props) {
   const mounted = useSyncExternalStore(subscribe, () => true, () => false)
   const [svg, setSvg] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const lastInitializedTheme = useRef<string | undefined>(undefined)
 
   useEffect(() => {
     if (!mounted) return
@@ -28,13 +26,13 @@ export function MermaidDiagram({ source }: Props) {
       const id = `mermaid-${crypto.randomUUID()}`
       const theme = resolvedTheme === 'dark' ? 'dark' : 'default'
 
-      if (lastInitializedTheme !== theme) {
+      if (lastInitializedTheme.current !== theme) {
         mermaid.initialize({
           startOnLoad: false,
           securityLevel: 'strict',
           theme,
         })
-        lastInitializedTheme = theme
+        lastInitializedTheme.current = theme
       }
 
       try {
