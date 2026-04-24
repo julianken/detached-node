@@ -200,7 +200,7 @@ test.describe('Posts Listing Page', () => {
       expect(titles).not.toContain('Legacy Post About Early Automation')
 
       // Verify total count
-      expect(titles).toHaveLength(4)
+      expect(titles).toHaveLength(5)
     })
   })
 })
