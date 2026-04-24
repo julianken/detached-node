@@ -333,7 +333,7 @@ async function seedTestDatabase() {
       ),
       tags: [agenticAiTag.id],
       status: 'published',
-      publishedAt: new Date('2026-01-30').toISOString(),
+      publishedAt: new Date('2022-01-01').toISOString(),
       featured: false,
     },
   })

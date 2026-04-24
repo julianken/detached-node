@@ -46,10 +46,12 @@ test.describe('Mermaid block rendering', () => {
 
     const idBefore = await svg.getAttribute('id')
 
-    // The theme toggle label in light mode is "Switch to dark mode"
-    const themeToggle = postDetailPage.page.getByRole('button', {
-      name: 'Switch to dark mode',
-    })
+    // The theme toggle label in light mode is "Switch to dark mode".
+    // Scope to the page <header> (banner role) to avoid matching the
+    // second toggle rendered in the footer status-bar.
+    const themeToggle = postDetailPage.page
+      .getByRole('banner')
+      .getByRole('button', { name: 'Switch to dark mode' })
     await expect(themeToggle).toBeVisible()
     await themeToggle.click()
 
