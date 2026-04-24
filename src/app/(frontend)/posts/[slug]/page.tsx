@@ -16,10 +16,7 @@ import { isValidSlug } from "@/lib/types/branded";
 import { isMediaObject } from "@/lib/types/media";
 import { FadeReveal } from "@/components/FadeReveal";
 import { siteUrl, ogDefaultImage } from "@/lib/site-config";
-import { MermaidDiagram } from "@/components/MermaidDiagram";
-import type { SerializedBlockNode } from "@payloadcms/richtext-lexical";
-
-type MermaidBlockFields = { blockType: 'mermaid'; code: string };
+import { mermaidConverters } from "@/lib/lexical/mermaid-converter";
 
 // ISR: Revalidate every hour - post content changes infrequently
 export const revalidate = 3600;
@@ -157,14 +154,7 @@ export default async function PostPage({ params }: PostPageProps) {
           <section className="prose dark:prose-invert max-w-none">
             <RichText
               data={post.body as SerializedEditorState}
-              converters={({ defaultConverters }) => ({
-                ...defaultConverters,
-                blocks: {
-                  mermaid: ({ node }: { node: SerializedBlockNode }) => (
-                    <MermaidDiagram source={(node.fields as unknown as MermaidBlockFields).code} />
-                  ),
-                },
-              })}
+              converters={mermaidConverters}
             />
           </section>
         </TextGlitch>
