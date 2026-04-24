@@ -42,9 +42,9 @@ test.describe('Posts Listing Page', () => {
     test('should display published posts in reverse chronological order', async ({ postsPage }) => {
       await postsPage.goto()
 
-      // Should have exactly 4 published posts (excluding draft and archived)
+      // Should have exactly 5 published posts (excluding draft and archived)
       const postCount = await postsPage.getPostCount()
-      expect(postCount).toBe(4)
+      expect(postCount).toBe(5)
 
       // Verify posts are in reverse chronological order by publishedAt
       const titles = await postsPage.getPostTitles()
@@ -162,9 +162,9 @@ test.describe('Posts Listing Page', () => {
       const draftSummary = postsPage.page.getByText(/Early draft exploring emergent AI behaviors/)
       await expect(draftSummary).not.toBeVisible()
 
-      // Verify we only have 4 posts, not 5 (which would include the draft)
+      // Verify we only have 5 posts, not 6 (which would include the draft)
       const postCount = await postsPage.getPostCount()
-      expect(postCount).toBe(4)
+      expect(postCount).toBe(5)
     })
 
     test('should NOT display archived posts to public users', async ({ postsPage }) => {
@@ -178,9 +178,9 @@ test.describe('Posts Listing Page', () => {
       const archivedSummary = postsPage.page.getByText(/Historical analysis of early automation techniques from the pre-AI era/)
       await expect(archivedSummary).not.toBeVisible()
 
-      // Verify we only have 4 posts, not 5 or 6
+      // Verify we only have 5 posts, not 6 or 7
       const postCount = await postsPage.getPostCount()
-      expect(postCount).toBe(4)
+      expect(postCount).toBe(5)
     })
 
     test('should only display published posts (comprehensive check)', async ({ postsPage }) => {
@@ -200,7 +200,7 @@ test.describe('Posts Listing Page', () => {
       expect(titles).not.toContain('Legacy Post About Early Automation')
 
       // Verify total count
-      expect(titles).toHaveLength(4)
+      expect(titles).toHaveLength(5)
     })
   })
 })

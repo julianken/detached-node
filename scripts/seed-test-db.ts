@@ -8,7 +8,7 @@
 import dotenv from 'dotenv'
 import fs from 'fs'
 import path from 'path'
-import { createRichText, createRichTextMulti } from '../src/lib/rich-text.js'
+import { createRichText, createRichTextMulti, createRichTextWithMermaid } from '../src/lib/rich-text.js'
 
 // Load environment variables from .env.local FIRST
 dotenv.config({ path: '.env.local' })
@@ -315,7 +315,31 @@ async function seedTestDatabase() {
     },
   })
 
-  console.log('✓ Created 6 posts')
+  // Post 7: Published post containing a mermaid block — used by E2E mermaid tests
+  await payload.create({
+    collection: 'posts',
+    data: {
+      title: 'Mermaid Diagram Test Post',
+      slug: 'mermaid-diagram-test-post',
+      type: 'essay',
+      summary: 'A test post containing a mermaid sequence diagram for E2E testing.',
+      // Reuse first media item so required image fields are satisfied
+      featuredImageLight: mediaItems[0].id,
+      featuredImageDark: mediaItems[0].id,
+      body: createRichTextWithMermaid(
+        'sequenceDiagram\n  User->>Server: Request\n  Server-->>User: Response',
+        // Stable UUID so the block id is predictable across seed runs
+        '00000000-0000-0000-0000-000000000001',
+      ),
+      tags: [agenticAiTag.id],
+      status: 'published',
+      // do not add a pre-2022 seed without auditing posts-listing ordering asserts
+      publishedAt: new Date('2022-01-01').toISOString(),
+      featured: false,
+    },
+  })
+
+  console.log('✓ Created 7 posts (including mermaid test post)')
 
   // 5. Create About page
   console.log('📄 Creating About page...')
@@ -401,7 +425,7 @@ async function seedTestDatabase() {
   console.log('  • 1 test admin user (test@example.com / testpassword123)')
   console.log('  • 3 tags (Agentic AI, Workflows, Philosophy)')
   console.log('  • 4 media items')
-  console.log('  • 6 posts (3 featured+published, 1 published, 1 draft, 1 archived)')
+  console.log('  • 7 posts (3 featured+published, 2 published, 1 draft, 1 archived, 1 mermaid test)')
   console.log('  • 1 page (About)')
   console.log('  • 1 listing (Featured Essays)')
 

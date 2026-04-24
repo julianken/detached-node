@@ -42,7 +42,7 @@ test.describe('Draft and Archived Access Control (Public)', () => {
     await postsPage.goto()
 
     const postCount = await postsPage.getPostCount()
-    expect(postCount).toBe(4)
+    expect(postCount).toBe(5)
 
     const titles = await postsPage.getPostTitles()
     expect(titles).not.toContain('Unpublished Thoughts on Emergence')
@@ -66,7 +66,7 @@ test.describe('Draft and Archived Access Control (Public)', () => {
 
     const data = await response.json()
     expect(data.docs).toBeDefined()
-    expect(data.docs.length).toBe(4)
+    expect(data.docs.length).toBe(5)
 
     const slugs = data.docs.map((post: { slug: string }) => post.slug)
     expect(slugs).not.toContain('unpublished-thoughts-emergence')
