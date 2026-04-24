@@ -226,7 +226,7 @@ In the Payload admin, open a post and scroll to the body field. Click **Add bloc
 
 ### Rendering contract
 
-- **Loading:** The component is client-only and lazy. The ~500 KB `mermaid` runtime loads on demand only when a Mermaid block is present on the page. Pages without a Mermaid block are not affected.
+- **Loading:** The ~500 KB `mermaid` runtime ships in the client bundle for `/posts/[slug]` routes. Runtime execution is client-side (the component is `'use client'`) and the SVG is generated post-hydration. Lazy-loading via `next/dynamic` is a future optimization.
 - **Theme:** Follows `next-themes` `resolvedTheme`. The diagram re-renders on light/dark toggle; the SVG id regenerates each render.
 - **Security:** Initialized with `securityLevel: 'strict'`. Click handlers and raw HTML embedded in diagram source are disabled. Do not author diagrams that depend on interactive features.
 - **Error fallback:** Invalid Mermaid source renders as a styled `<pre>` block rather than throwing. The page remains functional.
