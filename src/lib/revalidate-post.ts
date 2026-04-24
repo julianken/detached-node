@@ -2,7 +2,7 @@ import { revalidatePath } from 'next/cache'
 import type { CollectionAfterChangeHook, CollectionAfterDeleteHook } from 'payload'
 
 const paths = (slug?: string | null) => {
-  const out = ['/', '/posts']
+  const out = ['/', '/posts', '/sitemap.xml', '/feed.xml']
   if (slug) out.push(`/posts/${slug}`)
   return out
 }
