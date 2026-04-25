@@ -140,4 +140,56 @@ describe("MermaidDiagram", () => {
     expect(pre?.textContent).toContain("not valid mermaid");
   });
 
+  it("cancels the pending close timer when the trigger is clicked again mid-close (F1 race)", async () => {
+    render(<MermaidDiagram source="graph LR; A-->B" />);
+
+    // Wait for the SVG to render so the trigger button is visible (real timers).
+    await waitFor(() => {
+      if (!document.querySelector('svg[data-source="graph LR; A-->B"]'))
+        throw new Error("svg not yet rendered");
+    });
+
+    const trigger = screen.getByRole("button", { name: /expand diagram/i });
+    const dialog = document.querySelector("dialog") as HTMLDialogElement;
+
+    // Mock showModal / close on the dialog (jsdom does not implement them).
+    dialog.showModal = vi.fn();
+    dialog.close = vi.fn();
+
+    // Query the Close button directly; screen.getByRole skips elements
+    // inside a dialog that jsdom treats as not yet open.
+    const closeBtn = dialog.querySelector(
+      'button[aria-label="Close"]',
+    ) as HTMLButtonElement;
+    expect(closeBtn).toBeTruthy();
+
+    // Switch to fake timers now that async setup is done. This lets us
+    // precisely control the 600ms close animation delay without polling.
+    vi.useFakeTimers();
+
+    try {
+      // 1. Open the lightbox.
+      act(() => { trigger.click(); });
+      expect(dialog.showModal).toHaveBeenCalledTimes(1);
+
+      // 2. Click the close button — starts the 600ms animation timer.
+      act(() => { closeBtn.click(); });
+
+      // The timer is running but has NOT fired yet.
+      expect(dialog.close).not.toHaveBeenCalled();
+
+      // 3. Re-open before the timer fires (simulating rapid close→reopen).
+      act(() => { trigger.click(); });
+      expect(dialog.showModal).toHaveBeenCalledTimes(2);
+
+      // 4. Advance past the original 600ms deadline.
+      act(() => { vi.advanceTimersByTime(700); });
+
+      // The dialog must NOT have been closed — the timer was cancelled.
+      expect(dialog.close).not.toHaveBeenCalled();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
 });
