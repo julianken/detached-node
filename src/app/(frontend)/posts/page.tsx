@@ -50,6 +50,7 @@ export default async function PostsPage() {
               featuredImageDark={
                 isMediaObject(post.featuredImageDark) ? post.featuredImageDark : null
               }
+              focalPoint={post.focalPoint ?? undefined}
               label="ARCHIVE"
             />
           ))

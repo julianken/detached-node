@@ -18,6 +18,7 @@ vi.mock("next/image", () => ({
     sizes,
     width,
     height,
+    style,
     ...rest
   }: {
     src: string;
@@ -29,6 +30,7 @@ vi.mock("next/image", () => ({
     sizes?: string;
     width?: number;
     height?: number;
+    style?: React.CSSProperties;
     [key: string]: unknown;
   }) => {
     // Strip out Next.js-only props that would generate React warnings on an
@@ -38,6 +40,7 @@ vi.mock("next/image", () => ({
       src,
       alt,
       className,
+      style,
       "data-fill": fill ? "true" : undefined,
       "data-fetch-priority": fetchPriority,
       "data-priority": priority ? "true" : undefined,
@@ -227,5 +230,65 @@ describe("ThemeAwareHero", () => {
     const wrapper = container.firstChild as HTMLElement;
     expect(wrapper.className).toContain("my-custom-class");
     expect(wrapper.className).toContain("relative");
+  });
+
+  // --- focalPoint tests ---
+
+  it("applies objectPosition style on both <img> children when focalPoint is non-default", () => {
+    const { container } = render(
+      <ThemeAwareHero
+        light={lightMedia}
+        dark={darkMedia}
+        alt="Hero"
+        focalPoint={{ x: 25, y: 75 }}
+      />
+    );
+    const images = container.querySelectorAll("img");
+    expect(images).toHaveLength(2);
+    images.forEach((img) => {
+      expect((img as HTMLElement).style.objectPosition).toBe("25% 75%");
+    });
+  });
+
+  it("does NOT add objectPosition style when focalPoint is undefined", () => {
+    const { container } = render(
+      <ThemeAwareHero light={lightMedia} dark={darkMedia} alt="Hero" />
+    );
+    const images = container.querySelectorAll("img");
+    images.forEach((img) => {
+      expect((img as HTMLElement).style.objectPosition).toBeFalsy();
+    });
+  });
+
+  it("does NOT add objectPosition style when focalPoint is the default 50/50 (no-op skip)", () => {
+    const { container } = render(
+      <ThemeAwareHero
+        light={lightMedia}
+        dark={darkMedia}
+        alt="Hero"
+        focalPoint={{ x: 50, y: 50 }}
+      />
+    );
+    const images = container.querySelectorAll("img");
+    images.forEach((img) => {
+      expect((img as HTMLElement).style.objectPosition).toBeFalsy();
+    });
+  });
+
+  it("falls back y to 50 when focalPoint.y is null (Payload nullable number)", () => {
+    const { container } = render(
+      <ThemeAwareHero
+        light={lightMedia}
+        dark={darkMedia}
+        alt="Hero"
+        focalPoint={{ x: 25, y: null }}
+      />
+    );
+    const images = container.querySelectorAll("img");
+    expect(images).toHaveLength(2);
+    images.forEach((img) => {
+      // x=25 (non-default) with y=null→50: position is non-default, so style IS emitted
+      expect((img as HTMLElement).style.objectPosition).toBe("25% 50%");
+    });
   });
 });

@@ -159,7 +159,6 @@ export interface Media {
   id: number;
   alt: string;
   caption?: string | null;
-  prefix?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -259,6 +258,19 @@ export interface Post {
    * Dark-mode hero image — match the light version's dimensions
    */
   featuredImageDark: number | Media;
+  /**
+   * Crop anchor for hero image (0=left/top, 50=center, 100=right/bottom). Defaults to 50/50.
+   */
+  focalPoint?: {
+    /**
+     * Horizontal focal point: 0=left, 50=center, 100=right
+     */
+    x?: number | null;
+    /**
+     * Vertical focal point: 0=top, 50=center, 100=bottom
+     */
+    y?: number | null;
+  };
   body: {
     root: {
       type: string;
@@ -438,7 +450,6 @@ export interface UsersSelect<T extends boolean = true> {
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   caption?: T;
-  prefix?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -520,6 +531,12 @@ export interface PostsSelect<T extends boolean = true> {
   summary?: T;
   featuredImageLight?: T;
   featuredImageDark?: T;
+  focalPoint?:
+    | T
+    | {
+        x?: T;
+        y?: T;
+      };
   body?: T;
   references?:
     | T

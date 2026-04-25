@@ -142,6 +142,7 @@ export default async function PostPage({ params }: PostPageProps) {
               dark={post.featuredImageDark}
               alt={post.title}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 720px, 768px"
+              focalPoint={post.focalPoint ?? undefined}
             />
           </div>
         )}
