@@ -174,13 +174,17 @@ export function MermaidDiagram({ source }: Props) {
     if (!svg) return
     // Reset transform first so getBoundingClientRect reflects the SVG's
     // natural (post-layout) size, then compute the scale that fits both
-    // axes inside the stage and translate so the result is centered.
+    // axes inside the stage minus padding so the diagram doesn't crowd
+    // the panel edges (or the close + zoom-control chrome).
     pz.zoomAbs(0, 0, 1)
     pz.moveTo(0, 0)
     const sr = stage.getBoundingClientRect()
     const vr = svg.getBoundingClientRect()
     if (vr.width === 0 || vr.height === 0) return
-    const scale = Math.min(sr.width / vr.width, sr.height / vr.height, 1)
+    const PAD = 56
+    const availW = Math.max(sr.width - PAD * 2, 1)
+    const availH = Math.max(sr.height - PAD * 2, 1)
+    const scale = Math.min(availW / vr.width, availH / vr.height, 1)
     pz.zoomAbs(0, 0, scale)
     const tx = (sr.width - vr.width * scale) / 2
     const ty = (sr.height - vr.height * scale) / 2
