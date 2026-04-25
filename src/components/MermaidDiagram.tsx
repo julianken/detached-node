@@ -38,6 +38,7 @@ export function MermaidDiagram({ source }: Props) {
   const mounted = useSyncExternalStore(subscribe, () => true, () => false)
   const [svg, setSvg] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [glitchKey, setGlitchKey] = useState(0)
   const lastInitializedTheme = useRef<string | undefined>(undefined)
   const dialogRef = useRef<HTMLDialogElement | null>(null)
   const triggerRef = useRef<HTMLButtonElement | null>(null)
@@ -96,6 +97,7 @@ export function MermaidDiagram({ source }: Props) {
   }, [source, resolvedTheme, mounted])
 
   function openDialog() {
+    setGlitchKey((k) => k + 1)
     dialogRef.current?.showModal()
     // Wait one frame so the dialog has laid out (otherwise panzoom
     // initializes against zero-size bounds and the first interaction is dead).
@@ -212,9 +214,12 @@ export function MermaidDiagram({ source }: Props) {
         ref={dialogRef}
         onClick={handleBackdropClick}
         aria-label="Expanded diagram"
-        className="m-auto h-[90vh] w-[min(95vw,1400px)] border-0 bg-transparent p-0 backdrop:bg-[rgb(6_5_10_/_0.92)] backdrop:backdrop-blur-md"
+        className="mermaid-lightbox m-auto h-[90vh] w-[min(95vw,1400px)] overflow-hidden border-0 bg-transparent p-0 backdrop:bg-[rgb(6_5_10_/_0.92)] backdrop:backdrop-blur-md"
       >
-        <div className="relative h-full w-full overflow-hidden rounded-sm border border-border bg-surface shadow-[0_0_24px_rgba(180,156,255,0.08)]">
+        <div
+          key={glitchKey}
+          className="glitch-reveal relative h-full w-full overflow-hidden rounded-sm border border-border bg-surface shadow-[0_0_24px_rgba(180,156,255,0.08)]"
+        >
           <span aria-hidden="true" className="frame-label">DIAGRAM</span>
           <button
             type="button"

@@ -744,3 +744,17 @@ a.card-scanline:active {
 .mermaid-lightbox-stage:active {
   cursor: grabbing;
 }
+
+/* Soft fade for the dialog backdrop on entry. The panel itself glitches
+   in via the `.glitch-reveal` class (RGB-split + opacity, ~400ms). The
+   backdrop just fades to keep the focus on the panel's animation. */
+dialog.mermaid-lightbox::backdrop {
+  opacity: 1;
+  transition: opacity 180ms ease-out;
+}
+
+@starting-style {
+  dialog.mermaid-lightbox[open]::backdrop {
+    opacity: 0;
+  }
+}
