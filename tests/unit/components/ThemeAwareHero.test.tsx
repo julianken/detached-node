@@ -19,6 +19,8 @@ vi.mock("next/image", () => ({
     width,
     height,
     style,
+    blurDataURL,
+    placeholder,
     ...rest
   }: {
     src: string;
@@ -31,11 +33,14 @@ vi.mock("next/image", () => ({
     width?: number;
     height?: number;
     style?: React.CSSProperties;
+    blurDataURL?: string;
+    placeholder?: string;
     [key: string]: unknown;
   }) => {
     // Strip out Next.js-only props that would generate React warnings on an
     // intrinsic <img> element; preserve the props we actually want to assert.
     void rest;
+    void placeholder;
     return React.createElement("img", {
       src,
       alt,
@@ -47,6 +52,7 @@ vi.mock("next/image", () => ({
       "data-sizes": sizes,
       "data-width": width,
       "data-height": height,
+      "data-blur-data-url": blurDataURL,
     });
   },
 }));
@@ -309,6 +315,65 @@ describe("ThemeAwareHero", () => {
     expect(images).toHaveLength(2);
     images.forEach((img) => {
       expect((img as HTMLElement).style.objectPosition).toBe("0% 0%");
+    });
+  });
+
+  // --- LQIP tests ---
+
+  it("passes light.lqip as blurDataURL to the light <OptimizedImage>", () => {
+    const lightWithLqip = makeMedia({
+      ...lightMedia,
+      lqip: "data:image/avif;base64,lightlqip",
+    });
+    const { container } = render(
+      <ThemeAwareHero light={lightWithLqip} dark={darkMedia} alt="Hero" />
+    );
+    const lightImg = container.querySelector(
+      'img[src="/media/post-light.png"]'
+    ) as HTMLElement;
+    expect(lightImg.getAttribute("data-blur-data-url")).toBe(
+      "data:image/avif;base64,lightlqip"
+    );
+  });
+
+  it("passes both light.lqip and dark.lqip to their respective <OptimizedImage> children", () => {
+    const lightWithLqip = makeMedia({
+      ...lightMedia,
+      lqip: "data:image/avif;base64,lightlqip",
+    });
+    const darkWithLqip = makeMedia({
+      ...darkMedia,
+      lqip: "data:image/avif;base64,darklqip",
+    });
+    const { container } = render(
+      <ThemeAwareHero light={lightWithLqip} dark={darkWithLqip} alt="Hero" />
+    );
+    const lightImg = container.querySelector(
+      'img[src="/media/post-light.png"]'
+    ) as HTMLElement;
+    const darkImg = container.querySelector(
+      'img[src="/media/post-dark.png"]'
+    ) as HTMLElement;
+    expect(lightImg.getAttribute("data-blur-data-url")).toBe(
+      "data:image/avif;base64,lightlqip"
+    );
+    expect(darkImg.getAttribute("data-blur-data-url")).toBe(
+      "data:image/avif;base64,darklqip"
+    );
+  });
+
+  it("renders without custom blurDataURL when neither light nor dark has lqip (default fallback)", () => {
+    // When lqip is absent, ThemeAwareHero passes undefined → OptimizedImage
+    // uses its own 1×1 PNG default. The rendered img should NOT have a
+    // custom AVIF data URL.
+    const { container } = render(
+      <ThemeAwareHero light={lightMedia} dark={darkMedia} alt="Hero" />
+    );
+    const images = container.querySelectorAll("img");
+    images.forEach((img) => {
+      const val = img.getAttribute("data-blur-data-url");
+      // OptimizedImage's fallback 1×1 PNG — not a custom AVIF lqip
+      expect(val).not.toMatch(/^data:image\/avif/);
     });
   });
 });

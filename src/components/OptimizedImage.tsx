@@ -1,6 +1,10 @@
 import Image from "next/image";
 import type { CSSProperties } from "react";
 
+// 1×1 transparent PNG — permanent fallback for Media docs without a populated lqip.
+const FALLBACK_BLUR_DATA_URL =
+  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==";
+
 interface CommonProps {
   src: string;
   alt: string;
@@ -9,6 +13,8 @@ interface CommonProps {
   className?: string;
   sizes?: string;
   style?: CSSProperties;
+  /** Per-image AVIF LQIP data URL. Defaults to a 1×1 transparent PNG. */
+  blurDataURL?: string;
 }
 
 type OptimizedImageProps = CommonProps &
@@ -62,6 +68,7 @@ export function OptimizedImage(props: OptimizedImageProps) {
     className = "",
     sizes,
     style,
+    blurDataURL = FALLBACK_BLUR_DATA_URL,
   } = props;
 
   const dimensionProps = props.fill
@@ -79,7 +86,7 @@ export function OptimizedImage(props: OptimizedImageProps) {
       className={className}
       style={style}
       placeholder="blur"
-      blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+      blurDataURL={blurDataURL}
     />
   );
 }
