@@ -10,6 +10,10 @@ import sharp from 'sharp'
  */
 export async function generateLqipDataUrl(buffer: Buffer): Promise<string> {
   const avif = await sharp(buffer)
+    // fit: 'cover' is deliberate — it mirrors the consumer container's
+    // object-fit: cover (ThemeAwareHero), so the LQIP previews the same
+    // crop the user will see. fit: 'inside' would preview content that
+    // won't be rendered at hero render time.
     .resize(24, 12, { fit: 'cover' })
     .avif({ quality: 30 })
     .toBuffer()

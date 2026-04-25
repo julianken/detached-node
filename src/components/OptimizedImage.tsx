@@ -13,7 +13,14 @@ interface CommonProps {
   className?: string;
   sizes?: string;
   style?: CSSProperties;
-  /** Per-image AVIF LQIP data URL. Defaults to a 1×1 transparent PNG. */
+  /**
+   * Controls the Next.js Image placeholder strategy.
+   * - "blur" (default): shows a blur-up animation while loading; blurDataURL
+   *   falls back to the 1×1 transparent PNG when not supplied.
+   * - "empty": no placeholder; use for non-hero images that don't need blur-up.
+   */
+  placeholder?: "blur" | "empty";
+  /** Per-image AVIF LQIP data URL. Only used when placeholder="blur". */
   blurDataURL?: string;
 }
 
@@ -68,8 +75,12 @@ export function OptimizedImage(props: OptimizedImageProps) {
     className = "",
     sizes,
     style,
-    blurDataURL = FALLBACK_BLUR_DATA_URL,
+    placeholder = "blur",
+    blurDataURL,
   } = props;
+
+  const resolvedBlurDataURL =
+    placeholder === "blur" ? (blurDataURL ?? FALLBACK_BLUR_DATA_URL) : undefined;
 
   const dimensionProps = props.fill
     ? { fill: true as const }
@@ -85,8 +96,8 @@ export function OptimizedImage(props: OptimizedImageProps) {
       sizes={sizes || "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"}
       className={className}
       style={style}
-      placeholder="blur"
-      blurDataURL={blurDataURL}
+      placeholder={placeholder}
+      blurDataURL={resolvedBlurDataURL}
     />
   );
 }

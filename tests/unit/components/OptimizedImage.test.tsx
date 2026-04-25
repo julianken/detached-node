@@ -84,4 +84,13 @@ describe('OptimizedImage blurDataURL prop', () => {
     const img = container.querySelector('img')
     expect(img?.getAttribute('data-blur-data-url')).toBe(FALLBACK_1X1_PNG)
   })
+
+  it('does not pass blurDataURL when placeholder="empty"', () => {
+    const { container } = render(
+      <OptimizedImage fill src="/media/test.png" alt="test" placeholder="empty" />
+    )
+    const img = container.querySelector('img')
+    // placeholder="empty" must not materialise a blur data URL
+    expect(img?.getAttribute('data-blur-data-url')).toBeNull()
+  })
 })
