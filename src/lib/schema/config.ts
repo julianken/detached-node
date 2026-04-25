@@ -12,8 +12,7 @@
 // These are the only changes needed for author identity migration. All schema
 // generators reference AUTHOR_CONFIG and will pick up the update automatically.
 
-const siteUrl =
-  process.env.NEXT_PUBLIC_SERVER_URL || "https://detached-node.dev";
+import { siteUrl } from '../site-url'
 
 const siteName = "detached-node";
 

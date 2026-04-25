@@ -6,8 +6,7 @@
 // from its own config for internal use; this module is the authoritative
 // source for frontend page components.
 
-export const siteUrl: string =
-  process.env.NEXT_PUBLIC_SERVER_URL || "https://detached-node.dev";
+export { siteUrl } from './site-url'
 
 export const siteName = "detached-node";
 
