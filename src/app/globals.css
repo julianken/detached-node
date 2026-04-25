@@ -744,18 +744,25 @@ a.card-scanline:active {
   cursor: grabbing;
 }
 
-/* Soft fade for the dialog backdrop on entry. The panel itself glitches
-   in via the `.glitch-reveal` class (RGB-split + opacity, ~400ms). The
-   backdrop just fades to keep the focus on the panel's animation. */
+/* Soft fade-in/out for the lightbox backdrop. The page underneath stays
+   partially visible so the lightbox reads as "on top of" the article
+   rather than replacing it. The exit fade is driven by the `.is-closing`
+   class set by closeDialog() before the dialog actually closes. */
 dialog.mermaid-lightbox::backdrop {
   opacity: 1;
-  transition: opacity 180ms ease-out;
+  transition: opacity 250ms ease-out;
 }
 
 @starting-style {
   dialog.mermaid-lightbox[open]::backdrop {
     opacity: 0;
   }
+}
+
+dialog.mermaid-lightbox.is-closing::backdrop {
+  opacity: 0;
+  transition-duration: 600ms;
+  transition-timing-function: ease-in-out;
 }
 
 /* Glitch-out exit animation, mirrored from `.glitch-reveal` so the

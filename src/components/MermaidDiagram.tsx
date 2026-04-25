@@ -107,6 +107,7 @@ export function MermaidDiagram({ source }: Props) {
     // visible frame as the lightbox fades out.
     pzRef.current?.dispose()
     pzRef.current = null
+    dialogRef.current?.classList.remove('is-closing')
     dialogRef.current?.showModal()
     // Wait one frame so the dialog has laid out (otherwise panzoom
     // initializes against zero-size bounds and the first interaction is dead).
@@ -137,6 +138,7 @@ export function MermaidDiagram({ source }: Props) {
     // mid-animation and produces a "diagram flash zoomed in" frame.
     panelRef.current?.classList.remove('glitch-reveal')
     panelRef.current?.classList.add('glitch-conceal')
+    dialogRef.current?.classList.add('is-closing')
     // Let the glitch-out animation play before actually closing. We
     // intentionally do NOT dispose panzoom here — the next openDialog
     // disposes any leftover instance before initializing a new one.
@@ -144,7 +146,7 @@ export function MermaidDiagram({ source }: Props) {
       dialogRef.current?.close()
       triggerRef.current?.focus()
       closingRef.current = false
-    }, 150)
+    }, 600)
   }
 
   function handleBackdropClick(e: React.MouseEvent<HTMLDialogElement>) {
@@ -248,7 +250,7 @@ export function MermaidDiagram({ source }: Props) {
         onClick={handleBackdropClick}
         onCancel={handleDialogCancel}
         aria-label="Expanded diagram"
-        className="mermaid-lightbox m-auto h-[90vh] w-[min(95vw,1400px)] overflow-hidden border-0 bg-transparent p-0 backdrop:bg-[rgb(6_5_10_/_0.92)] backdrop:backdrop-blur-md"
+        className="mermaid-lightbox m-auto h-[90vh] w-[min(95vw,1400px)] overflow-hidden border-0 bg-transparent p-0 backdrop:bg-[rgb(6_5_10_/_0.75)] backdrop:backdrop-blur-sm"
       >
         <div
           key={glitchKey}
