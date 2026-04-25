@@ -76,6 +76,35 @@ export const Posts: CollectionConfig = {
       },
     },
     {
+      name: 'focalPoint',
+      type: 'group',
+      admin: {
+        description: 'Crop anchor for hero image (0=left/top, 50=center, 100=right/bottom). Defaults to 50/50.',
+      },
+      fields: [
+        {
+          name: 'x',
+          type: 'number',
+          min: 0,
+          max: 100,
+          defaultValue: 50,
+          admin: {
+            description: 'Horizontal focal point: 0=left, 50=center, 100=right',
+          },
+        },
+        {
+          name: 'y',
+          type: 'number',
+          min: 0,
+          max: 100,
+          defaultValue: 50,
+          admin: {
+            description: 'Vertical focal point: 0=top, 50=center, 100=bottom',
+          },
+        },
+      ],
+    },
+    {
       name: 'body',
       type: 'richText',
       required: true,

@@ -8,6 +8,22 @@ interface ThemeAwareHeroProps {
   alt: string;
   className?: string;
   sizes?: string;
+  focalPoint?: { x?: number | null; y?: number | null } | null;
+}
+
+/**
+ * Returns an objectPosition style only when the focal point diverges from 50/50.
+ * Skips the inline style for the default (50/50) — keeps DevTools clean and avoids
+ * unnecessary re-renders on the vast majority of posts.
+ */
+function focalPointStyle(
+  fp?: { x?: number | null; y?: number | null } | null
+): React.CSSProperties | undefined {
+  if (!fp) return undefined;
+  const x = fp.x ?? 50;
+  const y = fp.y ?? 50;
+  if (x === 50 && y === 50) return undefined;
+  return { objectPosition: `${x}% ${y}%` };
 }
 
 /**
@@ -35,6 +51,7 @@ export function ThemeAwareHero({
   alt,
   className = "",
   sizes,
+  focalPoint,
 }: ThemeAwareHeroProps) {
   if (!isMediaObject(light) || !light.url || !isMediaObject(dark) || !dark.url) {
     return null;
@@ -43,6 +60,7 @@ export function ThemeAwareHero({
   const width = light.width || 1200;
   const height = light.height || 630;
   const aspectStyle = { aspectRatio: `${width} / ${height}` };
+  const imgStyle = focalPointStyle(focalPoint);
 
   return (
     <div
@@ -56,6 +74,7 @@ export function ThemeAwareHero({
         fetchPriority="high"
         sizes={sizes}
         className="object-cover dark:hidden"
+        style={imgStyle}
       />
       <OptimizedImage
         src={dark.url}
@@ -64,6 +83,7 @@ export function ThemeAwareHero({
         fetchPriority="high"
         sizes={sizes}
         className="hidden object-cover dark:block"
+        style={imgStyle}
       />
     </div>
   );
