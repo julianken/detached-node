@@ -24,12 +24,14 @@ gcloud projects add-iam-policy-binding detached-node \
   --role=roles/billing.projectManager
 
 # Lets the Pub/Sub push subscription invoke the underlying Cloud Run service.
+# For Gen 2 + --trigger-topic, the invoker is the Pub/Sub-managed service
+# agent, NOT the function's runtime SA.
 gcloud run services add-iam-policy-binding budget-killswitch \
   --region=us-west1 \
-  --member=serviceAccount:budget-killswitch@detached-node.iam.gserviceaccount.com \
+  --member=serviceAccount:service-474426172729@gcp-sa-pubsub.iam.gserviceaccount.com \
   --role=roles/run.invoker
 
-# Lets the Pub/Sub service agent mint OIDC tokens for that SA.
+# Lets the Pub/Sub service agent mint OIDC tokens for the function's runtime SA.
 gcloud iam service-accounts add-iam-policy-binding \
   budget-killswitch@detached-node.iam.gserviceaccount.com \
   --member=serviceAccount:service-474426172729@gcp-sa-pubsub.iam.gserviceaccount.com \
@@ -52,7 +54,7 @@ detached.
 ```
 gcloud functions deploy budget-killswitch \
   --gen2 \
-  --region=us-central1 \
+  --region=us-west1 \
   --runtime=python312 \
   --entry-point=handle_budget_alert \
   --trigger-topic=budget-alerts \

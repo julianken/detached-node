@@ -2,29 +2,32 @@
 actual spend meets or exceeds the budgeted amount.
 
 Triggered by Pub/Sub messages from a GCP Budget notification channel.
-The message attributes carry `budgetAmount` and `costAmount`; the
-payload JSON carries the full budget event. We detach billing iff
-costAmount >= budgetAmount.
+Deployed as a Gen 2 Cloud Function, so the runtime delivers a
+CloudEvent. The Pub/Sub message JSON carries `budgetAmount` and
+`costAmount`; we detach billing iff costAmount >= budgetAmount.
 """
 
 import base64
 import json
 import os
 
+import functions_framework
 from google.cloud import billing_v1
 
 PROJECT_ID = os.environ["TARGET_PROJECT_ID"]
 PROJECT_NAME = f"projects/{PROJECT_ID}"
 
 
-def handle_budget_alert(event, context):
-    pubsub_message = event.get("data")
-    if not pubsub_message:
-        print("No data in event; ignoring.")
+@functions_framework.cloud_event
+def handle_budget_alert(cloud_event):
+    try:
+        encoded = cloud_event.data["message"]["data"]
+    except (KeyError, TypeError) as exc:
+        print(f"CloudEvent missing message.data: {exc}")
         return
 
     try:
-        payload = json.loads(base64.b64decode(pubsub_message).decode("utf-8"))
+        payload = json.loads(base64.b64decode(encoded).decode("utf-8"))
     except (ValueError, TypeError) as exc:
         print(f"Could not decode payload: {exc}")
         return
