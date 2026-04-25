@@ -75,6 +75,7 @@ export function ThemeAwareHero({
         sizes={sizes}
         className="object-cover dark:hidden"
         style={imgStyle}
+        blurDataURL={light.lqip ?? undefined}
       />
       <OptimizedImage
         src={dark.url}
@@ -84,6 +85,7 @@ export function ThemeAwareHero({
         sizes={sizes}
         className="hidden object-cover dark:block"
         style={imgStyle}
+        blurDataURL={dark.lqip ?? undefined}
       />
     </div>
   );

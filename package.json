@@ -21,7 +21,8 @@
     "test:unit:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "test:e2e:debug": "playwright test --debug"
+    "test:e2e:debug": "playwright test --debug",
+    "backfill:lqip": "tsx scripts/backfill-lqip.ts"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "^3.83.0",
