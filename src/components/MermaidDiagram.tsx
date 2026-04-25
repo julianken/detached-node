@@ -255,7 +255,6 @@ export function MermaidDiagram({ source }: Props) {
           ref={panelRef}
           className="glitch-reveal relative h-full w-full overflow-hidden rounded-sm border border-border bg-surface shadow-[0_0_24px_rgba(180,156,255,0.08)]"
         >
-          <span aria-hidden="true" className="frame-label">DIAGRAM</span>
           <button
             type="button"
             onClick={closeDialog}
