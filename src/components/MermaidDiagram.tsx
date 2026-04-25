@@ -17,14 +17,14 @@ interface Props {
 // from rendering at 1:1 (which would make their text visibly larger).
 const TARGET_SCALE = 0.625
 
-function capDiagramWidth(svgMarkup: string): string {
+export function capDiagramWidth(svgMarkup: string): string {
   const vbMatch = svgMarkup.match(/viewBox="[^"]*?\s(\d+(?:\.\d+)?)\s+\d+(?:\.\d+)?"/)
   if (!vbMatch) return svgMarkup
   const cap = Math.round(parseFloat(vbMatch[1]) * TARGET_SCALE)
   return svgMarkup.replace(/(style="[^"]*?max-width:\s*)\d+(?:\.\d+)?px/, `$1${cap}px`)
 }
 
-function uncapDiagramWidth(svgMarkup: string): string {
+export function uncapDiagramWidth(svgMarkup: string): string {
   // Strip the inline max-width so the SVG fills the lightbox container.
   // The id is kept identical to the inline copy so mermaid's embedded
   // <style> rules (scoped via that id) continue to apply.
