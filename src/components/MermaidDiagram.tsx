@@ -116,15 +116,16 @@ export function MermaidDiagram({ source }: Props) {
     // dialog (~500ms after the user clicked to re-open). Without this,
     // the lightbox blinks shut on its own after a rapid close→reopen.
     if (closeTimerRef.current !== null) {
+      // Cancel the stale close so dialog.close() doesn't fire ~500ms after
+      // re-open. Remove 'is-closing' so the backdrop's fade-out transition
+      // stops mid-flight. The panel itself doesn't need DOM surgery here:
+      // setGlitchKey (below) unmounts the old keyed panel and mounts a fresh
+      // one with className="glitch-reveal …" from JSX, re-running the entry
+      // animation on the new node.
       clearTimeout(closeTimerRef.current)
       closeTimerRef.current = null
       closingRef.current = false
-      // Undo any mid-exit visual state: remove the closing class from the
-      // backdrop and swap the panel back to its enter animation so the
-      // re-opened dialog doesn't land mid-exit.
       dialogRef.current?.classList.remove('is-closing')
-      panelRef.current?.classList.remove('glitch-conceal')
-      panelRef.current?.classList.add('glitch-reveal')
     }
     setGlitchKey((k) => k + 1)
     // Dispose any panzoom instance left over from the previous session.
