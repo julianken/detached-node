@@ -40,6 +40,7 @@ export function MermaidDiagram({ source }: Props) {
   const [error, setError] = useState<string | null>(null)
   const [glitchKey, setGlitchKey] = useState(0)
   const closingRef = useRef(false)
+  const closeTimerRef = useRef<number | null>(null)
   const panelRef = useRef<HTMLDivElement | null>(null)
   const lastInitializedTheme = useRef<string | undefined>(undefined)
   const dialogRef = useRef<HTMLDialogElement | null>(null)
@@ -98,7 +99,33 @@ export function MermaidDiagram({ source }: Props) {
     }
   }, [source, resolvedTheme, mounted])
 
+  // Clear any in-flight close timer on unmount so a pending dialog.close()
+  // doesn't fire against an unmounted component.
+  useEffect(() => {
+    return () => {
+      if (closeTimerRef.current !== null) {
+        clearTimeout(closeTimerRef.current)
+        closeTimerRef.current = null
+      }
+    }
+  }, [])
+
   function openDialog() {
+    // If a close animation is still in flight, cancel its timer so the
+    // lingering timeout cannot fire dialog.close() on the just-reopened
+    // dialog (~500ms after the user clicked to re-open). Without this,
+    // the lightbox blinks shut on its own after a rapid close→reopen.
+    if (closeTimerRef.current !== null) {
+      clearTimeout(closeTimerRef.current)
+      closeTimerRef.current = null
+      closingRef.current = false
+      // Undo any mid-exit visual state: remove the closing class from the
+      // backdrop and swap the panel back to its enter animation so the
+      // re-opened dialog doesn't land mid-exit.
+      dialogRef.current?.classList.remove('is-closing')
+      panelRef.current?.classList.remove('glitch-conceal')
+      panelRef.current?.classList.add('glitch-reveal')
+    }
     setGlitchKey((k) => k + 1)
     // Dispose any panzoom instance left over from the previous session.
     // We defer dispose to here (rather than running it during close) so the
@@ -142,7 +169,8 @@ export function MermaidDiagram({ source }: Props) {
     // Let the glitch-out animation play before actually closing. We
     // intentionally do NOT dispose panzoom here — the next openDialog
     // disposes any leftover instance before initializing a new one.
-    window.setTimeout(() => {
+    closeTimerRef.current = window.setTimeout(() => {
+      closeTimerRef.current = null
       dialogRef.current?.close()
       triggerRef.current?.focus()
       closingRef.current = false
