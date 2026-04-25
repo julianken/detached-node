@@ -758,3 +758,10 @@ dialog.mermaid-lightbox::backdrop {
     opacity: 0;
   }
 }
+
+/* Glitch-out exit animation — same RGB-split keyframe the page
+   transition uses. The component delays dialog.close() until this
+   animation finishes (otherwise the dialog just disappears). */
+.glitch-conceal {
+  animation: glitch-out 150ms ease-in forwards;
+}

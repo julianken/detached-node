@@ -39,6 +39,7 @@ export function MermaidDiagram({ source }: Props) {
   const [svg, setSvg] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [glitchKey, setGlitchKey] = useState(0)
+  const [closing, setClosing] = useState(false)
   const lastInitializedTheme = useRef<string | undefined>(undefined)
   const dialogRef = useRef<HTMLDialogElement | null>(null)
   const triggerRef = useRef<HTMLButtonElement | null>(null)
@@ -119,14 +120,27 @@ export function MermaidDiagram({ source }: Props) {
   }
 
   function closeDialog() {
-    pzRef.current?.dispose()
-    pzRef.current = null
-    dialogRef.current?.close()
-    triggerRef.current?.focus()
+    if (closing) return
+    setClosing(true)
+    // Let the glitch-out animation play before actually closing.
+    window.setTimeout(() => {
+      pzRef.current?.dispose()
+      pzRef.current = null
+      dialogRef.current?.close()
+      triggerRef.current?.focus()
+      setClosing(false)
+    }, 150)
   }
 
   function handleBackdropClick(e: React.MouseEvent<HTMLDialogElement>) {
     if (e.target === dialogRef.current) closeDialog()
+  }
+
+  function handleDialogCancel(e: React.SyntheticEvent<HTMLDialogElement>) {
+    // Intercept Esc so the panel can play its exit animation before
+    // the dialog actually closes.
+    e.preventDefault()
+    closeDialog()
   }
 
   function zoomBy(factor: number) {
@@ -213,12 +227,13 @@ export function MermaidDiagram({ source }: Props) {
       <dialog
         ref={dialogRef}
         onClick={handleBackdropClick}
+        onCancel={handleDialogCancel}
         aria-label="Expanded diagram"
         className="mermaid-lightbox m-auto h-[90vh] w-[min(95vw,1400px)] overflow-hidden border-0 bg-transparent p-0 backdrop:bg-[rgb(6_5_10_/_0.92)] backdrop:backdrop-blur-md"
       >
         <div
           key={glitchKey}
-          className="glitch-reveal relative h-full w-full overflow-hidden rounded-sm border border-border bg-surface shadow-[0_0_24px_rgba(180,156,255,0.08)]"
+          className={`${closing ? 'glitch-conceal' : 'glitch-reveal'} relative h-full w-full overflow-hidden rounded-sm border border-border bg-surface shadow-[0_0_24px_rgba(180,156,255,0.08)]`}
         >
           <span aria-hidden="true" className="frame-label">DIAGRAM</span>
           <button
