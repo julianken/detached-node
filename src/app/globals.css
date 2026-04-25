@@ -705,3 +705,90 @@ a.card-scanline:active {
     opacity: 0.5;
   }
 }
+
+/* ──────────────────────────────────────────────
+   MERMAID — DARK MODE CONTRAST
+   Sequence-diagram rect bands have hardcoded
+   pale fills from `rect rgb(...)` in the source;
+   re-tint them in dark mode so light arrow text
+   stays readable.
+   ────────────────────────────────────────────── */
+
+.dark svg[aria-roledescription="sequence"] rect[fill="rgb(227, 242, 253)"] {
+  fill: rgba(96, 165, 250, 0.14) !important;
+}
+
+.dark svg[aria-roledescription="sequence"] rect[fill="rgb(232, 245, 233)"] {
+  fill: rgba(34, 197, 94, 0.12) !important;
+}
+
+.mermaid-figure {
+  display: flex;
+  justify-content: center;
+}
+
+.mermaid-figure svg[id^="mermaid-"] {
+  display: inline-block;
+}
+
+/* The pannable surface inside the diagram lightbox. `touch-action: none`
+   hands all gestures (pinch, pan, drag) to the panzoom library so it can
+   apply transform on the SVG directly — instead of letting the browser
+   pinch-zoom the dialog's visual viewport, which moves the chrome too. */
+.mermaid-lightbox-stage {
+  cursor: grab;
+  touch-action: none;
+}
+
+.mermaid-lightbox-stage:active {
+  cursor: grabbing;
+}
+
+/* Soft fade-in/out for the lightbox backdrop. The page underneath stays
+   partially visible so the lightbox reads as "on top of" the article
+   rather than replacing it. The exit fade is driven by the `.is-closing`
+   class set by closeDialog() before the dialog actually closes. */
+dialog.mermaid-lightbox::backdrop {
+  opacity: 1;
+  transition: opacity 250ms ease-out;
+}
+
+@starting-style {
+  dialog.mermaid-lightbox[open]::backdrop {
+    opacity: 0;
+  }
+}
+
+dialog.mermaid-lightbox.is-closing::backdrop {
+  opacity: 0;
+  transition-duration: 600ms;
+  transition-timing-function: ease-in-out;
+}
+
+/* Glitch-out exit animation, mirrored from `.glitch-reveal` so the
+   lightbox enters and exits with the same shape (RGB-split + opacity
+   + tiny jitter). The shared `glitch-out` keyframe is unsuitable here
+   because it ends with a horizontal-slit clip-path tuned for the page
+   view-transition, which on a panel-sized element looks like a screen
+   wipe. The component delays dialog.close() until this finishes. */
+.glitch-conceal {
+  animation: lightbox-glitch-out 150ms ease-in forwards;
+}
+
+@keyframes lightbox-glitch-out {
+  0% {
+    opacity: 1;
+    filter: none;
+    transform: translateX(0);
+  }
+  40% {
+    opacity: 0.6;
+    filter: url(#rgb-split);
+    transform: translateX(-0.5px);
+  }
+  100% {
+    opacity: 0;
+    filter: url(#rgb-split);
+    transform: translateX(1px);
+  }
+}
