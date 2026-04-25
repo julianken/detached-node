@@ -32,30 +32,18 @@ async function main() {
 
   const payload = await getPayload({ config })
 
-  const { totalDocs } = await payload.find({
-    collection: 'media',
-    limit: 0,
-    pagination: false,
-    where: {
-      lqip: { exists: false },
-    },
-  })
-
-  // `limit: 0` with `pagination: false` returns all docs in a single query.
-  // The `docs` array will be empty when limit=0; re-fetch properly.
   const all = await payload.find({
     collection: 'media',
-    limit: totalDocs || 1000,
     pagination: false,
     where: {
       lqip: { exists: false },
     },
   })
 
-  const pending = all.docs.filter((doc) => !doc.lqip)
+  const pending = all.docs
   const total = pending.length
 
-  console.log(`[backfill-lqip] ${total} doc(s) without LQIP (of ${all.totalDocs} total media)`)
+  console.log(`[backfill-lqip] ${total} doc(s) without LQIP (of ${all.totalDocs} total media matched)`)
 
   let succeeded = 0
   let failed = 0
