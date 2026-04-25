@@ -1,6 +1,8 @@
 'use client'
 
 import mermaid from 'mermaid'
+import panzoom from 'panzoom'
+import type { PanZoom } from 'panzoom'
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { useTheme } from 'next-themes'
 
@@ -38,6 +40,9 @@ export function MermaidDiagram({ source }: Props) {
   const [error, setError] = useState<string | null>(null)
   const lastInitializedTheme = useRef<string | undefined>(undefined)
   const dialogRef = useRef<HTMLDialogElement | null>(null)
+  const triggerRef = useRef<HTMLButtonElement | null>(null)
+  const stageRef = useRef<HTMLDivElement | null>(null)
+  const pzRef = useRef<PanZoom | null>(null)
 
   useEffect(() => {
     if (!mounted) return
@@ -92,14 +97,63 @@ export function MermaidDiagram({ source }: Props) {
 
   function openDialog() {
     dialogRef.current?.showModal()
+    // Wait one frame so the dialog has laid out (otherwise panzoom
+    // initializes against zero-size bounds and the first interaction is dead).
+    requestAnimationFrame(() => {
+      const svgEl = stageRef.current?.querySelector('svg') as SVGSVGElement | null
+      if (!svgEl) return
+      pzRef.current = panzoom(svgEl, {
+        maxZoom: 4,
+        minZoom: 0.25,
+        bounds: true,
+        boundsPadding: 0.15,
+        smoothScroll: false,
+        zoomDoubleClickSpeed: 1,
+      })
+      // Defer fit one more frame so panzoom finishes its own first-frame
+      // setup before we apply the initial fit transform.
+      requestAnimationFrame(fitToScreen)
+    })
   }
 
   function closeDialog() {
+    pzRef.current?.dispose()
+    pzRef.current = null
     dialogRef.current?.close()
+    triggerRef.current?.focus()
   }
 
   function handleBackdropClick(e: React.MouseEvent<HTMLDialogElement>) {
     if (e.target === dialogRef.current) closeDialog()
+  }
+
+  function zoomBy(factor: number) {
+    const pz = pzRef.current
+    const stage = stageRef.current
+    if (!pz || !stage) return
+    const r = stage.getBoundingClientRect()
+    pz.smoothZoom(r.width / 2, r.height / 2, factor)
+  }
+
+  function fitToScreen() {
+    const pz = pzRef.current
+    const stage = stageRef.current
+    if (!pz || !stage) return
+    const svg = stage.querySelector('svg') as SVGSVGElement | null
+    if (!svg) return
+    // Reset transform first so getBoundingClientRect reflects the SVG's
+    // natural (post-layout) size, then compute the scale that fits both
+    // axes inside the stage and translate so the result is centered.
+    pz.zoomAbs(0, 0, 1)
+    pz.moveTo(0, 0)
+    const sr = stage.getBoundingClientRect()
+    const vr = svg.getBoundingClientRect()
+    if (vr.width === 0 || vr.height === 0) return
+    const scale = Math.min(sr.width / vr.width, sr.height / vr.height, 1)
+    pz.zoomAbs(0, 0, scale)
+    const tx = (sr.width - vr.width * scale) / 2
+    const ty = (sr.height - vr.height * scale) / 2
+    pz.moveTo(tx, ty)
   }
 
   if (error !== null) {
@@ -124,14 +178,20 @@ export function MermaidDiagram({ source }: Props) {
     )
   }
 
+  const chromeBtn =
+    'inline-flex h-9 w-9 items-center justify-center bg-transparent text-text-tertiary ' +
+    'transition-colors duration-150 hover:bg-hover-bg hover:text-accent ' +
+    'focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-focus-ring'
+
   return (
     <>
       <div className="mermaid-figure my-10">
         <button
+          ref={triggerRef}
           type="button"
           onClick={openDialog}
           aria-label="Expand diagram"
-          className="group relative block w-full cursor-zoom-in rounded-sm border-0 bg-transparent p-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-400"
+          className="group relative block w-full cursor-zoom-in rounded-sm border-0 bg-transparent p-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-focus-ring"
         >
           <span
             className="block text-center"
@@ -140,9 +200,9 @@ export function MermaidDiagram({ source }: Props) {
           />
           <span
             aria-hidden="true"
-            className="pointer-events-none absolute right-2 top-2 inline-flex h-7 w-7 items-center justify-center rounded-md bg-black/45 text-white opacity-50 backdrop-blur-sm transition-opacity duration-150 group-hover:opacity-100 group-focus-visible:opacity-100"
+            className="pointer-events-none absolute right-2 top-2 inline-flex h-7 w-7 items-center justify-center rounded-sm border border-border bg-surface/85 text-text-tertiary opacity-60 backdrop-blur-sm transition-opacity duration-150 group-hover:opacity-100 group-focus-visible:opacity-100"
           >
-            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
             </svg>
           </span>
@@ -152,24 +212,62 @@ export function MermaidDiagram({ source }: Props) {
         ref={dialogRef}
         onClick={handleBackdropClick}
         aria-label="Expanded diagram"
-        className="m-auto h-[90vh] w-[min(95vw,1400px)] border-0 bg-transparent p-0 backdrop:bg-zinc-950/85 backdrop:backdrop-blur-sm"
+        className="m-auto h-[90vh] w-[min(95vw,1400px)] border-0 bg-transparent p-0 backdrop:bg-[rgb(6_5_10_/_0.92)] backdrop:backdrop-blur-md"
       >
-        <div className="relative flex h-full w-full flex-col overflow-auto rounded-md border border-zinc-200 bg-white p-10 dark:border-zinc-700 dark:bg-zinc-900">
+        <div className="relative h-full w-full overflow-hidden rounded-sm border border-border bg-surface shadow-[0_0_24px_rgba(180,156,255,0.08)]">
+          <span aria-hidden="true" className="frame-label">DIAGRAM</span>
           <button
             type="button"
             onClick={closeDialog}
             aria-label="Close"
-            className="absolute right-2 top-2 inline-flex h-9 w-9 items-center justify-center rounded-md border-0 bg-transparent text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-900 focus-visible:bg-zinc-100 focus-visible:text-zinc-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100 dark:focus-visible:bg-zinc-800 dark:focus-visible:text-zinc-100"
+            className={`absolute right-3 top-3 z-10 rounded-sm border-0 ${chromeBtn}`}
           >
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M18 6L6 18M6 6l12 12" />
             </svg>
           </button>
           <div
-            className="flex justify-center [touch-action:pinch-zoom]"
+            ref={stageRef}
+            className="mermaid-lightbox-stage relative h-full w-full"
             // mermaid.render() produces sanitized SVG; securityLevel:'strict' prevents injection
             dangerouslySetInnerHTML={{ __html: uncapDiagramWidth(svg) }}
           />
+          <div
+            role="group"
+            aria-label="Zoom controls"
+            className="absolute bottom-4 right-4 z-10 inline-flex items-stretch overflow-hidden rounded-sm border border-border bg-surface/95 backdrop-blur-sm"
+          >
+            <button
+              type="button"
+              onClick={() => zoomBy(0.8)}
+              aria-label="Zoom out"
+              className={chromeBtn}
+            >
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+                <path d="M5 12h14" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              onClick={fitToScreen}
+              aria-label="Fit to screen"
+              className={`${chromeBtn} border-l border-border`}
+            >
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 9V5h4M20 9V5h-4M4 15v4h4M20 15v4h-4" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              onClick={() => zoomBy(1.25)}
+              aria-label="Zoom in"
+              className={`${chromeBtn} border-l border-border`}
+            >
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 5v14M5 12h14" />
+              </svg>
+            </button>
+          </div>
         </div>
       </dialog>
     </>

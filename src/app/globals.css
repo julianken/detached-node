@@ -731,3 +731,16 @@ a.card-scanline:active {
   display: block;
   margin-inline: auto;
 }
+
+/* The pannable surface inside the diagram lightbox. `touch-action: none`
+   hands all gestures (pinch, pan, drag) to the panzoom library so it can
+   apply transform on the SVG directly — instead of letting the browser
+   pinch-zoom the dialog's visual viewport, which moves the chrome too. */
+.mermaid-lightbox-stage {
+  cursor: grab;
+  touch-action: none;
+}
+
+.mermaid-lightbox-stage:active {
+  cursor: grabbing;
+}
