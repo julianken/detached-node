@@ -221,6 +221,33 @@ export function MermaidDiagram({ source }: Props) {
     pz.moveTo(tx, ty)
   }
 
+  // F2: When the theme flips while the lightbox is open, the render effect
+  // above updates `svg` state and React re-renders the stage with the new
+  // SVG markup. The old pzRef still points at the previous (now-detached)
+  // SVG node — all pan/zoom gestures become dead. Re-initialize panzoom
+  // against the freshly mounted SVG element whenever `svg` changes and the
+  // dialog is currently open. Dispose first to avoid duplicate listeners.
+  // This path is separate from openDialog, which also disposes (handling
+  // the "leftover from a previous session" case on normal re-open).
+  useEffect(() => {
+    if (!dialogRef.current?.open) return
+    pzRef.current?.dispose()
+    pzRef.current = null
+    requestAnimationFrame(() => {
+      const svgEl = stageRef.current?.querySelector('svg') as SVGSVGElement | null
+      if (!svgEl) return
+      pzRef.current = panzoom(svgEl, {
+        maxZoom: 4,
+        minZoom: 0.25,
+        bounds: true,
+        boundsPadding: 0.15,
+        smoothScroll: false,
+        zoomDoubleClickSpeed: 1,
+      })
+      requestAnimationFrame(fitToScreen)
+    })
+  }, [svg])
+
   if (error !== null) {
     return (
       <div className="my-6 overflow-x-auto">
