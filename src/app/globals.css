@@ -728,8 +728,7 @@ a.card-scanline:active {
 }
 
 .mermaid-figure svg[id^="mermaid-"] {
-  display: block;
-  margin-inline: auto;
+  display: inline-block;
 }
 
 /* The pannable surface inside the diagram lightbox. `touch-action: none`
