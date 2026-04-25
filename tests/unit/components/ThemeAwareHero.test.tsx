@@ -291,4 +291,24 @@ describe("ThemeAwareHero", () => {
       expect((img as HTMLElement).style.objectPosition).toBe("25% 50%");
     });
   });
+
+  // Regression tripwire: x=0,y=0 anchors to top-left. If someone changes the
+  // ?? coalescing in focalPointStyle to ||, 0 would silently fall back to 50
+  // and this test would fail loudly. The other tests all use values that
+  // differ from both 0 and 50, so they wouldn't catch that regression.
+  it("emits objectPosition '0% 0%' for top-left focal point (?? vs || tripwire)", () => {
+    const { container } = render(
+      <ThemeAwareHero
+        light={lightMedia}
+        dark={darkMedia}
+        alt="Hero"
+        focalPoint={{ x: 0, y: 0 }}
+      />
+    );
+    const images = container.querySelectorAll("img");
+    expect(images).toHaveLength(2);
+    images.forEach((img) => {
+      expect((img as HTMLElement).style.objectPosition).toBe("0% 0%");
+    });
+  });
 });
