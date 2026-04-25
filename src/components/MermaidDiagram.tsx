@@ -39,7 +39,8 @@ export function MermaidDiagram({ source }: Props) {
   const [svg, setSvg] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [glitchKey, setGlitchKey] = useState(0)
-  const [closing, setClosing] = useState(false)
+  const closingRef = useRef(false)
+  const panelRef = useRef<HTMLDivElement | null>(null)
   const lastInitializedTheme = useRef<string | undefined>(undefined)
   const dialogRef = useRef<HTMLDialogElement | null>(null)
   const triggerRef = useRef<HTMLButtonElement | null>(null)
@@ -99,6 +100,13 @@ export function MermaidDiagram({ source }: Props) {
 
   function openDialog() {
     setGlitchKey((k) => k + 1)
+    // Dispose any panzoom instance left over from the previous session.
+    // We defer dispose to here (rather than running it during close) so the
+    // SVG keeps its fit transform throughout the exit animation — otherwise
+    // the diagram snaps back to its natural (much larger) size for one
+    // visible frame as the lightbox fades out.
+    pzRef.current?.dispose()
+    pzRef.current = null
     dialogRef.current?.showModal()
     // Wait one frame so the dialog has laid out (otherwise panzoom
     // initializes against zero-size bounds and the first interaction is dead).
@@ -120,15 +128,22 @@ export function MermaidDiagram({ source }: Props) {
   }
 
   function closeDialog() {
-    if (closing) return
-    setClosing(true)
-    // Let the glitch-out animation play before actually closing.
+    if (closingRef.current) return
+    closingRef.current = true
+    // Drive the class swap via DOM mutation, NOT React state. React
+    // re-rendering the panel causes it to re-set the stage's innerHTML
+    // (because reading innerHTML back returns serialized markup that
+    // differs from the input string), which wipes panzoom's transform
+    // mid-animation and produces a "diagram flash zoomed in" frame.
+    panelRef.current?.classList.remove('glitch-reveal')
+    panelRef.current?.classList.add('glitch-conceal')
+    // Let the glitch-out animation play before actually closing. We
+    // intentionally do NOT dispose panzoom here — the next openDialog
+    // disposes any leftover instance before initializing a new one.
     window.setTimeout(() => {
-      pzRef.current?.dispose()
-      pzRef.current = null
       dialogRef.current?.close()
       triggerRef.current?.focus()
-      setClosing(false)
+      closingRef.current = false
     }, 150)
   }
 
@@ -233,7 +248,8 @@ export function MermaidDiagram({ source }: Props) {
       >
         <div
           key={glitchKey}
-          className={`${closing ? 'glitch-conceal' : 'glitch-reveal'} relative h-full w-full overflow-hidden rounded-sm border border-border bg-surface shadow-[0_0_24px_rgba(180,156,255,0.08)]`}
+          ref={panelRef}
+          className="glitch-reveal relative h-full w-full overflow-hidden rounded-sm border border-border bg-surface shadow-[0_0_24px_rgba(180,156,255,0.08)]"
         >
           <span aria-hidden="true" className="frame-label">DIAGRAM</span>
           <button
