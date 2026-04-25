@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { generateLqipHook } from '@/lib/hooks/generate-lqip'
 
 export const Media: CollectionConfig = {
   slug: 'media',
@@ -10,6 +11,9 @@ export const Media: CollectionConfig = {
     create: ({ req: { user } }) => !!user,
     update: ({ req: { user } }) => !!user,
     delete: ({ req: { user } }) => !!user,
+  },
+  hooks: {
+    beforeChange: [generateLqipHook],
   },
   upload: {
     staticDir: 'public/media',
@@ -30,6 +34,14 @@ export const Media: CollectionConfig = {
     {
       name: 'caption',
       type: 'textarea',
+    },
+    {
+      name: 'lqip',
+      type: 'text',
+      admin: {
+        readOnly: true,
+        description: 'Auto-generated AVIF data URL placeholder. Populated on upload.',
+      },
     },
   ],
 }
