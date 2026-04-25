@@ -9,6 +9,7 @@ interface PostCardProps {
   href: string;
   featuredImageLight?: Media | null;
   featuredImageDark?: Media | null;
+  focalPoint?: { x?: number | null; y?: number | null } | null;
   label?: string;
 }
 
@@ -19,6 +20,7 @@ export function PostCard({
   href,
   featuredImageLight,
   featuredImageDark,
+  focalPoint,
   label,
 }: PostCardProps) {
   return (
@@ -39,6 +41,7 @@ export function PostCard({
             alt={title}
             className="transition-transform group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, 720px"
+            focalPoint={focalPoint}
           />
         </div>
       )}

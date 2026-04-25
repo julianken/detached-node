@@ -1,4 +1,5 @@
 import Image from "next/image";
+import type { CSSProperties } from "react";
 
 interface CommonProps {
   src: string;
@@ -7,6 +8,7 @@ interface CommonProps {
   fetchPriority?: "high" | "low" | "auto";
   className?: string;
   sizes?: string;
+  style?: CSSProperties;
 }
 
 type OptimizedImageProps = CommonProps &
@@ -59,6 +61,7 @@ export function OptimizedImage(props: OptimizedImageProps) {
     fetchPriority,
     className = "",
     sizes,
+    style,
   } = props;
 
   const dimensionProps = props.fill
@@ -74,6 +77,7 @@ export function OptimizedImage(props: OptimizedImageProps) {
       fetchPriority={fetchPriority}
       sizes={sizes || "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"}
       className={className}
+      style={style}
       placeholder="blur"
       blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
     />
