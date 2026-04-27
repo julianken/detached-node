@@ -9,15 +9,15 @@ export const typeLabels: Record<string, string> = {
   essay: "Essay",
   decoder: "Decoder",
   index: "Index",
-  "field-report": "Field Report",
 };
 
 /**
  * Get a display label for a post type
- * Falls back to the raw type value if not found in the mapping
+ * Returns an empty string for types not in the mapping (so callers can
+ * easily branch on truthiness when deciding whether to render a label).
  */
 export function getTypeLabel(type: string): string {
-  return typeLabels[type] || type;
+  return typeLabels[type] ?? "";
 }
 
 /**

@@ -5,6 +5,7 @@ import { SchemaScript } from "@/components/SchemaScript";
 import { generateWebSiteSchema, generatePersonSchema } from "@/lib/schema";
 import { getFeaturedPosts } from "@/lib/queries/posts";
 import { siteUrl } from "@/lib/site-config";
+import { getTypeLabel } from "@/lib/formatting";
 
 // ISR: Revalidate every 30 minutes - featured posts change infrequently
 export const revalidate = 1800;
@@ -41,7 +42,11 @@ export default async function Home() {
         <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {featuredPosts.length > 0 ? (
             featuredPosts.map((post) => (
-              <Card key={post.id} href={`/posts/${post.slug}`} label="FIELD REPORT">
+              <Card
+                key={post.id}
+                href={`/posts/${post.slug}`}
+                label={getTypeLabel(post.type).toUpperCase() || undefined}
+              >
                 <h3 className="font-mono text-base font-semibold text-text-primary [text-wrap:balance]">
                   {post.title}
                 </h3>

@@ -53,14 +53,12 @@ describe("typeLabels", () => {
     expect(typeLabels).toHaveProperty("essay");
     expect(typeLabels).toHaveProperty("decoder");
     expect(typeLabels).toHaveProperty("index");
-    expect(typeLabels).toHaveProperty("field-report");
   });
 
   it("has correct label values", () => {
     expect(typeLabels.essay).toBe("Essay");
     expect(typeLabels.decoder).toBe("Decoder");
     expect(typeLabels.index).toBe("Index");
-    expect(typeLabels["field-report"]).toBe("Field Report");
   });
 });
 
@@ -77,12 +75,8 @@ describe("getTypeLabel", () => {
     expect(getTypeLabel("index")).toBe("Index");
   });
 
-  it("returns correct label for field-report", () => {
-    expect(getTypeLabel("field-report")).toBe("Field Report");
-  });
-
-  it("returns raw type for unknown type", () => {
-    expect(getTypeLabel("unknown-type")).toBe("unknown-type");
+  it("returns empty string for unknown type", () => {
+    expect(getTypeLabel("unknown-type")).toBe("");
   });
 
   it("returns empty string for empty input", () => {

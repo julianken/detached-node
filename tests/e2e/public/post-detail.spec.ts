@@ -8,7 +8,7 @@ import { expectVisible, expectTitle } from '../helpers'
  * Test data from seed-test-db.ts:
  * - "The Architecture of Agent Systems" (essay) - slug: architecture-of-agent-systems
  * - "Decoding Tool Use Patterns" (decoder) - slug: decoding-tool-use-patterns
- * - "Notes on Autonomous Workflows" (field-report) - slug: notes-on-autonomous-workflows
+ * - "Notes on Autonomous Workflows" (field-report, no badge rendered) - slug: notes-on-autonomous-workflows
  * - "Essential Readings on Agentic AI" (index) - slug: essential-readings-agentic-ai
  */
 
@@ -67,7 +67,7 @@ test.describe('Post Detail Page', () => {
     test.expect(summary).toContain('systematic breakdown of how AI agents select')
   })
 
-  test('should display Field Report post type badge for field-report posts', async ({
+  test('should not render a post type badge for field-report posts', async ({
     postDetailPage,
   }) => {
     await postDetailPage.goto('notes-on-autonomous-workflows')
@@ -75,10 +75,11 @@ test.describe('Post Detail Page', () => {
     // Verify page title metadata
     await expectTitle(postDetailPage.page, /Notes on Autonomous Workflows/)
 
-    // Verify post type badge displays "Field Report"
-    await expectVisible(postDetailPage.postType)
-    const postType = await postDetailPage.getPostType()
-    test.expect(postType?.toUpperCase()).toContain('FIELD REPORT')
+    // Verify the post type badge <p> is not rendered. The badge has the
+    // distinguishing `uppercase` class; selecting on it avoids matching
+    // the (visually similar) date <p> that lives in the same header.
+    const badge = postDetailPage.page.locator('article header p.uppercase')
+    await test.expect(badge).toHaveCount(0)
 
     // Verify title displays
     await expectVisible(postDetailPage.postTitle)

@@ -124,9 +124,11 @@ export default async function PostPage({ params }: PostPageProps) {
         </Link>
 
         <header className="flex flex-col gap-2">
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-text-tertiary">
-            {typeLabel}
-          </p>
+          {typeLabel && (
+            <p className="font-mono text-xs uppercase tracking-[0.2em] text-text-tertiary">
+              {typeLabel}
+            </p>
+          )}
           <h1 className="font-mono text-3xl font-semibold tracking-tight text-text-primary">
             {post.title}
           </h1>
