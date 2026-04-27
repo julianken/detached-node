@@ -6,7 +6,6 @@ import { Page, Locator } from '@playwright/test'
 export class PostDetailPage {
   readonly page: Page
   readonly postTitle: Locator
-  readonly postType: Locator
   readonly postDate: Locator
   readonly postSummary: Locator
   readonly postContent: Locator
@@ -16,7 +15,6 @@ export class PostDetailPage {
   constructor(page: Page) {
     this.page = page
     this.navigation = page.locator('nav')
-    this.postType = page.locator('article header p').first()
     this.postTitle = page.locator('article h1').first()
     this.postDate = page.locator('article header p').last()
     this.postSummary = page.locator('article p.text-lg').first()
@@ -31,10 +29,6 @@ export class PostDetailPage {
 
   async getPostTitle() {
     return await this.postTitle.textContent()
-  }
-
-  async getPostType() {
-    return await this.postType.textContent()
   }
 
   async getPostDate() {
