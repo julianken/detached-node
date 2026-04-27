@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { RichText } from "@payloadcms/richtext-lexical/react";
 import type { SerializedEditorState } from "@payloadcms/richtext-lexical/lexical";
-import { formatDate, getTypeLabel } from "@/lib/formatting";
+import { formatDate } from "@/lib/formatting";
 import { Link } from "next-view-transitions";
 import { PageLayout } from "@/components/PageLayout";
 import { ThemeAwareHero } from "@/components/ThemeAwareHero";
@@ -109,8 +109,6 @@ export default async function PostPage({ params }: PostPageProps) {
     notFound();
   }
 
-  const typeLabel = getTypeLabel(post.type);
-
   return (
     <FadeReveal>
     <SchemaScript schema={[generateBlogPostingSchema(post), generateBreadcrumbSchema(post.slug, post.title)]} />
@@ -124,9 +122,6 @@ export default async function PostPage({ params }: PostPageProps) {
         </Link>
 
         <header className="flex flex-col gap-2">
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-text-tertiary">
-            {typeLabel}
-          </p>
           <h1 className="font-mono text-3xl font-semibold tracking-tight text-text-primary">
             {post.title}
           </h1>

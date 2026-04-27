@@ -10,19 +10,17 @@ import { expectVisible, expectTitle } from '../helpers'
  * - "Decoding Tool Use Patterns" (decoder) - slug: decoding-tool-use-patterns
  * - "Notes on Autonomous Workflows" (field-report) - slug: notes-on-autonomous-workflows
  * - "Essential Readings on Agentic AI" (index) - slug: essential-readings-agentic-ai
+ *
+ * Post-type labels were removed from the public frontend in #133, so no
+ * post type renders a header badge regardless of `Posts.type`.
  */
 
 test.describe('Post Detail Page', () => {
-  test('should display Essay post type badge for essay posts', async ({ postDetailPage }) => {
+  test('should render essay post detail correctly', async ({ postDetailPage }) => {
     await postDetailPage.goto('architecture-of-agent-systems')
 
     // Verify page title metadata
     await expectTitle(postDetailPage.page, /The Architecture of Agent Systems/)
-
-    // Verify post type badge displays "Essay"
-    await expectVisible(postDetailPage.postType)
-    const postType = await postDetailPage.getPostType()
-    test.expect(postType?.toUpperCase()).toContain('ESSAY')
 
     // Verify title displays
     await expectVisible(postDetailPage.postTitle)
@@ -40,16 +38,11 @@ test.describe('Post Detail Page', () => {
     test.expect(summary).toContain('exploration of how modern agent architectures')
   })
 
-  test('should display Decoder post type badge for decoder posts', async ({ postDetailPage }) => {
+  test('should render decoder post detail correctly', async ({ postDetailPage }) => {
     await postDetailPage.goto('decoding-tool-use-patterns')
 
     // Verify page title metadata
     await expectTitle(postDetailPage.page, /Decoding Tool Use Patterns/)
-
-    // Verify post type badge displays "Decoder"
-    await expectVisible(postDetailPage.postType)
-    const postType = await postDetailPage.getPostType()
-    test.expect(postType?.toUpperCase()).toContain('DECODER')
 
     // Verify title displays
     await expectVisible(postDetailPage.postTitle)
@@ -67,18 +60,20 @@ test.describe('Post Detail Page', () => {
     test.expect(summary).toContain('systematic breakdown of how AI agents select')
   })
 
-  test('should display Field Report post type badge for field-report posts', async ({
+  test('should not render a post type badge in the header', async ({
     postDetailPage,
   }) => {
     await postDetailPage.goto('notes-on-autonomous-workflows')
 
+    // Post-type labels were removed from the frontend in #133.
+    // The badge had the distinguishing `uppercase` class; selecting on it
+    // avoids matching the (visually similar) date <p> that lives in the
+    // same header.
+    const badge = postDetailPage.page.locator('article header p.uppercase')
+    await test.expect(badge).toHaveCount(0)
+
     // Verify page title metadata
     await expectTitle(postDetailPage.page, /Notes on Autonomous Workflows/)
-
-    // Verify post type badge displays "Field Report"
-    await expectVisible(postDetailPage.postType)
-    const postType = await postDetailPage.getPostType()
-    test.expect(postType?.toUpperCase()).toContain('FIELD REPORT')
 
     // Verify title displays
     await expectVisible(postDetailPage.postTitle)
@@ -96,16 +91,11 @@ test.describe('Post Detail Page', () => {
     test.expect(summary).toContain('Field observations on how autonomous workflows')
   })
 
-  test('should display Index post type badge for index posts', async ({ postDetailPage }) => {
+  test('should render index post detail correctly', async ({ postDetailPage }) => {
     await postDetailPage.goto('essential-readings-agentic-ai')
 
     // Verify page title metadata
     await expectTitle(postDetailPage.page, /Essential Readings on Agentic AI/)
-
-    // Verify post type badge displays "Index"
-    await expectVisible(postDetailPage.postType)
-    const postType = await postDetailPage.getPostType()
-    test.expect(postType?.toUpperCase()).toContain('INDEX')
 
     // Verify title displays
     await expectVisible(postDetailPage.postTitle)
