@@ -20,7 +20,8 @@ const SVG_TIMEOUT = 10_000
 
 // Mermaid emits role="graphics-document document" (two space-separated tokens).
 // Use [role*="graphics-document"] so both the exact and combined values match.
-const MERMAID_SVG = 'svg[id^="mermaid-"][role*="graphics-document"]'
+// Scope to .mermaid-figure: the lightbox <dialog> in MermaidDiagram.tsx pre-renders a duplicate SVG with the same id.
+const MERMAID_SVG = '.mermaid-figure svg[id^="mermaid-"][role*="graphics-document"]'
 
 test.describe('Mermaid block rendering', () => {
   test('renders a mermaid block as SVG on the post page', async ({ postDetailPage }) => {
