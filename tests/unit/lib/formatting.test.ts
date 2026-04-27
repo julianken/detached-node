@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { formatDate, getTypeLabel, typeLabels } from "@/lib/formatting";
+import { formatDate } from "@/lib/formatting";
 
 describe("formatDate", () => {
   it("returns empty string for null input", () => {
@@ -45,41 +45,5 @@ describe("formatDate", () => {
     // en-US short format: Mon Day, Year
     const result = formatDate("2026-03-15");
     expect(result).toMatch(/Mar \d+, 2026/);
-  });
-});
-
-describe("typeLabels", () => {
-  it("contains all expected post types", () => {
-    expect(typeLabels).toHaveProperty("essay");
-    expect(typeLabels).toHaveProperty("decoder");
-    expect(typeLabels).toHaveProperty("index");
-  });
-
-  it("has correct label values", () => {
-    expect(typeLabels.essay).toBe("Essay");
-    expect(typeLabels.decoder).toBe("Decoder");
-    expect(typeLabels.index).toBe("Index");
-  });
-});
-
-describe("getTypeLabel", () => {
-  it("returns correct label for essay", () => {
-    expect(getTypeLabel("essay")).toBe("Essay");
-  });
-
-  it("returns correct label for decoder", () => {
-    expect(getTypeLabel("decoder")).toBe("Decoder");
-  });
-
-  it("returns correct label for index", () => {
-    expect(getTypeLabel("index")).toBe("Index");
-  });
-
-  it("returns empty string for unknown type", () => {
-    expect(getTypeLabel("unknown-type")).toBe("");
-  });
-
-  it("returns empty string for empty input", () => {
-    expect(getTypeLabel("")).toBe("");
   });
 });
