@@ -707,6 +707,89 @@ a.card-scanline:active {
 }
 
 /* ──────────────────────────────────────────────
+   ASCII PREVIEW (image hero loading state)
+   Server-rendered halftone over a dominant color.
+   Crossfades to the real image on <Image> onLoad.
+   See ImageWithAsciiPreview.tsx for the wrapper
+   contract (data-loaded attribute on the wrapper).
+   ────────────────────────────────────────────── */
+
+.ascii-preview-wrapper {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Dominant-color background. Visible from byte 0; sits behind both the
+   ASCII layer and the image. Falls back to surface when --preview-color
+   is not set (missing color metadata). */
+.ascii-preview-bg {
+  position: absolute;
+  inset: 0;
+  background-color: var(--preview-color, var(--surface));
+  z-index: 0;
+}
+
+/* The 24×12 luminance halftone. One <pre> child of the wrapper.
+   Aria-hidden — purely decorative, real alt text comes from the <img>. */
+.ascii-preview-layer {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono-stack);
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: 0;
+  color: var(--text-tertiary);
+  opacity: 0.55;
+  white-space: pre;
+  text-align: center;
+  pointer-events: none;
+  user-select: none;
+  /* Smooth out the crossfade to the loaded image. */
+  transition: opacity 200ms ease-out;
+}
+
+.dark .ascii-preview-layer {
+  opacity: 0.4;
+}
+
+/* The real <Image> sits on top of both background and ASCII.
+   It starts at opacity 0 and fades in once data-loaded flips. */
+.ascii-preview-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 200ms ease-out;
+}
+
+.ascii-preview-wrapper[data-loaded="true"] .ascii-preview-layer {
+  opacity: 0;
+}
+
+.ascii-preview-wrapper[data-loaded="true"] .ascii-preview-img {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Skip the crossfade entirely — once the image loads it appears in place. */
+  .ascii-preview-layer,
+  .ascii-preview-img {
+    transition: none !important;
+  }
+}
+
+/* ──────────────────────────────────────────────
    MERMAID — DARK MODE CONTRAST
    Sequence-diagram rect bands have hardcoded
    pale fills from `rect rgb(...)` in the source;
