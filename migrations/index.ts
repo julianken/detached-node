@@ -9,6 +9,7 @@ import * as migration_20260422_204700_add_media_prefix from './20260422_204700_a
 import * as migration_20260424_035219_add_mermaid_block from './20260424_035219_add_mermaid_block';
 import * as migration_20260425_202704_add_posts_focal_point from './20260425_202704_add_posts_focal_point';
 import * as migration_20260425_220000_add_media_lqip from './20260425_220000_add_media_lqip';
+import * as migration_20260428_010142_add_media_preview from './20260428_010142_add_media_preview';
 
 export const migrations = [
   {
@@ -65,5 +66,10 @@ export const migrations = [
     up: migration_20260425_220000_add_media_lqip.up,
     down: migration_20260425_220000_add_media_lqip.down,
     name: '20260425_220000_add_media_lqip',
+  },
+  {
+    up: migration_20260428_010142_add_media_preview.up,
+    down: migration_20260428_010142_add_media_preview.down,
+    name: '20260428_010142_add_media_preview',
   },
 ];
