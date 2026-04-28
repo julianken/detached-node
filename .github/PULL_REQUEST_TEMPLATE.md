@@ -69,6 +69,25 @@ on a ready-to-merge PR. -->
       Reviewers repeat the drive + console check via `gh pr checkout <N>` +
       `npm run dev` against the PR head SHA before approving.
 
+## Migration checklist
+
+<!-- Delete this entire section if no migration in this PR. The deploy pipeline
+runs migrations BEFORE the new container builds, so the OLD container serves
+traffic against the NEW schema for the duration of the build. Every migration
+must be backwards-compatible with the previous container — see
+migrations/README.md "N-1 Backwards-Compatibility Contract" for the full
+spec. -->
+
+- [ ] Migration is additive-nullable, default-bearing, `CREATE INDEX
+      CONCURRENTLY`, or `ADD CONSTRAINT NOT VALID` — OR is part of a documented
+      two-PR sequence (PR 1 additive + PR 2 cutover)
+- [ ] I walked through every `SELECT` / `INSERT` / `UPDATE` in
+      `src/lib/queries/` and confirmed the old container's queries still
+      succeed against the new schema
+- [ ] If this is a destructive change (DROP COLUMN, RENAME, type change),
+      the corresponding "PR 2 cutover" issue is filed and linked above
+- [ ] Migration's `down()` reverses cleanly
+
 ## Plan reference
 
 <!-- Link the issue, Linear ticket, brainstorm doc, or design doc this PR
