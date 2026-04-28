@@ -37,15 +37,16 @@ jobs:
       - name: Configure Docker for Artifact Registry
         run: gcloud auth configure-docker ${{ vars.GCP_REGION }}-docker.pkg.dev
 
-      - name: Build Docker image
-        run: |
-          docker build \
-            --build-arg "NEXT_PUBLIC_SERVER_URL=${{ vars.NEXT_PUBLIC_SERVER_URL }}" \
-            --build-arg DATABASE_URL=${{ secrets.SUPABASE_SESSION_URL }} \
-            --build-arg PAYLOAD_SECRET=${{ secrets.PAYLOAD_SECRET }} \
-            -t ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/tech-blog/app:${{ github.sha }} .
-          docker push ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/tech-blog/app:${{ github.sha }}
-
+      # Migrations MUST run before the Docker build. The build runs `pnpm build`
+      # which prerenders server components against the live DB (DATABASE_URL is
+      # passed as a build-arg). If the schema is older than the code being
+      # built, prerender queries fail mid-build. On 2026-04-28 (PR #140), this
+      # plus the swallow-and-return-empty pattern in src/lib/queries/ baked an
+      # empty-state /posts HTML into the container image and shipped it. See
+      # issue #141 for the swallow-pattern follow-up. The invariant here is:
+      # all migrations must be backwards-compatible with the previous container
+      # (N-1 compat), so running them before the new build does not break the
+      # currently-serving revision.
       - name: Run Payload migrations
         env:
           DATABASE_URL: ${{ secrets.SUPABASE_SESSION_URL }}
@@ -76,6 +77,15 @@ jobs:
           SQL
           pnpm payload migrate
         timeout-minutes: 5
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            --build-arg "NEXT_PUBLIC_SERVER_URL=${{ vars.NEXT_PUBLIC_SERVER_URL }}" \
+            --build-arg DATABASE_URL=${{ secrets.SUPABASE_SESSION_URL }} \
+            --build-arg PAYLOAD_SECRET=${{ secrets.PAYLOAD_SECRET }} \
+            -t ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/tech-blog/app:${{ github.sha }} .
+          docker push ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/tech-blog/app:${{ github.sha }}
 
       - name: Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@v2
