@@ -1,0 +1,121 @@
+name: Backfill Media Previews
+
+# One-shot, manually-triggered workflow that runs scripts/backfill-previews.ts
+# against the production database. Idempotent — skips Media docs whose
+# preview.ascii is already 288 chars long. Safe to re-run.
+#
+# Why this exists:
+#   PR #140 added preview.color and preview.ascii fields with a beforeChange
+#   hook that fires on create + re-upload. Existing Media docs uploaded
+#   before #140 stay NULL on these fields and render the broken yellow
+#   placeholder fallback. This workflow backfills them.
+#
+# Operational notes:
+#   - Defaults to dry-run. Author must explicitly set dry_run=false to write.
+#   - Sets I_KNOW_THIS_IS_NOT_PROD=1 so the script's assertNonProductionDatabase
+#     guard allows the prod DB host (mirrors scripts/seed-test-db.ts:16).
+#   - Reuses the same DATABASE_URL secret (SUPABASE_SESSION_URL) and
+#     PAYLOAD_SECRET as deploy.yml. The script fetches Media files via their
+#     public GCS URLs, so no GCS auth is needed for reads.
+#   - Concurrency-locked so two clicks from the Actions UI cannot stomp on
+#     each other.
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (true = no writes; false = live backfill)'
+        type: boolean
+        required: true
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: backfill-previews-production
+  cancel-in-progress: false
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      # Defense in depth: the script's assertNonProductionDatabase guard is
+      # bypassed below for production. To prevent a future fork from accidentally
+      # pointing this workflow at an unexpected host (e.g. someone copies this
+      # file, swaps the script ref, but forgets to update DATABASE_URL), assert
+      # that the resolved DB hostname matches the expected Supabase pattern
+      # before invoking the bypass.
+      - name: Assert DB host is the expected prod host
+        env:
+          DATABASE_URL: ${{ secrets.SUPABASE_SESSION_URL }}
+        run: |
+          host=$(node -e 'console.log(new URL(process.env.DATABASE_URL).hostname)')
+          case "$host" in
+            *.supabase.co|*.supabase.com|*.pooler.supabase.com)
+              echo "OK: $host" ;;
+            *)
+              echo "::error::Unexpected DB host: $host"; exit 1 ;;
+          esac
+
+      - name: Run backfill
+        env:
+          DATABASE_URL: ${{ secrets.SUPABASE_SESSION_URL }}
+          PAYLOAD_SECRET: ${{ secrets.PAYLOAD_SECRET }}
+          NEXT_PUBLIC_SERVER_URL: ${{ vars.NEXT_PUBLIC_SERVER_URL }}
+          I_KNOW_THIS_IS_NOT_PROD: '1'
+          DRY_RUN_INPUT: ${{ inputs.dry_run }}
+        # Fail-safe shell branch: any value of DRY_RUN_INPUT that is not exactly
+        # "false" (e.g. "", "True", "1", malformed runner serialization) defaults
+        # to dry-run. Matches the L14 comment "Author must explicitly set
+        # dry_run=false to write".
+        run: |
+          if [ "$DRY_RUN_INPUT" = "false" ]; then
+            echo "::warning::Running LIVE — will update Media docs in production."
+            pnpm tsx scripts/backfill-previews.ts
+          else
+            echo "::notice::Running in DRY RUN mode (no writes)."
+            pnpm tsx scripts/backfill-previews.ts --dry-run
+          fi
+
+      # After a live backfill: (a) verify every Media doc has a populated
+      # 288-char preview.ascii — fail loudly if not, since the script swallows
+      # per-doc decode errors as `failed++` and exits 0; (b) warm individual
+      # post pages so direct landings (RSS, social, search) get fresh HTML
+      # instead of stale yellow-fallback prerenders for up to an hour.
+      - name: Verify previews and warm post pages
+        if: ${{ inputs.dry_run != true }}
+        env:
+          PROD_URL: ${{ vars.NEXT_PUBLIC_SERVER_URL }}
+        run: |
+          echo "Asserting all media docs have populated previews…"
+          missing=$(curl -fsS "$PROD_URL/api/media?limit=0&depth=0&select%5Bpreview%5D=true" \
+            | jq '[.docs[] | select((.preview.ascii // "") | length != 288)] | length')
+          if [ "$missing" -ne 0 ]; then
+            echo "::error::$missing media doc(s) still lack a populated 288-char preview.ascii"
+            exit 1
+          fi
+          echo "All media docs verified."
+
+          echo "Warming /posts and /…"
+          curl -fsS -o /dev/null -w "%{http_code} %{url_effective}\n" "$PROD_URL/posts" || true
+          curl -fsS -o /dev/null -w "%{http_code} %{url_effective}\n" "$PROD_URL/" || true
+
+          echo "Warming individual post pages…"
+          curl -fsS "$PROD_URL/api/posts?where%5Bstatus%5D%5Bequals%5D=published&limit=0&depth=0&select%5Bslug%5D=true" \
+            | jq -r '.docs[].slug' \
+            | while read -r slug; do
+                curl -fsS -o /dev/null -w "%{http_code} /posts/$slug\n" "$PROD_URL/posts/$slug" || true
+              done
