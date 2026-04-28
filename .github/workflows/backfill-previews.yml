@@ -1,0 +1,82 @@
+name: Backfill Media Previews
+
+# One-shot, manually-triggered workflow that runs scripts/backfill-previews.ts
+# against the production database. Idempotent — skips Media docs whose
+# preview.ascii is already 288 chars long. Safe to re-run.
+#
+# Why this exists:
+#   PR #140 added preview.color and preview.ascii fields with a beforeChange
+#   hook that fires on create + re-upload. Existing Media docs uploaded
+#   before #140 stay NULL on these fields and render the broken yellow
+#   placeholder fallback. This workflow backfills them.
+#
+# Operational notes:
+#   - Defaults to dry-run. Author must explicitly set dry_run=false to write.
+#   - Sets I_KNOW_THIS_IS_NOT_PROD=1 so the script's assertNonProductionDatabase
+#     guard allows the prod DB host (mirrors scripts/seed-test-db.ts:16).
+#   - Reuses the same DATABASE_URL secret (SUPABASE_SESSION_URL) and
+#     PAYLOAD_SECRET as deploy.yml. The script fetches Media files via their
+#     public GCS URLs, so no GCS auth is needed for reads.
+#   - Concurrency-locked so two clicks from the Actions UI cannot stomp on
+#     each other.
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (true = no writes; false = live backfill)'
+        type: boolean
+        required: true
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: backfill-previews-production
+  cancel-in-progress: false
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Run backfill
+        env:
+          DATABASE_URL: ${{ secrets.SUPABASE_SESSION_URL }}
+          PAYLOAD_SECRET: ${{ secrets.PAYLOAD_SECRET }}
+          NEXT_PUBLIC_SERVER_URL: ${{ vars.NEXT_PUBLIC_SERVER_URL }}
+          I_KNOW_THIS_IS_NOT_PROD: '1'
+          DRY_RUN_INPUT: ${{ inputs.dry_run }}
+        run: |
+          if [ "$DRY_RUN_INPUT" = "true" ]; then
+            echo "::notice::Running in DRY RUN mode (no writes)."
+            pnpm tsx scripts/backfill-previews.ts --dry-run
+          else
+            echo "::warning::Running LIVE — will update Media docs in production."
+            pnpm tsx scripts/backfill-previews.ts
+          fi
+
+      - name: Trigger ISR warm-up
+        if: ${{ inputs.dry_run == false }}
+        env:
+          PROD_URL: ${{ vars.NEXT_PUBLIC_SERVER_URL }}
+        run: |
+          # Backfill updates Media docs but does not touch any Post, so the
+          # revalidate-post hook never fires. Hit /posts and / once to force a
+          # fresh prerender with the new previews instead of waiting up to an
+          # hour for natural ISR. Failures here are non-fatal.
+          echo "Warming /posts and /…"
+          curl -fsS -o /dev/null -w "%{http_code} %{url_effective}\n" "$PROD_URL/posts" || true
+          curl -fsS -o /dev/null -w "%{http_code} %{url_effective}\n" "$PROD_URL/" || true
