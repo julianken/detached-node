@@ -112,6 +112,46 @@ DROP INDEX IF EXISTS idx_posts_status_publishedAt;
 EOF
 ```
 
+## N-1 Backwards-Compatibility Contract
+
+**Every migration in this repository MUST be backwards-compatible with the previous container revision.**
+
+### Why
+
+The deploy pipeline (`.github/workflows/deploy.yml`) runs migrations *before* the new Docker image builds and deploys. Between the migration applying and Cloud Run cutting traffic to the new revision, the **old** container is still serving every request — against the **new** schema. If the migration breaks the old container's queries, prod goes down for the duration of the build (~1–3 minutes).
+
+This is a deliberate trade. The alternative ordering (build → migrate → deploy, our prior setup) put the *new* code on the *old* schema during the build's prerender phase, which caused the 2026-04-28 incident (PR #140 → empty `/posts` baked into the container image; see #141).
+
+### What "backwards-compatible" means
+
+A migration is N-1 compatible if **the previous container revision continues to serve every route correctly while the new schema is live but the new code is not yet deployed**. Concretely:
+
+- ✅ **Safe**: `ADD COLUMN ... NULL` (additive nullable column — old SELECTs ignore it)
+- ✅ **Safe**: `ADD COLUMN ... NOT NULL DEFAULT '...'` (new column with default — old INSERTs that omit it succeed via the default)
+- ✅ **Safe**: `CREATE INDEX CONCURRENTLY` (online index build — no locking)
+- ✅ **Safe**: `ALTER TABLE ... ADD CONSTRAINT ... NOT VALID` (deferred validation)
+- ⚠️ **Requires two-PR sequencing**: `DROP COLUMN`, `RENAME`, type changes (e.g. `varchar → uuid`)
+- ⚠️ **Requires two-PR sequencing**: removing an enum variant the old code still writes
+- ❌ **Never safe in one PR**: dropping a table or column the old code reads from; renaming a primary key; making a previously-nullable column NOT NULL without backfilling first
+
+### Two-PR sequencing pattern (for the ⚠️ cases)
+
+When a change is not N-1 safe in one step, split it across two PRs:
+
+1. **PR 1 (additive)**: add the new shape (column/table/enum). Old code ignores it. Code reads/writes the *old* shape, optionally also writing the new one. Deploy. Backfill if needed.
+2. **PR 2 (cutover)**: switch reads to the new shape, drop the old. Old container from PR 1 still serves correctly because both shapes existed.
+
+Worked example: `migrations/20260428_010142_add_media_preview.ts` (PR 1: add `preview_color` + `preview_ascii` columns; old `lqip` column kept and dual-read) — the PR 2 follow-up will drop `lqip` once all docs are backfilled and the new code path is proven.
+
+### Author checklist (copy into the PR body for every migration)
+
+- [ ] Migration is one of the ✅-Safe shapes above, OR is part of a documented two-PR sequence
+- [ ] Old container's queries still succeed against the new schema (mentally walk through every `SELECT`/`INSERT`/`UPDATE` from `src/lib/queries/`)
+- [ ] If a column type changes or a column is dropped, there is a corresponding "PR 2 cutover" issue filed
+- [ ] Migration includes a `down()` that reverses cleanly (we don't autorollback, but the option matters)
+
+If you cannot tick every box, do not merge — split into two PRs.
+
 ## Best Practices
 
 1. **Always backup** before running migrations in production
@@ -119,6 +159,7 @@ EOF
 3. **Validate results** with `validate-indexes.sql` script
 4. **Monitor performance** after deployment
 5. **Document custom migrations** with inline comments
+6. **Honor the N-1 contract above** — non-additive migrations require two-PR sequencing
 
 ## References
 
