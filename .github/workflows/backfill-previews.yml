@@ -96,12 +96,12 @@ jobs:
       # post pages so direct landings (RSS, social, search) get fresh HTML
       # instead of stale yellow-fallback prerenders for up to an hour.
       - name: Verify previews and warm post pages
-        if: ${{ inputs.dry_run == false }}
+        if: ${{ inputs.dry_run != true }}
         env:
           PROD_URL: ${{ vars.NEXT_PUBLIC_SERVER_URL }}
         run: |
           echo "Asserting all media docs have populated previews…"
-          missing=$(curl -fsS "$PROD_URL/api/media?limit=200&depth=0&select%5Bpreview%5D=true" \
+          missing=$(curl -fsS "$PROD_URL/api/media?limit=0&depth=0&select%5Bpreview%5D=true" \
             | jq '[.docs[] | select((.preview.ascii // "") | length != 288)] | length')
           if [ "$missing" -ne 0 ]; then
             echo "::error::$missing media doc(s) still lack a populated 288-char preview.ascii"
@@ -114,7 +114,7 @@ jobs:
           curl -fsS -o /dev/null -w "%{http_code} %{url_effective}\n" "$PROD_URL/" || true
 
           echo "Warming individual post pages…"
-          curl -fsS "$PROD_URL/api/posts?where%5Bstatus%5D%5Bequals%5D=published&limit=200&depth=0&select%5Bslug%5D=true" \
+          curl -fsS "$PROD_URL/api/posts?where%5Bstatus%5D%5Bequals%5D=published&limit=0&depth=0&select%5Bslug%5D=true" \
             | jq -r '.docs[].slug' \
             | while read -r slug; do
                 curl -fsS -o /dev/null -w "%{http_code} /posts/$slug\n" "$PROD_URL/posts/$slug" || true
