@@ -12,47 +12,14 @@ function getSection(pathname: string): string {
   return (segment || 'HOME').toUpperCase();
 }
 
-// External epoch store — avoids setState-in-effect and ref-during-render
-let epochCurrent = '----------';
-let epochPrev = '----------';
-let epochSnapshot = { current: epochCurrent, prev: epochPrev };
-
-function subscribeEpoch(callback: () => void) {
-  epochCurrent = String(Math.floor(Date.now() / 1000));
-  epochSnapshot = { current: epochCurrent, prev: epochPrev };
-  const id = setInterval(() => {
-    epochPrev = epochCurrent;
-    epochCurrent = String(Math.floor(Date.now() / 1000));
-    epochSnapshot = { current: epochCurrent, prev: epochPrev };
-    callback();
-  }, 1000);
-  return () => clearInterval(id);
-}
-
-function getEpochSnapshot() {
-  return epochSnapshot;
-}
-
-const serverSnapshot = { current: '----------', prev: '----------' };
-
 export function StatusBar() {
   const mounted = useSyncExternalStore(() => () => {}, () => true, () => false);
-  const { current: epoch, prev } = useSyncExternalStore(subscribeEpoch, getEpochSnapshot, () => serverSnapshot);
   const { resolvedTheme, toggle } = useThemeToggle();
   const { level: contrast, cycle: cycleContrast } = useContrast();
   const { level: brightness, cycle: cycleBrightness } = useBrightness();
   const pathname = usePathname();
 
   const themeLabel = mounted ? (resolvedTheme === 'dark' ? 'DARK' : 'LIGHT') : '----';
-
-  const digits = epoch.split('').map((digit, i) => {
-    const changed = digit !== prev[i];
-    return (
-      <span key={`${i}-${digit}`} className={changed ? 'epoch-pulse' : undefined}>
-        {digit}
-      </span>
-    );
-  });
 
   return (
     <footer className="border-t border-border px-4 py-2 font-mono text-xs tracking-wider text-text-tertiary">
@@ -84,8 +51,6 @@ export function StatusBar() {
             >
               BRT:{mounted ? brightness.toUpperCase() : '----'}
             </button>
-            <span>{'//'}</span>
-            <span className="inline-flex">{digits}</span>
           </span>
         </div>
         <span className="shrink-0 text-text-tertiary">&copy; DETACHED-NODE</span>

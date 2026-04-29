@@ -588,20 +588,6 @@ main {
 }
 
 /* ──────────────────────────────────────────────
-   EPOCH PULSE
-   Brief accent-color flash on each timestamp tick.
-   ────────────────────────────────────────────── */
-
-@keyframes epoch-pulse {
-  0% { color: var(--accent-muted); }
-  100% { color: var(--text-tertiary); }
-}
-
-.epoch-pulse {
-  animation: epoch-pulse 400ms ease-out forwards;
-}
-
-/* ──────────────────────────────────────────────
    HERO GLOW
    Slow-drifting radial gradient behind hero content.
    GPU-accelerated via transform on pseudo-element.
