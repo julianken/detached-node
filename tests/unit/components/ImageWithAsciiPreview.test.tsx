@@ -155,6 +155,49 @@ describe("ImageWithAsciiPreview", () => {
     expect(img?.getAttribute("alt")).toBe("A neural network diagram")
   })
 
+  it("propagates dark:hidden from className to the inner <img>", () => {
+    const { container } = render(
+      <ImageWithAsciiPreview
+        src="/media/test.png"
+        alt="alt"
+        className="dark:hidden"
+        preview={{ color: "#1e2530", ascii: VALID_ASCII }}
+      />,
+    )
+    const wrapper = container.querySelector(".ascii-preview-wrapper") as HTMLElement
+    const img = container.querySelector("img") as HTMLImageElement
+    expect(wrapper.className).toContain("dark:hidden")
+    expect(img.className).toContain("dark:hidden")
+  })
+
+  it("propagates 'hidden dark:block' (off-by-default variant) to the inner <img>", () => {
+    const { container } = render(
+      <ImageWithAsciiPreview
+        src="/media/test.png"
+        alt="alt"
+        className="hidden dark:block"
+        preview={{ color: "#1e2530", ascii: VALID_ASCII }}
+      />,
+    )
+    const img = container.querySelector("img") as HTMLImageElement
+    expect(img.className).toContain("hidden")
+    expect(img.className).toContain("dark:block")
+  })
+
+  it("does not propagate non-display utilities (e.g. object-cover) to the inner <img>", () => {
+    const { container } = render(
+      <ImageWithAsciiPreview
+        src="/media/test.png"
+        alt="alt"
+        className="object-cover dark:hidden"
+        preview={{ color: "#1e2530", ascii: VALID_ASCII }}
+      />,
+    )
+    const img = container.querySelector("img") as HTMLImageElement
+    expect(img.className).toContain("dark:hidden")
+    expect(img.className).not.toContain("object-cover")
+  })
+
   it("flips data-loaded to 'true' on the wrapper when the image fires onLoad", () => {
     const { container } = render(
       <ImageWithAsciiPreview

@@ -22,6 +22,25 @@ interface ImageWithAsciiPreviewProps {
 }
 
 /**
+ * Tailwind utility tokens whose effect is `display: …` — including their
+ * variant-prefixed forms (`dark:hidden`, `md:flex`, etc.). We propagate
+ * these to the inner <img> so `getComputedStyle(<img>).display` reflects
+ * theme visibility, not just the wrapper's. The wrapper keeps the same
+ * tokens too, so the entire stack (background + ASCII + image) hides
+ * together — propagation only adds the inner-element invariant the
+ * theme-aware-hero E2E spec asserts on the <img>.
+ */
+const DISPLAY_TOKEN_RE =
+  /^(?:[a-z][\w-]*:)?(?:hidden|block|inline|inline-block|flex|inline-flex|grid|inline-grid|contents|table|table-cell|table-row|flow-root|list-item)$/
+
+function partitionDisplayClasses(className: string): string {
+  return className
+    .split(/\s+/)
+    .filter((tok) => tok && DISPLAY_TOKEN_RE.test(tok))
+    .join(" ")
+}
+
+/**
  * Validates and splits an ASCII halftone string into one row per array
  * element, preserving original character order (row-major). Returns null
  * when the input is missing or wrong length so the caller can omit the
@@ -74,6 +93,13 @@ export function ImageWithAsciiPreview({
   // CSS uses to drive both the ASCII fade-out and the image fade-in.
   const wrapperClass = `ascii-preview-wrapper ${className}`.trim()
 
+  // The E2E theme-aware-hero spec asserts `display` on the inner <img>, not
+  // the wrapper. Without forwarding `hidden` / `dark:hidden` / `dark:block`
+  // to the <img>, hiding the wrapper leaves the descendant <img> reporting
+  // `display: block` to getComputedStyle. Propagate just the display tokens.
+  const imgDisplayClass = partitionDisplayClasses(className)
+  const imgClass = `ascii-preview-img ${imgDisplayClass}`.trim()
+
   return (
     <div
       className={wrapperClass}
@@ -101,7 +127,7 @@ export function ImageWithAsciiPreview({
       <AsciiPreviewImage
         src={src}
         alt={alt}
-        className="ascii-preview-img"
+        className={imgClass}
         sizes={sizes}
         style={style}
         fetchPriority={fetchPriority}
