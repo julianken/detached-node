@@ -13,7 +13,7 @@ export const pattern: Pattern = {
     'The pattern straddles two layers. As Topology it shapes the control flow: a generator-execute-evaluate loop that, on failure, branches into a critique step before retrying. As State it maintains durable, retrievable memory whose unit is a natural-language lesson, not an embedding of a previous answer. The mechanism only earns its keep when failures are diagnosable from the trajectory itself — the agent must be able to articulate, in words, what an outside observer could also see. Tasks where failure is invisible (a stale tool, a wrong premise the agent never questioned) defeat the loop, because the critique is grounded in nothing.',
     'Reflexion sits next to but distinct from a within-attempt generator-critic loop. Self-Refine iterates on a single output until a critic stops complaining; Reflexion iterates across attempts, so the lesson outlives the run and the next encounter with the same problem class starts informed. The cost is operational, not algorithmic: someone has to decide what counts as the same task, how many critiques to retrieve, when to compact the buffer, and which model writes the critique. The default of having the same model judge its own work is the hazard the pattern is most often deployed without noticing.',
   ],
-  mermaidSource: `graph TD
+  mermaidSource: `graph LR
   A[Task] --> B[Generate]
   B --> C[Execute]
   C --> D{Success?}
