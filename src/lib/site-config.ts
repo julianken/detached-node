@@ -21,6 +21,10 @@ export const siteKeywords = [
   "AI workflows",
   "machine intelligence",
   "failure modes",
+  "agentic design patterns",
+  "AI agent design patterns",
+  "agent design patterns",
+  "LLM agent reference",
 ];
 
 export const ogDefaultImage = "/og-default.png";
