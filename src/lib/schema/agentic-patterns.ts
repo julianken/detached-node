@@ -34,6 +34,11 @@ import type { Pattern, Reference } from "@/data/agentic-design-patterns/types";
  *   - Reference.pages  — book chapter page range; schema.org Book does not have
  *                        a top-level pagination slot. Skipped for v1; a future
  *                        enhancement could model this as a Chapter sub-entity.
+ *   - Reference.venue  — display-only ("ICML 2024", "arXiv preprint"); could be
+ *                        modeled as publishedIn / sourceOrganization but values
+ *                        are free-form strings not entity URIs. Skipped for v1.
+ *   - Reference.accessedAt — useful for docs citations but no canonical
+ *                            schema.org slot at the citation level. Skipped for v1.
  */
 export function referenceToPatternCitation(ref: Reference): PatternCitationSchema {
   const base: PatternCitationSchema = {

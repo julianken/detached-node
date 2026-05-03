@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeAll } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 
 // Mock the schema config module to avoid the NEXT_PUBLIC_SERVER_URL env check
 // that fires at import time in src/lib/site-url.ts.
