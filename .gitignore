@@ -62,6 +62,7 @@ scripts/.tmp-seed-images/
 .claude/hooks/
 .playwright-mcp/
 .serena/
+.superpowers/
 
 # Working directories (drafts, analysis, brainstorming)
 # analysis-funnel default ARTIFACT_ROOT — keep out of version control
