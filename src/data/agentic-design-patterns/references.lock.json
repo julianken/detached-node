@@ -56,6 +56,20 @@
       "firstAuthorSurname": "Gou",
       "source": "openalex",
       "verifiedAt": "2026-05-03"
+    },
+    "10.48550/arXiv.2309.15789": {
+      "title": "Large Language Model Routing with Benchmark Datasets",
+      "year": 2023,
+      "firstAuthorSurname": "Shnitzer",
+      "source": "openalex",
+      "verifiedAt": "2026-05-03"
+    },
+    "10.48550/arXiv.2406.18665": {
+      "title": "RouteLLM: Learning to Route LLMs with Preference Data",
+      "year": 2024,
+      "firstAuthorSurname": "Ong",
+      "source": "openalex",
+      "verifiedAt": "2026-05-03"
     }
   }
 }
