@@ -3,7 +3,7 @@ import type { Pattern } from '../types'
 export const pattern: Pattern = {
   slug: 'reflexion',
   name: 'Reflexion',
-  alternativeNames: ['Verbal RL', 'Self-Reflection'],
+  alternativeNames: ['Verbal Reinforcement Learning', 'Self-Reflection'],
   layerId: 'topology',
   secondaryLayerId: 'state',
   topologySubtier: 'single-agent',
@@ -29,9 +29,9 @@ export const pattern: Pattern = {
     'Prefer it when you want behavioral improvements that survive a deploy: the lessons are inspectable text you can read, edit, or evict by hand.',
   ],
   whenNotToUse: [
-    'Skip it for single-shot tasks: there is no second attempt for the lesson to inform, and the critique step pays no rent.',
-    'Avoid same-model self-critique without external grounding — the model tends to approve its own work even when it should not. Use a different model, a tool-grounded check, or the CRITIC pattern instead.',
-    'Drop it when failures are not visible in the trajectory (stale data the agent could not have known about, hidden environment changes), because the critique will hallucinate a cause.',
+    'When the task is single-shot, the lesson has no future attempt to inform and the critique step pays no rent.',
+    'Without external grounding, same-model self-critique tends to approve its own work even when it should not — substitute a different model, a tool-grounded check, or the CRITIC pattern.',
+    'When failures are not visible in the trajectory (stale data the agent could not have known about, hidden environment changes), the critique will hallucinate a cause.',
   ],
   realWorldExamples: [
     {
@@ -101,6 +101,7 @@ export {}
       url: 'https://arxiv.org/abs/2303.17651',
       authors: 'Madaan et al.',
       year: 2023,
+      venue: 'NeurIPS 2023',
       type: 'paper',
       doi: '10.48550/arXiv.2303.17651',
       note: 'closely related single-attempt variant',
@@ -110,6 +111,7 @@ export {}
       url: 'https://arxiv.org/abs/2305.11738',
       authors: 'Gou et al.',
       year: 2023,
+      venue: 'ICLR 2024',
       type: 'paper',
       doi: '10.48550/arXiv.2305.11738',
       note: 'tool-grounded variant; addresses the same-model sycophancy gotcha',
@@ -137,10 +139,10 @@ export {}
       authors: 'LangChain team',
       year: 2024,
       type: 'docs',
-      accessedAt: new Date().toISOString().slice(0, 10),
+      accessedAt: '2026-05-03',
     },
   ],
   addedAt: '2026-05-02',
-  dateModified: new Date().toISOString().slice(0, 10),
+  dateModified: '2026-05-03',
   lastChangeNote: 'Initial authoring as the Phase-1 exemplar.',
 }
