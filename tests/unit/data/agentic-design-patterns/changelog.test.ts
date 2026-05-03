@@ -7,8 +7,8 @@ describe('CHANGELOG', () => {
     expect(Array.isArray(CHANGELOG)).toBe(true)
   })
 
-  it('has exactly 1 entry in Phase 1 (the scaffold launch)', () => {
-    expect(CHANGELOG).toHaveLength(1)
+  it('has at least 1 entry (the Phase 1 scaffold seed)', () => {
+    expect(CHANGELOG.length).toBeGreaterThanOrEqual(1)
   })
 
   it('every entry has an ISO date', () => {
@@ -35,25 +35,17 @@ describe('CHANGELOG', () => {
     }
   })
 
-  it('Phase 1 seed entry date is bumped to the Reflexion authoring date by #158', () => {
+  it('Phase 1 seed entry (reflexion) is preserved with its bumped date', () => {
     // T1 (#152) seeded the entry as '2026-05-02'. Per issue #158 step 6, the
     // entry's date is bumped to the Reflexion authoring date so lint-changelog's
     // "latest CHANGELOG date >= today" check passes alongside pattern.dateModified.
-    // The note text is preserved verbatim per #152's AC (asserted below).
-    expect(CHANGELOG[0].date).toMatch(/^\d{4}-\d{2}-\d{2}$/)
-    expect(CHANGELOG[0].date >= '2026-05-02').toBe(true)
-  })
-
-  it('Phase 1 seed entry slug is reflexion', () => {
-    expect(CHANGELOG[0].slug).toBe('reflexion')
-  })
-
-  it('Phase 1 seed entry type is added', () => {
-    expect(CHANGELOG[0].type).toBe('added')
-  })
-
-  it('Phase 1 seed entry note matches issue AC verbatim', () => {
-    expect(CHANGELOG[0].note).toBe(
+    // Phase 2 prepends new entries above this seed; the seed must still exist
+    // verbatim (date, slug, type, note) per #152's AC.
+    const seed = CHANGELOG.find((e) => e.slug === 'reflexion' && e.type === 'added')
+    expect(seed).toBeDefined()
+    expect(seed!.date).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+    expect(seed!.date >= '2026-05-02').toBe(true)
+    expect(seed!.note).toBe(
       'Catalog scaffold launched; Reflexion exemplar shipped in #158.',
     )
   })
