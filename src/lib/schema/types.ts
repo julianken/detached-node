@@ -132,3 +132,47 @@ export interface CollectionPageSchema extends SchemaBase {
   url: string;
   isPartOf: { "@id": string };
 }
+
+// -------------------------------------------------------------------------
+// PatternCitationSchema — embedded citation shape for agentic pattern pages.
+// Diverges from CitationSchema intentionally: the Reference type in
+// agentic-design-patterns/types.ts is structured (explicit 'type' field)
+// so we branch on that, not on field presence.
+//
+// Schema.org types used:
+//   ScholarlyArticle — research papers (with DOI identifier)
+//   Book             — book references
+//   WebPage          — specs, docs, essays (online references without a
+//                      canonical academic or book identity)
+// -------------------------------------------------------------------------
+
+export interface PatternCitationSchema {
+  "@type": "ScholarlyArticle" | "Book" | "WebPage";
+  name: string;
+  url: string;
+  author?: { "@type": "Person"; name: string };
+  datePublished?: string;
+  identifier?: {
+    "@type": "PropertyValue";
+    propertyID: "DOI";
+    value: string;
+  };
+}
+
+// -------------------------------------------------------------------------
+// ArticleSchema — top-level schema for agentic pattern satellite pages.
+// Uses @id suffix #pattern-article to avoid future collision with the
+// BlogPosting @id pattern (${url}#article).
+// author is an @id reference to the canonical Person entity (not inline).
+// -------------------------------------------------------------------------
+
+export interface ArticleSchema extends SchemaBase {
+  "@type": "Article";
+  "@id": string;
+  headline: string;
+  description?: string;
+  url: string;
+  dateModified?: string;
+  author: { "@id": string };
+  citation?: PatternCitationSchema[];
+}
