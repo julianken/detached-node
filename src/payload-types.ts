@@ -176,7 +176,6 @@ export interface Media {
      */
     ascii?: string | null;
   };
-  prefix?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -475,7 +474,6 @@ export interface MediaSelect<T extends boolean = true> {
         color?: T;
         ascii?: T;
       };
-  prefix?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
