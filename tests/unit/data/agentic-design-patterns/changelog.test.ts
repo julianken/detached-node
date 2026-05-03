@@ -7,7 +7,10 @@ describe('CHANGELOG', () => {
     expect(Array.isArray(CHANGELOG)).toBe(true)
   })
 
-  it('has at least 1 entry (the Phase 1 scaffold seed)', () => {
+  it('has at least 1 entry (Phase 1 scaffold launch + any Phase 2 authoring)', () => {
+    // Phase 1 shipped a single seed entry; Phase 2 prepends one entry per
+    // newly authored pattern. Both shapes must satisfy this assertion so
+    // wave-1 worktrees can land independently without colliding on this test.
     expect(CHANGELOG.length).toBeGreaterThanOrEqual(1)
   })
 
@@ -39,13 +42,28 @@ describe('CHANGELOG', () => {
     // T1 (#152) seeded the entry as '2026-05-02'. Per issue #158 step 6, the
     // entry's date is bumped to the Reflexion authoring date so lint-changelog's
     // "latest CHANGELOG date >= today" check passes alongside pattern.dateModified.
-    // Phase 2 prepends new entries above this seed; the seed must still exist
-    // verbatim (date, slug, type, note) per #152's AC.
-    const seed = CHANGELOG.find((e) => e.slug === 'reflexion' && e.type === 'added')
-    expect(seed).toBeDefined()
-    expect(seed!.date).toMatch(/^\d{4}-\d{2}-\d{2}$/)
-    expect(seed!.date >= '2026-05-02').toBe(true)
-    expect(seed!.note).toBe(
+    // The note text is preserved verbatim per #152's AC (asserted below).
+    // Phase 2 prepends new authoring entries, so the Reflexion seed is no
+    // longer guaranteed to be at index 0 — find it by slug.
+    const reflexionSeed = CHANGELOG.find((e) => e.slug === 'reflexion')
+    expect(reflexionSeed).toBeDefined()
+    expect(reflexionSeed!.date).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+    expect(reflexionSeed!.date >= '2026-05-02').toBe(true)
+  })
+
+  it('Phase 1 seed entry slug is reflexion', () => {
+    const reflexionSeed = CHANGELOG.find((e) => e.slug === 'reflexion')
+    expect(reflexionSeed).toBeDefined()
+  })
+
+  it('Phase 1 seed entry type is added', () => {
+    const reflexionSeed = CHANGELOG.find((e) => e.slug === 'reflexion')
+    expect(reflexionSeed?.type).toBe('added')
+  })
+
+  it('Phase 1 seed entry note matches issue AC verbatim', () => {
+    const reflexionSeed = CHANGELOG.find((e) => e.slug === 'reflexion')
+    expect(reflexionSeed?.note).toBe(
       'Catalog scaffold launched; Reflexion exemplar shipped in #158.',
     )
   })
