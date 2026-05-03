@@ -16,7 +16,7 @@ import { Link } from "next-view-transitions";
 import { SchemaScript } from "@/components/SchemaScript";
 import { PageLayout } from "@/components/PageLayout";
 import { PageHeader } from "@/components/PageHeader";
-import { generatePageBreadcrumbSchema } from "@/lib/schema";
+import { generateHubChildBreadcrumb } from "@/lib/schema";
 import { siteUrl } from "@/lib/site-config";
 import { CHANGELOG } from "@/data/agentic-design-patterns/changelog";
 import { getPattern } from "@/data/agentic-design-patterns/index";
@@ -36,10 +36,7 @@ export const metadata: Metadata = {
   openGraph: { title: PAGE_TITLE, description: PAGE_DESCRIPTION, url: PAGE_URL },
 };
 
-const breadcrumbSchema = generatePageBreadcrumbSchema(
-  "agentic-design-patterns/changelog",
-  "Changelog",
-);
+const breadcrumbSchema = generateHubChildBreadcrumb("changelog", "Changelog");
 
 const TYPE_LABELS: Record<ChangelogEntryType, string> = {
   added: "ADDED",

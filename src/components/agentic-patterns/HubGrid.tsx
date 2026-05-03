@@ -13,8 +13,8 @@
 // - Under a topology sub-tier (parent <h3>): card heading is <h4>
 //
 // HubGrid is intentionally pure server: filtering coordination lives in the
-// client wrapper introduced by issue #157 (HubFilterableContent), which
-// composes HubSearchBar + a filter-aware variant of this grid.
+// client wrapper introduced by issue #157 (HubFilterableContent), which owns
+// its own search input and feeds a filtered patterns array down to this grid.
 
 import { LAYERS } from "@/data/agentic-design-patterns/layers";
 import { getPatternsByLayer, getTopologyPatterns } from "@/data/agentic-design-patterns/index";

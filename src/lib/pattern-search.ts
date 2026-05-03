@@ -1,9 +1,8 @@
 // ---------------------------------------------------------------------------
 // pattern-search
 // ---------------------------------------------------------------------------
-// Pure search function over the Pattern catalog. Used by HubSearchBar to
-// compute the result count, and by the filter wrapper introduced in #157
-// to filter the visible cards.
+// Pure search function over the Pattern catalog. Used by HubFilterableContent
+// (#157) to filter the visible cards and compute the result count.
 //
 // Search rules:
 //   - Empty / whitespace-only query → returns ALL patterns (acts as identity)
