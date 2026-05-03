@@ -14,6 +14,11 @@
  *     ("await expression at top level only allowed within a module").
  *  3. We capture both stdout AND stderr from tsc — depending on which check
  *     fails, error output goes to one or the other.
+ *  4. Snippets are written under a project-local scratch directory (.adp-sketch-tmp/),
+ *     NOT the system tmpdir(). With `--moduleResolution bundler`, tsc walks up
+ *     from the file to find node_modules; from /tmp/* that walk never reaches
+ *     this project, so any `import` of a real npm package (`ai`, `@ai-sdk/openai`,
+ *     etc.) fails with TS2307. The scratch dir is gitignored.
  *
  * Sketches whose pattern's `sdkAvailability` is `'python-only'` or `'no-sdk'`
  * are NOT compiled (they may be pseudocode), but we DO require a "pseudocode"
@@ -24,8 +29,7 @@
  */
 
 import { spawnSync } from 'node:child_process'
-import { existsSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
-import { tmpdir } from 'node:os'
+import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 
 import { PATTERNS } from '../src/data/agentic-design-patterns/index.js'
@@ -72,6 +76,13 @@ type CompilationResult =
   | { ok: true }
   | { ok: false; output: string }
 
+// Project-local scratch dir. Writing inside the project tree is required so
+// `--moduleResolution bundler` can walk up to ./node_modules and resolve real
+// dependencies referenced from sketches (e.g. `ai`, `@ai-sdk/openai`).
+// Putting it under the system tmpdir() breaks module resolution.
+// Gitignored via .gitignore — never persisted across runs.
+const PROJECT_SCRATCH_ROOT = resolve(process.cwd(), '.adp-sketch-tmp')
+
 function compileSnippet(sketch: string, slug: string): CompilationResult {
   if (!existsSync(TSC_BIN)) {
     return {
@@ -81,7 +92,8 @@ function compileSnippet(sketch: string, slug: string): CompilationResult {
   }
   // Slugs starting with a digit (e.g. "12-factor-agent") are invalid as JS
   // identifiers — but they're valid filenames, so this is purely cosmetic.
-  const dir = mkdtempSync(join(tmpdir(), `adp-sketch-${slug}-`))
+  if (!existsSync(PROJECT_SCRATCH_ROOT)) mkdirSync(PROJECT_SCRATCH_ROOT, { recursive: true })
+  const dir = mkdtempSync(join(PROJECT_SCRATCH_ROOT, `${slug}-`))
   const file = join(dir, `${slug}.ts`)
   try {
     writeFileSync(file, ensureModuleScope(sketch), 'utf8')
