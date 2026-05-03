@@ -19,8 +19,10 @@ async function globalSetup(config: FullConfig) {
       })
       console.log('✅ Test database seeded successfully')
     } catch (error) {
-      console.error('❌ Failed to seed test database:', error)
-      throw error
+      // Seed failure is non-fatal: static/public routes (e.g. ADP pattern
+      // satellites) are DB-independent and can still be tested even when no
+      // local database is available. DB-dependent tests will fail on their own.
+      console.warn('⚠️  Seed failed — DB-independent tests (e.g. ADP routes) will still run.', error)
     }
   } else {
     console.log('⏭️  Skipping seed (already done by CI workflow)')
@@ -43,8 +45,9 @@ async function globalSetup(config: FullConfig) {
     await setupAuth(page)
     console.log('✅ Authentication setup complete')
   } catch (error) {
-    console.error('❌ Authentication setup failed:', error)
-    throw error
+    // Auth failure is non-fatal: public routes (e.g. ADP pattern satellites)
+    // don't need authentication. Admin-only tests will fail on their own.
+    console.warn('⚠️  Authentication setup failed — public-route tests will still run.', error)
   } finally {
     await browser.close()
   }
