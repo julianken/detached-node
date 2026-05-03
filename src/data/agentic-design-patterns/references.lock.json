@@ -1,4 +1,26 @@
 {
   "version": 1,
-  "doiToReference": {}
+  "doiToReference": {
+    "10.48550/arXiv.2303.11366": {
+      "title": "Reflexion: Language Agents with Verbal Reinforcement Learning",
+      "year": 2023,
+      "firstAuthorSurname": "Shinn",
+      "source": "openalex",
+      "verifiedAt": "2026-05-03"
+    },
+    "10.48550/arXiv.2303.17651": {
+      "title": "Self-Refine: Iterative Refinement with Self-Feedback",
+      "year": 2023,
+      "firstAuthorSurname": "Madaan",
+      "source": "openalex",
+      "verifiedAt": "2026-05-03"
+    },
+    "10.48550/arXiv.2305.11738": {
+      "title": "CRITIC: Large Language Models Can Self-Correct with Tool-Interactive Critiquing",
+      "year": 2023,
+      "firstAuthorSurname": "Gou",
+      "source": "openalex",
+      "verifiedAt": "2026-05-03"
+    }
+  }
 }

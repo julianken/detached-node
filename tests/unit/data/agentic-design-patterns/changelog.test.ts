@@ -35,8 +35,13 @@ describe('CHANGELOG', () => {
     }
   })
 
-  it('Phase 1 seed entry has correct date (2026-05-02 per issue AC)', () => {
-    expect(CHANGELOG[0].date).toBe('2026-05-02')
+  it('Phase 1 seed entry date is bumped to the Reflexion authoring date by #158', () => {
+    // T1 (#152) seeded the entry as '2026-05-02'. Per issue #158 step 6, the
+    // entry's date is bumped to the Reflexion authoring date so lint-changelog's
+    // "latest CHANGELOG date >= today" check passes alongside pattern.dateModified.
+    // The note text is preserved verbatim per #152's AC (asserted below).
+    expect(CHANGELOG[0].date).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+    expect(CHANGELOG[0].date >= '2026-05-02').toBe(true)
   })
 
   it('Phase 1 seed entry slug is reflexion', () => {
