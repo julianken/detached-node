@@ -64,11 +64,8 @@ const STUBS = [
 ]
 
 function generateStub(slug, name, layerId, topologySubtier, parentPatternSlug) {
-  const exportName = slug
-    .replace(/-([a-z0-9])/g, (_, c) => c.toUpperCase())
-    .replace(/^(\d)/, 'n$1') // digits can't start an identifier — prefix 'n'
-    // Special case: we want the export to be called 'pattern' uniformly
-  // We use a named export `pattern` for consistency across all files.
+  // All stub files use a named export `pattern: Pattern` for consistency.
+  // The digit-leading slug 12-factor-agent is aliased in index.ts barrel.
 
   const topologySubtierLine =
     topologySubtier
