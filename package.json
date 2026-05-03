@@ -23,7 +23,8 @@
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:debug": "playwright test --debug",
     "backfill:lqip": "tsx scripts/backfill-lqip.ts",
-    "backfill:previews": "tsx scripts/backfill-previews.ts"
+    "backfill:previews": "tsx scripts/backfill-previews.ts",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "^3.83.0",
