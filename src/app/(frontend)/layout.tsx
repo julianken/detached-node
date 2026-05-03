@@ -101,6 +101,9 @@ export default function FrontendLayout({
                   <Link className="hover:text-accent py-2 transition-colors focus-ring" href="/posts">
                     Posts
                   </Link>
+                  <Link className="hover:text-accent py-2 transition-colors focus-ring" href="/agentic-design-patterns">
+                    Patterns
+                  </Link>
                   <Link className="hover:text-accent py-2 transition-colors focus-ring" href="/about">
                     About
                   </Link>
