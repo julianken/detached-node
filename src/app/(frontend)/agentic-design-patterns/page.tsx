@@ -86,14 +86,14 @@ export default async function AgenticDesignPatternsHubPage({
 
   // Apply `?layer=` filter SSR-side. Unknown layer values fall through to
   // the full catalog (no 404; the URL is best-effort, not authoritative).
-  const visiblePatterns =
-    layer && isLayerId(layer) ? getPatternsByLayer(layer) : PATTERNS;
+  const filteredLayerId = layer && isLayerId(layer) ? layer : null;
+  const visiblePatterns = filteredLayerId ? getPatternsByLayer(filteredLayerId) : PATTERNS;
 
   return (
     <PageLayout maxWidth="full" gap="lg">
       <SchemaScript schema={[articleSchema, breadcrumbSchema]} />
       <HubHero />
-      <HubFilterableContent patterns={visiblePatterns} />
+      <HubFilterableContent patterns={visiblePatterns} layerFiltered={!!filteredLayerId} />
     </PageLayout>
   );
 }
