@@ -8,10 +8,31 @@
       "source": "openalex",
       "verifiedAt": "2026-05-03"
     },
+    "10.48550/arXiv.2303.17580": {
+      "title": "HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in Hugging Face",
+      "year": 2023,
+      "firstAuthorSurname": "Shen",
+      "source": "openalex",
+      "verifiedAt": "2026-05-03"
+    },
     "10.48550/arXiv.2303.17651": {
       "title": "Self-Refine: Iterative Refinement with Self-Feedback",
       "year": 2023,
       "firstAuthorSurname": "Madaan",
+      "source": "openalex",
+      "verifiedAt": "2026-05-03"
+    },
+    "10.48550/arXiv.2305.04091": {
+      "title": "Plan-and-Solve Prompting: Improving Zero-Shot Chain-of-Thought Reasoning by Large Language Models",
+      "year": 2023,
+      "firstAuthorSurname": "Wang",
+      "source": "openalex",
+      "verifiedAt": "2026-05-03"
+    },
+    "10.48550/arXiv.2305.10601": {
+      "title": "Tree of Thoughts: Deliberate Problem Solving with Large Language Models",
+      "year": 2023,
+      "firstAuthorSurname": "Yao",
       "source": "openalex",
       "verifiedAt": "2026-05-03"
     },
