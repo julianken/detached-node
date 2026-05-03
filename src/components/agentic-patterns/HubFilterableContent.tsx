@@ -25,11 +25,14 @@
 // Filtering: searchPatterns is pure and operates on the FULL catalog. The
 // filtered view is grouped by layer, mirroring the static HubGrid grouping
 // so the layered hierarchy is preserved while filtering. When debouncedQuery
-// is empty we render the original HubGrid (no churn for the common path).
+// is empty AND no `?layer=` URL param is set, we render the original HubGrid
+// (no churn for the common path).
 //
 // `?layer=` SSR filter (per spec § 337) is applied by the parent server
 // component before this client island; the layer prop here narrows what
-// patterns this island sees on the server.
+// patterns this island sees on the server. Client-side we read `?layer=` from
+// the URL to know whether to stay in the filtered-grid path (instead of
+// falling back to HubGrid which re-reads the full catalog).
 
 import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { searchPatterns } from "@/lib/pattern-search";
@@ -58,9 +61,17 @@ interface HubFilterableContentProps {
    * responsible for any `?layer=` SSR filtering before passing this in.
    */
   patterns: Pattern[];
+  /**
+   * Whether a `?layer=` SSR filter was applied. When true, the component stays
+   * in the filtered-grid path even when debouncedQuery is empty — prevents
+   * HubGrid from re-reading the full catalog on hydration and overriding the
+   * SSR layer filter. Must be known at render time (not via useEffect) to avoid
+   * a flash of all layers before hydration completes.
+   */
+  layerFiltered?: boolean;
 }
 
-export function HubFilterableContent({ patterns }: HubFilterableContentProps) {
+export function HubFilterableContent({ patterns, layerFiltered = false }: HubFilterableContentProps) {
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [, startTransition] = useTransition();
@@ -123,7 +134,11 @@ export function HubFilterableContent({ patterns }: HubFilterableContentProps) {
 
   const matchCount = filtered.length;
   const announcement = `${matchCount} ${matchCount === 1 ? "pattern" : "patterns"} found`;
-  const isFiltering = debouncedQuery.trim().length > 0;
+  // Use filtered-grid path when actively searching OR when the server applied a
+  // `?layer=` filter (layerFiltered prop). Without the layerFiltered check,
+  // HubGrid re-reads the full catalog on hydration and overrides the SSR layer
+  // filter, causing a flash of all 5 layers.
+  const isFiltering = debouncedQuery.trim().length > 0 || layerFiltered;
 
   // Group filtered patterns by layer for rendering. Preserves catalog order
   // within each layer (searchPatterns is order-preserving).
@@ -144,7 +159,7 @@ export function HubFilterableContent({ patterns }: HubFilterableContentProps) {
       {/* Search input — markup mirrors HubSearchBar (T2-C). */}
       <div className="flex flex-col gap-2">
         <label htmlFor="hub-search" className="sr-only">
-          Search patterns
+          Search agentic design patterns
         </label>
         <div className="relative">
           <input
@@ -153,7 +168,7 @@ export function HubFilterableContent({ patterns }: HubFilterableContentProps) {
             type="search"
             value={query}
             onChange={handleChange}
-            aria-label="Search patterns"
+            aria-label="Search agentic design patterns"
             aria-describedby="hub-search-hint"
             placeholder="Search patterns…"
             className="w-full rounded-sm border border-border bg-surface px-4 py-2.5 pr-16 font-mono text-base text-text-primary placeholder:text-text-tertiary focus-ring"
@@ -187,9 +202,16 @@ export function HubFilterableContent({ patterns }: HubFilterableContentProps) {
       ) : groupedByLayer && groupedByLayer.length > 0 ? (
         <div className="flex flex-col gap-16">
           {groupedByLayer.map(({ layer, patterns: layerPatterns }) => (
-            <section key={layer.id} className="flex flex-col gap-6">
+            <section
+              key={layer.id}
+              className="flex flex-col gap-6"
+              aria-labelledby={`filtered-layer-heading-${layer.id}`}
+            >
               <header className="flex flex-col gap-1">
-                <h2 className="font-mono text-2xl font-semibold tracking-tight text-text-primary">
+                <h2
+                  id={`filtered-layer-heading-${layer.id}`}
+                  className="font-mono text-2xl font-semibold tracking-tight text-text-primary"
+                >
                   Layer {layer.number} — {layer.title}
                 </h2>
                 <p className="text-sm text-text-tertiary italic">{layer.question}</p>

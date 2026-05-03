@@ -24,7 +24,10 @@ import { PatternCard } from "./PatternCard";
 function LayerSectionTitle({ layer }: { layer: Layer }) {
   return (
     <header className="flex flex-col gap-1">
-      <h2 className="font-mono text-2xl font-semibold tracking-tight text-text-primary">
+      <h2
+        id={`layer-heading-${layer.id}`}
+        className="font-mono text-2xl font-semibold tracking-tight text-text-primary"
+      >
         Layer {layer.number} — {layer.title}
       </h2>
       <p className="text-sm text-text-tertiary italic">{layer.question}</p>
@@ -73,7 +76,7 @@ function TopologyLayer({ layer }: { layer: Layer }) {
   const singleAgent = getTopologyPatterns("single-agent");
   const multiAgent = getTopologyPatterns("multi-agent");
   return (
-    <section className="flex flex-col gap-8">
+    <section aria-labelledby={`layer-heading-${layer.id}`} className="flex flex-col gap-8">
       <LayerSectionTitle layer={layer} />
       <SubTier title="Single-agent" patterns={singleAgent} />
       <SubTier title="Multi-agent" patterns={multiAgent} />
@@ -84,7 +87,7 @@ function TopologyLayer({ layer }: { layer: Layer }) {
 function FlatLayer({ layer }: { layer: Layer }) {
   const patterns = getPatternsByLayer(layer.id);
   return (
-    <section className="flex flex-col gap-6">
+    <section aria-labelledby={`layer-heading-${layer.id}`} className="flex flex-col gap-6">
       <LayerSectionTitle layer={layer} />
       {/* Cards under a flat layer are <h3> because parent heading is <h2>. */}
       <CardGrid patterns={patterns} headingLevel={3} />
