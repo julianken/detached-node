@@ -18,6 +18,13 @@ import type { ChangelogEntry } from './types'
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    date: '2026-05-03',
+    slug: 'routing',
+    type: 'added',
+    note: 'Initial authoring of the Routing pattern (wave-1, issue #173).',
+    author: 'julianken',
+  },
+  {
     // Phase 1A scaffold: type model, layers, 23 stubs, helpers, changelog.
     // Reflexion stub is added here; full authoring ships in Phase 1F (#158).
     // Date bumped to 2026-05-03 by #158 so lint-changelog matches the
