@@ -8,10 +8,24 @@
       "source": "crossref",
       "verifiedAt": "2026-05-03"
     },
+    "10.48550/arXiv.2210.03629": {
+      "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+      "year": 2022,
+      "firstAuthorSurname": "Yao",
+      "source": "openalex",
+      "verifiedAt": "2026-05-03"
+    },
     "10.48550/arXiv.2212.14024": {
       "title": "Demonstrate-Search-Predict: Composing retrieval and language models for knowledge-intensive NLP",
       "year": 2022,
       "firstAuthorSurname": "Khattab",
+      "source": "openalex",
+      "verifiedAt": "2026-05-03"
+    },
+    "10.48550/arXiv.2302.04761": {
+      "title": "Toolformer: Language Models Can Teach Themselves to Use Tools",
+      "year": 2023,
+      "firstAuthorSurname": "Schick",
       "source": "openalex",
       "verifiedAt": "2026-05-03"
     },

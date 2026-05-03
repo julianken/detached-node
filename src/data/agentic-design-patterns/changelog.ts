@@ -19,6 +19,13 @@ import type { ChangelogEntry } from './types'
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: '2026-05-03',
+    slug: 'tool-use-react',
+    type: 'added',
+    note: 'Initial authoring of Tool Use / ReAct pattern (Phase-2 wave-1).',
+    author: 'julianken',
+  },
+  {
+    date: '2026-05-03',
     slug: 'routing',
     type: 'added',
     note: 'Initial authoring of the Routing pattern (wave-1, issue #173).',
