@@ -74,3 +74,6 @@ scripts/.tmp-seed-images/
 
 # Transient workspaces
 tmp/
+
+# typecheck-sketches scratch (project-local so module resolution finds node_modules)
+/.adp-sketch-tmp/

@@ -20,8 +20,10 @@ export const CHANGELOG: ChangelogEntry[] = [
   {
     // Phase 1A scaffold: type model, layers, 23 stubs, helpers, changelog.
     // Reflexion stub is added here; full authoring ships in Phase 1F (#158).
-    // date is intentionally '2026-05-02' per issue #152 AC — #158 bumps it.
-    date: '2026-05-02',
+    // Date bumped to today by #158 so lint-changelog matches the now-authored
+    // Reflexion pattern's dateModified. Note text is mandated by #152 — do not
+    // change it; do not append a duplicate entry for this slug+type.
+    date: new Date().toISOString().slice(0, 10),
     slug: 'reflexion',
     type: 'added',
     note: 'Catalog scaffold launched; Reflexion exemplar shipped in #158.',
