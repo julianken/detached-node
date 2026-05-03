@@ -19,6 +19,13 @@ import type { ChangelogEntry } from './types'
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: '2026-05-03',
+    slug: 'prompt-chaining',
+    type: 'added',
+    note: 'Initial authoring of Prompt Chaining pattern (wave 1).',
+    author: 'julianken',
+  },
+  {
+    date: '2026-05-03',
     slug: 'planning',
     type: 'added',
     note: 'Author Planning satellite: planner-executor split, re-plan loop, ToT/HuggingGPT/Plan-and-Solve variants.',
