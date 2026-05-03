@@ -3,18 +3,20 @@
 // ---------------------------------------------------------------------------
 // Composes the 8 satellite-page content slots for a pattern. Server component.
 //
-// Slots (each conditionally rendered — empty arrays / missing fields are
-// suppressed so the satellite never shows an empty header):
-//   1. Summary       (bodySummary paragraphs)
-//   2. Diagram       (mermaidSource via <MermaidDiagram />)
-//   3. When to use   (whenToUse bullets)
-//   4. When NOT to   (whenNotToUse bullets)
-//   5. Real-world    (realWorldExamples — text + sourceUrl)
-//   6. Reader gotcha (readerGotcha — only present sometimes)
-//   7. Sketch        (implementationSketch — fenced code)
-//   8. Frameworks    (frameworks chips + SDK availability badge)
+// 8-slot anatomy:
+//   1. Overview      (bodySummary prose — no <h2>; sits directly under <h1>)
+//   2. Diagram       (mermaidSource via <MermaidDiagram /> — no <h2>; figure only)
+//   3. When to use   (<h2> — 2nd-person imperative bullets)
+//   4. When NOT to use (<h2> — conditional/noun-phrase bullets)
+//   5. In the wild   (<h2> — real-world examples with cited sources)
+//   6. Reader gotcha (<h2> — optional; must cite source)
+//   7. Implementation sketch (<h2> — TypeScript or pseudocode)
+//   [8. Frameworks rendered as subsection inside Implementation sketch — no standalone <h2>]
 //
-// Slot headings are <h2>; sub-headings inside a slot are <h3>.
+// h2-bearing sections: When to use, When NOT to use, In the wild,
+//   Reader gotcha, Implementation sketch.
+// Plus Related patterns (<h2> from RelatedPatternsRow) and
+//   References (<h2> from ReferencesSection) = 7 <h2>s total per satellite.
 //
 // Pseudocode banner appears only when sdkAvailability is 'python-only' or
 // 'no-sdk' — readers landing on a pattern with no first-party TS SDK get an
@@ -73,11 +75,10 @@ export function PatternBody({ pattern }: PatternBodyProps) {
 
   return (
     <div className="flex flex-col gap-12">
-      {/* 1. Summary */}
+      {/* 1. Overview — prose directly under <h1>; no <h2> heading per spec */}
       {pattern.bodySummary.length > 0 && (
-        <section aria-labelledby="summary-heading">
-          <SlotHeading id="summary-heading">Summary</SlotHeading>
-          <div className="mt-4 flex flex-col gap-4">
+        <section>
+          <div className="flex flex-col gap-4">
             {pattern.bodySummary.map((para, idx) => (
               <p
                 key={idx}
@@ -90,11 +91,11 @@ export function PatternBody({ pattern }: PatternBodyProps) {
         </section>
       )}
 
-      {/* 2. Diagram */}
+      {/* 2. Diagram — figure only; no <h2> heading per spec.
+          MermaidDiagram renders its own .mermaid-figure div internally. */}
       {pattern.mermaidSource && (
-        <section aria-labelledby="diagram-heading">
-          <SlotHeading id="diagram-heading">Diagram</SlotHeading>
-          <figure className="mt-4">
+        <section>
+          <figure>
             {/* IMPORTANT: only `{ source: string }` is passed across the
                 server/client boundary. No functions or closures. */}
             <MermaidDiagram source={pattern.mermaidSource} />
@@ -122,7 +123,7 @@ export function PatternBody({ pattern }: PatternBodyProps) {
       {/* 4. When NOT to use */}
       {pattern.whenNotToUse.length > 0 && (
         <section aria-labelledby="when-not-to-use-heading">
-          <SlotHeading id="when-not-to-use-heading">When not to use</SlotHeading>
+          <SlotHeading id="when-not-to-use-heading">When NOT to use</SlotHeading>
           <ul className="mt-4 list-disc pl-6 text-base leading-7 text-text-secondary">
             {pattern.whenNotToUse.map((item, idx) => (
               <li key={idx} className="[text-wrap:pretty]">{item}</li>
@@ -131,10 +132,10 @@ export function PatternBody({ pattern }: PatternBodyProps) {
         </section>
       )}
 
-      {/* 5. Real-world examples */}
+      {/* 5. In the wild (real-world examples) */}
       {pattern.realWorldExamples.length > 0 && (
         <section aria-labelledby="real-world-heading">
-          <SlotHeading id="real-world-heading">Real-world examples</SlotHeading>
+          <SlotHeading id="real-world-heading">In the wild</SlotHeading>
           <ul className="mt-4 flex flex-col gap-3">
             {pattern.realWorldExamples.map((ex, idx) => (
               <li key={idx} className="text-base leading-7 text-text-secondary [text-wrap:pretty]">
@@ -173,7 +174,7 @@ export function PatternBody({ pattern }: PatternBodyProps) {
         </section>
       )}
 
-      {/* 7. Implementation sketch */}
+      {/* 7. Implementation sketch — includes frameworks/SDK availability as a subsection (no standalone h2 for frameworks) */}
       {pattern.implementationSketch && (
         <section aria-labelledby="sketch-heading">
           <SlotHeading id="sketch-heading">Implementation sketch</SlotHeading>
@@ -192,32 +193,33 @@ export function PatternBody({ pattern }: PatternBodyProps) {
           <pre className="mt-4 overflow-x-auto rounded-sm border border-border bg-surface p-4 text-sm leading-6">
             <code className="font-mono text-text-primary">{pattern.implementationSketch}</code>
           </pre>
-        </section>
-      )}
-
-      {/* 8. Frameworks + SDK availability */}
-      {pattern.frameworks.length > 0 && (
-        <section aria-labelledby="frameworks-heading">
-          <SlotHeading id="frameworks-heading">Frameworks</SlotHeading>
-          <div className="mt-4 flex flex-col gap-3">
-            <div>
-              <h3 className="font-mono text-sm font-semibold uppercase tracking-[0.05em] text-text-tertiary">
-                SDK availability
-              </h3>
-              <p className="mt-1 text-sm text-text-secondary">
-                {SDK_LABELS[pattern.sdkAvailability]}
-              </p>
+          {/* Frameworks + SDK availability — subsection inside sketch; no standalone h2 */}
+          {pattern.frameworks.length > 0 && (
+            <div className="mt-6 flex flex-col gap-3">
+              <div>
+                <h3 className="font-mono text-sm font-semibold uppercase tracking-[0.05em] text-text-tertiary">
+                  SDK availability
+                </h3>
+                <p className="mt-1 text-sm text-text-secondary">
+                  {SDK_LABELS[pattern.sdkAvailability]}
+                </p>
+              </div>
+              <div>
+                <h3 className="font-mono text-sm font-semibold uppercase tracking-[0.05em] text-text-tertiary">
+                  Frameworks
+                </h3>
+                <ul className="mt-2 flex flex-wrap gap-2">
+                  {pattern.frameworks.map((fw) => (
+                    <li key={fw}>
+                      <span className="inline-flex items-center rounded-sm border border-border bg-surface px-2.5 py-1 font-mono text-sm text-text-secondary">
+                        {FRAMEWORK_LABELS[fw]}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
-            <ul className="flex flex-wrap gap-2">
-              {pattern.frameworks.map((fw) => (
-                <li key={fw}>
-                  <span className="inline-flex items-center rounded-sm border border-border bg-surface px-2.5 py-1 font-mono text-sm text-text-secondary">
-                    {FRAMEWORK_LABELS[fw]}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
+          )}
         </section>
       )}
     </div>
