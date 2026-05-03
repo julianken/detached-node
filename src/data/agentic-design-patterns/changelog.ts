@@ -18,6 +18,14 @@ import type { ChangelogEntry } from './types'
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    // Phase 2 wave-1: Tool Use / ReAct pattern authored (#174).
+    date: '2026-05-03',
+    slug: 'tool-use-react',
+    type: 'added',
+    note: 'Initial authoring of Tool Use / ReAct pattern (Phase-2 wave-1).',
+    author: 'julianken',
+  },
+  {
     // Phase 1A scaffold: type model, layers, 23 stubs, helpers, changelog.
     // Reflexion stub is added here; full authoring ships in Phase 1F (#158).
     // Date bumped to 2026-05-03 by #158 so lint-changelog matches the
