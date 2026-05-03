@@ -7,8 +7,11 @@ describe('CHANGELOG', () => {
     expect(Array.isArray(CHANGELOG)).toBe(true)
   })
 
-  it('has exactly 1 entry in Phase 1 (the scaffold launch)', () => {
-    expect(CHANGELOG).toHaveLength(1)
+  it('has at least 1 entry (Phase 1 scaffold launch + any Phase 2 authoring)', () => {
+    // Phase 1 shipped a single seed entry; Phase 2 prepends one entry per
+    // newly authored pattern. Both shapes must satisfy this assertion so
+    // wave-1 worktrees can land independently without colliding on this test.
+    expect(CHANGELOG.length).toBeGreaterThanOrEqual(1)
   })
 
   it('every entry has an ISO date', () => {
@@ -40,20 +43,27 @@ describe('CHANGELOG', () => {
     // entry's date is bumped to the Reflexion authoring date so lint-changelog's
     // "latest CHANGELOG date >= today" check passes alongside pattern.dateModified.
     // The note text is preserved verbatim per #152's AC (asserted below).
-    expect(CHANGELOG[0].date).toMatch(/^\d{4}-\d{2}-\d{2}$/)
-    expect(CHANGELOG[0].date >= '2026-05-02').toBe(true)
+    // Phase 2 prepends new authoring entries, so the Reflexion seed is no
+    // longer guaranteed to be at index 0 — find it by slug.
+    const reflexionSeed = CHANGELOG.find((e) => e.slug === 'reflexion')
+    expect(reflexionSeed).toBeDefined()
+    expect(reflexionSeed!.date).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+    expect(reflexionSeed!.date >= '2026-05-02').toBe(true)
   })
 
   it('Phase 1 seed entry slug is reflexion', () => {
-    expect(CHANGELOG[0].slug).toBe('reflexion')
+    const reflexionSeed = CHANGELOG.find((e) => e.slug === 'reflexion')
+    expect(reflexionSeed).toBeDefined()
   })
 
   it('Phase 1 seed entry type is added', () => {
-    expect(CHANGELOG[0].type).toBe('added')
+    const reflexionSeed = CHANGELOG.find((e) => e.slug === 'reflexion')
+    expect(reflexionSeed?.type).toBe('added')
   })
 
   it('Phase 1 seed entry note matches issue AC verbatim', () => {
-    expect(CHANGELOG[0].note).toBe(
+    const reflexionSeed = CHANGELOG.find((e) => e.slug === 'reflexion')
+    expect(reflexionSeed?.note).toBe(
       'Catalog scaffold launched; Reflexion exemplar shipped in #158.',
     )
   })
