@@ -1,34 +1,26 @@
 // ---------------------------------------------------------------------------
-// PatternBody
+// PatternBody (D1 spec-sheet layout)
 // ---------------------------------------------------------------------------
-// Composes the 8 satellite-page content slots for a pattern. Server component.
+// Slot composition for the satellite page, body region only. Header is
+// emitted by PatternHeader; meta/TOC/related by PatternStickyRail; references
+// + Overview/Background disclosures by [slug]/page.tsx.
 //
-// 8-slot anatomy:
-//   1. Overview      (bodySummary prose — no <h2>; sits directly under <h1>)
-//   2. Diagram       (mermaidSource via <MermaidDiagram /> — no <h2>; figure only)
-//   3. When to use   (<h2> — 2nd-person imperative bullets)
-//   4. When NOT to use (<h2> — conditional/noun-phrase bullets)
-//   5. In the wild   (<h2> — real-world examples with cited sources)
-//   6. Reader gotcha (<h2> — optional; must cite source)
-//   7. Implementation sketch (<h2> — TypeScript or pseudocode)
-//   [8. Frameworks rendered as subsection inside Implementation sketch — no standalone <h2>]
+// Body slot order (top to bottom):
+//   1. Diagram                — figure, no h2
+//   2. Decision matrix        — h2 "Decision" (replaces When-to-use + When-NOT)
+//   3. In the wild            — h2, source/claim table
+//   4. Reader gotcha          — h2, optional, red-bordered callout
+//   5. Implementation sketch  — h2, denser pre, frameworks subsection
 //
-// h2-bearing sections: When to use, When NOT to use, In the wild,
-//   Reader gotcha, Implementation sketch.
-// Plus Related patterns (<h2> from RelatedPatternsRow) and
-//   References (<h2> from ReferencesSection) = 7 <h2>s total per satellite.
-//
-// Pseudocode banner appears only when sdkAvailability is 'python-only' or
-// 'no-sdk' — readers landing on a pattern with no first-party TS SDK get an
-// upfront callout that the sketch is illustrative.
-//
-// Server/client boundary: MermaidDiagram is 'use client'. We pass ONLY the
-// `{ source: string }` prop — no functions, no closures, no JSX with
-// server-only state. Adding any non-serializable prop fails the Next 16 build
-// with "functions cannot be passed to client components".
+// Heading count: this body emits up to 4 h2s (Decision, In the wild,
+// Reader gotcha, Implementation sketch). Plus h2 from References + the
+// disclosure summaries (which are NOT h2s — <summary> elements). The E2E
+// fixture must be updated.
 
 import type { Framework, Pattern, SdkAvailability } from "@/data/agentic-design-patterns/types";
 import { MermaidDiagram } from "@/components/MermaidDiagram";
+import { DecisionMatrix } from "./DecisionMatrix";
+import { SourcedClaimTable } from "./SourcedClaimTable";
 
 interface PatternBodyProps {
   pattern: Pattern;
@@ -63,7 +55,7 @@ function SlotHeading({ id, children }: { id: string; children: React.ReactNode }
   return (
     <h2
       id={id}
-      className="font-mono text-xl font-semibold tracking-tight text-text-primary"
+      className="font-mono text-base font-semibold uppercase tracking-[0.08em] text-text-tertiary"
     >
       {children}
     </h2>
@@ -74,30 +66,12 @@ export function PatternBody({ pattern }: PatternBodyProps) {
   const showPseudocodeBanner = PSEUDOCODE_BANNER_SET.has(pattern.sdkAvailability);
 
   return (
-    <div className="flex flex-col gap-12">
-      {/* 1. Overview — prose directly under <h1>; no <h2> heading per spec */}
-      {pattern.bodySummary.length > 0 && (
-        <section>
-          <div className="flex flex-col gap-4">
-            {pattern.bodySummary.map((para, idx) => (
-              <p
-                key={idx}
-                className="max-w-prose text-base leading-7 text-text-secondary [text-wrap:pretty]"
-              >
-                {para}
-              </p>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* 2. Diagram — figure only; no <h2> heading per spec.
-          MermaidDiagram renders its own .mermaid-figure div internally. */}
+    <div className="flex flex-col gap-10">
+      {/* 1. Diagram */}
       {pattern.mermaidSource && (
         <section>
           <figure>
-            {/* IMPORTANT: only `{ source: string }` is passed across the
-                server/client boundary. No functions or closures. */}
+            {/* IMPORTANT: only `{ source: string }` crosses the server/client boundary. */}
             <MermaidDiagram source={pattern.mermaidSource} />
             {pattern.mermaidAlt && (
               <figcaption className="mt-2 text-sm text-text-tertiary italic">
@@ -108,57 +82,17 @@ export function PatternBody({ pattern }: PatternBodyProps) {
         </section>
       )}
 
-      {/* 3. When to use */}
-      {pattern.whenToUse.length > 0 && (
-        <section aria-labelledby="when-to-use-heading">
-          <SlotHeading id="when-to-use-heading">When to use</SlotHeading>
-          <ul className="mt-4 list-disc pl-6 text-base leading-7 text-text-secondary">
-            {pattern.whenToUse.map((item, idx) => (
-              <li key={idx} className="[text-wrap:pretty]">{item}</li>
-            ))}
-          </ul>
-        </section>
-      )}
+      {/* 2. Decision matrix — replaces When-to-use + When-NOT */}
+      <DecisionMatrix pattern={pattern} />
 
-      {/* 4. When NOT to use */}
-      {pattern.whenNotToUse.length > 0 && (
-        <section aria-labelledby="when-not-to-use-heading">
-          <SlotHeading id="when-not-to-use-heading">When NOT to use</SlotHeading>
-          <ul className="mt-4 list-disc pl-6 text-base leading-7 text-text-secondary">
-            {pattern.whenNotToUse.map((item, idx) => (
-              <li key={idx} className="[text-wrap:pretty]">{item}</li>
-            ))}
-          </ul>
-        </section>
-      )}
+      {/* 3. In the wild — source/claim table */}
+      <SourcedClaimTable pattern={pattern} />
 
-      {/* 5. In the wild (real-world examples) */}
-      {pattern.realWorldExamples.length > 0 && (
-        <section aria-labelledby="real-world-heading">
-          <SlotHeading id="real-world-heading">In the wild</SlotHeading>
-          <ul className="mt-4 flex flex-col gap-3">
-            {pattern.realWorldExamples.map((ex, idx) => (
-              <li key={idx} className="text-base leading-7 text-text-secondary [text-wrap:pretty]">
-                {ex.text}{" "}
-                <a
-                  href={ex.sourceUrl}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  className="text-accent underline underline-offset-4 hover:text-accent-muted"
-                >
-                  source
-                </a>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-
-      {/* 6. Reader gotcha */}
+      {/* 4. Reader gotcha — red-bordered callout, differentiates from neutral matrix */}
       {pattern.readerGotcha && (
-        <section aria-labelledby="gotcha-heading">
+        <section id="reader-gotcha" aria-labelledby="gotcha-heading" className="scroll-mt-24">
           <SlotHeading id="gotcha-heading">Reader gotcha</SlotHeading>
-          <div className="mt-4 rounded-sm border border-border bg-surface p-4">
+          <div className="mt-4 rounded-sm border-l-2 border-rose-400/60 border-y border-r border-border-subtle bg-surface p-4">
             <p className="text-base leading-7 text-text-secondary [text-wrap:pretty]">
               {pattern.readerGotcha.text}{" "}
               <a
@@ -174,50 +108,43 @@ export function PatternBody({ pattern }: PatternBodyProps) {
         </section>
       )}
 
-      {/* 7. Implementation sketch — includes frameworks/SDK availability as a subsection (no standalone h2 for frameworks) */}
+      {/* 5. Implementation sketch — denser code, frameworks subsection */}
       {pattern.implementationSketch && (
-        <section aria-labelledby="sketch-heading">
-          <SlotHeading id="sketch-heading">Implementation sketch</SlotHeading>
+        <section
+          id="implementation-sketch"
+          aria-labelledby="sketch-heading"
+          className="scroll-mt-24"
+        >
           {showPseudocodeBanner && (
             <div
               role="note"
-              className="mt-4 rounded-sm border border-border-subtle bg-surface px-4 py-3 text-sm text-text-tertiary"
+              className="mb-4 rounded-sm border border-border-subtle bg-surface px-4 py-3 text-sm text-text-tertiary"
             >
               <span className="font-mono uppercase tracking-[0.05em] text-text-secondary">
                 Pseudocode:
               </span>{" "}
-              No first-party TypeScript SDK is available for this pattern
-              ({SDK_LABELS[pattern.sdkAvailability]}). The sketch below is illustrative.
+              No first-party TypeScript SDK ({SDK_LABELS[pattern.sdkAvailability]}). The sketch below is illustrative.
             </div>
           )}
-          <pre className="mt-4 overflow-x-auto rounded-sm border border-border bg-surface p-4 text-sm leading-6">
+          <SlotHeading id="sketch-heading">Implementation sketch</SlotHeading>
+          <pre className="mt-4 overflow-x-auto rounded-sm border border-border bg-surface p-4 text-[0.8125rem] leading-5">
             <code className="font-mono text-text-primary">{pattern.implementationSketch}</code>
           </pre>
-          {/* Frameworks + SDK availability — subsection inside sketch; no standalone h2 */}
           {pattern.frameworks.length > 0 && (
-            <div className="mt-6 flex flex-col gap-3">
-              <div>
-                <h3 className="font-mono text-sm font-semibold uppercase tracking-[0.05em] text-text-tertiary">
-                  SDK availability
-                </h3>
-                <p className="mt-1 text-sm text-text-secondary">
-                  {SDK_LABELS[pattern.sdkAvailability]}
-                </p>
-              </div>
-              <div>
-                <h3 className="font-mono text-sm font-semibold uppercase tracking-[0.05em] text-text-tertiary">
-                  Frameworks
-                </h3>
-                <ul className="mt-2 flex flex-wrap gap-2">
-                  {pattern.frameworks.map((fw) => (
-                    <li key={fw}>
-                      <span className="inline-flex items-center rounded-sm border border-border bg-surface px-2.5 py-1 font-mono text-sm text-text-secondary">
-                        {FRAMEWORK_LABELS[fw]}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+            <div className="mt-4 flex flex-wrap items-baseline gap-x-4 gap-y-2 text-xs text-text-tertiary">
+              <span className="font-mono uppercase tracking-[0.08em]">
+                {SDK_LABELS[pattern.sdkAvailability]}
+              </span>
+              <span aria-hidden="true">·</span>
+              <ul className="flex flex-wrap gap-2">
+                {pattern.frameworks.map((fw) => (
+                  <li key={fw}>
+                    <span className="inline-flex items-center rounded-sm border border-border bg-surface px-2 py-0.5 font-mono text-xs text-text-secondary">
+                      {FRAMEWORK_LABELS[fw]}
+                    </span>
+                  </li>
+                ))}
+              </ul>
             </div>
           )}
         </section>

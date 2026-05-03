@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 import { SATELLITE_H2_HEADINGS } from './_satellite-fixtures'
 // No fixture import — these routes are public and DB-independent.
 
-test('renders Reflexion: 1 h1 + 7 h2 slots + Overview prose + Mermaid SVG', async ({ page }) => {
+test('renders Reflexion: 1 h1 + 5 h2 slots + Overview disclosure + Mermaid SVG', async ({ page }) => {
   await page.goto('/agentic-design-patterns/reflexion')
   await expect(page.getByRole('heading', { level: 1, name: 'Reflexion' })).toBeVisible()
   for (const h of SATELLITE_H2_HEADINGS) {
