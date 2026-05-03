@@ -6,6 +6,13 @@
 // The Overview slot (bodySummary) renders as prose directly under <h1> with
 // NO <h2> heading. The Diagram slot is a <figure> with no <h2>. The remaining
 // 7 slots each carry an <h2> heading.
+//
+// COUPLING: 'Reader gotcha' is technically optional in the Pattern type
+// (PatternBody renders it conditionally on pattern.readerGotcha). The full
+// 7-h2 set assumes the canonical E2E target defines all optional slots.
+// Reflexion (T5) defines readerGotcha. Before reusing this fixture against a
+// different pattern, verify it has all 7 h2 sections — otherwise filter
+// SATELLITE_H2_HEADINGS to the slots that pattern actually renders.
 
 export const SATELLITE_H2_HEADINGS = [
   { level: 2, name: 'When to use' },

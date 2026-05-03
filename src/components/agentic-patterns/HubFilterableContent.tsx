@@ -202,9 +202,16 @@ export function HubFilterableContent({ patterns, layerFiltered = false }: HubFil
       ) : groupedByLayer && groupedByLayer.length > 0 ? (
         <div className="flex flex-col gap-16">
           {groupedByLayer.map(({ layer, patterns: layerPatterns }) => (
-            <section key={layer.id} className="flex flex-col gap-6">
+            <section
+              key={layer.id}
+              className="flex flex-col gap-6"
+              aria-labelledby={`filtered-layer-heading-${layer.id}`}
+            >
               <header className="flex flex-col gap-1">
-                <h2 className="font-mono text-2xl font-semibold tracking-tight text-text-primary">
+                <h2
+                  id={`filtered-layer-heading-${layer.id}`}
+                  className="font-mono text-2xl font-semibold tracking-tight text-text-primary"
+                >
                   Layer {layer.number} — {layer.title}
                 </h2>
                 <p className="text-sm text-text-tertiary italic">{layer.question}</p>
