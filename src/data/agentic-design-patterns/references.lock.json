@@ -36,6 +36,13 @@
       "source": "crossref",
       "verifiedAt": "2026-05-03"
     },
+    "10.48550/arXiv.2203.11171": {
+      "title": "Self-Consistency Improves Chain of Thought Reasoning in Language Models",
+      "year": 2022,
+      "firstAuthorSurname": "Wang",
+      "source": "openalex",
+      "verifiedAt": "2026-05-04"
+    },
     "10.48550/arXiv.2210.03629": {
       "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
       "year": 2022,
@@ -138,6 +145,13 @@
       "title": "Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena",
       "year": 2023,
       "firstAuthorSurname": "Zheng",
+      "source": "openalex",
+      "verifiedAt": "2026-05-04"
+    },
+    "10.48550/arXiv.2307.15337": {
+      "title": "Skeleton-of-Thought: Prompting LLMs for Efficient Parallel Generation",
+      "year": 2023,
+      "firstAuthorSurname": "Ning",
       "source": "openalex",
       "verifiedAt": "2026-05-04"
     },

@@ -19,6 +19,13 @@ import type { ChangelogEntry } from './types'
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: '2026-05-04',
+    slug: 'parallelization',
+    type: 'added',
+    note: 'Author Parallelization satellite: fan-out with deterministic aggregator, Sectioning vs Voting variants, self-consistency diversity gotcha.',
+    author: 'julianken',
+  },
+  {
+    date: '2026-05-04',
     slug: 'a2a',
     type: 'added',
     note: 'Author A2A satellite: Agent Card discovery, Task lifecycle, distinction from MCP and in-process Handoffs.',
