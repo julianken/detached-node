@@ -19,6 +19,13 @@ import type { ChangelogEntry } from './types'
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: '2026-05-03',
+    slug: 'checkpointing',
+    type: 'added',
+    note: 'Author Checkpointing satellite: durable agent state across crashes; snapshot vs replay variants; determinism gotcha.',
+    author: 'julianken',
+  },
+  {
+    date: '2026-05-03',
     slug: 'context-engineering',
     type: 'added',
     note: 'Author Context Engineering pattern (selection, ranking, layout, cache-aware assembly).',

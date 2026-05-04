@@ -1,6 +1,13 @@
 {
   "version": 1,
   "doiToReference": {
+    "10.1145/1807167.1807184": {
+      "title": "Pregel",
+      "year": 2010,
+      "firstAuthorSurname": "Malewicz",
+      "source": "crossref",
+      "verifiedAt": "2026-05-04"
+    },
     "10.1145/3491102.3517582": {
       "title": "AI Chains: Transparent and Controllable Human-AI Interaction by Chaining Large Language Model Prompts",
       "year": 2022,
