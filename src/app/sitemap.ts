@@ -2,6 +2,7 @@ import { MetadataRoute } from "next";
 import { getPublishedPosts } from "@/lib/queries/posts";
 import { getPublishedPages } from "@/lib/queries/pages";
 import { siteUrl } from "@/lib/site-config";
+import { PATTERNS } from "@/data/agentic-design-patterns/index";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -31,6 +32,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
+  // Agentic Design Patterns: hub + changelog + 23 satellite URLs.
+  const adpHubRoutes: MetadataRoute.Sitemap = [
+    {
+      url: `${siteUrl}/agentic-design-patterns`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.95,
+    },
+    {
+      url: `${siteUrl}/agentic-design-patterns/changelog`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.7,
+    },
+  ];
+  const adpSatelliteRoutes: MetadataRoute.Sitemap = PATTERNS.filter(
+    (p) => !p.archived,
+  ).map((p) => ({
+    url: `${siteUrl}/agentic-design-patterns/${p.slug}`,
+    lastModified: new Date(p.dateModified),
+    changeFrequency: "monthly" as const,
+    priority: 0.85,
+  }));
+
   // Fetch published posts
   const posts = await getPublishedPosts();
   const postRoutes: MetadataRoute.Sitemap = posts.map((post) => ({
@@ -51,5 +76,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.6,
     }));
 
-  return [...staticRoutes, ...postRoutes, ...pageRoutes];
+  return [
+    ...staticRoutes,
+    ...adpHubRoutes,
+    ...adpSatelliteRoutes,
+    ...postRoutes,
+    ...pageRoutes,
+  ];
 }
