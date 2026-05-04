@@ -18,6 +18,13 @@ import type { ChangelogEntry } from './types'
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    date: '2026-05-04',
+    slug: 'handoffs-swarm',
+    type: 'added',
+    note: 'Author Handoffs / Swarm satellite: sequential conversation ownership, transfer-as-tool-call, supervisor variant.',
+    author: 'julianken',
+  },
+  {
     date: '2026-05-03',
     slug: 'guardrails',
     type: 'added',
