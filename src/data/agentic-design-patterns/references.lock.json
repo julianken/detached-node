@@ -50,6 +50,13 @@
       "source": "openalex",
       "verifiedAt": "2026-05-03"
     },
+    "10.48550/arXiv.2303.16634": {
+      "title": "G-Eval: NLG Evaluation using GPT-4 with Better Human Alignment",
+      "year": 2023,
+      "firstAuthorSurname": "Liu",
+      "source": "openalex",
+      "verifiedAt": "2026-05-04"
+    },
     "10.48550/arXiv.2303.17580": {
       "title": "HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in Hugging Face",
       "year": 2023,
@@ -85,6 +92,13 @@
       "source": "openalex",
       "verifiedAt": "2026-05-03"
     },
+    "10.48550/arXiv.2306.05685": {
+      "title": "Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena",
+      "year": 2023,
+      "firstAuthorSurname": "Zheng",
+      "source": "openalex",
+      "verifiedAt": "2026-05-04"
+    },
     "10.48550/arXiv.2309.15789": {
       "title": "Large Language Model Routing with Benchmark Datasets",
       "year": 2023,
@@ -98,6 +112,13 @@
       "firstAuthorSurname": "Gao",
       "source": "openalex",
       "verifiedAt": "2026-05-03"
+    },
+    "10.48550/arXiv.2404.04475": {
+      "title": "Length-Controlled AlpacaEval: A Simple Way to Debias Automatic Evaluators",
+      "year": 2024,
+      "firstAuthorSurname": "Dubois",
+      "source": "openalex",
+      "verifiedAt": "2026-05-04"
     },
     "10.48550/arXiv.2406.18665": {
       "title": "RouteLLM: Learning to Route LLMs with Preference Data",
