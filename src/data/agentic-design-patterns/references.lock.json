@@ -120,6 +120,20 @@
       "source": "openalex",
       "verifiedAt": "2026-05-03"
     },
+    "10.48550/arXiv.2305.14325": {
+      "title": "Improving Factuality and Reasoning in Language Models through Multiagent Debate",
+      "year": 2023,
+      "firstAuthorSurname": "Du",
+      "source": "openalex",
+      "verifiedAt": "2026-05-04"
+    },
+    "10.48550/arXiv.2305.19118": {
+      "title": "Encouraging Divergent Thinking in Large Language Models through Multi-Agent Debate",
+      "year": 2023,
+      "firstAuthorSurname": "Tian",
+      "source": "openalex",
+      "verifiedAt": "2026-05-04"
+    },
     "10.48550/arXiv.2306.05685": {
       "title": "Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena",
       "year": 2023,
@@ -175,6 +189,13 @@
       "firstAuthorSurname": "Gao",
       "source": "openalex",
       "verifiedAt": "2026-05-03"
+    },
+    "10.48550/arXiv.2402.06782": {
+      "title": "Debating with More Persuasive LLMs Leads to More Truthful Answers",
+      "year": 2024,
+      "firstAuthorSurname": "Khan",
+      "source": "openalex",
+      "verifiedAt": "2026-05-04"
     },
     "10.48550/arXiv.2404.04475": {
       "title": "Length-Controlled AlpacaEval: A Simple Way to Debias Automatic Evaluators",
