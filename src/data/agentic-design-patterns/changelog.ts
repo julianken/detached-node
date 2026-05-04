@@ -19,6 +19,13 @@ import type { ChangelogEntry } from './types'
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: '2026-05-04',
+    slug: 'evaluator-optimizer',
+    type: 'added',
+    note: 'Author Evaluator-Optimizer satellite: within-attempt generator-critic loop, contrast with Reflexion, base-capability-ceiling gotcha.',
+    author: 'julianken',
+  },
+  {
+    date: '2026-05-04',
     slug: 'code-agent',
     type: 'added',
     note: 'Author Code Agent satellite: read-edit-test loop, Agent-Computer Interface as the differentiator from generic Tool Use, edit-format gotcha.',
