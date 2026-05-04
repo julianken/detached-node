@@ -57,6 +57,13 @@
       "source": "openalex",
       "verifiedAt": "2026-05-03"
     },
+    "10.48550/arXiv.2302.12173": {
+      "title": "Not what you've signed up for: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection",
+      "year": 2023,
+      "firstAuthorSurname": "Greshake",
+      "source": "openalex",
+      "verifiedAt": "2026-05-04"
+    },
     "10.48550/arXiv.2303.11366": {
       "title": "Reflexion: Language Agents with Verbal Reinforcement Learning",
       "year": 2023,
@@ -131,6 +138,20 @@
       "title": "MemGPT: Towards LLMs as Operating Systems",
       "year": 2023,
       "firstAuthorSurname": "Packer",
+      "source": "openalex",
+      "verifiedAt": "2026-05-04"
+    },
+    "10.48550/arXiv.2310.10501": {
+      "title": "NeMo Guardrails: A Toolkit for Controllable and Safe LLM Applications with Programmable Rails",
+      "year": 2023,
+      "firstAuthorSurname": "Rebedea",
+      "source": "openalex",
+      "verifiedAt": "2026-05-04"
+    },
+    "10.48550/arXiv.2312.06674": {
+      "title": "Llama Guard: LLM-based Input-Output Safeguard for Human-AI Conversations",
+      "year": 2023,
+      "firstAuthorSurname": "Inan",
       "source": "openalex",
       "verifiedAt": "2026-05-04"
     },
