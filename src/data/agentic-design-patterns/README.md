@@ -37,7 +37,7 @@ Every PR that populates a pattern stub must check off:
 - [ ] All required `Pattern` fields populated; no empty strings or empty arrays in content slots
 - [ ] `pnpm typecheck` passes
 - [ ] `pnpm lint` passes (includes implementation-sketch typecheck in Phase 2)
-- [ ] Read the style guide (`docs/superpowers/specs/agentic-design-patterns-style-guide.md`); voice matches Reflexion exemplar
+- [ ] Voice matches the Reflexion exemplar (`patterns/reflexion.ts`) — terse, diagnostic, third-person observational; bullets second-person imperative for `whenToUse` and conditional/noun-phrase for `whenNotToUse`
 - [ ] No prose copied or paraphrased from any source
 - [ ] `mermaidSource` diagram renders in `pnpm dev` (visual check); `mermaidAlt` written
 - [ ] `oneLineSummary.length <= 90` (enforced by unit test)
