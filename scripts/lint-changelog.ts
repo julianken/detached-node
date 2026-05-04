@@ -10,8 +10,12 @@
  *   1. Detect modified pattern files via `git diff --name-only origin/main...HEAD`.
  *      For every src/data/agentic-design-patterns/patterns/<slug>.ts in the
  *      diff that has been authored (non-empty implementationSketch), ensure
- *      CHANGELOG contains an entry with that slug whose date is >= today (i.e.
- *      you didn't forget to bump the date).
+ *      CHANGELOG contains an entry with that slug whose date is a valid ISO
+ *      date that is NOT in the future. The original rule required >= today
+ *      (force-bump on every edit), which broke long-lived feature branches:
+ *      patterns authored on day N would fail the lint on day N+1 even though
+ *      their CHANGELOG entry was honestly dated. The relaxed rule still
+ *      catches forged future dates and missing entries.
  *
  *      Empty stubs are skipped — they're scaffolding, not content. The audit
  *      trail starts when a pattern has content.
@@ -75,8 +79,11 @@ function isAuthored(slug: string): boolean {
 }
 
 function main(): void {
-  // Check #1: every modified AUTHORED pattern has a CHANGELOG entry dated >= today.
+  // Check #1: every modified AUTHORED pattern has a CHANGELOG entry whose
+  // date is a valid ISO yyyy-mm-dd that is not in the future. Any past-or-today
+  // date is honest. Future dates are a forgery / clock-skew signal.
   const today = todayIso()
+  const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}$/
   const touchedSlugs = modifiedPatternSlugs()
   const authoredTouched = touchedSlugs.filter(isAuthored)
   const skippedStubs = touchedSlugs.length - authoredTouched.length
@@ -90,10 +97,17 @@ function main(): void {
       )
       continue
     }
+    for (const entry of entries) {
+      if (!ISO_DATE_RE.test(entry.date)) {
+        failures.push(
+          `pattern "${slug}" CHANGELOG entry has invalid date "${entry.date}" — must be yyyy-mm-dd`,
+        )
+      }
+    }
     const latest = entries.reduce((acc, e) => (e.date > acc ? e.date : acc), '0000-00-00')
-    if (latest < today) {
+    if (latest > today) {
       failures.push(
-        `pattern "${slug}" was modified but its latest CHANGELOG entry is dated ${latest} (< today ${today}) — bump it`,
+        `pattern "${slug}" CHANGELOG entry is dated ${latest} (> today ${today}) — future-dated entries are not permitted`,
       )
     }
   }
