@@ -64,6 +64,13 @@
       "source": "openalex",
       "verifiedAt": "2026-05-03"
     },
+    "10.48550/arXiv.2304.03442": {
+      "title": "Generative Agents: Interactive Simulacra of Human Behavior",
+      "year": 2023,
+      "firstAuthorSurname": "Park",
+      "source": "openalex",
+      "verifiedAt": "2026-05-04"
+    },
     "10.48550/arXiv.2305.04091": {
       "title": "Plan-and-Solve Prompting: Improving Zero-Shot Chain-of-Thought Reasoning by Large Language Models",
       "year": 2023,
@@ -91,6 +98,13 @@
       "firstAuthorSurname": "Shnitzer",
       "source": "openalex",
       "verifiedAt": "2026-05-03"
+    },
+    "10.48550/arXiv.2310.08560": {
+      "title": "MemGPT: Towards LLMs as Operating Systems",
+      "year": 2023,
+      "firstAuthorSurname": "Packer",
+      "source": "openalex",
+      "verifiedAt": "2026-05-04"
     },
     "10.48550/arXiv.2312.10997": {
       "title": "Retrieval-Augmented Generation for Large Language Models: A Survey",
