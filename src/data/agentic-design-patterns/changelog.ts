@@ -18,6 +18,13 @@ import type { ChangelogEntry } from './types'
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    date: '2026-05-04',
+    slug: 'a2a',
+    type: 'added',
+    note: 'Author A2A satellite: Agent Card discovery, Task lifecycle, distinction from MCP and in-process Handoffs.',
+    author: 'julianken',
+  },
+  {
     date: '2026-05-03',
     slug: 'guardrails',
     type: 'added',
