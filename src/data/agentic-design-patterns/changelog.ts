@@ -19,6 +19,13 @@ import type { ChangelogEntry } from './types'
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: '2026-05-04',
+    slug: 'parallelization',
+    type: 'added',
+    note: 'Author Parallelization satellite: fan-out with deterministic aggregator, Sectioning vs Voting variants, self-consistency diversity gotcha.',
+    author: 'julianken',
+  },
+  {
+    date: '2026-05-04',
     slug: 'agentic-rag',
     type: 'added',
     note: 'Initial authoring of Agentic RAG pattern (iterative retrieval loop; contrasts with single-shot RAG).',
