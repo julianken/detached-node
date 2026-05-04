@@ -127,6 +127,13 @@
       "source": "openalex",
       "verifiedAt": "2026-05-04"
     },
+    "10.48550/arXiv.2308.00352": {
+      "title": "MetaGPT: Meta Programming for A Multi-Agent Collaborative Framework",
+      "year": 2023,
+      "firstAuthorSurname": "Hong",
+      "source": "openalex",
+      "verifiedAt": "2026-05-04"
+    },
     "10.48550/arXiv.2308.08155": {
       "title": "AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation",
       "year": 2023,

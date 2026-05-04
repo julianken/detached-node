@@ -3,20 +3,156 @@ import type { Pattern } from '../types'
 export const pattern: Pattern = {
   slug: 'orchestrator-workers',
   name: 'Orchestrator-Workers',
+  alternativeNames: ['Manager-Workers', 'Hierarchical Multi-Agent', 'Coordinator-Specialist'],
   layerId: 'topology',
   topologySubtier: 'multi-agent',
-  oneLineSummary: '', // TODO: fill in ≤ 90 chars
-  bodySummary: [],
-  mermaidSource: '',
-  mermaidAlt: '',
-  whenToUse: [],
-  whenNotToUse: [],
-  realWorldExamples: [],
-  implementationSketch: '',
-  sdkAvailability: 'no-sdk',
+  oneLineSummary: 'A central planner spawns worker agents per task, then merges their outputs.',
+  bodySummary: [
+    'Orchestrator-Workers structures a multi-agent run as a hub with spokes. A central orchestrator inspects the incoming request, decides at runtime which sub-tasks the work decomposes into, and dispatches each one to a fresh worker agent with its own prompt, tool surface, and context window. When the workers return, the orchestrator aggregates their outputs into the response the caller sees. The decomposition is dynamic: the orchestrator chooses how many workers to spawn and what each one is asked to do based on the request, not by reading off a fixed pipeline. Workers do not talk to each other; they talk only to the orchestrator, and the topology stays a tree.',
+    'The pattern sits between two simpler shapes that resemble it. Parallelization fans the same prompt across a fixed number of workers and votes; the decomposition is decided at design time, not by an LLM at runtime. Planning splits a single agent into a planner and an executor, but the executor walks one step list in one process — there is no second model call per step in a separate context. Orchestrator-Workers earns its name when both conditions hold: the sub-tasks are not enumerable up front, and each one benefits from running in isolation. AutoGen and MetaGPT formalise the role split; Anthropic frames the workflow as the right answer when "you can\'t predict the subtasks."',
+    'The hard part is the orchestrator, not the workers. A planner that under-decomposes hands a single worker the whole job and adds latency for nothing; one that over-decomposes shatters context the workers needed and pays N times for the same prompt overhead. The aggregation step is where partial worker failures and disagreements surface, and a naive orchestrator that concatenates worker outputs verbatim leaks duplicate sentences and contradicts itself. Production deployments instrument worker count, fan-out latency, and aggregation conflicts, and treat the orchestrator prompt as the critical path — every regression there multiplies through the workers below.',
+  ],
+  mermaidSource: `graph TD
+  A[Incoming task] --> B[Orchestrator]
+  B --> C[Plan: list of worker briefs]
+  C --> D[Worker 1]
+  C --> E[Worker 2]
+  C --> F[Worker N]
+  D --> G[Aggregator]
+  E --> G
+  F --> G
+  G --> H[Synthesised response]`,
+  mermaidAlt: 'A flowchart in which an incoming task feeds an orchestrator node that produces a plan listing worker briefs; the plan fans out to N parallel worker nodes whose outputs converge on an aggregator node that emits a single synthesised response.',
+  whenToUse: [
+    'Apply when the request decomposes into sub-tasks the planner can only enumerate after reading the input — multi-file code edits, deep research over an open question set, document pipelines that branch by content type.',
+    'Use where each sub-task benefits from a clean context (its own prompt, tool subset, and scratch space) so workers do not pollute each other or the orchestrator.',
+    'Reach for it when the orchestrator can be a stronger model than the workers and the cost is dominated by worker turns — Anthropic\'s research system pairs an Opus orchestrator with Sonnet workers for that reason.',
+    'Prefer it when the aggregation step has clear merge semantics (concatenation by section, voting, schema-typed merge) so the orchestrator can write an aggregator the workers all target.',
+  ],
+  whenNotToUse: [
+    'When the sub-tasks are known in advance and identical, Parallelization is the simpler shape and avoids paying for the orchestrator turn on every request.',
+    'Without observable per-worker outcomes, partial failures vanish into the aggregated response and the orchestrator silently presents broken work as finished.',
+    'When workers need to coordinate mid-task or react to each other\'s findings, the tree topology forces every exchange through the orchestrator and an a2a-style peer protocol or debate is a better fit.',
+  ],
+  realWorldExamples: [
+    {
+      text: 'Anthropic documents Claude\'s Research feature as an orchestrator-workers system: a lead Claude agent plans the search, spawns subagents that explore branches in parallel with their own context windows, and a final agent synthesises the report — exactly the hub-and-spoke shape this pattern names.',
+      sourceUrl: 'https://www.anthropic.com/engineering/multi-agent-research-system',
+    },
+    {
+      text: 'CrewAI ships a hierarchical Process in which a manager agent — generated by the framework or supplied by the developer — assigns tasks to specialist agents and reviews their outputs before composing the final result.',
+      sourceUrl: 'https://docs.crewai.com/en/concepts/processes',
+    },
+    {
+      text: 'MetaGPT encodes Standard Operating Procedures as a hierarchy of specialised role agents (Product Manager, Architect, Engineer, QA) coordinated by an upstream planner that routes artifacts between them, demonstrating the pattern on a software-company workflow.',
+      sourceUrl: 'https://github.com/FoundationAgents/MetaGPT',
+    },
+  ],
+  implementationSketch: `import { generateObject, generateText } from 'ai'
+import { openai } from '@ai-sdk/openai'
+import { z } from 'zod'
+
+const Plan = z.object({
+  workers: z.array(z.object({ role: z.string(), brief: z.string() })).min(1).max(6),
+})
+
+export async function orchestrate(task: string): Promise<string> {
+  const { object: plan } = await generateObject({
+    model: openai('gpt-4o'),
+    schema: Plan,
+    prompt: \`Decompose into 1-6 worker briefs.\\nTask: \${task}\`,
+  })
+  const outputs = await Promise.all(
+    plan.workers.map(({ role, brief }) =>
+      generateText({
+        model: openai('gpt-4o-mini'),
+        system: \`You are the \${role} worker. Return only your slice.\`,
+        prompt: brief,
+      }).then((r) => \`[\${role}] \${r.text}\`),
+    ),
+  )
+  const { text } = await generateText({
+    model: openai('gpt-4o'),
+    prompt: \`Task: \${task}\\nWorker outputs:\\n\${outputs.join('\\n\\n')}\\nMerge into one coherent response.\`,
+  })
+  return text
+}
+
+export {}
+`,
+  sdkAvailability: 'first-party-ts',
+  readerGotcha: {
+    text: 'Anthropic reports their multi-agent research system uses about 15× the tokens of a single Claude chat — the planner pays once, every spawned worker pays the prompt overhead again, and the aggregator pays a third time over the merged context. The pattern only earns the cost when the task is parallelisable enough that wall-clock and quality wins outweigh the multiplier.',
+    sourceUrl: 'https://www.anthropic.com/engineering/multi-agent-research-system',
+  },
   relatedSlugs: [],
-  frameworks: [],
-  references: [],
+  frameworks: ['langgraph', 'crew-ai', 'autogen', 'vercel-ai-sdk'],
+  references: [
+    {
+      title: 'Building Effective Agents',
+      url: 'https://www.anthropic.com/engineering/building-effective-agents',
+      authors: 'Anthropic',
+      year: 2024,
+      type: 'essay',
+      note: 'names orchestrator-workers as a workflow and frames the dynamic-decomposition criterion',
+    },
+    {
+      title: 'How we built our multi-agent research system',
+      url: 'https://www.anthropic.com/engineering/multi-agent-research-system',
+      authors: 'Anthropic',
+      year: 2025,
+      type: 'essay',
+      note: 'production deployment of the pattern; source for the 15× token-cost figure',
+    },
+    {
+      title: 'AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation',
+      url: 'https://arxiv.org/abs/2308.08155',
+      authors: 'Wu et al.',
+      year: 2023,
+      venue: 'arXiv preprint',
+      type: 'paper',
+      doi: '10.48550/arXiv.2308.08155',
+      note: 'manager-style conversational agent that delegates to specialised workers',
+    },
+    {
+      title: 'MetaGPT: Meta Programming for A Multi-Agent Collaborative Framework',
+      url: 'https://arxiv.org/abs/2308.00352',
+      authors: 'Hong et al.',
+      year: 2023,
+      venue: 'ICLR 2024',
+      type: 'paper',
+      doi: '10.48550/arXiv.2308.00352',
+      note: 'role-specialised hierarchy coordinated by an SOP-encoded planner',
+    },
+    {
+      title: 'LangGraph — Workflows and agents (orchestrator-workers section)',
+      url: 'https://langchain-ai.github.io/langgraph/tutorials/workflows/',
+      authors: 'LangChain team',
+      year: 2025,
+      type: 'docs',
+      accessedAt: '2026-05-04',
+      note: 'reference implementation using Send to fan out to dynamic worker subgraphs',
+    },
+    {
+      title: 'Agentic Design Patterns, Chapter 7: Multi-Agent Collaboration',
+      url: 'https://link.springer.com/book/10.1007/978-3-032-01402-3',
+      authors: 'Antonio Gulli',
+      year: 2026,
+      venue: 'Springer',
+      type: 'book',
+      pages: [102, 119],
+    },
+    {
+      title: 'CrewAI — Hierarchical Process',
+      url: 'https://docs.crewai.com/en/concepts/processes',
+      authors: 'CrewAI team',
+      year: 2025,
+      type: 'docs',
+      accessedAt: '2026-05-04',
+      note: 'manager agent assigns and reviews specialist work in the framework primitive',
+    },
+  ],
   addedAt: '2026-05-03',
-  dateModified: '2026-05-03',
+  dateModified: '2026-05-04',
+  lastChangeNote: 'Author Orchestrator-Workers satellite: hub-and-spoke planner/worker/aggregator topology, AutoGen/MetaGPT/Claude-Research framing, token-multiplier gotcha.',
 }
