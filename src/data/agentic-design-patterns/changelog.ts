@@ -19,6 +19,13 @@ import type { ChangelogEntry } from './types'
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: '2026-05-03',
+    slug: 'evaluation-llm-as-judge',
+    type: 'added',
+    note: 'Initial authoring of the Evaluation (LLM-as-Judge) pattern (wave-2, issue #179).',
+    author: 'julianken',
+  },
+  {
+    date: '2026-05-03',
     slug: 'memory-management',
     type: 'added',
     note: 'Initial authoring of Memory Management pattern (wave 2; tiered working/episodic/semantic stores).',
