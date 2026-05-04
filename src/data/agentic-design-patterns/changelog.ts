@@ -18,6 +18,13 @@ import type { ChangelogEntry } from './types'
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    date: '2026-05-04',
+    slug: 'mcp',
+    type: 'added',
+    note: 'Author MCP satellite: open protocol for cross-vendor tool/resource/prompt discovery; tool-poisoning gotcha.',
+    author: 'julianken',
+  },
+  {
     date: '2026-05-03',
     slug: 'guardrails',
     type: 'added',
