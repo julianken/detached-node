@@ -36,6 +36,13 @@
       "source": "crossref",
       "verifiedAt": "2026-05-03"
     },
+    "10.48550/arXiv.1706.03741": {
+      "title": "Deep reinforcement learning from human preferences",
+      "year": 2017,
+      "firstAuthorSurname": "Christiano",
+      "source": "openalex",
+      "verifiedAt": "2026-05-04"
+    },
     "10.48550/arXiv.2203.11171": {
       "title": "Self-Consistency Improves Chain of Thought Reasoning in Language Models",
       "year": 2022,

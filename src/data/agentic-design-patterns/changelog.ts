@@ -19,6 +19,13 @@ import type { ChangelogEntry } from './types'
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: '2026-05-04',
+    slug: 'human-in-the-loop',
+    type: 'added',
+    note: 'Author Human in the Loop satellite: pause-snapshot-resume contract, three sub-variants, automation-bias gotcha.',
+    author: 'julianken',
+  },
+  {
+    date: '2026-05-04',
     slug: 'parallelization',
     type: 'added',
     note: 'Author Parallelization satellite: fan-out with deterministic aggregator, Sectioning vs Voting variants, self-consistency diversity gotcha.',
