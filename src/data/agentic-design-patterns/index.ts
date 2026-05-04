@@ -152,3 +152,4 @@ export function getCatalogDateModified(): string {
 export function getCatalogPatternCount(): number {
   return PATTERNS.filter((p) => !p.archived).length
 }
+// CI re-trigger touch — safe to remove
