@@ -106,6 +106,13 @@
       "source": "openalex",
       "verifiedAt": "2026-05-03"
     },
+    "10.48550/arXiv.2305.06983": {
+      "title": "Active Retrieval Augmented Generation",
+      "year": 2023,
+      "firstAuthorSurname": "Jiang",
+      "source": "openalex",
+      "verifiedAt": "2026-05-04"
+    },
     "10.48550/arXiv.2305.10601": {
       "title": "Tree of Thoughts: Deliberate Problem Solving with Large Language Models",
       "year": 2023,
@@ -124,6 +131,13 @@
       "title": "Improving Factuality and Reasoning in Language Models through Multiagent Debate",
       "year": 2023,
       "firstAuthorSurname": "Du",
+      "source": "openalex",
+      "verifiedAt": "2026-05-04"
+    },
+    "10.48550/arXiv.2305.15294": {
+      "title": "Enhancing Retrieval-Augmented Large Language Models with Iterative Retrieval-Generation Synergy",
+      "year": 2023,
+      "firstAuthorSurname": "Shao",
       "source": "openalex",
       "verifiedAt": "2026-05-04"
     },
@@ -173,6 +187,13 @@
       "title": "NeMo Guardrails: A Toolkit for Controllable and Safe LLM Applications with Programmable Rails",
       "year": 2023,
       "firstAuthorSurname": "Rebedea",
+      "source": "openalex",
+      "verifiedAt": "2026-05-04"
+    },
+    "10.48550/arXiv.2310.11511": {
+      "title": "Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection",
+      "year": 2023,
+      "firstAuthorSurname": "Asai",
       "source": "openalex",
       "verifiedAt": "2026-05-04"
     },
