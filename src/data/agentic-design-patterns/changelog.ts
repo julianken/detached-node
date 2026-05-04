@@ -19,6 +19,13 @@ import type { ChangelogEntry } from './types'
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: '2026-05-03',
+    slug: 'checkpointing',
+    type: 'added',
+    note: 'Author Checkpointing satellite: durable agent state across crashes; snapshot vs replay variants; determinism gotcha.',
+    author: 'julianken',
+  },
+  {
+    date: '2026-05-03',
     slug: 'rag',
     type: 'added',
     note: 'Authored RAG pattern (vanilla retrieve-and-generate; agentic variant remains separate).',
