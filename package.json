@@ -48,6 +48,7 @@
   },
   "devDependencies": {
     "@ai-sdk/openai": "^1",
+    "@modelcontextprotocol/sdk": "^1.29.0",
     "@playwright/test": "^1.59.1",
     "@tailwindcss/postcss": "^4",
     "@tailwindcss/typography": "^0.5.19",
