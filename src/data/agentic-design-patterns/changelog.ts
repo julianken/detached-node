@@ -18,6 +18,13 @@ import type { ChangelogEntry } from './types'
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    date: '2026-05-04',
+    slug: 'orchestrator-workers',
+    type: 'added',
+    note: 'Author Orchestrator-Workers satellite: hub-and-spoke planner/worker/aggregator topology, AutoGen/MetaGPT/Claude-Research framing, token-multiplier gotcha.',
+    author: 'julianken',
+  },
+  {
     date: '2026-05-03',
     slug: 'guardrails',
     type: 'added',
