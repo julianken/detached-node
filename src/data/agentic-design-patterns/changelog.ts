@@ -1,0 +1,187 @@
+import type { ChangelogEntry } from './types'
+
+// ---------------------------------------------------------------------------
+// Agentic Design Patterns — Catalog Changelog
+// ---------------------------------------------------------------------------
+// Append-only audit trail. Every PR that touches patterns/<slug>.ts MUST add
+// an entry here. CI (scripts/lint-changelog.mjs) enforces this in Phase 2.
+//
+// Sort: newest-first. When adding an entry, prepend to CHANGELOG.
+//
+// Fields:
+//   date      ISO date the change landed (PR merge date)
+//   slug      Pattern slug that was touched
+//   type      'added' | 'edited' | 'retired'
+//   note      1-line description (mirrors pattern.lastChangeNote for 'edited')
+//   author    GitHub handle of the PR author
+//   prUrl     Link to the merged PR (fill in after merge)
+
+export const CHANGELOG: ChangelogEntry[] = [
+  {
+    date: '2026-05-04',
+    slug: '12-factor-agent',
+    type: 'added',
+    note: 'Author 12-Factor Agent satellite: production methodology layered above mechanism patterns; HumanLayer/Horthy framing; stateless-reducer sketch; reducer-purity gotcha.',
+    author: 'julianken',
+  },
+  {
+    date: '2026-05-04',
+    slug: 'streaming',
+    type: 'added',
+    note: 'Author Streaming satellite: SSE event-flow, token vs structured vs tool-call variants, mid-stream-error gotcha.',
+    author: 'julianken',
+  },
+  {
+    date: '2026-05-04',
+    slug: 'human-in-the-loop',
+    type: 'added',
+    note: 'Author Human in the Loop satellite: pause-snapshot-resume contract, three sub-variants, automation-bias gotcha.',
+    author: 'julianken',
+  },
+  {
+    date: '2026-05-04',
+    slug: 'parallelization',
+    type: 'added',
+    note: 'Author Parallelization satellite: fan-out with deterministic aggregator, Sectioning vs Voting variants, self-consistency diversity gotcha.',
+    author: 'julianken',
+  },
+  {
+    date: '2026-05-04',
+    slug: 'agentic-rag',
+    type: 'added',
+    note: 'Initial authoring of Agentic RAG pattern (iterative retrieval loop; contrasts with single-shot RAG).',
+    author: 'julianken',
+  },
+  {
+    date: '2026-05-04',
+    slug: 'evaluator-optimizer',
+    type: 'added',
+    note: 'Author Evaluator-Optimizer satellite: within-attempt generator-critic loop, contrast with Reflexion, base-capability-ceiling gotcha.',
+    author: 'julianken',
+  },
+  {
+    date: '2026-05-04',
+    slug: 'code-agent',
+    type: 'added',
+    note: 'Author Code Agent satellite: read-edit-test loop, Agent-Computer Interface as the differentiator from generic Tool Use, edit-format gotcha.',
+    author: 'julianken',
+  },
+  {
+    date: '2026-05-04',
+    slug: 'a2a',
+    type: 'added',
+    note: 'Author A2A satellite: Agent Card discovery, Task lifecycle, distinction from MCP and in-process Handoffs.',
+    author: 'julianken',
+  },
+  {
+    date: '2026-05-04',
+    slug: 'multi-agent-debate',
+    type: 'added',
+    note: 'Author Multi-Agent Debate satellite: parallel-agent answers, peer-critique rounds, deterministic aggregation; degeneration-of-thought gotcha.',
+    author: 'julianken',
+  },
+  {
+    date: '2026-05-04',
+    slug: 'mcp',
+    type: 'added',
+    note: 'Author MCP satellite: open protocol for cross-vendor tool/resource/prompt discovery; tool-poisoning gotcha.',
+    author: 'julianken',
+  },
+  {
+    date: '2026-05-04',
+    slug: 'orchestrator-workers',
+    type: 'added',
+    note: 'Author Orchestrator-Workers satellite: hub-and-spoke planner/worker/aggregator topology, AutoGen/MetaGPT/Claude-Research framing, token-multiplier gotcha.',
+    author: 'julianken',
+  },
+  {
+    date: '2026-05-04',
+    slug: 'handoffs-swarm',
+    type: 'added',
+    note: 'Author Handoffs / Swarm satellite: sequential conversation ownership, transfer-as-tool-call, supervisor variant.',
+    author: 'julianken',
+  },
+  {
+    date: '2026-05-03',
+    slug: 'guardrails',
+    type: 'added',
+    note: 'Author Guardrails satellite: input/output rails, layered defence, indirect-prompt-injection gotcha.',
+    author: 'julianken',
+  },
+  {
+    date: '2026-05-03',
+    slug: 'checkpointing',
+    type: 'added',
+    note: 'Author Checkpointing satellite: durable agent state across crashes; snapshot vs replay variants; determinism gotcha.',
+    author: 'julianken',
+  },
+  {
+    date: '2026-05-03',
+    slug: 'context-engineering',
+    type: 'added',
+    note: 'Author Context Engineering pattern (selection, ranking, layout, cache-aware assembly).',
+    author: 'julianken',
+  },
+  {
+    date: '2026-05-03',
+    slug: 'evaluation-llm-as-judge',
+    type: 'added',
+    note: 'Initial authoring of the Evaluation (LLM-as-Judge) pattern (wave-2, issue #179).',
+    author: 'julianken',
+  },
+  {
+    date: '2026-05-03',
+    slug: 'memory-management',
+    type: 'added',
+    note: 'Initial authoring of Memory Management pattern (wave 2; tiered working/episodic/semantic stores).',
+    author: 'julianken',
+  },
+  {
+    date: '2026-05-03',
+    slug: 'rag',
+    type: 'added',
+    note: 'Authored RAG pattern (vanilla retrieve-and-generate; agentic variant remains separate).',
+    author: 'julianken',
+  },
+  {
+    date: '2026-05-03',
+    slug: 'tool-use-react',
+    type: 'added',
+    note: 'Initial authoring of Tool Use / ReAct pattern (Phase-2 wave-1).',
+    author: 'julianken',
+  },
+  {
+    date: '2026-05-03',
+    slug: 'routing',
+    type: 'added',
+    note: 'Initial authoring of the Routing pattern (wave-1, issue #173).',
+    author: 'julianken',
+  },
+  {
+    date: '2026-05-03',
+    slug: 'prompt-chaining',
+    type: 'added',
+    note: 'Initial authoring of Prompt Chaining pattern (wave 1).',
+    author: 'julianken',
+  },
+  {
+    date: '2026-05-03',
+    slug: 'planning',
+    type: 'added',
+    note: 'Author Planning satellite: planner-executor split, re-plan loop, ToT/HuggingGPT/Plan-and-Solve variants.',
+    author: 'julianken',
+  },
+  {
+    // Phase 1A scaffold: type model, layers, 23 stubs, helpers, changelog.
+    // Reflexion stub is added here; full authoring ships in Phase 1F (#158).
+    // Date bumped to 2026-05-03 by #158 so lint-changelog matches the
+    // now-authored Reflexion pattern's dateModified. Note text is mandated by
+    // #152 — do not change it; do not append a duplicate entry for this
+    // slug+type.
+    date: '2026-05-03',
+    slug: 'reflexion',
+    type: 'added',
+    note: 'Catalog scaffold launched; Reflexion exemplar shipped in #158.',
+    author: 'julianken',
+  },
+]
