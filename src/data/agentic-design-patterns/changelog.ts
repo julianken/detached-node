@@ -19,6 +19,13 @@ import type { ChangelogEntry } from './types'
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: '2026-05-03',
+    slug: 'guardrails',
+    type: 'added',
+    note: 'Author Guardrails satellite: input/output rails, layered defence, indirect-prompt-injection gotcha.',
+    author: 'julianken',
+  },
+  {
+    date: '2026-05-03',
     slug: 'rag',
     type: 'added',
     note: 'Authored RAG pattern (vanilla retrieve-and-generate; agentic variant remains separate).',
