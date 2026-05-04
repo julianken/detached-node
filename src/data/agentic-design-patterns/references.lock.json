@@ -8,6 +8,20 @@
       "source": "crossref",
       "verifiedAt": "2026-05-03"
     },
+    "10.18653/v1/2020.emnlp-main.550": {
+      "title": "Dense Passage Retrieval for Open-Domain Question Answering",
+      "year": 2020,
+      "firstAuthorSurname": "Karpukhin",
+      "source": "crossref",
+      "verifiedAt": "2026-05-03"
+    },
+    "10.18653/v1/2021.naacl-main.200": {
+      "title": "KILT: a Benchmark for Knowledge Intensive Language Tasks",
+      "year": 2021,
+      "firstAuthorSurname": "Petroni",
+      "source": "crossref",
+      "verifiedAt": "2026-05-03"
+    },
     "10.48550/arXiv.2210.03629": {
       "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
       "year": 2022,
@@ -75,6 +89,13 @@
       "title": "Large Language Model Routing with Benchmark Datasets",
       "year": 2023,
       "firstAuthorSurname": "Shnitzer",
+      "source": "openalex",
+      "verifiedAt": "2026-05-03"
+    },
+    "10.48550/arXiv.2312.10997": {
+      "title": "Retrieval-Augmented Generation for Large Language Models: A Survey",
+      "year": 2023,
+      "firstAuthorSurname": "Gao",
       "source": "openalex",
       "verifiedAt": "2026-05-03"
     },
