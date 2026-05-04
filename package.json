@@ -47,7 +47,7 @@
     "sharp": "^0.34.5"
   },
   "devDependencies": {
-    "@ai-sdk/openai": "^1",
+    "@ai-sdk/openai": "^3",
     "@modelcontextprotocol/sdk": "^1.29.0",
     "@playwright/test": "^1.59.1",
     "@tailwindcss/postcss": "^4",
