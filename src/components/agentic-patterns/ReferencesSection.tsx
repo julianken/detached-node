@@ -88,7 +88,7 @@ export function ReferencesSection({ pattern }: ReferencesSectionProps) {
   }
 
   return (
-    <section aria-labelledby="references-heading">
+    <section id="references" aria-labelledby="references-heading" className="scroll-mt-24">
       <h2
         id="references-heading"
         className="font-mono text-xl font-semibold tracking-tight text-text-primary"
