@@ -71,6 +71,7 @@ scripts/.tmp-seed-images/
 /creative-output/
 /launch-plan/
 /docs/brainstorms/
+/docs/read-along-feature/
 
 # Transient workspaces
 tmp/

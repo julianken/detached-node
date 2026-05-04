@@ -6,7 +6,7 @@
  * compile is the highest-leverage failure mode in this catalog, so this script
  * is the most important guardrail in the lint chain.
  *
- * Lessons applied from docs/agentic-design-patterns/spike/SPIKE_LOG.md:
+ * Lessons baked in (from a Phase 0 calibration spike that's no longer in-tree):
  *  1. tsc flags include `--types node --skipLibCheck --lib es2022,dom` so that
  *     fetch / console / process compile without a per-snippet tsconfig.
  *  2. We inject `export {}` at end of any snippet that lacks an import or
