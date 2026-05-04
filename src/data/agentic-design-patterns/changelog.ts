@@ -19,6 +19,13 @@ import type { ChangelogEntry } from './types'
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: '2026-05-04',
+    slug: '12-factor-agent',
+    type: 'added',
+    note: 'Author 12-Factor Agent satellite: production methodology layered above mechanism patterns; HumanLayer/Horthy framing; stateless-reducer sketch; reducer-purity gotcha.',
+    author: 'julianken',
+  },
+  {
+    date: '2026-05-04',
     slug: 'streaming',
     type: 'added',
     note: 'Author Streaming satellite: SSE event-flow, token vs structured vs tool-call variants, mid-stream-error gotcha.',
