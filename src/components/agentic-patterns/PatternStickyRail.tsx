@@ -49,7 +49,7 @@ const JUMP_LINKS = [
   { href: "#in-the-wild", label: "In the wild" },
   { href: "#implementation-sketch", label: "Sketch" },
   { href: "#references", label: "References" },
-  { href: "#overview-discussion", label: "Background ↓" },
+  { href: "#background-discussion", label: "Background ↓" },
 ] as const;
 
 function RailRow({ label, children }: { label: string; children: React.ReactNode }) {
