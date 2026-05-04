@@ -204,12 +204,26 @@
       "source": "openalex",
       "verifiedAt": "2026-05-04"
     },
+    "10.48550/arXiv.2405.15793": {
+      "title": "SWE-agent: Agent-Computer Interfaces Enable Automated Software Engineering",
+      "year": 2024,
+      "firstAuthorSurname": "Yang",
+      "source": "openalex",
+      "verifiedAt": "2026-05-04"
+    },
     "10.48550/arXiv.2406.18665": {
       "title": "RouteLLM: Learning to Route LLMs with Preference Data",
       "year": 2024,
       "firstAuthorSurname": "Ong",
       "source": "openalex",
       "verifiedAt": "2026-05-03"
+    },
+    "10.48550/arXiv.2407.16741": {
+      "title": "OpenHands: An Open Platform for AI Software Developers as Generalist Agents",
+      "year": 2024,
+      "firstAuthorSurname": "Wang",
+      "source": "openalex",
+      "verifiedAt": "2026-05-04"
     }
   }
 }
