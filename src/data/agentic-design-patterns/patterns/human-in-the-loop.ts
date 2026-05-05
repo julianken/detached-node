@@ -155,13 +155,15 @@ export {}
   ],
   addedAt: '2026-05-04',
   dateModified: '2026-05-05',
-  lastChangeNote: 'W2.9 additive: Tier C realizingInClaudeCode — Mergify merge-queue as deployment-layer HITL gate.',
+  lastChangeNote: 'W3.3 additive over W2.9: second HITL realization — subagent-workflow within-task review gates.',
 
   realizingInClaudeCode: {
     tier: 'C',
 
     bodyMarkdown: `
 The merge queue is the deployment-layer realization of Human in the Loop at the merge boundary. In this repo, Mergify enforces the gate structurally: the [\`.mergify.yml\`](https://github.com/julianken/detached-node/blob/main/.mergify.yml) declares a \`queue_conditions\` block requiring \`#approved-reviews-by >= 1\` and all CI checks passing before a squash-merge proceeds. The human signal — an explicit collaborator approval — is the precondition the queue checks before the run continues. No approval, no merge; the pending PR sits in the queue until the signal arrives, exactly the pause-and-resume contract the pattern names. The convention in this repo is to wait for the julianken-bot APPROVE before commenting \`@mergifyio queue\`, making the reviewer's verdict the trigger that opens the merge boundary. (Mergify is paid SaaS; GitHub-native merge queue is the OSS substitute.)
+
+**Within-task review gates (W3.3 addition).** The [subagent-workflow skill](https://github.com/julianken/detached-node/blob/main/.claude/skills/subagent-workflow/SKILL.md) adds two earlier HITL gates inside the per-issue loop. After the implementer completes the PR, a spec-compliance reviewer explicitly reads acceptance criteria and reports SPEC COMPLIANT or SPEC GAPS FOUND — the operator reads this verdict before quality review proceeds. After quality review passes, the operator comments \`@mergifyio queue\` to trigger the merge boundary gate. The pattern runs twice per issue: once as an agent-to-agent handoff signal, and once as the human-signal merge gate. Both are pause-and-resume; neither is optional. [PR #349](https://github.com/julianken/detached-node/pull/349) documents a completed cycle of both gates in a single merge.
 `.trim(),
 
     readerMove: {
@@ -170,6 +172,7 @@ The merge queue is the deployment-layer realization of Human in the Loop at the 
     },
 
     seeAlso: {
+      skillPath: '.claude/skills/subagent-workflow/SKILL.md',
       siblingPatternSlugs: ['evaluation-llm-as-judge', 'guardrails', 'checkpointing'],
     },
   },

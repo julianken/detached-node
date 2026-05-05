@@ -1,6 +1,11 @@
 ---
 name: creative-funnel
 description: Parallel creative production pipeline (N items) with spec review and quality review cycles per item, disk checkpoints, and crash recovery. Produces N creative artifacts + structured documentation.
+realizes:
+  - orchestrator-workers
+  - parallelization
+  - checkpointing
+  - evaluator-optimizer
 ---
 
 # Creative Funnel: N-Item Parallel Production Pipeline

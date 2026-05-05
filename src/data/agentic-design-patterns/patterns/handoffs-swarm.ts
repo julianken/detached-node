@@ -148,6 +148,24 @@ export async function runSwarm(messages: { role: 'user' | 'assistant'; content: 
     },
   ],
   addedAt: '2026-05-03',
-  dateModified: '2026-05-04',
-  lastChangeNote: 'Author Handoffs / Swarm satellite: sequential conversation ownership, transfer-as-tool-call, supervisor variant.',
+  dateModified: '2026-05-05',
+  lastChangeNote: 'W3.3: add realizingInClaudeCode Tier C — subagent-workflow handoff chain as Handoffs/Swarm realization.',
+
+  realizingInClaudeCode: {
+    tier: 'C',
+
+    bodyMarkdown: `
+The [subagent-workflow skill](https://github.com/julianken/detached-node/blob/main/.claude/skills/subagent-workflow/SKILL.md) wires a three-agent handoff chain for every GitHub Issue. Step 3 dispatches an implementer who owns the worktree and produces the PR. Step 4 hands off to a spec-compliance reviewer who reads the acceptance criteria and checks the diff. Step 5 hands off to a quality reviewer who checks conventions, security, and test coverage. Each handoff is explicit — the next agent receives the PR number and the preceding review's verdict as structured context. The chain is sequential within each issue and parallel across issues (all implementers run in one dispatch message). Principle 6 enforces handoff integrity: "Fixes stay in the same worktree/PR — never create a new PR for review fixes." [PR #344](https://github.com/julianken/detached-node/pull/344) and [PR #350](https://github.com/julianken/detached-node/pull/350) are instances of this chain completing in production.
+`.trim(),
+
+    readerMove: {
+      text: 'Model the implementer → spec-reviewer → quality-reviewer chain as three sequential dispatches per issue; never split fixes to a new PR.',
+      anchorUrl: 'https://github.com/julianken/detached-node/blob/main/.claude/skills/subagent-workflow/SKILL.md',
+    },
+
+    seeAlso: {
+      skillPath: '.claude/skills/subagent-workflow/SKILL.md',
+      siblingPatternSlugs: ['routing', 'orchestrator-workers', 'human-in-the-loop'],
+    },
+  },
 }
