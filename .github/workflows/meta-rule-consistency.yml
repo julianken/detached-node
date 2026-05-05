@@ -1,0 +1,23 @@
+name: Meta-Rule Consistency
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/data/agentic-design-patterns/patterns/12-factor-agent.ts'
+      - 'src/data/agentic-design-patterns/patterns/context-engineering.ts'
+      - 'src/data/agentic-design-patterns/patterns/memory-management.ts'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Meta-Rule Consistency
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - name: Check meta-rule consistency
+        run: bash scripts/check_meta_rule_consistency.sh
