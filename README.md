@@ -13,9 +13,9 @@ A tech blog exploring modern agentic AI workflows, autonomous systems, and the p
 | Styling | Tailwind CSS 4 |
 | CMS | Payload CMS 3 |
 | Database | PostgreSQL via Supabase |
-| Media | Vercel Blob Storage |
+| Media | Google Cloud Storage |
 | Rate Limiting | Upstash Redis (with in-memory fallback) |
-| Deployment | Vercel |
+| Deployment | Google Cloud Run |
 | Testing | Vitest (unit) + Playwright (e2e) |
 
 ### Project Structure
@@ -23,12 +23,13 @@ A tech blog exploring modern agentic AI workflows, autonomous systems, and the p
 ```
 src/
 ├── app/
-│   ├── (frontend)/       # Public-facing routes
-│   │   ├── page.tsx       # Home
-│   │   ├── posts/         # Post listing + detail ([slug])
-│   │   ├── about/         # Static about page
-│   │   └── failure-modes/ # Pillar page for article clusters
-│   └── (payload)/         # CMS admin routes
+│   ├── (frontend)/                    # Public-facing routes
+│   │   ├── page.tsx                    # Home
+│   │   ├── posts/                      # Post listing + detail ([slug])
+│   │   ├── about/                      # Static about page
+│   │   ├── failure-modes/              # Pillar page for article clusters
+│   │   └── agentic-design-patterns/    # Hub + [slug] satellites + changelog
+│   └── (payload)/                      # CMS admin routes
 ├── components/            # Shared React components
 ├── lib/                   # Utilities, config, schema generators
 └── collections/           # Payload CMS collection definitions
@@ -44,12 +45,12 @@ src/
 ## Development
 
 ```bash
-npm install
-npm run dev          # Start dev server (localhost:3000)
-npm run build        # Production build
-npm run lint         # ESLint
-npm run test:unit    # Vitest unit tests
-npm run test:e2e     # Playwright end-to-end tests
+pnpm install
+pnpm dev          # Start dev server (localhost:3000)
+pnpm build        # Production build
+pnpm lint         # ESLint
+pnpm test:unit    # Vitest unit tests
+pnpm test:e2e     # Playwright end-to-end tests
 ```
 
 ### Environment
@@ -60,7 +61,9 @@ Copy `.env.example` for the required environment variables. The app requires:
 
 Optional for full functionality:
 - `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` — production rate limiting
-- `BLOB_READ_WRITE_TOKEN` — Vercel Blob media storage
+- `GCS_BUCKET` — Google Cloud Storage bucket name for media
+- `GCS_HMAC_ACCESS_KEY` — GCS HMAC access key for S3-compatible media uploads
+- `GCS_HMAC_SECRET` — GCS HMAC secret for S3-compatible media uploads
 
 ### AI-Assisted Development
 
@@ -78,4 +81,4 @@ See `CONTENT_MODEL.md` for the full schema specification.
 
 ## License
 
-All rights reserved.
+MIT — see [LICENSE](./LICENSE).
