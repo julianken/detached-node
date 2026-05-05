@@ -59,7 +59,6 @@ scripts/.tmp-seed-images/
 /tests/.auth/
 
 # Tool configs
-.claude/hooks/
 .claude/settings.local.json
 .playwright-mcp/
 .serena/

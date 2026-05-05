@@ -90,17 +90,6 @@ Key points:
 - The current hardcoded data is placeholder only
 - Content structure should align with `CONTENT_MODEL.md`
 
-## Worktree Branch Management
-
-Subagent workflows create temporary `worktree-agent-*` branches. These are local-only development artifacts that must never be pushed to the remote.
-
-**Safeguards:**
-- A PreToolUse hook blocks `git push` commands referencing worktree-agent branches
-- Cleanup script: `bash .claude/hooks/clean-worktree-branches.sh`
-- These branches should be deleted after each session
-
-**Convention:** If worktree branches accumulate, run the cleanup script before starting new work.
-
 ## Skill Ownership
 
 - **`analysis-funnel`** — global-canonical (`~/.claude/skills/analysis-funnel/SKILL.md`). Repo copy is a mirror; re-copy from global if drift recurs.
@@ -125,7 +114,6 @@ Config: `.mergify.yml` at repo root. Dashboard: https://dashboard.mergify.com
 | Add content types | Update `CONTENT_MODEL.md` first, then implement |
 | Add a Mermaid diagram to a post | Insert "Mermaid diagram" block in the body field; see `docs/design-system.md#mermaid-diagrams` |
 | Queue a PR to merge | Comment `@mergifyio queue` on the approved PR |
-| Clean worktree branches | `bash .claude/hooks/clean-worktree-branches.sh` |
 
 ## Phase Roadmap
 
