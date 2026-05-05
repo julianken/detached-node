@@ -13,3 +13,7 @@ queue_rules:
       - "check-success = Next.js Build"
       - "check-success = Analyze Bundle"
       - "check-success = CodeQL Analysis"
+      - "check-success = E2E Shard 1/4"
+      - "check-success = E2E Shard 2/4"
+      - "check-success = E2E Shard 3/4"
+      - "check-success = E2E Shard 4/4"
