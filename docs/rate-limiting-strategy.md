@@ -92,5 +92,4 @@ In local development, omitting these variables activates the in-memory fallback 
 
 ## Related files
 
-- `src/lib/rate-limit.ts` — canonical implementation
-- `docs/rate-limiting-implementation.md` — deployment checklist and curl examples
+- `src/lib/rate-limit.ts` — canonical implementation. See `docs/deployment.md` for rate-limit deployment notes.

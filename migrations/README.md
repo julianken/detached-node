@@ -45,8 +45,6 @@ pnpm payload migrate:status
 For detailed information about database indexing:
 
 - **Indexing Strategy:** `docs/database-indexing-strategy.md`
-- **Testing Checklist:** `docs/index-migration-testing.md`
-- **Implementation Summary:** `docs/CON-111-implementation-summary.md`
 
 ## Troubleshooting
 
