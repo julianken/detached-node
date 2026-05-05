@@ -138,7 +138,7 @@ export {}
   ],
   addedAt: '2026-05-03',
   dateModified: '2026-05-05',
-  lastChangeNote: 'Add realizingInClaudeCode Tier A + minimal-CLAUDE.md inline Tier C (W1.2 #309).',
+  lastChangeNote: 'W2.9 additive: 5-section PR body as reviewer context packet cross-link.',
   realizingInClaudeCode: {
     tier: 'A',
     ccPrimitives: [
@@ -176,6 +176,13 @@ Measuring the always-on budget is the prerequisite step. Count tokens in \`CLAUD
 <summary>Cross-link: minimal-CLAUDE.md pattern</summary>
 
 The minimal-CLAUDE.md configuration applies the same token-economics meta-rule at the file level. The editorial split is: unconditional facts about the project (framework, conventions, non-goals) stay in \`CLAUDE.md\`; triggered behaviors (pre-commit checks, screenshot procedures, PR review rubrics) live in \`.claude/skills/\` and load only when invoked. The result is a \`CLAUDE.md\` that is dense with signal per token rather than exhaustive. The user-level meta-rule — "If a rule has a trigger, it belongs in a skill, not here" — is the one-sentence specification for this configuration. Context Engineering names the budget rationale; minimal-CLAUDE.md names the file-level split that implements it.
+
+</details>
+
+<details>
+<summary>Cross-link: 5-section PR body as reviewer context packet</summary>
+
+The five-section PR body (Diagrams / Summary / Screenshots / Test plan / Plan reference) is an engineered context packet for the reviewer's first read. Each section maps to a distinct attention slot: Diagrams anchors visual changes before the diff is opened; Summary compresses scope to a single scroll; Test plan itemizes the pre-review checklist the bot is expected to verify claim-by-claim before scoring the implementation. Placing Test plan before Plan reference is a layout choice, not convention — the sections that require active checking arrive before the sections that are reference-only, matching the U-shape recall curve the pattern documents. [PR #339 (W1.1 Orchestrator-Workers)](https://github.com/julianken/detached-node/pull/339) shows the full five-section structure as read by the julianken-bot reviewer on its first cycle.
 
 </details>`,
   },
