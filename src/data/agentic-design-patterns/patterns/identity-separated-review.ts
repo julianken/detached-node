@@ -162,7 +162,7 @@ export {}
     ],
 
     scaffolding: [
-      '.claude/skills/reviewing-as-julianken-bot/SKILL.md — 12-rule rubric with per-rule rationale and citation anchors; loaded by the julianken-bot subagent via the `skills:` frontmatter declaration; contains the mandatory R8 second-pass instruction, the R11 sanitization protocol reference, and the R12 cross-tier dispatch rule',
+      '.claude/skills/subagent-workflow/SKILL.md — in-repo skill encoding the orchestrator/implementer/reviewer separation discipline; the reviewing-as-julianken-bot rubric (a user-level global skill at ~/.claude/skills/reviewing-as-julianken-bot/SKILL.md, not checked into this repo) extends this discipline with identity separation and the 12-rule review protocol',
       'scripts/bot-review.sh — encapsulates Keychain PAT retrieval, single-subprocess GH_TOKEN scoping, and REST API review posting; dispatcher calls this with owner/repo, PR number, and a jq-assembled review JSON; the script is the only place the bot token is ever handled',
       '.mergify.yml — declares required checks and a `#approved-reviews-by >= 1` queue condition; when the convention is to wait for `@julianken-bot`, the bot APPROVE is the signal that triggers the queue comment',
     ],
@@ -196,11 +196,10 @@ The bot PAT lives in macOS Keychain under four account entries: \`password\`, \`
 
     readerMove: {
       text: "Mint a machine-user account, write a 12-rule rubric, and wait for the bot's APPROVE before queuing the merge.",
-      anchorUrl: 'https://github.com/julianken/detached-node/blob/main/.claude/skills/reviewing-as-julianken-bot/SKILL.md',
+      anchorUrl: 'https://github.com/julianken/detached-node/blob/main/.mergify.yml',
     },
 
     seeAlso: {
-      skillPath: '.claude/skills/reviewing-as-julianken-bot/SKILL.md',
       articleSlug: 'cross-identity-code-review',
       siblingPatternSlugs: ['evaluation-llm-as-judge', 'guardrails', 'human-in-the-loop'],
     },
