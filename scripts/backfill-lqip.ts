@@ -1,7 +1,7 @@
 /**
  * Backfill LQIP (Low-Quality Image Placeholder) for existing Media docs.
  *
- * INTENDED FOR ONE-SHOT POST-DEPLOY INVOCATION against the Vercel Blob store.
+ * INTENDED FOR ONE-SHOT POST-DEPLOY INVOCATION against the Google Cloud Storage bucket.
  * DO NOT run this in CI or as part of the deploy pipeline.
  *
  * Usage:
@@ -10,7 +10,9 @@
  *
  * Prerequisites:
  *   - DATABASE_URL and PAYLOAD_SECRET in environment (e.g. via .env.local)
- *   - Network access to Vercel Blob URLs (doc.url)
+ *   - GCS_BUCKET
+ *   - GCS_HMAC_ACCESS_KEY
+ *   - GCS_HMAC_SECRET
  *
  * Review the --dry-run output before the live run.
  */
@@ -86,7 +88,7 @@ async function main() {
       failed++
     }
 
-    // Respect Vercel Blob rate limits between iterations.
+    // Respect GCS request quotas between iterations.
     if (i < pending.length - 1) {
       await sleep(SLEEP_MS)
     }
