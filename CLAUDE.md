@@ -6,14 +6,14 @@ Project context and guidance for AI-assisted development on Detached Node.
 
 A tech blog exploring modern agentic AI workflows, autonomous systems, and the philosophy of machine intelligence. Built with Next.js 16, React 19, TypeScript, and Tailwind CSS 4.
 
-**Current phase:** Phase 1 (shell site with navigation and placeholders)
+**Current phase:** Phase 3 (interaction layer in progress)
 
 ## Quick Reference
 
 ```bash
-npm run dev      # Start dev server (localhost:3000)
-npm run build    # Production build
-npm run lint     # Run ESLint
+pnpm dev      # Start dev server (localhost:3000)
+pnpm build    # Production build
+pnpm lint     # Run ESLint
 ```
 
 ## Architecture
@@ -21,7 +21,7 @@ npm run lint     # Run ESLint
 - **Framework:** Next.js App Router (`src/app/`)
 - **Styling:** Tailwind CSS (utility classes, minimal custom CSS)
 - **Content:** Payload CMS with Postgres backend
-- **Deployment:** Vercel (see `docs/deployment.md` for complete guide)
+- **Deployment:** Google Cloud Run (Artifact Registry + Workload Identity Fed)
 
 ### Key Directories
 
@@ -38,10 +38,13 @@ src/app/
 
 ## Content Model
 
-Three page types defined in `CONTENT_MODEL.md`:
-- **Post:** Long-form entry (title, slug, summary, published_at, tags, body, references)
-- **Listing:** Curated list of posts
-- **Static Page:** Fixed content (About, Method, etc.)
+Six Payload collections (see `CONTENT_MODEL.md` for full field definitions):
+- **Posts:** Long-form entries (title, slug, summary, published_at, tags, body, references)
+- **Listings:** Curated lists of posts
+- **Pages:** Fixed content (About, Method, etc.)
+- **Tags:** Taxonomy labels applied to posts
+- **Media:** Uploaded images and files managed by Payload
+- **Users:** Payload admin users
 
 ## Coding Conventions
 
@@ -78,8 +81,8 @@ Key points:
 - Prefer `Link` from `next/link` for internal navigation
 
 ### When adding features:
-- Check `PROJECT_BRIEF.md` for scope (some things are explicitly non-goals for Phase 1)
-- Keep changes incremental; this is still a scaffold
+- Check `PROJECT_BRIEF.md` for scope (some things are explicitly non-goals)
+- Keep changes incremental; Phase 3 is in progress
 - Document new patterns in `AGENTS.md` if they affect future development
 
 ### When working with content:
@@ -102,7 +105,7 @@ Subagent workflows create temporary `worktree-agent-*` branches. These are local
 
 **After approving a PR, comment `@mergifyio queue` on it to add it to the merge queue.** Mergify will rebase onto main, re-run CI, and auto-merge if checks pass.
 
-Required checks: ESLint, TypeScript, Vitest, Next.js Build, Analyze Bundle, CodeQL Analysis + 1 approval.
+Required checks: ESLint, TypeScript, Vitest, Next.js Build, Analyze Bundle, CodeQL Analysis, E2E Shard 1/4, E2E Shard 2/4, E2E Shard 3/4, E2E Shard 4/4 + 1 approval.
 
 Config: `.mergify.yml` at repo root. Dashboard: https://dashboard.mergify.com
 
@@ -121,9 +124,9 @@ Config: `.mergify.yml` at repo root. Dashboard: https://dashboard.mergify.com
 
 ## Phase Roadmap
 
-1. **Phase 1 (current):** Deployed shell site + initial config
-2. **Phase 2:** Authoring and post pipeline (MDX, content loading)
-3. **Phase 3:** Full aesthetic + interaction layer
+1. **Phase 1** ✅ DONE — Deployed shell site + initial config
+2. **Phase 2** ✅ DONE — Authoring and post pipeline (Payload CMS, content loading)
+3. **Phase 3 (current):** Full aesthetic + interaction layer (in progress)
 4. **Phase 4:** MVP complete
 
 ## Files to Read First
@@ -131,7 +134,7 @@ Config: `.mergify.yml` at repo root. Dashboard: https://dashboard.mergify.com
 When starting a session, these provide the most context:
 1. `CLAUDE.md` (this file)
 2. `docs/design-system.md` (color palette and component patterns)
-3. `docs/deployment.md` (Vercel deployment and production configuration)
+3. `docs/deployment.md` (Cloud Run deployment and production configuration)
 4. `PROJECT_BRIEF.md` (goals and non-goals)
 5. `CONTENT_MODEL.md` (data structure)
 6. `src/app/layout.tsx` (design patterns)
