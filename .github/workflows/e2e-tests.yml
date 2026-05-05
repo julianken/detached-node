@@ -30,7 +30,7 @@ jobs:
     name: E2E Shard ${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    if: (github.event_name == 'pull_request' && github.event.pull_request.draft != true) || (github.event_name == 'workflow_dispatch' && github.event.inputs.test_pattern == '')
+    if: (github.event_name == 'pull_request' && (github.event.pull_request.draft != true || startsWith(github.event.pull_request.head.ref, 'mergify/merge-queue/'))) || (github.event_name == 'workflow_dispatch' && github.event.inputs.test_pattern == '')
 
     strategy:
       fail-fast: false
