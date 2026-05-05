@@ -6,21 +6,21 @@ import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-postgres'
  * This migration adds composite indexes to optimize common query patterns:
  *
  * Posts Collection:
- * - idx_posts_status_publishedAt: Optimize queries filtering by status and sorting by date
- * - idx_posts_featured_status_publishedAt: Optimize featured post queries (partial index)
- * - idx_posts_status_updatedAt: Optimize sitemap generation and admin list views
+ * - idx_posts_status_published_at: Optimize queries filtering by status and sorting by date
+ * - idx_posts_featured_status_published_at: Optimize featured post queries (partial index)
+ * - idx_posts_status_updated_at: Optimize sitemap generation and admin list views
  *
  * Pages Collection:
- * - idx_pages_status_updatedAt: Optimize published page queries with date sorting
+ * - idx_pages_status_updated_at: Optimize published page queries with date sorting
  *
  * These indexes complement the existing single-column indexes on slug, status,
- * publishedAt, and featured fields defined in the collection configs.
+ * published_at, and featured fields defined in the collection configs.
  *
  * Query Patterns Optimized:
- * 1. getPublishedPosts(): WHERE status = 'published' ORDER BY publishedAt DESC
+ * 1. getPublishedPosts(): WHERE status = 'published' ORDER BY published_at DESC
  * 2. getFeaturedPosts(): WHERE featured = true AND status = 'published'
- * 3. getPublishedPages(): WHERE status = 'published' ORDER BY updatedAt DESC
- * 4. Sitemap generation: WHERE status = 'published' ORDER BY updatedAt DESC
+ * 3. getPublishedPages(): WHERE status = 'published' ORDER BY updated_at DESC
+ * 4. Sitemap generation: WHERE status = 'published' ORDER BY updated_at DESC
  *
  * Expected Performance Impact:
  * - 10-100x faster queries on large datasets (10k+ rows)
@@ -36,7 +36,7 @@ import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-postgres'
  * Test query performance with:
  *   EXPLAIN ANALYZE SELECT * FROM posts
  *   WHERE status = 'published'
- *   ORDER BY "publishedAt" DESC;
+ *   ORDER BY "published_at" DESC;
  */
 
 export async function up({ db }: MigrateUpArgs): Promise<void> {

@@ -33,53 +33,53 @@ ORDER BY tablename, indexname;
 SELECT
   indexname,
   CASE
-    WHEN indexname = 'idx_posts_status_publishedAt' THEN 'Expected: posts(status, publishedAt DESC)'
-    WHEN indexname = 'idx_posts_featured_status_publishedAt' THEN 'Expected: posts(featured, status, publishedAt DESC) WHERE featured = true'
-    WHEN indexname = 'idx_posts_status_updatedAt' THEN 'Expected: posts(status, updatedAt DESC)'
-    WHEN indexname = 'idx_pages_status_updatedAt' THEN 'Expected: pages(status, updatedAt DESC)'
+    WHEN indexname = 'idx_posts_status_published_at' THEN 'Expected: posts(status, published_at DESC)'
+    WHEN indexname = 'idx_posts_featured_status_published_at' THEN 'Expected: posts(featured, status, published_at DESC) WHERE featured = true'
+    WHEN indexname = 'idx_posts_status_updated_at' THEN 'Expected: posts(status, updated_at DESC)'
+    WHEN indexname = 'idx_pages_status_updated_at' THEN 'Expected: pages(status, updated_at DESC)'
     ELSE 'Other index'
   END AS expected_definition,
   indexdef AS actual_definition
 FROM pg_indexes
 WHERE indexname IN (
-  'idx_posts_status_publishedAt',
-  'idx_posts_featured_status_publishedAt',
-  'idx_posts_status_updatedAt',
-  'idx_pages_status_updatedAt'
+  'idx_posts_status_published_at',
+  'idx_posts_featured_status_published_at',
+  'idx_posts_status_updated_at',
+  'idx_pages_status_updated_at'
 );
 
 -- ==========================================
 -- 4. Test Query Plans - Published Posts
 -- ==========================================
--- This should use idx_posts_status_publishedAt
+-- This should use idx_posts_status_published_at
 EXPLAIN ANALYZE
 SELECT *
 FROM posts
 WHERE status = 'published'
-ORDER BY "publishedAt" DESC
+ORDER BY "published_at" DESC
 LIMIT 50;
 
 -- ==========================================
 -- 5. Test Query Plans - Featured Posts
 -- ==========================================
--- This should use idx_posts_featured_status_publishedAt
+-- This should use idx_posts_featured_status_published_at
 EXPLAIN ANALYZE
 SELECT *
 FROM posts
 WHERE featured = true
   AND status = 'published'
-ORDER BY "publishedAt" DESC
+ORDER BY "published_at" DESC
 LIMIT 3;
 
 -- ==========================================
 -- 6. Test Query Plans - Published Pages
 -- ==========================================
--- This should use idx_pages_status_updatedAt
+-- This should use idx_pages_status_updated_at
 EXPLAIN ANALYZE
 SELECT *
 FROM pages
 WHERE status = 'published'
-ORDER BY "updatedAt" DESC;
+ORDER BY "updated_at" DESC;
 
 -- ==========================================
 -- 7. Check for unused indexes
@@ -102,5 +102,5 @@ ORDER BY pg_relation_size(indexrelid) DESC;
 -- Section 1: Should show all indexes including the 4 new composite indexes
 -- Section 2: Should show index sizes (typically a few KB to MB depending on data volume)
 -- Section 3: Should return 4 rows confirming the composite indexes exist
--- Sections 4-6: Query plans should show "Index Scan using idx_..." or "Index Only Scan"
+-- Sections 4-6: Query plans should show "Index Scan using idx_posts_status_published_at" etc. or "Index Only Scan"
 -- Section 7: New indexes may show 0 scans initially - run again after traffic
