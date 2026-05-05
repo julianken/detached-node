@@ -16,7 +16,7 @@ Writing on Detached Node is precise, analytical, and practitioner-facing. It pri
 Deployed shell site with navigation and placeholder content. Content model and site structure defined at a high level. Initial Vercel deployment, ESLint/TypeScript/Vitest CI, and Tailwind design system established.
 
 ### Phase 2 ✅ DONE
-Full authoring and post pipeline shipped: Payload CMS with six collections (Posts, Listings, Pages, Tags, Media, Users), Lexical rich-text editor, Mermaid diagram support, ISR cache, preview pipeline, and ADP satellite posts (#152–#159) merged. Deployment migrated from Vercel to Google Cloud Run with Workload Identity Federation and Artifact Registry.
+Full authoring and post pipeline shipped: Payload CMS with six collections (Posts, Listings, Pages, Tags, Media, Users), Lexical rich-text editor, Mermaid diagram support, ISR cache, preview pipeline, and ADP infrastructure shipped via PRs #162–#218 (Phase 1) plus #220 polish; 23 pattern satellites live at /agentic-design-patterns/. Deployment migrated from Vercel to Google Cloud Run with Workload Identity Federation and Artifact Registry.
 
 ### Phase 3 (current)
 Full aesthetic and interaction layer. Success criteria:
