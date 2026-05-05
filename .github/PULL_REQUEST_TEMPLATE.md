@@ -36,38 +36,46 @@ diagram shows the *what*. -->
 <!-- REQUIRED when this PR adds or modifies visible UI (any file under
 src/app/** or src/components/**). Otherwise write "N/A — not UI".
 
-Headless workflow for subagent-generated PRs: capture via Playwright (either
-a test:e2e spec or an MCP drive), save under
-docs/screenshots/<feature-slug>/<description>.png, commit with the PR, then
-reference the file using an ABSOLUTE raw.githubusercontent URL with the
-commit SHA captured at PR-creation time. Relative paths do NOT work in PR
-bodies — GitHub resolves them against /pull/N/, not the repo root.
+Default workflow (human or subagent): simulate a paste into the GitHub PR
+comment box to produce a persistent `user-attachments/assets/<uuid>` CDN URL.
+The skill `pr-screenshots-via-user-attachments` encodes the full procedure,
+the four tripwires, the permissions list, and a worked example — invoke it
+before capturing screenshots.
 
-Pattern (inside a subagent bash HEREDOC):
+Human-authored PRs can drag-and-drop an image directly into the comment box —
+GitHub uploads it and inserts the same user-attachments link automatically.
 
-    SHA=$(git rev-parse HEAD)
-    gh pr create --body "... ![hero](https://raw.githubusercontent.com/julianken/detached-node/${SHA}/docs/screenshots/theme-hero/light.png) ..."
+> [!NOTE]
+> Fallback — only when a headless subagent cannot drive a browser
+> (chrome-devtools-mcp paste path unavailable): capture via Playwright, commit
+> the file to `docs/screenshots/<feature-slug>/<description>.png` with the PR,
+> then reference it using an absolute `raw.githubusercontent.com` URL with the
+> commit SHA captured at PR-creation time. Relative paths do NOT work in PR
+> bodies — GitHub resolves them against /pull/N/, not the repo root.
+>
+>     SHA=$(git rev-parse HEAD)
+>     gh pr create --body "... ![hero](https://raw.githubusercontent.com/julianken/detached-node/${SHA}/docs/screenshots/theme-hero/light.png) ..."
 
-Human-authored PRs can drag-and-drop the image directly into the comment box —
-GitHub uploads it and inserts a working link. -->
+-->
 
 ## Test plan
 
 <!-- Checklist of the verifications you ran. Reviewers expect all boxes checked
 on a ready-to-merge PR. -->
 
-- [ ] `npm run lint && npm run test` — green
-- [ ] `npm run build` — clean production build (typechecks + bundles)
+- [ ] `pnpm lint && pnpm test` — green
+- [ ] `pnpm typecheck` — no type errors
+- [ ] `pnpm build` — clean production build (typechecks + bundles)
 - [ ] New unit / integration tests added (if behavior changed)
 - [ ] New Playwright e2e spec added (if user-visible behavior changed) —
-      `npm run test:e2e`
-- [ ] (UI only) Playwright MCP smoke — ran `npm run dev`, drove the feature
+      `pnpm test:e2e`
+- [ ] (UI only) Playwright MCP smoke — ran `pnpm dev`, drove the feature
       via `mcp__plugin_playwright_playwright__browser_*` at ≥1 mobile (390×844) and ≥1
       desktop (1440×900) viewport, `browser_console_messages` returns no
       errors/warnings, and the Screenshots section was captured from those
       runs. Human-authored PRs may substitute direct browser interaction.
       Reviewers repeat the drive + console check via `gh pr checkout <N>` +
-      `npm run dev` against the PR head SHA before approving.
+      `pnpm dev` against the PR head SHA before approving.
 
 ## Migration checklist
 
