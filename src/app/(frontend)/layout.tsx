@@ -6,6 +6,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { StatusBar } from "@/components/StatusBar";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { TextureOverlay } from "@/components/TextureOverlay";
+import { WebVitalsReporter } from "@/components/WebVitalsReporter";
 import {
   siteUrl,
   siteName,
@@ -86,6 +87,7 @@ export default function FrontendLayout({
         </a>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ViewTransitions>
+          <WebVitalsReporter />
           <ScrollToTop />
           <TextureOverlay />
           <div className="site-frame mx-auto my-4 flex min-h-[calc(100vh-2rem)] max-w-5xl flex-col rounded-sm border border-border sm:my-6 sm:min-h-[calc(100vh-3rem)]">
