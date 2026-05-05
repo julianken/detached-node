@@ -1,6 +1,12 @@
 ---
 name: decision-funnel
 description: Structured investigate-iterate-synthesize pipeline (5->5->3->1) that sends parallel agents to explore different facets of a problem, iterates on findings, progressively synthesizes, and produces a detailed execution plan
+realizes:
+  - orchestrator-workers
+  - parallelization
+  - checkpointing
+  - planning
+  - prompt-chaining
 ---
 
 # Decision Funnel: 5→5→3→1 Investigation Method

@@ -1,6 +1,11 @@
 ---
 name: subagent-workflow
 description: MANDATORY for all multi-step tasks - parallel task execution with sequential per-task workflow (implementer → spec review → quality review) with GitHub Issues as source of truth
+realizes:
+  - orchestrator-workers
+  - parallelization
+  - human-in-the-loop
+  - identity-separated-review
 ---
 
 # Subagent-Driven Development Workflow
