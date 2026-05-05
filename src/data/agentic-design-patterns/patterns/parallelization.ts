@@ -155,14 +155,14 @@ export {}
       'single-message multi-Task() mechanic — dispatching all N Task() calls inside one assistant message is the primitive that converts N serial round-trips into one parallel wall-clock window; Claude Code executes concurrent tool_use blocks for every call in the message simultaneously',
       'Task tool (sub-agent dispatch) — each branch runs in its own context window with its own prompt, tool subset, and scratch space; branches are isolated by construction, not by opt-in configuration',
       'Deterministic aggregation step — the dispatching session reads worker output files from disk after all Task() calls complete; the aggregation rule (concatenate by section, pick majority answer, schema-typed merge) is encoded in the orchestrator prompt, not delegated back to a model call',
-      'Parallel fan-out cardinality — five investigators in Phase 1, five iterators in Phase 2, three synthesizers in Phase 3 (5+5+3+1 cardinality); each wave dispatches all N workers in one message so wall-clock is the slowest worker, not the sum',
-      'Phase-boundary disk checkpoint — workers write findings to disk before the next phase dispatches; the checkpoint is what makes each fan-out wave reproducible and restartable if any worker times out or fails',
     ],
     scaffolding: [
       '.claude/skills/analysis-funnel/SKILL.md — the orchestrator prompt that encodes the phase cardinality (5+5+3+1), the single-message dispatch constraint, and the disk-checkpoint protocol between phases; loaded into the dispatching session before any Task() call fires',
       'phase-{N}/{role}-{slug}.md artifact convention — each worker writes its output to a deterministic file path before the wave ends; the aggregation step reads these files rather than accumulating worker transcripts in the orchestrator context',
       'context-packet forwarding — between phases the orchestrator assembles a 1–2 K token summary from the current-phase artifacts and passes it as the dispatch payload for the next wave; keeps worker contexts clean and prevents the orchestrator context from growing unbounded',
       'Worktree-per-issue branch convention — each subagent workflow runs on a dedicated branch and a dedicated git worktree; the dispatching session and worker sessions do not share a working tree, which prevents file-system race conditions during parallel writes',
+      'Parallel fan-out cardinality — five investigators in Phase 1, five iterators in Phase 2, three synthesizers in Phase 3 (5+5+3+1 cardinality); the specific cardinality is a choice encoded in the analysis-funnel skill, not a CC-native primitive',
+      'Phase-boundary disk checkpoint — workers write findings to disk before the next phase dispatches; the checkpoint protocol is a convention encoded in the analysis-funnel SKILL.md, not a feature of Claude Code itself',
     ],
     workedExample: {
       url: 'https://github.com/julianken/detached-node/pull/218',
@@ -177,7 +177,7 @@ The distinction from the Orchestrator-Workers framing is altitude, not mechanics
 The worked example also shows where the pattern's aggregation discipline matters in practice. Phase 1 produces five artifact files; the aggregation step must read all five and produce a coherent context packet before Phase 2 can dispatch. If the aggregation rule is underspecified — if the orchestrator prompt does not tell the session how to resolve disagreements between investigators or how to weight their outputs — the context packet for Phase 2 will carry conflicting signals that downstream workers have to untangle. In PR #218, the analysis-funnel SKILL.md encodes the aggregation rule alongside the dispatch constraint, so both halves of the pattern are expressed in one artifact.`,
     },
     readerMove: {
-      text: 'Send N Task() calls in one assistant message; never serialize independent work.',
+      text: 'Inspect every dispatch message: N Task() calls in one message buys parallel wall-clock; N messages × 1 call serializes the work.',
       anchorUrl: 'https://github.com/julianken/detached-node/blob/main/.claude/skills/analysis-funnel/SKILL.md',
     },
     seeAlso: {
