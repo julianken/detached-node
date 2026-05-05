@@ -60,25 +60,7 @@ Never commit `.env.local` — it is already in `.gitignore`.
 
 ### Preview Environment
 
-Preview builds run in ephemeral Cloud Run Jobs triggered per PR. All three required vars must be present or `src/lib/env/required-env.ts` will throw `Missing required environment variables: [...]` at startup.
-
-```bash
-# Separate secret from Production — token-signing isolation
-PAYLOAD_SECRET="preview-only-secret-min-32-chars"
-
-# Safe to reuse the production canonical URL for Preview
-NEXT_PUBLIC_SERVER_URL="https://detached-node.dev"
-
-# Must NOT point at the production DB — payload migrate runs on every Preview build
-DATABASE_URL="postgres://..."  # dedicated Preview Supabase project
-
-# GCS — use a separate Preview bucket to isolate media uploads
-GCS_BUCKET="your-preview-bucket"
-GCS_HMAC_ACCESS_KEY="..."
-GCS_HMAC_SECRET="..."
-```
-
-Store Preview secrets in GitHub Actions secrets and map them to Cloud Run Jobs via Workload Identity Fed — same auth flow as Production, different service account with narrower IAM scope.
+Preview deployments are not yet wired. No `pull_request` workflow exists — `.github/workflows/deploy.yml` triggers only on `push: branches: [main]`. PRs are validated via CI only: ESLint, TypeScript, Vitest, Next.js build, and bundle analysis. Preview Cloud Run infrastructure (a Service per branch, not a Job — Cloud Run Jobs are batch, not HTTP) is tracked as a future milestone.
 
 ## CI/CD (GitHub Actions)
 
@@ -90,7 +72,13 @@ The `.github/workflows/deploy.yml` workflow:
 4. Deploys new revision via `gcloud run deploy --image ... --region ...`.
 5. Cloud Run shifts 100% traffic to the new revision on success.
 
-Required GitHub secrets: `GCP_PROJECT_ID`, `GCP_WORKLOAD_IDENTITY_PROVIDER`, `GCP_SERVICE_ACCOUNT`, `DATABASE_URL`, `PAYLOAD_SECRET`, `NEXT_PUBLIC_SERVER_URL`, `GCS_BUCKET`, `GCS_HMAC_ACCESS_KEY`, `GCS_HMAC_SECRET`.
+Required configuration, split by store:
+
+**GitHub repository variables (`vars.`):** `GCP_PROJECT_ID`, `GCP_REGION`, `GCP_WORKLOAD_IDENTITY_PROVIDER`, `GCP_SERVICE_ACCOUNT`, `NEXT_PUBLIC_SERVER_URL`
+
+**GitHub repository secrets (`secrets.`):** `SUPABASE_SESSION_URL` (the database URL used during migrations and Docker build — note: not `DATABASE_URL`), `PAYLOAD_SECRET`
+
+**Google Secret Manager (mounted into Cloud Run by `deploy-cloudrun@v2`):** `database-url:latest`, `payload-secret:latest`, `gcs-bucket:latest`, `gcs-hmac-key:latest`, `gcs-hmac-secret:latest`
 
 ## Database Migrations
 
