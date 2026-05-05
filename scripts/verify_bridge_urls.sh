@@ -13,6 +13,14 @@ BRIDGE_DIRS=(
 REPO_SLUG="julianken/detached-node"
 REPO_URL_PREFIX="https://github.com/${REPO_SLUG}"
 
+# Validate every BRIDGE_DIRS entry exists before proceeding
+for dir in "${BRIDGE_DIRS[@]}"; do
+  if [[ ! -e "$dir" ]]; then
+    echo "ERROR: BRIDGE_DIRS path missing: $dir — paths may be stale; aborting" >&2
+    exit 1
+  fi
+done
+
 failures=()
 urls=()
 pass_count=0
@@ -25,8 +33,8 @@ while IFS= read -r line; do urls+=("$line"); done < <(
 )
 
 if [[ ${#urls[@]} -eq 0 ]]; then
-  echo "No bridge URLs found — nothing to verify." >&2
-  exit 0
+  echo "ERROR: BRIDGE_DIRS produced no URLs — paths may be stale; aborting" >&2
+  exit 1
 fi
 
 for url in "${urls[@]}"; do
