@@ -140,6 +140,17 @@ export {}
     },
   ],
   addedAt: '2026-05-03',
-  dateModified: '2026-05-03',
-  lastChangeNote: 'Initial authoring of Tool Use / ReAct pattern (Phase-2 wave-1).',
+  dateModified: '2026-05-05',
+  lastChangeNote: 'W2.8 — Add realizingInClaudeCode Tier C cross-link: PreToolUse as harness-level enforcement primitive.',
+  realizingInClaudeCode: {
+    tier: 'C',
+    bodyMarkdown: `Claude Code exposes PreToolUse hooks as a harness-level enforcement primitive: shell scripts declared in .claude/settings.json intercept Bash tool calls before they execute and abort on non-zero exit. This makes the hook a process-level guardrail around the Tool Use / ReAct loop itself — not a prompt constraint, but a runtime intercept that fires before the model's chosen action reaches the shell. The scripts are tracked in git and carry the executable bit; [PR #335](https://github.com/julianken/detached-node/pull/335) is the canonical demonstration. A hook script is a no-op by design when the file is absent — enforcement is gated by script presence on disk, which is why git tracking is the activation step.`,
+    readerMove: {
+      text: 'Add a PreToolUse hook to .claude/settings.json; track the script in git so enforcement is present on every clone.',
+      anchorUrl: 'https://github.com/julianken/detached-node/pull/335',
+    },
+    seeAlso: {
+      siblingPatternSlugs: ['code-agent', 'guardrails'],
+    },
+  },
 }
