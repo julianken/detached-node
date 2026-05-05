@@ -99,10 +99,7 @@ One worktree per GitHub Issue using `Skill(using-git-worktrees)`:
 
 ```bash
 git worktree add ../wt-330-login-form -b feat/login-form
-cd ../wt-330-login-form && ./scripts/setup-worktree-e2e.sh && cd -
 ```
-
-**CRITICAL:** Run `./scripts/setup-worktree-e2e.sh` in EACH worktree to prevent port conflicts.
 
 Verify: `git worktree list`
 
