@@ -15,7 +15,8 @@
  * PNG source assets.
  *
  * Requires `DATABASE_URL`, `PAYLOAD_SECRET`, and (for prod uploads to
- * Vercel Blob) `BLOB_READ_WRITE_TOKEN` in `.env.local`.
+ * Google Cloud Storage) `GCS_BUCKET`, `GCS_HMAC_ACCESS_KEY`, and
+ * `GCS_HMAC_SECRET` in `.env.local`.
  *
  * After a successful run, delete `tmp/hero-pics/`.
  */
@@ -103,8 +104,8 @@ async function main() {
       const alt = `${post.title} — ${variant} hero`
 
       // Find existing media by filename (Payload sets filename to the
-      // upload's basename on disk — matches work for both local disk and
-      // Vercel Blob because Payload persists the filename as canonical).
+      // upload's basename on disk — Payload persists the filename as
+      // canonical regardless of storage adapter).
       const { docs: existingMedia } = await payload.find({
         collection: 'media',
         where: { filename: { equals: filename } },
