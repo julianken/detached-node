@@ -167,6 +167,36 @@ export {}
     },
   ],
   addedAt: '2026-05-03',
-  dateModified: '2026-05-04',
-  lastChangeNote: 'Author Code Agent satellite: read-edit-test loop, Agent-Computer Interface as the differentiator from generic Tool Use, edit-format gotcha.',
+  dateModified: '2026-05-05',
+  lastChangeNote: 'W2.3: add realizingInClaudeCode Tier B + worktree-per-issue inline Tier C.',
+  realizingInClaudeCode: {
+    tier: 'B',
+    ccPrimitives: [
+      'Edit / Bash / Read tool loop (the Agent-Computer Interface Claude Code ships)',
+      'pnpm test:unit → pnpm lint → pnpm typecheck → pnpm test:e2e gate (the test-runner half of the loop)',
+      'subagent-workflow principle 5: "lead agent orchestrates, never edits code directly"',
+    ],
+    bodyMarkdown: `
+Claude Code is not a tool that supports the Code Agent pattern — it is the pattern. The CLI wires the read-edit-test loop directly: the model calls \`Read\`, \`Edit\`, and \`Bash\` tools against a real checkout, runs \`pnpm test:unit\` to get feedback, and iterates. No scaffolding is required to enter the loop; opening a terminal session is the Agent-Computer Interface.
+
+Three layers make the loop disciplined rather than merely runnable. First, a **tool layer**: \`Read\`, \`Edit\`, and \`Bash\` are the ACI primitives; the test-gate command sequence (\`pnpm test:unit → pnpm lint → pnpm typecheck → pnpm test:e2e\`) is the success criterion the loop converges on. Second, a **CLAUDE.md rule**: the subagent-workflow skill encodes the convention as principle 5 — "lead agent orchestrates, never edits code directly." The lead agent plans, dispatches, and reviews; implementer subagents hold the edit tools. This is a workflow convention in this repo's [\`.claude/skills/subagent-workflow/SKILL.md\`](https://github.com/julianken/detached-node/blob/main/.claude/skills/subagent-workflow/SKILL.md), not an enforced technical constraint. Third, a **worktree-per-issue discipline**: each GitHub Issue gets its own git worktree so implementer agents work in isolation and the lead agent's main checkout stays clean.
+
+The worked example is [issue #305](https://github.com/julianken/detached-node/issues/305) + [PR #335](https://github.com/julianken/detached-node/pull/335): a W0.1 hooks-restore task dispatched to a subagent that ran the read-edit-test loop in a dedicated worktree, produced a clean diff, and surfaced it for review — the pattern's lifecycle compressed into a single issue.
+
+<details>
+<summary>Cross-link: worktree-per-issue (Tier C)</summary>
+
+Each GitHub Issue in this repo's subagent workflow gets its own git worktree, created with \`git worktree add .claude/worktrees/wt-NNN-<slug> feat/<slug>\`. The naming places worktrees inside the repo at \`.claude/worktrees/\` so the harness sandbox can reach them without leaving the checkout root. The worktree inherits the repo's \`CLAUDE.md\` automatically; no extra config copy step is needed. The pattern prevents implementer agents from stepping on each other's working trees and keeps the lead agent's main checkout unmodified between dispatches. Remove with \`git worktree remove .claude/worktrees/wt-NNN-<slug>\` after the PR merges.
+
+</details>
+`.trim(),
+    readerMove: {
+      text: 'Add a one-line lead-never-edits rule to your CLAUDE.md and try git worktree add on your next issue.',
+      anchorUrl: 'https://github.com/julianken/detached-node/blob/main/.claude/skills/subagent-workflow/SKILL.md',
+    },
+    seeAlso: {
+      skillPath: '.claude/skills/subagent-workflow/SKILL.md',
+      siblingPatternSlugs: ['tool-use-react', 'orchestrator-workers'],
+    },
+  },
 }
