@@ -150,23 +150,23 @@ if (!rateLimit.success) {
 
 ## Environment Variables
 
-Add to `.env.local` for production-like testing:
+Add to `.env.local` for local development with a real Upstash instance:
 
 ```bash
 UPSTASH_REDIS_REST_URL="https://your-database.upstash.io"
 UPSTASH_REDIS_REST_TOKEN="your-token-here"
 ```
 
-In development without these variables, the system automatically uses in-memory fallback.
+In production these are set as GitHub Actions secrets and injected into the Cloud Run service at deploy time. In development without these variables, the system automatically uses in-memory fallback.
 
 ## Deployment Checklist
 
 Before deploying to production:
 
 - [ ] Set up Upstash Redis database
-- [ ] Add `UPSTASH_REDIS_REST_URL` to Vercel environment variables
-- [ ] Add `UPSTASH_REDIS_REST_TOKEN` to Vercel environment variables
-- [ ] Test rate limiting in preview deployment
+- [ ] Add `UPSTASH_REDIS_REST_URL` as a GitHub Actions secret (injected into Cloud Run)
+- [ ] Add `UPSTASH_REDIS_REST_TOKEN` as a GitHub Actions secret (injected into Cloud Run)
+- [ ] Test rate limiting in staging deployment
 - [ ] Monitor Upstash dashboard for rate limit analytics
 - [ ] Set up alerts for high rate limit hit rates
 
@@ -179,7 +179,7 @@ Before deploying to production:
 
 ### Production (with Upstash)
 - Upstash dashboard shows rate limit analytics
-- Track 429 response rates via Vercel Analytics
+- Track 429 response rates via Cloud Run logs / monitoring
 - Monitor Redis command usage for cost tracking
 
 ## Performance Impact
