@@ -143,7 +143,6 @@ export {}
     tier: 'A',
     ccPrimitives: [
       'CLAUDE.md always-on-files trio (CLAUDE.md, settings.json, .claude/skills/)',
-      'context-packets/phase-{N}-packet.md per-phase snapshot files',
       'prompt-caching prefix pinning (invariant system prompt at window head)',
       'tiktoken cl100k_base token counting / wc -w × 1.8 fallback',
     ],
