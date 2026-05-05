@@ -32,6 +32,16 @@ const nextConfig: NextConfig = {
       : [],
   },
 
+  async redirects() {
+    return [
+      {
+        source: '/failure-modes',
+        destination: '/posts/',
+        permanent: true,
+      },
+    ]
+  },
+
   async headers() {
     return [
       {

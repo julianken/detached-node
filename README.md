@@ -27,7 +27,6 @@ src/
 │   │   ├── page.tsx                    # Home
 │   │   ├── posts/                      # Post listing + detail ([slug])
 │   │   ├── about/                      # Static about page
-│   │   ├── failure-modes/              # Pillar page for article clusters
 │   │   └── agentic-design-patterns/    # Hub + [slug] satellites + changelog
 │   └── (payload)/                      # CMS admin routes
 ├── components/            # Shared React components
