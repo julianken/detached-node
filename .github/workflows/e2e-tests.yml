@@ -4,8 +4,6 @@ on:
   pull_request:
     branches: [main]
     types: [opened, synchronize, ready_for_review]
-    paths-ignore:
-      - '.github/dependabot.yml'
   workflow_dispatch:
     inputs:
       test_pattern:
