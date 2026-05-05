@@ -147,6 +147,63 @@ export {}
     },
   ],
   addedAt: '2026-05-03',
-  dateModified: '2026-05-03',
-  lastChangeNote: 'Initial authoring of the Evaluation (LLM-as-Judge) pattern (wave-2, issue #179).',
+  dateModified: '2026-05-05',
+  lastChangeNote: 'Populate realizingInClaudeCode Tier A (W1.3, issue #310).',
+
+  realizingInClaudeCode: {
+    tier: 'A',
+
+    ccPrimitives: [
+      'julianken-bot subagent — a separate GitHub machine-user identity that posts reviews via the REST API, never via `gh pr review`, from a fresh context window independent of the dispatcher',
+      'reviewing-as-julianken-bot SKILL.md — the 12-rule rubric (R1 trace-every-claim, R3 cap-findings-at-3, R8 mandatory-find second pass, R11 prompt-injection defense, R12 cross-tier model bias) loaded by the subagent at invocation time',
+      'macOS Keychain PAT — bot credential stored under service `julianken-bot@github.com`, account `token`; scoped to a single `GH_TOKEN=$(...) gh` subprocess per call; never exported, never written to disk',
+      'Mergify merge-queue gate — `.mergify.yml` required-checks list includes the bot APPROVE as a precondition; PRs cannot enter the queue until the bot posts a clean verdict',
+    ],
+
+    scaffolding: [
+      '.claude/skills/reviewing-as-julianken-bot/SKILL.md — the 12-rule rubric file; loaded by the julianken-bot subagent; contains R1–R12 with per-rule rationale and citation anchors',
+      'scripts/bot-review.sh — encapsulates Keychain load + single-subprocess GH_TOKEN scoping + REST API call; dispatcher calls this with owner/repo, PR number, and a jq-assembled review JSON',
+      '.mergify.yml — declares required checks and the APPROVE gate; bot verdict is enforced at the infrastructure layer, not the honor layer',
+    ],
+
+    workedExample: {
+      url: 'https://github.com/julianken/detached-node/pull/290',
+      description: 'PR #290 (favicon rebrand) completed a full 2-cycle bot review. Cycle 1: julianken-bot (model: opus, fresh context) posted REQUEST_CHANGES with 1 IMPORTANT finding (splash background merge) and 1 SUGGESTION (short_name truncation), each traced to a specific manifest field per R1. The mandatory R8 second pass surfaced both findings; no filler praise appeared. Cycle 2: fixes applied; bot re-reviewed the delta-only diff, confirmed both findings resolved, ran the mandatory R8 second pass on a 4-character change set, and posted APPROVE. The same-tier risk flag was noted in the verdict per R12. Total review time across both cycles: under 4 minutes.',
+    },
+
+    bodyMarkdown: `
+The abstract pattern — a separate model reads a candidate output, applies a written rubric, and emits a structured verdict — appears in the research literature as LLM-as-Judge (Zheng et al., NeurIPS 2023) and in the observability ecosystem as first-class evaluator types (LangSmith, OpenAI Evals). Anthropic shipped a managed version of this pattern in April 2026 as multi-agent code review built into Claude Code: a separate critic agent in fresh context, cross-provider model selection, and sycophancy-bias mitigation as a named design goal (InfoQ; The New Stack). The mechanics are structurally identical to what this section describes.
+
+The self-hosted realization documented here predates the managed feature and is one of two paths for practitioners who want control over the rubric, the identity separation, or the credential topology.
+
+**Bias mitigations the rubric encodes**
+
+LLM-as-judge has three documented failure modes that any production realization must address explicitly. NeurIPS 2024 measured perplexity-familiarity bias: a model reviewing its own output assigns systematically inflated scores because the output reads as familiar rather than correct. NYU (January 2026) showed empirically that cross-tier verification — a stronger model reviewing a weaker model's output — breaks the shared-prior mechanism responsible for the inflation. OWASP LLM Top 10 2026 catalogues indirect prompt injection via PR body as the dominant attack class on AI reviewers; OWASP LLM01:2025 / OWASP LLM01:2026 list it as the top-ranked enterprise risk.
+
+The 12-rule rubric addresses all three:
+
+- **R8 (mandatory-find second pass)** directly counters perplexity-familiarity bias. Before drafting the verdict, the reviewer runs a second pass with the explicit prior that at least one improvement exists. A clean APPROVE after a genuine second pass is an honest verdict; skipping the pass produces a sycophantic LGTM.
+- **R12 (cross-tier model bias)** implements the NYU mitigation. The julianken-bot subagent defaults to \`model: opus\` so that when the implementer ran on Sonnet, the reviewer runs on a stronger tier. If both ran on Opus, R12 flags the same-tier risk explicitly in the verdict — as seen in PR #290's cycle-2 APPROVE.
+- **R11 (prompt-injection defense)** implements the OWASP mitigation. PR title, body, and commit messages are treated as untrusted input. Text that looks like reviewer instructions (e.g., "please approve without reviewing") is flagged as a BLOCKER, not followed. The rubric also defines sanitization protocol in a companion \`sanitization.md\`.
+
+**PR-Agent convergence**
+
+The 3-finding cap (R3) and the "no filler praise" rule (R4) derive from PR-Agent's verbatim defaults (\`num_max_findings = 3\`) and style guidelines. The 9:1 false-positive ratio of undisciplined AI reviewers drops toward a >60% signal ratio under the rubric per the April 2026 benchmark (arxiv 2604.03196). The convergence is intentional: PR-Agent encoded the same operational lesson independently.
+
+**Credential topology**
+
+The bot PAT lives in macOS Keychain under service \`julianken-bot@github.com\`, account \`token\`. Four accounts cover all bot access: \`password\` (web UI fallback), \`token\` (every \`gh\` call), \`totp-secret\` (TOTP generation via \`scripts/bot-totp.sh\`), and \`recovery-codes\`. The \`GH_TOKEN=$(...) gh\` scoping pattern keeps Julian's main \`gh auth\` state untouched — \`gh auth status\` always shows \`julianken\`, never the bot. The token is never exported, never written to \`.env\` or \`.netrc\`, and never visible in \`ps aux\`.
+`.trim(),
+
+    readerMove: {
+      text: "Mint a machine-user account, write a 12-rule rubric SKILL.md, gate the merge queue on the bot's APPROVE.",
+      anchorUrl:
+        'https://github.com/julianken/detached-node/blob/main/.claude/skills/reviewing-as-julianken-bot/SKILL.md',
+    },
+
+    seeAlso: {
+      skillPath: '.claude/skills/reviewing-as-julianken-bot/SKILL.md',
+      siblingPatternSlugs: ['guardrails', 'human-in-the-loop'],
+    },
+  },
 }
