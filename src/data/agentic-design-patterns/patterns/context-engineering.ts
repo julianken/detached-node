@@ -137,6 +137,48 @@ export {}
     },
   ],
   addedAt: '2026-05-03',
-  dateModified: '2026-05-03',
-  lastChangeNote: 'Author Context Engineering pattern (selection, ranking, layout, cache-aware assembly).',
+  dateModified: '2026-05-05',
+  lastChangeNote: 'Add realizingInClaudeCode Tier A + minimal-CLAUDE.md inline Tier C (W1.2 #309).',
+  realizingInClaudeCode: {
+    tier: 'A',
+    ccPrimitives: [
+      'CLAUDE.md always-on-files trio (CLAUDE.md, settings.json, .claude/skills/)',
+      'context-packets/phase-{N}-packet.md per-phase snapshot files',
+      'prompt-caching prefix pinning (invariant system prompt at window head)',
+      'tiktoken cl100k_base token counting / wc -w × 1.8 fallback',
+    ],
+    scaffolding: [
+      'docs/read-along-feature/context-packets/ (per-phase packet artifacts)',
+      'CLAUDE.md (always-on project-level instructions)',
+      '.claude/skills/analysis-funnel/SKILL.md (carry-forward context structure)',
+    ],
+    workedExample: {
+      url: 'https://github.com/julianken/detached-node/tree/main/docs/read-along-feature/context-packets',
+      description: 'The read-along-feature context-packets directory contains four per-phase packet files (phase-0 through phase-3) produced during the multi-phase analysis funnel run. Each packet is a compact Markdown snapshot — retrieved artifacts, synthesis notes, carry-forward decisions — assembled so the next phase agent starts with a budgeted, ranked context rather than a raw transcript. The packet files exist at HEAD and are linked from the STATUS.md recovery anchor.',
+    },
+    readerMove: {
+      text: 'Count your three always-on files with tiktoken cl100k_base or wc -w × 1.8; if over 3 K tokens, move trigger-bearing rules into skills.',
+      anchorUrl: 'https://github.com/julianken/detached-node/blob/main/CLAUDE.md',
+    },
+    seeAlso: {
+      skillPath: '.claude/skills/analysis-funnel/SKILL.md',
+      siblingPatternSlugs: ['memory-management', 'checkpointing'],
+    },
+    bodyMarkdown: `Context engineering in a Claude Code setup begins with the three files that load on every session — \`CLAUDE.md\`, \`settings.json\`, and the skills directory. These are the always-on context: they arrive before any tool call, before any task instruction, before any retrieved content. The user-level \`~/.claude/CLAUDE.md\` token-economics meta-rule captures the load-bearing editorial discipline for this file class: "If a rule has a trigger (\\"when adding screenshots\\", \\"before committing\\", \\"during PR review\\"), it belongs in a skill, not here." ([source](https://github.com/julianken/detached-node/blob/main/CLAUDE.md)). Rules without triggers stay in \`CLAUDE.md\`; rules with triggers migrate to skills. The discipline is token-economic: every unconditional rule that migrates to a skill is a line evicted from the always-on budget.
+
+### Realization in this repo
+
+The read-along-feature run ([docs/read-along-feature/context-packets/](https://github.com/julianken/detached-node/tree/main/docs/read-along-feature/context-packets)) produced four per-phase context packets — \`phase-0-packet.md\` through \`phase-3-packet.md\` — each assembled by a phase-boundary summarization step before the next agent dispatched. The packet is a ranked, budgeted snapshot: carry-forward decisions, artifact paths already written to disk, open questions, and the synthesis from the prior phase. The format is not a verbatim transcript; it is a curated context selection that fits within the token budget the next phase can afford to spend on prior state.
+
+The three-move mechanical implementation mirrors the pattern's abstract structure. A relevance signal — the phase-boundary summarizer deciding which prior decisions have downstream bearing — orders candidates. A budget — a target packet size calibrated so the full three-file always-on context plus one packet stays under the session's practical limit — caps what survives. A layout — project invariants pinned at the \`CLAUDE.md\` head, then the packet, then the live task — places surviving tokens where attention is strongest.
+
+Measuring the always-on budget is the prerequisite step. Count tokens in \`CLAUDE.md\` + \`settings.json\` + the relevant skill using tiktoken \`cl100k_base\`, or multiply the raw word count by 1.8 as a fast proxy (tiktoken cl100k_base is the canonical measure; wc -w × 1.8 is the fast fallback). If the total exceeds 3 K tokens, the always-on context is consuming budget that limits how much retrieved or task-specific content can be packed in. The repair is the meta-rule: any rule with a trigger migrates to a skill so it loads only when the trigger fires.
+
+<details>
+<summary>Cross-link: minimal-CLAUDE.md pattern</summary>
+
+The minimal-CLAUDE.md configuration applies the same token-economics meta-rule at the file level. The editorial split is: unconditional facts about the project (framework, conventions, non-goals) stay in \`CLAUDE.md\`; triggered behaviors (pre-commit checks, screenshot procedures, PR review rubrics) live in \`.claude/skills/\` and load only when invoked. The result is a \`CLAUDE.md\` that is dense with signal per token rather than exhaustive. The user-level meta-rule — "If a rule has a trigger, it belongs in a skill, not here" — is the one-sentence specification for this configuration. Context Engineering names the budget rationale; minimal-CLAUDE.md names the file-level split that implements it.
+
+</details>`,
+  },
 }
