@@ -37,7 +37,7 @@ If you find yourself about to dispatch agents without having written the precedi
 
 **CRITICAL: Use MCP Servers for Data.** Throughout every phase, actively use available MCP servers to query for real data rather than relying on assumptions or stale knowledge. This includes but is not limited to:
 - **Context7** (`mcp__context7__*` / `mcp__plugin_context7_context7__*`) — Query up-to-date library documentation, API references, and code examples for any technology in the problem space. Use this before making claims about how a library or framework works.
-- **Issue tracker** (e.g., `mcp__linear-server__*`) — Read issue descriptions, acceptance criteria, comments, and linked context. Never fabricate issue details.
+- **Issue tracker** (e.g., GitHub Issues via `gh issue list / view`) — Read issue descriptions, acceptance criteria, comments, and linked context. Never fabricate issue details.
 - **Codebase tools** (e.g., `mcp__plugin_serena_serena__*`) — Use symbolic code analysis tools to understand existing architecture, find symbols, trace references, and read implementations. Prefer these over reading entire files.
 - **Browser/Playwright** (e.g., `mcp__playwright__*`) — Validate UI assumptions by actually looking at the current state of the application during investigation phases, not just during execution.
 - **Any other available MCP servers** — Check what's available and use them when they provide relevant data for the problem at hand.
@@ -356,7 +356,7 @@ Ordered list of what gets built/changed and in what order. Include dependency ar
 
 #### D.3) Work Unit Specs
 
-Define the units of work that the orchestration workflow will turn into real tickets (in Linear, GitHub Issues, or whatever tracker the project uses). **This skill does NOT create tickets** — it produces specs. The orchestration workflow (e.g., `Skill(subagent-workflow)`) is responsible for creating actual tickets, assigning them, and tracking their state.
+Define the units of work that the orchestration workflow will turn into real GitHub Issues. **This skill does NOT create issues** — it produces specs. The orchestration workflow (e.g., `Skill(subagent-workflow)`) is responsible for creating actual issues, assigning them, and tracking their state.
 
 Each work unit spec:
 
@@ -661,7 +661,7 @@ Sessions crash, context gets lost, conversations expire. The funnel is designed 
 
 - Everything in `{ARTIFACT_ROOT}/` — STATUS.md, phase outputs, context packets, execution artifacts
 - Git state — branches, commits, worktrees, PRs
-- Issue tracker state — Linear/ticket statuses, comments
+- GitHub Issue state — issue labels, assignees, linked PRs, comments
 
 ### Recovery Procedure
 
