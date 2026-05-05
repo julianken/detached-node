@@ -182,7 +182,8 @@ The worked example also shows where the pattern's aggregation discipline matters
     },
     seeAlso: {
       skillPath: '.claude/skills/analysis-funnel/SKILL.md',
-      siblingPatternSlugs: ['orchestrator-workers', 'checkpointing'],
+      articleSlug: 'phase-boundary-loop',
+      siblingPatternSlugs: ['orchestrator-workers', 'checkpointing', 'funnel-method'],
     },
     bodyMarkdown: `Parallelization in Claude Code reduces to one structural choice: how many Task() calls appear in a single assistant message. Dispatching N workers in one message tells Claude Code to execute all N tool_use blocks concurrently — wall-clock is bounded by the slowest worker, not the sum. Dispatching one worker per message serializes the work and multiplies wall-clock by N. The fan-out shape, the context isolation, and the deterministic aggregator that the abstract pattern describes all depend on that single dispatch decision being made correctly.
 
