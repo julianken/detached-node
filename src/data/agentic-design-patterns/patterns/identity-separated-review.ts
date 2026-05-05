@@ -169,7 +169,7 @@ export {}
 
     workedExample: {
       url: 'https://github.com/julianken/detached-node/pull/342',
-      description: 'PR #342 (W2.2 Checkpointing Tier A satellite) completed a first-cycle APPROVE. julianken-bot (model: opus, fresh context, implementer was sonnet — cross-tier held per R12) read the diff cold, ran the mandatory R8 second pass, confirmed all Tier A invariants via the verification ledger, and posted APPROVE with a single plan-controlled SUGGESTION noting that the workedExample URL doubles as the readerMove anchorUrl. The bot\'s verdict: ship-ready against the validator; the SUGGESTION is plan-scope, not implementer-scope.',
+      description: 'PR #342 (W2.2 Checkpointing Tier A satellite) completed a first-cycle APPROVE. julianken-bot dispatched with model: opus and a fresh context window (implementer ran Sonnet — cross-tier held per R12), read the diff cold, ran the mandatory R8 second pass, confirmed all Tier A invariants via the verification ledger (pnpm test:unit, pnpm typecheck, slug resolution, URL HTTP-200), and posted APPROVE. R9 attribution applied plan-scope vs implementer-scope discipline in the verdict.',
     },
 
     bodyMarkdown: `
