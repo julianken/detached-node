@@ -101,6 +101,11 @@ Subagent workflows create temporary `worktree-agent-*` branches. These are local
 
 **Convention:** If worktree branches accumulate, run the cleanup script before starting new work.
 
+## Skill Ownership
+
+- **`analysis-funnel`** — global-canonical (`~/.claude/skills/analysis-funnel/SKILL.md`). Repo copy is a mirror; re-copy from global if drift recurs.
+- **`decision-funnel`, `creative-funnel`, `design-review`, `subagent-workflow`** — repo-canonical. No global counterpart exists; repo is the source of truth.
+
 ## Merge Queue (Mergify)
 
 **After approving a PR, comment `@mergifyio queue` on it to add it to the merge queue.** Mergify will rebase onto main, re-run CI, and auto-merge if checks pass.
