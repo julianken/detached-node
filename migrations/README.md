@@ -72,10 +72,10 @@ pnpm payload migrate:rollback
 
 # Manual rollback (if needed)
 psql $DATABASE_URL << 'EOF'
-DROP INDEX IF EXISTS idx_pages_status_updatedAt;
-DROP INDEX IF EXISTS idx_posts_status_updatedAt;
-DROP INDEX IF EXISTS idx_posts_featured_status_publishedAt;
-DROP INDEX IF EXISTS idx_posts_status_publishedAt;
+DROP INDEX IF EXISTS idx_pages_status_updated_at;
+DROP INDEX IF EXISTS idx_posts_status_updated_at;
+DROP INDEX IF EXISTS idx_posts_featured_status_published_at;
+DROP INDEX IF EXISTS idx_posts_status_published_at;
 EOF
 ```
 
