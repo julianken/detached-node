@@ -29,6 +29,7 @@ async function globalSetup(config: FullConfig) {
   // Set up authentication
   console.log('🔐 Setting up authentication...')
 
+  // tests/.auth/ is git-ignored; this fixture regenerates admin.json on every test run.
   // Ensure .auth directory exists
   const authDir = path.dirname(STORAGE_STATE)
   if (!fs.existsSync(authDir)) {
