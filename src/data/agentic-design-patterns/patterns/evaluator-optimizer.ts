@@ -151,6 +151,24 @@ export {}
     },
   ],
   addedAt: '2026-05-03',
-  dateModified: '2026-05-04',
-  lastChangeNote: 'Author Evaluator-Optimizer satellite: within-attempt generator-critic loop, contrast with Reflexion, base-capability-ceiling gotcha.',
+  dateModified: '2026-05-05',
+  lastChangeNote: 'W3.3: add realizingInClaudeCode Tier C — creative-funnel spec+quality review cycle as evaluator-optimizer realization.',
+
+  realizingInClaudeCode: {
+    tier: 'C',
+
+    bodyMarkdown: `
+The [creative-funnel skill](https://github.com/julianken/detached-node/blob/main/.claude/skills/creative-funnel/SKILL.md) is evaluator-optimizer with two named critic roles and a capped iteration budget. Phase 1 creates N artifacts (generator). Phase 2 dispatches N spec reviewers who each return APPROVED or REVISION NEEDED with actionable instructions (evaluator pass 1). Failed items are revised and re-reviewed; maximum two cycles. Phase 3 dispatches N quality reviewers who rate craft and return APPROVED or POLISH NEEDED (evaluator pass 2). Failed items are polished and re-reviewed; maximum two cycles. After two failures the item is flagged for human attention rather than looped — the skill names the cap explicitly as an anti-drift measure. The two-gate structure separates correctness evaluation (spec) from quality evaluation (craft), matching the pattern's requirement that the evaluator produce actionable feedback the generator can act on. [PR #341](https://github.com/julianken/detached-node/pull/341) used this review structure.
+`.trim(),
+
+    readerMove: {
+      text: 'Separate spec review (correctness) from quality review (craft); cap each at two cycles; flag rather than loop after two failures.',
+      anchorUrl: 'https://github.com/julianken/detached-node/blob/main/.claude/skills/creative-funnel/SKILL.md',
+    },
+
+    seeAlso: {
+      skillPath: '.claude/skills/creative-funnel/SKILL.md',
+      siblingPatternSlugs: ['reflexion', 'evaluation-llm-as-judge', 'guardrails'],
+    },
+  },
 }

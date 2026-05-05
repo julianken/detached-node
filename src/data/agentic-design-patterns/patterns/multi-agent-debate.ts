@@ -141,6 +141,24 @@ export {}
     },
   ],
   addedAt: '2026-05-04',
-  dateModified: '2026-05-04',
-  lastChangeNote: 'Author Multi-Agent Debate satellite: parallel-agent answers, peer-critique rounds, deterministic aggregation; degeneration-of-thought gotcha.',
+  dateModified: '2026-05-05',
+  lastChangeNote: 'W3.3: add realizingInClaudeCode Tier C — decision-funnel Phase 3 synthesizers as multi-agent debate realization.',
+
+  realizingInClaudeCode: {
+    tier: 'C',
+
+    bodyMarkdown: `
+Phase 3 of the [decision-funnel skill](https://github.com/julianken/detached-node/blob/main/.claude/skills/decision-funnel/SKILL.md) is structured multi-agent debate with deterministic aggregation. Three synthesizers receive the same phase-2 packet and independently analyze findings through different lenses — thematic, risk/opportunity, and implication/coverage. They run in parallel (dispatched in a single message) so their outputs are independent, then the orchestrator reads all three and produces the phase-3-packet comparing areas of agreement and divergence. Phase 4 resolves disagreements into a final plan. The [design-review skill](https://github.com/julianken/detached-node/blob/main/.claude/skills/design-review/SKILL.md) offers a lighter version: one reviewer runs a full checklist, producing a prioritized list of independent findings. [PR #347](https://github.com/julianken/detached-node/pull/347) and [PR #348](https://github.com/julianken/detached-node/pull/348) both used the Phase 3 synthesis structure.
+`.trim(),
+
+    readerMove: {
+      text: 'Assign three synthesizers different lenses (thematic, risk, implication); dispatch all three in one message; aggregate in a separate orchestrator step.',
+      anchorUrl: 'https://github.com/julianken/detached-node/blob/main/.claude/skills/decision-funnel/SKILL.md',
+    },
+
+    seeAlso: {
+      skillPath: '.claude/skills/decision-funnel/SKILL.md',
+      siblingPatternSlugs: ['orchestrator-workers', 'evaluation-llm-as-judge', 'identity-separated-review'],
+    },
+  },
 }
