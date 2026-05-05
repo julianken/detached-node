@@ -145,6 +145,63 @@ export {}
     },
   ],
   addedAt: '2026-05-03',
-  dateModified: '2026-05-03',
-  lastChangeNote: 'Author Guardrails satellite: input/output rails, layered defence, indirect-prompt-injection gotcha.',
+  dateModified: '2026-05-05',
+  lastChangeNote: 'W2.4 — Populate realizingInClaudeCode Tier A: three-layer realization (hooks + skill-tables + branch-protection), PR #335 worked example.',
+  realizingInClaudeCode: {
+    tier: 'A',
+    ccPrimitives: [
+      'PreToolUse hooks (Layer 1) — shell scripts wired into Claude Code\'s settings.json that intercept Bash tool calls before they execute; .claude/hooks/block-debug-artifacts.sh and .claude/hooks/block-console-log.sh are the canonical Layer-1 instances in this repo: they fire on every git commit attempt and exit non-zero to abort the commit if a disallowed artifact or console.log is staged',
+      'settings.json hook schema — the JSON object under "PreToolUse" that declares the matcher ("Bash") and the hook command array; this is the CC-native wiring point that connects a shell script to a tool event; the hook fires inside the Claude Code process, not as a git pre-commit hook, so it intercepts the model\'s own commit attempts rather than a human\'s',
+      'CLAUDE.md / SKILL.md skill-table rules (Layer 2) — structured constraints the model reads as policy before it acts; the "Skill Ownership" section in CLAUDE.md and the frontmatter tables in .claude/skills/*.md are the convention layer: they tell the model what patterns to follow and what scaffolding to reach for, but they do not block any tool call at the process level',
+    ],
+    scaffolding: [
+      '.claude/hooks/block-debug-artifacts.sh — PreToolUse script that exits 2 when git commit would stage debug-*.spec.ts or *.bak files; tracked in git so it exists on every fresh clone',
+      '.claude/hooks/block-console-log.sh — PreToolUse script that exits 2 when a staged file outside the allowlist (tests/, e2e/, scripts/, *.test.*, *.spec.*) contains console.log; tracked in git, executable bit set',
+      '.mergify.yml required-checks list (Layer 3) — the queue_conditions block gates the merge queue on ESLint, TypeScript, Vitest, Next.js Build, Analyze Bundle, CodeQL Analysis, and four E2E shards; a PR cannot merge until all checks pass regardless of approvals; this is the infrastructure enforcement layer that the model cannot bypass',
+      'CLAUDE.md Skill Ownership section — documents which skills are global-canonical vs. repo-canonical and constrains how the model reasons about drift; a convention-layer guardrail that shapes model behavior without blocking tool calls',
+      '.claude/skills/*/SKILL.md frontmatter — skill tables that name permitted tools, phase cardinalities, and dispatch constraints; loaded into the orchestrator context before Task() dispatch and act as the read-time policy layer between the model and the hook layer',
+    ],
+    workedExample: {
+      url: 'https://github.com/julianken/detached-node/pull/335',
+      description: `PR #335 — "infra(hooks): restore PreToolUse enforcement + remove worktree-agent dead code" — is the canonical Layer-1 realization of the Guardrails pattern in this repository. It demonstrates the complete lifecycle of an operational hook layer: .claude/hooks/block-debug-artifacts.sh and .claude/hooks/block-console-log.sh are tracked in git, carry the executable bit, and are referenced by settings.json so they fire on every git commit attempt the model makes. The PR also removed the dead block-worktree-push.sh reference and the CLAUDE.md documentation that pointed to a non-existent clean-worktree-branches.sh script, keeping the convention layer in sync with the actual tool surface.
+
+The structural mechanics visible in PR #335 map directly to the three-layer framing this satellite describes. Layer 1 is operational: the two scripts exist on every clone, both hooks fire on every git commit attempt the model makes, and a non-zero exit aborts the commit before the staged artifact ships. Layer 2 was adjusted simultaneously — the stale CLAUDE.md section was removed so the model's read-time policy matched the actual tool surface. Layer 3 (the .mergify.yml required-checks queue) was already in place and remained unchanged; the PR had to pass all CI gates before Mergify advanced it.
+
+The test plan in PR #335 includes smoke tests that confirm the hooks fire as specified: staging debug-foo.spec.ts exits 2; staging a clean src/foo.ts exits 0; staging an allowlisted tests/_smoketest.ts with console.log exits 0. These are the observable signals of an operational guardrail: the script is present, executable, reachable from settings.json, and verified by a smoke test. The PR is evidence for the Layer-1 guardrail pattern because it demonstrates the full lifecycle: authoring the script, tracking it in git, confirming it fires, and gating the merge on CI. All three layers are in view in a single PR — the hooks became operational (Layer 1), the CLAUDE.md policy section was updated to reflect the actual tool surface (Layer 2), and the merge queue required all CI gates to pass before Mergify advanced the PR (Layer 3).`,
+    },
+    readerMove: {
+      text: 'Write your .claude/hooks/ scripts; track them in git; gate the merge queue on the lint check.',
+      anchorUrl: 'https://github.com/julianken/detached-node/blob/main/.claude/hooks/block-debug-artifacts.sh',
+    },
+    seeAlso: {
+      siblingPatternSlugs: ['evaluation-llm-as-judge', 'human-in-the-loop'],
+    },
+    bodyMarkdown: `Guardrails in Claude Code realize as three distinct layers, each operating at a different scope: instant (process-level hooks), session (read-time model policy), and repo-wide (merge-queue infrastructure). The practitioner's job is to instrument all three, because each layer governs a different surface.
+
+### Layer 1: PreToolUse hooks
+
+PreToolUse hooks are shell scripts declared in .claude/settings.json under the "PreToolUse" key with a tool matcher. When the matcher fires — "Bash" matches any Bash tool call — Claude Code runs the hook command before the tool executes. A non-zero exit aborts the tool call. The hook fires inside the Claude Code process, not as a git pre-commit hook, which means it intercepts the model's own commit attempts before they reach git.
+
+This repo's two hook scripts enforce artifact hygiene at the commit boundary. .claude/hooks/block-debug-artifacts.sh exits 2 when git commit would stage debug-*.spec.ts or *.bak files. .claude/hooks/block-console-log.sh exits 2 when a staged file outside the allowlist (tests/, e2e/, scripts/, *.test.*, *.spec.*) contains console.log. Both scripts are tracked in git and carry the executable bit; PR #335 is the canonical demonstration of this lifecycle: the scripts are present on every fresh clone, referenced in settings.json, smoke-tested, and gated through the Mergify required-checks list.
+
+The Layer-1 guarantee is process-level: the hook runs in the Claude Code process and the model cannot skip it by rephrasing the Bash command. It is also scope-limited: hooks fire only on the tool events their matcher matches. A PreToolUse hook on Bash does not intercept Write tool calls, Edit tool calls, or actions outside Claude Code. Layer 1 guards the model's own actions within the session; it does not govern what ships through the merge queue.
+
+### Layer 2: skill-table rules
+
+Skill-table rules are structured constraints the model reads as policy before it acts. The "Skill Ownership" section in this repo's CLAUDE.md declares which skills are global-canonical versus repo-canonical and constrains how the model reasons about drift. The SKILL.md files in .claude/skills/ carry phase cardinalities, dispatch constraints, and tool surface declarations that shape model behavior at read time.
+
+Layer 2 is the convention layer. It operates by telling the model what to do, not by blocking it from doing otherwise. A well-authored CLAUDE.md constraint is fast (no process overhead), broad (applies to any tool call the model reads about), and brittle (the model can reason past it under pressure or when the context window is full). Layer 2 is not a substitute for Layer 1; it is the layer that shapes model behavior on the large class of actions that do not touch a hook-matched tool event.
+
+The Layer-2 guarantee is probabilistic: the model is more likely to follow a clearly stated rule than to violate it, and the rule is auditable as plaintext. It is not a hard stop.
+
+### Layer 3: branch-protection infrastructure
+
+The .mergify.yml queue_conditions block is the infrastructure enforcement layer. It gates the merge queue on ESLint, TypeScript, Vitest, Next.js Build, Analyze Bundle, CodeQL Analysis, and four E2E shards. A PR cannot advance in the queue until all checks pass and at least one approval is recorded. This runs in GitHub's infrastructure, not in Claude Code, and the model cannot bypass it by any in-session action.
+
+Layer 3 is the highest-trust layer because it is fully outside the model's control surface. Its scope is also the narrowest: it governs what merges into main, not what the model does within a session. A session that produces malformed output, leaks secrets into a file that is never committed, or calls a disallowed tool does not touch Layer 3 at all. Layer 3 is the last line of defense, not the only one.
+
+### The three layers as a system
+
+The layers are complementary because each covers a different scope. Layer 1 (process-level hooks) governs the model's own tool calls within the active session — instant enforcement, hard stop on non-zero exit. Layer 2 (read-time model policy) shapes the model's reasoning across the full action space before any tool call fires — broad coverage, probabilistic enforcement. Layer 3 (merge-queue infrastructure) governs what reaches main — the narrowest scope, the highest trust, fully outside the model's control surface. Instrumenting all three — confirming hooks fire on smoke tests, auditing CLAUDE.md for drift, reviewing .mergify.yml conditions on each major scope addition — is what keeps the system operational rather than merely configured.`,
+  },
 }
