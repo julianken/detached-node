@@ -27,6 +27,17 @@ updates:
         patterns:
           - "tailwindcss"
           - "@tailwindcss/*"
+      ai-sdk:
+        patterns:
+          - "ai"
+          - "@ai-sdk/*"
+      dom-testing:
+        patterns:
+          - "jsdom"
+          - "happy-dom"
+      types:
+        patterns:
+          - "@types/*"
     labels:
       - "dependencies"
 
@@ -35,6 +46,13 @@ updates:
     schedule:
       interval: "weekly"
       day: "monday"
+    groups:
+      gcp-actions:
+        patterns:
+          - "google-github-actions/*"
+      actions-core:
+        patterns:
+          - "actions/*"
     labels:
       - "dependencies"
       - "github-actions"
