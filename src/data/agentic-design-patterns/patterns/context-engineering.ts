@@ -138,7 +138,7 @@ export {}
   ],
   addedAt: '2026-05-03',
   dateModified: '2026-05-05',
-  lastChangeNote: 'W2.9 additive: 5-section PR body as reviewer context packet cross-link.',
+  lastChangeNote: 'W3.1 additive: add 12-factor-agent to seeAlso.siblingPatternSlugs, resolving W1.2 forward-reference.',
   realizingInClaudeCode: {
     tier: 'A',
     ccPrimitives: [
@@ -160,7 +160,7 @@ export {}
     },
     seeAlso: {
       skillPath: '.claude/skills/analysis-funnel/SKILL.md',
-      siblingPatternSlugs: ['memory-management', 'checkpointing'],
+      siblingPatternSlugs: ['memory-management', 'checkpointing', '12-factor-agent'],
     },
     bodyMarkdown: `Context engineering in a Claude Code setup begins with the three files that load on every session — \`CLAUDE.md\`, \`settings.json\`, and the skills directory. These are the always-on context: they arrive before any tool call, before any task instruction, before any retrieved content. The user-level \`~/.claude/CLAUDE.md\` token-economics meta-rule captures the load-bearing editorial discipline for this file class: "If a rule has a trigger ("when adding screenshots", "before committing", "during PR review"), it belongs in a skill, not here." ([source](https://github.com/julianken/detached-node/blob/main/CLAUDE.md)). Rules without triggers stay in \`CLAUDE.md\`; rules with triggers migrate to skills. The discipline is token-economic: every unconditional rule that migrates to a skill is a line evicted from the always-on budget.
 

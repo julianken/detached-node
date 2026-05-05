@@ -151,7 +151,7 @@ export {}
   ],
   addedAt: '2026-05-03',
   dateModified: '2026-05-05',
-  lastChangeNote: 'W1.4: add realizingInClaudeCode Tier B (Monday audit move + seeAlso cross-links).',
+  lastChangeNote: 'W3.1 additive: seeAlso already includes 12-factor-agent; W1.4 forward-reference resolved by umbrella landing.',
   realizingInClaudeCode: {
     tier: 'B',
     bodyMarkdown: `
