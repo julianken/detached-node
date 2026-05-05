@@ -152,6 +152,26 @@ export {}
     },
   ],
   addedAt: '2026-05-03',
-  dateModified: '2026-05-04',
-  lastChangeNote: 'Author MCP satellite: open protocol for cross-vendor tool/resource/prompt discovery; tool-poisoning gotcha.',
+  dateModified: '2026-05-05',
+  lastChangeNote: 'W2.5: add realizingInClaudeCode Tier B (MCP in active Claude Code config; PR #287 cited as decommissioning-maintenance evidence).',
+  realizingInClaudeCode: {
+    tier: 'B',
+    bodyMarkdown: `
+In a working Claude Code setup, MCP shows up as the contents of the \`enabledPlugins\` and \`permissions.allow\` sections of \`~/.claude/settings.json\`. Five servers are active in this repo's config at authoring time: **context7** (documentation lookup), **github** (PR/issue operations), **playwright** (browser automation), **linear-server** (issue tracking), and **chrome-devtools-mcp** (runtime debugging). Each exposes its catalog over the same wire format; Claude Code calls \`list_tools\` on session start and the full catalog is available without any host-side adapter code.
+
+MCP configs require periodic maintenance as servers are added or decommissioned. [PR #287](https://github.com/julianken/detached-node/pull/287) is a routine instance of that discipline: it strips 13 stale \`mcp__vercel__*\` permission entries from \`.claude/settings.local.json\` after the Vercel MCP server was removed from the active set. The entries had accumulated silently — the protocol adds tools on connect, but nothing removes stale allow-list entries when a server is decommissioned. The pattern's value proposition (write the connector once, consume everywhere) carries a corresponding maintenance commitment: every server in the config is a standing permission surface that benefits from periodic review when the active server set changes.
+`.trim(),
+    workedExample: {
+      url: 'https://github.com/julianken/detached-node/pull/287',
+      description: 'PR #287 strips 13 stale mcp__vercel__* permission entries after the Vercel MCP server was removed — a routine maintenance pass demonstrating the standing-permission-surface review that MCP allow-lists benefit from when the active server set changes.',
+    },
+    readerMove: {
+      text: 'Add context7 + your equivalents to your CC config; reload session; new tool appears.',
+      anchorUrl: 'https://code.claude.com/docs/en/mcp',
+    },
+    seeAlso: {
+      articleSlug: 'rethinking-systems-in-the-agentic-age',
+      siblingPatternSlugs: ['tool-use-react', 'guardrails'],
+    },
+  },
 }
