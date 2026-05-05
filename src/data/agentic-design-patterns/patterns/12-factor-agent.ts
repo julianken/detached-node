@@ -205,7 +205,7 @@ export {}
       },
       {
         patternSlug: 'evaluation-llm-as-judge',
-        oneLine: 'Factor 9 — compact errors back into the window: scores model output against a rubric so regressions surface before they ship.',
+        oneLine: 'Factor 6 — small focused agents: stronger judge model, rubric-scoped and distinct from the candidate it grades.',
       },
       {
         patternSlug: 'evaluator-optimizer',
