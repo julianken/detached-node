@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 
-const VALID_METRICS = new Set(["LCP", "INP", "CLS", "TTFB", "FCP", "FID"]);
+const VALID_METRICS = new Set(["LCP", "INP", "CLS", "TTFB", "FCP"]);
 const MAX_BODY_BYTES = 2048;
 
 type VitalPayload = {
