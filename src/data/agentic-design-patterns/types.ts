@@ -52,6 +52,74 @@ export type SdkAvailability =
   | 'python-only'
   | 'no-sdk'
 
+// ---------------------------------------------------------------------------
+// Realizing in Claude Code — discriminated field added in W1.0
+// ---------------------------------------------------------------------------
+// Optional field on Pattern; all 23 existing patterns default undefined.
+// Render path guards with pattern.realizingInClaudeCode && so absent values
+// produce no output.
+// ---------------------------------------------------------------------------
+
+/** A concrete CC primitive name, e.g. "Task() parallel dispatch" */
+export type CcPrimitive = string
+
+/** A concrete scaffolding artifact name, e.g. "analysis-funnel/SKILL.md" */
+export type CcScaffolding = string
+
+/** A worked example anchor with a verified GitHub URL */
+export type CcWorkedExample = {
+  url: string
+  description: string
+}
+
+/** The Monday-morning move: text ≤25 words + SKILL.md or GitHub anchor */
+export type CcReaderMove = {
+  text: string
+  anchorUrl: string
+}
+
+/** Cross-links: optional skill path, article slug, sibling pattern slugs */
+export type CcSeeAlso = {
+  skillPath?: string
+  articleSlug?: string
+  siblingPatternSlugs?: string[]
+}
+
+/** Single row in a Tier-U umbrella pointer list */
+export type CcUmbrellaPointer = {
+  patternSlug: string
+  oneLine: string
+}
+
+/**
+ * Discriminated union over four tiers:
+ * - Tier A: full satellite (ccPrimitives + scaffolding + workedExample + readerMove + seeAlso)
+ * - Tier B: compact (readerMove + seeAlso; bodyMarkdown optional)
+ * - Tier C: cross-link paragraph (readerMove + seeAlso + bodyMarkdown)
+ * - Tier U: umbrella index (openingFraming + umbrellaPointers ≥10 + closingRule + seeAlso)
+ */
+export type RealizingInClaudeCode = {
+  tier: 'A' | 'B' | 'C' | 'U'
+  /** Required Tier A: CC primitive names that realize this pattern */
+  ccPrimitives?: CcPrimitive[]
+  /** Required Tier A: scaffolding artifacts (SKILL.md paths, config files) */
+  scaffolding?: CcScaffolding[]
+  /** Required Tier A: one verified worked-example PR or tree URL */
+  workedExample?: CcWorkedExample
+  /** Required Tier A, B, C: the Monday-morning reader move */
+  readerMove?: CcReaderMove
+  /** Required all tiers: cross-link block */
+  seeAlso?: CcSeeAlso
+  /** Tier C (and Tier A supplementary): compact paragraph prose */
+  bodyMarkdown?: string
+  /** Tier U only: ≥10 umbrella pointer rows */
+  umbrellaPointers?: CcUmbrellaPointer[]
+  /** Tier U only: opening framing paragraph (~100w) */
+  openingFraming?: string
+  /** Tier U only: closing rule sentence (verbatim meta-rule) */
+  closingRule?: string
+}
+
 export type Pattern = {
   slug: string                // kebab-case, equals filename
   name: string                // canonical name we use
@@ -77,6 +145,8 @@ export type Pattern = {
   dateModified: string        // ISO date — last meaningful content edit
   lastChangeNote?: string     // 1-line description of last edit
   archived?: boolean          // true when retired
+  /** W1.0: optional bridge field; absent for all 23 patterns until W1.1+ fills them */
+  realizingInClaudeCode?: RealizingInClaudeCode
 }
 
 export type ChangelogEntryType = 'added' | 'edited' | 'retired'
