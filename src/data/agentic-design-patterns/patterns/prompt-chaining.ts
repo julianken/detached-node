@@ -136,6 +136,24 @@ export {}
     },
   ],
   addedAt: '2026-05-03',
-  dateModified: '2026-05-03',
-  lastChangeNote: 'Initial authoring of Prompt Chaining pattern (wave 1).',
+  dateModified: '2026-05-05',
+  lastChangeNote: 'W3.3: add realizingInClaudeCode Tier C — decision-funnel skill as prompt-chaining realization.',
+
+  realizingInClaudeCode: {
+    tier: 'C',
+
+    bodyMarkdown: `
+The [decision-funnel skill](https://github.com/julianken/detached-node/blob/main/.claude/skills/decision-funnel/SKILL.md) in this repo is prompt chaining at scale. Each phase produces a context packet that is the prompt for the next: Phase 0 frames the problem, Phase 1's five investigators receive the phase-0-packet as their context, Phase 2's iterators receive the compressed phase-1-packet, Phase 3 synthesizers receive the phase-2-packet, and Phase 4 takes the phase-3-packet plus full Phase 3 artifacts to produce the execution plan. The key discipline is that the raw artifacts never flow forward — only the compressed packet flows to the next phase, preventing context bloat as the chain deepens. [PR #342](https://github.com/julianken/detached-node/pull/342) and [PR #343](https://github.com/julianken/detached-node/pull/343) are instances of the execution leg of this chain.
+`.trim(),
+
+    readerMove: {
+      text: 'Wire each phase\'s output as a compressed context packet that becomes the next phase\'s input prompt; never forward raw artifacts.',
+      anchorUrl: 'https://github.com/julianken/detached-node/blob/main/.claude/skills/decision-funnel/SKILL.md',
+    },
+
+    seeAlso: {
+      skillPath: '.claude/skills/decision-funnel/SKILL.md',
+      siblingPatternSlugs: ['orchestrator-workers', 'parallelization', 'context-engineering'],
+    },
+  },
 }

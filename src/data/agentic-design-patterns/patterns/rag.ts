@@ -135,6 +135,24 @@ export {}
     },
   ],
   addedAt: '2026-05-03',
-  dateModified: '2026-05-03',
-  lastChangeNote: 'Authored RAG pattern (vanilla retrieve-and-generate; agentic variant remains separate).',
+  dateModified: '2026-05-05',
+  lastChangeNote: 'W3.3: add realizingInClaudeCode Tier C — analysis-funnel context packets as structured RAG realization.',
+
+  realizingInClaudeCode: {
+    tier: 'C',
+
+    bodyMarkdown: `
+The [analysis-funnel skill](https://github.com/julianken/detached-node/blob/main/.claude/skills/analysis-funnel/SKILL.md) practices structured RAG at every phase transition. Each wave produces detailed artifacts on disk; what flows to the next wave is not those artifacts but a compressed **context packet** — a purpose-built retrieval unit distilled from the raw output. The packet carries problem summary, key findings, carry-forward concerns, and artifact paths. Downstream agents receive the packet as pre-loaded context (retrieve) alongside their specific task (generate), following the classic RAG contract. The anti-bloat rules in the skill's Context Management section enforce the retrieval discipline: sending raw artifacts instead of packets is the named failure mode. [PR #339](https://github.com/julianken/detached-node/pull/339) is an instance of this pipeline operating in production.
+`.trim(),
+
+    readerMove: {
+      text: 'Write a compressed context packet after each phase; send the packet, not the raw artifacts, to the next phase\'s agents.',
+      anchorUrl: 'https://github.com/julianken/detached-node/blob/main/.claude/skills/analysis-funnel/SKILL.md',
+    },
+
+    seeAlso: {
+      skillPath: '.claude/skills/analysis-funnel/SKILL.md',
+      siblingPatternSlugs: ['agentic-rag', 'context-engineering', 'checkpointing'],
+    },
+  },
 }

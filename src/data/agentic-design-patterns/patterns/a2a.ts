@@ -153,6 +153,24 @@ export {}
     },
   ],
   addedAt: '2026-05-03',
-  dateModified: '2026-05-04',
-  lastChangeNote: 'Author A2A satellite: Agent Card discovery, Task lifecycle, distinction from MCP and in-process Handoffs.',
+  dateModified: '2026-05-05',
+  lastChangeNote: 'W3.3: add realizingInClaudeCode Tier C — subagent-workflow Task() dispatch as lightweight A2A realization.',
+
+  realizingInClaudeCode: {
+    tier: 'C',
+
+    bodyMarkdown: `
+The [subagent-workflow skill](https://github.com/julianken/detached-node/blob/main/.claude/skills/subagent-workflow/SKILL.md) realizes a lightweight in-process A2A protocol using Claude Code's Task() primitive. Each implementer, spec reviewer, and quality reviewer is dispatched with a structured prompt that functions as an implicit Agent Card: it names the agent's role, working directory, issue number, PR reference, and expected deliverable. The orchestrator sends tasks and receives completions without shared state — each agent is isolated to its worktree. The protocol does not use the Google A2A spec's JSON-over-HTTP Task lifecycle, but mirrors its conceptual shape: structured task dispatch, isolated execution, result surfaced back to the orchestrating agent. [PR #335](https://github.com/julianken/detached-node/pull/335) and [PR #344](https://github.com/julianken/detached-node/pull/344) are instances of this dispatch protocol completing in production.
+`.trim(),
+
+    readerMove: {
+      text: 'Write each Task() prompt as a structured agent card: role, working directory, issue reference, and expected deliverable format.',
+      anchorUrl: 'https://github.com/julianken/detached-node/blob/main/.claude/skills/subagent-workflow/SKILL.md',
+    },
+
+    seeAlso: {
+      skillPath: '.claude/skills/subagent-workflow/SKILL.md',
+      siblingPatternSlugs: ['orchestrator-workers', 'handoffs-swarm', 'mcp'],
+    },
+  },
 }

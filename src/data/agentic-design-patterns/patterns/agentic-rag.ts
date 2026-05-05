@@ -139,6 +139,24 @@ export {}
     },
   ],
   addedAt: '2026-05-04',
-  dateModified: '2026-05-04',
-  lastChangeNote: 'Initial authoring of Agentic RAG pattern (iterative retrieval loop; contrasts with single-shot RAG).',
+  dateModified: '2026-05-05',
+  lastChangeNote: 'W3.3: add realizingInClaudeCode Tier C — decision-funnel MCP-grounded investigation as agentic RAG realization.',
+
+  realizingInClaudeCode: {
+    tier: 'C',
+
+    bodyMarkdown: `
+The [decision-funnel skill](https://github.com/julianken/detached-node/blob/main/.claude/skills/decision-funnel/SKILL.md) mandates agentic retrieval throughout every phase: "Throughout every phase, actively use available MCP servers to query for real data rather than relying on assumptions or stale knowledge." Each Phase 1 investigator actively queries Context7 for up-to-date library documentation, GitHub Issues for issue context, and codebase tools for current architecture before generating findings. This is the agentic variant of RAG — retrieval is driven by the agent mid-task via tool calls, not pre-loaded into a static prompt. The phase-0 context packet lists artifact paths and domain scope; investigators retrieve against those anchors on demand. [PR #336](https://github.com/julianken/detached-node/pull/336) shows a funnel run grounded in live codebase queries.
+`.trim(),
+
+    readerMove: {
+      text: 'Instruct each investigator to query MCP tools for real data throughout every phase; never pre-load static context.',
+      anchorUrl: 'https://github.com/julianken/detached-node/blob/main/.claude/skills/decision-funnel/SKILL.md',
+    },
+
+    seeAlso: {
+      skillPath: '.claude/skills/decision-funnel/SKILL.md',
+      siblingPatternSlugs: ['rag', 'tool-use-react', 'context-engineering'],
+    },
+  },
 }
