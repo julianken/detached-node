@@ -11,7 +11,7 @@ export const pattern: Pattern = {
   bodySummary: [
     'Reflexion teaches a language agent to learn from its own trajectories without touching model weights. After each attempt, the agent inspects the trajectory and any environment feedback, then writes a short verbal critique — a paragraph that names what went wrong and what to try next. That critique is appended to an episodic memory buffer keyed by task or task class. On the next attempt, the agent retrieves the most recent and most relevant critiques and conditions its plan on them, treating prior failures as instructions rather than as silent gradient signal.',
     'The pattern straddles two layers. As Topology it shapes the control flow: a generator-execute-evaluate loop that, on failure, branches into a critique step before retrying. As State it maintains durable, retrievable memory whose unit is a natural-language lesson, not an embedding of a previous answer. The mechanism only earns its keep when failures are diagnosable from the trajectory itself — the agent must be able to articulate, in words, what an outside observer could also see. Tasks where failure is invisible (a stale tool, a wrong premise the agent never questioned) defeat the loop, because the critique is grounded in nothing.',
-    'Reflexion sits next to but distinct from a within-attempt generator-critic loop. Self-Refine iterates on a single output until a critic stops complaining; Reflexion iterates across attempts, so the lesson outlives the run and the next encounter with the same problem class starts informed. The cost is operational, not algorithmic: someone has to decide what counts as the same task, how many critiques to retrieve, when to compact the buffer, and which model writes the critique. The default of having the same model judge its own work is the hazard the pattern is most often deployed without noticing.',
+    'Reflexion sits next to but distinct from a within-attempt generator-critic loop. Self-Refine iterates on a single output until a critic stops complaining; Reflexion iterates across attempts, so the lesson outlives the run and the next encounter with the same problem class starts informed. The cost is operational, not algorithmic: someone has to decide what counts as the same task, how many critiques to retrieve, when to compact the buffer, and which model writes the critique. The default of having the same model judge its own work is the hazard the pattern is most often deployed without noticing. Reflexion does not have its own Claude Code realization in this catalog yet; the closest in-repo realization of the critic-feedback loop is `evaluation-llm-as-judge` — both patterns turn on an identity-separated judge over generated output, differing mainly in time-scale (per-PR rather than per-iteration) and in whether the lesson persists across runs.',
   ],
   mermaidSource: `graph LR
   A[Task] --> B[Generate]
@@ -143,6 +143,6 @@ export {}
     },
   ],
   addedAt: '2026-05-02',
-  dateModified: '2026-05-03',
-  lastChangeNote: 'Initial authoring as the Phase-1 exemplar.',
+  dateModified: '2026-05-05',
+  lastChangeNote: 'W3.2 — Tier D honest-absence pointer: adjacent realization → evaluation-llm-as-judge.',
 }
