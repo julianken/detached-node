@@ -36,6 +36,7 @@ import { pattern as a2a }                   from './patterns/a2a'
 import { pattern as streaming }             from './patterns/streaming'
 // Digit-starting slug — must be aliased
 import { pattern as twelveFactorAgent }     from './patterns/12-factor-agent'
+import { pattern as identitySeparatedReview } from './patterns/identity-separated-review'
 
 // ── PATTERNS array — canonical order matches the 5-layer spec ─────────────
 
@@ -67,8 +68,9 @@ export const PATTERNS: Pattern[] = [
   mcp,
   a2a,
   streaming,
-  // Layer 5 — Methodology (1)
+  // Layer 5 — Methodology (2)
   twelveFactorAgent,
+  identitySeparatedReview,
 ]
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
