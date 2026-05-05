@@ -205,7 +205,7 @@ export {}
       },
       {
         patternSlug: 'evaluation-llm-as-judge',
-        oneLine: 'Factor 7 adjacent — human-gated merge: bot APPROVE gate closes the loop with a structured signal.',
+        oneLine: 'Factor 9 — compact errors back into the window: scores model output against a rubric so regressions surface before they ship.',
       },
       {
         patternSlug: 'evaluator-optimizer',
@@ -233,7 +233,7 @@ export {}
       },
       {
         patternSlug: 'mcp',
-        oneLine: 'Factor 4 + Factor 11 — tools as outputs, trigger anywhere: open protocol for cross-vendor tool discovery.',
+        oneLine: 'Factor 4 — tools as structured outputs: open protocol for cross-vendor tool discovery and call.',
       },
       {
         patternSlug: 'a2a',
@@ -264,7 +264,7 @@ export {}
         oneLine: 'Factor 11 — trigger from anywhere: delivers partial output as generated for any consumer transport.',
       },
     ],
-    closingRule: 'If a rule has a trigger (when X, each time X, before/after X), it belongs in a skill, not here.',
+    closingRule: `If a rule has a trigger ("when adding screenshots", "before committing", "during PR review"), it belongs in a skill, not here.`,
     seeAlso: {
       siblingPatternSlugs: ['context-engineering', 'memory-management', 'checkpointing', 'tool-use-react'],
     },
