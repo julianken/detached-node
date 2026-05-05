@@ -85,8 +85,21 @@ These routes exist in `src/app/` but are intentionally absent from the public si
 | Route | Reason |
 |---|---|
 | `/admin/*` | Auth-gated Payload CMS admin panel (`src/app/(payload)/admin/`) |
-| `/api/*` | Payload REST + GraphQL API endpoints (`src/app/(payload)/api/`); robot-disallowed in `robots.ts` |
+| `/api/*` | Payload CMS REST/GraphQL endpoints under `(payload)/api/*` (auth-gated for write ops; read-only for some) and the `/api/vitals` reporting endpoint (`src/app/api/vitals/`); robot-disallowed in `robots.ts` |
 | `/test-error` | Dev/test only — `page.tsx` returns `notFound()` when `NODE_ENV === 'production'` |
+
+---
+
+## Auto-generated metadata routes
+
+Next.js serves these directly from static files in `src/app/` — no route handler required. They are not included in the XML sitemap but are publicly reachable.
+
+| Route | File |
+|---|---|
+| `/favicon.ico` | `src/app/favicon.ico` |
+| `/icon.png` | `src/app/icon.png` |
+| `/apple-icon.png` | `src/app/apple-icon.png` |
+| `/manifest.webmanifest` | `src/app/manifest.webmanifest` |
 
 ---
 
