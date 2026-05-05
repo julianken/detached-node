@@ -49,7 +49,7 @@ export const pattern: Pattern = {
     },
   ],
   implementationSketch: `// Pseudocode — the actual implementation uses the reviewing-as-julianken-bot
-// SKILL.md, scripts/bot-review.sh, and macOS Keychain credential scoping.
+// SKILL.md, ~/.claude/skills/reviewing-as-julianken-bot/scripts/bot-review.sh (global skill bundle, not in-repo), and macOS Keychain credential scoping.
 
 // 1. Dispatcher retrieves bot PAT (never exported, scoped to one subprocess)
 // const token = execSync('security find-generic-password -s julianken-bot@github.com -a token -w').toString().trim()
@@ -163,7 +163,7 @@ export {}
 
     scaffolding: [
       '.claude/skills/subagent-workflow/SKILL.md — in-repo skill encoding the orchestrator/implementer/reviewer separation discipline; the reviewing-as-julianken-bot rubric (a user-level global skill at ~/.claude/skills/reviewing-as-julianken-bot/SKILL.md, not checked into this repo) extends this discipline with identity separation and the 12-rule review protocol',
-      'scripts/bot-review.sh — encapsulates Keychain PAT retrieval, single-subprocess GH_TOKEN scoping, and REST API review posting; dispatcher calls this with owner/repo, PR number, and a jq-assembled review JSON; the script is the only place the bot token is ever handled',
+      '~/.claude/skills/reviewing-as-julianken-bot/scripts/bot-review.sh — bundled with the global reviewing-as-julianken-bot skill (not checked into this repo); encapsulates Keychain PAT retrieval, single-subprocess GH_TOKEN scoping, and REST API review posting; dispatcher invokes the wrapper with owner/repo, PR number, and a jq-assembled review JSON; the script is the only place the bot token is ever handled',
       '.mergify.yml — declares required checks and a `#approved-reviews-by >= 1` queue condition; when the convention is to wait for `@julianken-bot`, the bot APPROVE is the signal that triggers the queue comment',
     ],
 
@@ -191,7 +191,7 @@ The 3-finding cap (R3) and "no filler praise" rule (R4) derive from PR-Agent's v
 
 **Credential topology**
 
-The bot PAT lives in macOS Keychain under four account entries: \`password\`, \`token\` (every \`gh\` call), \`totp-secret\` (TOTP generation via \`scripts/bot-totp.sh\`), and \`recovery-codes\`. The \`GH_TOKEN=$(...) gh\` scoping pattern keeps Julian's main \`gh auth\` state untouched — \`gh auth status\` always shows \`julianken\`, never the bot. The token is never exported, never written to disk, and never visible in \`ps aux\`.
+The bot PAT lives in macOS Keychain under four account entries: \`password\`, \`token\` (every \`gh\` call), \`totp-secret\` (TOTP generation via \`~/.claude/skills/reviewing-as-julianken-bot/scripts/bot-totp.sh\`, bundled with the global skill), and \`recovery-codes\`. The \`GH_TOKEN=$(...) gh\` scoping pattern keeps Julian's main \`gh auth\` state untouched — \`gh auth status\` always shows \`julianken\`, never the bot. The token is never exported, never written to disk, and never visible in \`ps aux\`.
 `.trim(),
 
     readerMove: {
