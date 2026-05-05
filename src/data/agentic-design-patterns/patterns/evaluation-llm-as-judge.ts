@@ -148,7 +148,7 @@ export {}
   ],
   addedAt: '2026-05-03',
   dateModified: '2026-05-05',
-  lastChangeNote: 'W2.6 additive: add seeAlso.articleSlug and identity-separated-review sibling cross-link.',
+  lastChangeNote: 'W2.9 additive: Mergify merge-queue structural-lock cross-link + 5-section PR body cross-link.',
 
   realizingInClaudeCode: {
     tier: 'A',
@@ -193,6 +193,20 @@ The 3-finding cap (R3) and the "no filler praise" rule (R4) derive from PR-Agent
 **Credential topology**
 
 The bot PAT lives in macOS Keychain under service \`julianken-bot@github.com\`, account \`token\`. Four accounts cover all bot access: \`password\` (web UI fallback), \`token\` (every \`gh\` call), \`totp-secret\` (TOTP generation via \`scripts/bot-totp.sh\`), and \`recovery-codes\`. The \`GH_TOKEN=$(...) gh\` scoping pattern keeps Julian's main \`gh auth\` state untouched — \`gh auth status\` always shows \`julianken\`, never the bot. The token is never exported, never written to \`.env\` or \`.netrc\`, and never visible in \`ps aux\`.
+
+<details>
+<summary>Cross-link: Mergify merge queue as structural lock</summary>
+
+The merge queue is the infrastructure that closes the cross-tier review loop. The bot's APPROVE is the gate signal: the [\`.mergify.yml\`](https://github.com/julianken/detached-node/blob/main/.mergify.yml) \`queue_conditions\` block requires \`#approved-reviews-by >= 1\` before Mergify rebases the branch, re-runs all CI checks, and squash-merges. In practice this means the reviewer's verdict — not a human clicking a button after the fact — is what opens the merge boundary. The convention of commenting \`@mergifyio queue\` only after the bot APPROVE translates the evaluation pattern's "structured verdict gates the next stage" contract into a deployment primitive. (For OSS projects without paid Mergify, GitHub-native merge queue provides the same structural lock.)
+
+</details>
+
+<details>
+<summary>Cross-link: 5-section PR body as reviewer context packet</summary>
+
+The canonical five-section PR body (Diagrams / Summary / Screenshots / Test plan / Plan reference) is the artifact the julianken-bot reviewer reads before opening the diff. Each section serves the rubric: Diagrams surfaces render changes so R1 (trace-every-claim) has visual evidence; Test plan provides a deterministic checklist the reviewer can verify claim-by-claim; Plan reference anchors the PR to its action-plan entry so scope is auditable. [PR #342 (W2.2 Checkpointing)](https://github.com/julianken/detached-node/pull/342) demonstrates the full shape: five sections, all populated, first-cycle APPROVE with zero BLOCKER findings.
+
+</details>
 `.trim(),
 
     readerMove: {
