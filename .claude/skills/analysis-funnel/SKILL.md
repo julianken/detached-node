@@ -94,7 +94,7 @@ Before running the funnel, gather these from the conversation or explicitly ask:
 
 If any of these are ambiguous, ask the user before starting Phase 0. Do not assume.
 
-**Data gathering before Phase 0.** Use available MCP servers to fill in gaps *before* framing, not during. Query issue trackers (Linear `mcp__linear-server__*`, GitHub Issues, Jira) for context, use codebase tools (e.g. `mcp__plugin_serena_serena__*`) to understand current state, and fetch library docs via Context7 (`mcp__plugin_context7_context7__*`) for any technology in scope. Grounding every phase in real data is the difference between an analysis and a plausible-sounding guess.
+**Data gathering before Phase 0.** Use available MCP servers to fill in gaps *before* framing, not during. Query the project's issue tracker (e.g., GitHub Issues via `gh issue list / view`) for context, use codebase tools (e.g. `mcp__plugin_serena_serena__*`) to understand current state, and fetch library docs via Context7 (`mcp__plugin_context7_context7__*`) for any technology in scope. Grounding every phase in real data is the difference between an analysis and a plausible-sounding guess.
 
 ---
 
