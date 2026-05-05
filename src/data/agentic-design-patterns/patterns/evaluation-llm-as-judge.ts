@@ -157,13 +157,13 @@ export {}
       'julianken-bot subagent — a separate GitHub machine-user identity that posts reviews via the REST API, never via `gh pr review`, from a fresh context window independent of the dispatcher',
       'reviewing-as-julianken-bot SKILL.md — the 12-rule rubric (R1 trace-every-claim, R3 cap-findings-at-3, R8 mandatory-find second pass, R11 prompt-injection defense, R12 cross-tier model bias) loaded by the subagent at invocation time',
       'macOS Keychain PAT — bot credential stored under service `julianken-bot@github.com`, account `token`; scoped to a single `GH_TOKEN=$(...) gh` subprocess per call; never exported, never written to disk',
-      'Mergify merge-queue gate — `.mergify.yml` required-checks list includes the bot APPROVE as a precondition; PRs cannot enter the queue until the bot posts a clean verdict',
+      'Mergify merge-queue gate — `.mergify.yml` declares the required-checks list and the `#approved-reviews-by >= 1` precondition; convention is to wait for `@julianken-bot`\'s APPROVE before commenting `@Mergifyio queue`',
     ],
 
     scaffolding: [
       '.claude/skills/reviewing-as-julianken-bot/SKILL.md — the 12-rule rubric file; loaded by the julianken-bot subagent; contains R1–R12 with per-rule rationale and citation anchors',
       'scripts/bot-review.sh — encapsulates Keychain load + single-subprocess GH_TOKEN scoping + REST API call; dispatcher calls this with owner/repo, PR number, and a jq-assembled review JSON',
-      '.mergify.yml — declares required checks and the APPROVE gate; bot verdict is enforced at the infrastructure layer, not the honor layer',
+      '.mergify.yml — declares required checks and a `#approved-reviews-by >= 1` queue condition; the bot identity is convention-enforced today (any collaborator approval satisfies the gate), and could be pinned via a Mergify condition such as `approved-reviews-by ~= julianken-bot` if the convention needs infrastructure backing',
     ],
 
     workedExample: {
@@ -196,13 +196,12 @@ The bot PAT lives in macOS Keychain under service \`julianken-bot@github.com\`, 
 `.trim(),
 
     readerMove: {
-      text: "Mint a machine-user account, write a 12-rule rubric SKILL.md, gate the merge queue on the bot's APPROVE.",
+      text: "Mint a machine-user account, write a 12-rule rubric, and adopt the convention of waiting for the bot's APPROVE before queueing the merge.",
       anchorUrl:
-        'https://github.com/julianken/detached-node/blob/main/.claude/skills/reviewing-as-julianken-bot/SKILL.md',
+        'https://github.com/julianken/detached-node/blob/main/.mergify.yml',
     },
 
     seeAlso: {
-      skillPath: '.claude/skills/reviewing-as-julianken-bot/SKILL.md',
       siblingPatternSlugs: ['guardrails', 'human-in-the-loop'],
     },
   },
