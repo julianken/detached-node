@@ -150,6 +150,23 @@ export {}
     },
   ],
   addedAt: '2026-05-03',
-  dateModified: '2026-05-03',
-  lastChangeNote: 'Initial authoring of Memory Management pattern (wave 2; tiered working/episodic/semantic stores).',
+  dateModified: '2026-05-05',
+  lastChangeNote: 'W1.4: add realizingInClaudeCode Tier B (Monday audit move + seeAlso cross-links).',
+  realizingInClaudeCode: {
+    tier: 'B',
+    bodyMarkdown: `
+In Claude Code, Memory Management resolves into three concrete layers: the **context window** (working memory — your \`CLAUDE.md\` files, recent turns, active tool outputs), **skills** (procedural memory — trigger-bearing rules externalised into \`.claude/skills/*/SKILL.md\` files loaded on demand), and **disk artifacts** (episodic memory — \`STATUS.md\`, phase packets, and context-packet files written between agent phases so the next session picks up where the last one left off).
+
+The practical constraint is the always-on token budget. Claude Code loads three files on every session start: the user-level \`~/.claude/CLAUDE.md\`, the repo \`CLAUDE.md\`, and (when present) \`AGENTS.md\`. Their combined token cost is fixed overhead, charged on every invocation regardless of task. When that overhead climbs above roughly 3 000 tokens, the working tier is already crowded before the first tool call. The audit move is the entry point: measure the combined token total with tiktoken \`cl100k_base\` or the proxy \`wc -w × 1.8\`, then lift any rule that carries a trigger condition ("when X", "before X", "each time X") into a skill. A rule that only fires in one context earns its keep in a skill file, not in always-on overhead.
+
+This pattern deliberately overlaps with Context Engineering — Memory Management names the audit; Context Engineering provides the budget rationale. The 12-factor-agent umbrella's closing rule captures the meta-principle: if a rule has a trigger, it belongs in a skill, not here.
+`.trim(),
+    readerMove: {
+      text: 'Audit your three always-on files; sum their Claude-token total via tiktoken cl100k_base or wc -w × 1.8; if > 3K, lift trigger-bearing rules into skills.',
+      anchorUrl: 'https://github.com/julianken/detached-node/blob/main/CLAUDE.md',
+    },
+    seeAlso: {
+      siblingPatternSlugs: ['context-engineering', '12-factor-agent'],
+    },
+  },
 }
