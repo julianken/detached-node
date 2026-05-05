@@ -22,6 +22,7 @@ import { PatternStickyRail } from "@/components/agentic-patterns/PatternStickyRa
 import { PatternBody } from "@/components/agentic-patterns/PatternBody";
 import { ReferencesSection } from "@/components/agentic-patterns/ReferencesSection";
 import { DisclosureSection } from "@/components/agentic-patterns/DisclosureSection";
+import { RealizingDisclosure } from "@/components/agentic-patterns/RealizingDisclosure";
 import { PrevNextNav } from "@/components/agentic-patterns/PrevNextNav";
 import {
   generateHubChildBreadcrumb,
@@ -127,6 +128,9 @@ export default async function PatternSatellitePage({
                   ))}
                 </div>
               </DisclosureSection>
+            )}
+            {pattern.realizingInClaudeCode && (
+              <RealizingDisclosure pattern={pattern} />
             )}
           </article>
         </div>
