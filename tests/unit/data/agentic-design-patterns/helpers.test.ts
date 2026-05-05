@@ -15,8 +15,8 @@ import {
 // ---------------------------------------------------------------------------
 
 describe('PATTERNS catalog', () => {
-  it('contains exactly 23 patterns', () => {
-    expect(PATTERNS).toHaveLength(23)
+  it('contains exactly 24 patterns', () => {
+    expect(PATTERNS).toHaveLength(24)
   })
 
   it('every pattern slug is unique', () => {
@@ -150,15 +150,15 @@ describe('getPatternsByLayer', () => {
     expect(getPatternsByLayer('interfaces')).toHaveLength(3)
   })
 
-  it('methodology has 1 pattern', () => {
-    expect(getPatternsByLayer('methodology')).toHaveLength(1)
+  it('methodology has 2 patterns', () => {
+    expect(getPatternsByLayer('methodology')).toHaveLength(2)
   })
 
-  it('layer counts sum to 23', () => {
+  it('layer counts sum to 24', () => {
     const total = ['topology', 'quality', 'state', 'interfaces', 'methodology']
       .map((id) => getPatternsByLayer(id as Parameters<typeof getPatternsByLayer>[0]).length)
       .reduce((a, b) => a + b, 0)
-    expect(total).toBe(23)
+    expect(total).toBe(24)
   })
 })
 
@@ -190,8 +190,8 @@ describe('getPattern', () => {
 // ---------------------------------------------------------------------------
 
 describe('getPatternSlugs', () => {
-  it('returns exactly 23 slugs', () => {
-    expect(getPatternSlugs().length).toBe(23)
+  it('returns exactly 24 slugs', () => {
+    expect(getPatternSlugs().length).toBe(24)
   })
 
   it('includes 12-factor-agent', () => {
@@ -229,9 +229,15 @@ describe('getAdjacentPatterns', () => {
     expect(next).toBeNull()
   })
 
-  it('12-factor-agent is alone in methodology — both null', () => {
+  it('12-factor-agent is first in methodology — prev null, next is identity-separated-review', () => {
     const { prev, next } = getAdjacentPatterns('12-factor-agent')
     expect(prev).toBeNull()
+    expect(next?.slug).toBe('identity-separated-review')
+  })
+
+  it('identity-separated-review is last in methodology — prev is 12-factor-agent, next null', () => {
+    const { prev, next } = getAdjacentPatterns('identity-separated-review')
+    expect(prev?.slug).toBe('12-factor-agent')
     expect(next).toBeNull()
   })
 })
@@ -259,7 +265,7 @@ describe('getCatalogDateModified', () => {
 // ---------------------------------------------------------------------------
 
 describe('getCatalogPatternCount', () => {
-  it('returns 23 (no patterns archived in this PR)', () => {
-    expect(getCatalogPatternCount()).toBe(23)
+  it('returns 24 (no patterns archived in this PR)', () => {
+    expect(getCatalogPatternCount()).toBe(24)
   })
 })

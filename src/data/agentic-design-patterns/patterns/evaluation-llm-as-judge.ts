@@ -148,7 +148,7 @@ export {}
   ],
   addedAt: '2026-05-03',
   dateModified: '2026-05-05',
-  lastChangeNote: 'Populate realizingInClaudeCode Tier A (W1.3, issue #310).',
+  lastChangeNote: 'W2.6 additive: add seeAlso.articleSlug and identity-separated-review sibling cross-link.',
 
   realizingInClaudeCode: {
     tier: 'A',
@@ -202,7 +202,8 @@ The bot PAT lives in macOS Keychain under service \`julianken-bot@github.com\`, 
     },
 
     seeAlso: {
-      siblingPatternSlugs: ['guardrails', 'human-in-the-loop'],
+      articleSlug: 'cross-identity-code-review',
+      siblingPatternSlugs: ['guardrails', 'human-in-the-loop', 'identity-separated-review'],
     },
   },
 }

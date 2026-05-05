@@ -266,6 +266,27 @@
       "firstAuthorSurname": "Wang",
       "source": "openalex",
       "verifiedAt": "2026-05-04"
+    },
+    "10.48550/arXiv.2410.21819": {
+      "title": "Self-Preference Bias in LLM-as-a-Judge",
+      "year": 2024,
+      "firstAuthorSurname": "Wataoka",
+      "source": "openalex",
+      "verifiedAt": "2026-05-05"
+    },
+    "10.48550/arXiv.2601.19072": {
+      "title": "HalluJudge: A Reference-Free Hallucination Detection for Context Misalignment in Code Review Automation",
+      "year": 2026,
+      "firstAuthorSurname": "Tantithamthavorn",
+      "source": "openalex",
+      "verifiedAt": "2026-05-05"
+    },
+    "10.48550/arXiv.2604.03196": {
+      "title": "From Industry Claims to Empirical Reality: An Empirical Study of Code Review Agents in Pull Requests",
+      "year": 2026,
+      "firstAuthorSurname": "Chowdhury",
+      "source": "openalex",
+      "verifiedAt": "2026-05-05"
     }
   }
 }
