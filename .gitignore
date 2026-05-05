@@ -60,6 +60,7 @@ scripts/.tmp-seed-images/
 
 # Tool configs
 .claude/hooks/
+.claude/settings.local.json
 .playwright-mcp/
 .serena/
 .superpowers/
