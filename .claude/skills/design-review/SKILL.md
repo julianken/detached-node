@@ -5,6 +5,7 @@ user-invocable: true
 disable-model-invocation: true
 context: fork
 agent: design-reviewer
+realizes: []
 ---
 
 # Design Review
