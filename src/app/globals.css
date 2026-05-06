@@ -843,7 +843,14 @@ a.card-scanline:active {
 }
 
 .mermaid-figure svg[id^="mermaid-"] {
-  display: inline-block;
+  display: block;
+  /* Mermaid sets an inline max-width based on the diagram's natural rendered
+     width. Override so the SVG fills its figure container (capped at the
+     figure's max-w-4xl); SVG scales cleanly. */
+  width: 100%;
+  max-width: 100% !important;
+  height: auto;
+  margin: 0 auto;
 }
 
 /* The pannable surface inside the diagram lightbox. `touch-action: none`
