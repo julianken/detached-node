@@ -187,6 +187,24 @@
   --font-sans-stack: var(--font-crimson), Georgia, "Times New Roman", serif;
   --font-mono-stack: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo,
     Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  /* ── Magazine-scale typography tokens ────────────────────
+     Values picked so each clamp's min hits at a 375px viewport
+     and max hits at a 1280px viewport. 1rem = 16px (root unchanged). */
+
+  /* Width tokens */
+  --width-frame: 1280px;
+  --width-prose: 960px;
+  --width-content: 1100px;
+
+  /* Type tokens (fluid) */
+  --type-body: clamp(19px, 1.1rem + 0.34vw, 22px);
+  --type-nav: clamp(14px, 0.8rem + 0.34vw, 17px);
+  --type-brand: clamp(18px, 1rem + 0.5vw, 22px);
+  --type-meta: clamp(11px, 0.65rem + 0.22vw, 13px);
+  --type-card-title: clamp(17px, 0.95rem + 0.45vw, 21px);
+  --type-card-summary: clamp(15px, 0.85rem + 0.34vw, 18px);
+  --type-page-h1: clamp(30px, 1.72rem + 0.66vw, 36px);
 }
 
 .dark {
