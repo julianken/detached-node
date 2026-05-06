@@ -148,24 +148,40 @@ export async function runSwarm(messages: { role: 'user' | 'assistant'; content: 
     },
   ],
   addedAt: '2026-05-03',
-  dateModified: '2026-05-05',
-  lastChangeNote: 'W3.3: add realizingInClaudeCode Tier C — subagent-workflow handoff chain as Handoffs/Swarm realization.',
-
+  dateModified: '2026-05-04',
+  lastChangeNote: 'Author Handoffs / Swarm satellite: sequential conversation ownership, transfer-as-tool-call, supervisor variant.',
   realizingInClaudeCode: {
-    tier: 'C',
-
-    bodyMarkdown: `
-The [subagent-workflow skill](https://github.com/julianken/detached-node/blob/main/.claude/skills/subagent-workflow/SKILL.md) wires a three-agent handoff chain for every GitHub Issue. Step 3 dispatches an implementer who owns the worktree and produces the PR. Step 4 hands off to a spec-compliance reviewer who reads the acceptance criteria and checks the diff. Step 5 hands off to a quality reviewer who checks conventions, security, and test coverage. Each handoff is explicit — the next agent receives the PR number and the preceding review's verdict as structured context. The chain is sequential within each issue and parallel across issues (all implementers run in one dispatch message). Principle 6 enforces handoff integrity: "Fixes stay in the same worktree/PR — never create a new PR for review fixes." [PR #344](https://github.com/julianken/detached-node/pull/344) and [PR #350](https://github.com/julianken/detached-node/pull/350) are instances of this chain completing in production.
-`.trim(),
-
-    readerMove: {
-      text: 'Model the implementer → spec-reviewer → quality-reviewer chain as three sequential dispatches per issue; never split fixes to a new PR.',
-      anchorUrl: 'https://github.com/julianken/detached-node/blob/main/.claude/skills/subagent-workflow/SKILL.md',
-    },
-
+    keyMoves: [
+      'Define each specialist as a separate [SKILL.md](https://docs.claude.com/en/docs/claude-code/skills) with its own tool surface and trigger condition.',
+      'Encode the handoff decision as a structured output step; the triage [subagent](https://docs.claude.com/en/docs/claude-code/sub-agents) emits the target skill name as a JSON field.',
+      'Pass a compact written context packet (not the full transcript) to the specialist at handoff — prevents the new agent re-interpreting prior framing.',
+      'Cap handoff depth in the orchestrator\'s instructions — declare a maximum count and treat exceeding it as a task-completion error.',
+    ],
+    ccPrimitives: [
+      'SKILL.md per specialist',
+      'Task tool (specialist subagents)',
+      'permissions.deny (scope guard)',
+      'Structured handoff output',
+    ],
     seeAlso: {
-      skillPath: '.claude/skills/subagent-workflow/SKILL.md',
-      siblingPatternSlugs: ['routing', 'orchestrator-workers', 'human-in-the-loop'],
+      siblingPatternSlugs: ['routing', 'orchestrator-workers', 'planning'],
+    },
+  },
+  realizingInCursor: {
+    keyMoves: [
+      'Create one `.cursor/rules/*.mdc` per specialist with `alwaysApply: false` and activate via `@rule-name` when handing off.',
+      'Use Agent mode as the triage layer — it decides when to switch context; activate the specialist rule after the classification.',
+      'Pass a summary of the conversation to the specialist at handoff via `@file` rather than relying on the raw chat history.',
+      'Use [Plan mode](https://cursor.com/docs/agent/plan-mode) to draft the handoff sequence upfront for complex multi-specialist tasks.',
+    ],
+    ccPrimitives: [
+      '.cursor/rules/*.mdc (per-specialist rules)',
+      '@rule-name activation',
+      '@file (handoff context packet)',
+      'Agent mode',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['routing', 'orchestrator-workers', 'planning'],
     },
   },
 }

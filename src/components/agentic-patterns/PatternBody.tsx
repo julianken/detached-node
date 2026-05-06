@@ -24,6 +24,8 @@ import { SourcedClaimTable } from "./SourcedClaimTable";
 
 interface PatternBodyProps {
   pattern: Pattern;
+  /** Optional slot rendered immediately after the diagram, before the decision matrix. */
+  afterDiagram?: React.ReactNode;
 }
 
 const FRAMEWORK_LABELS: Record<Framework, string> = {
@@ -62,7 +64,7 @@ function SlotHeading({ id, children }: { id: string; children: React.ReactNode }
   );
 }
 
-export function PatternBody({ pattern }: PatternBodyProps) {
+export function PatternBody({ pattern, afterDiagram }: PatternBodyProps) {
   const showPseudocodeBanner = PSEUDOCODE_BANNER_SET.has(pattern.sdkAvailability);
 
   return (
@@ -81,6 +83,9 @@ export function PatternBody({ pattern }: PatternBodyProps) {
           </figure>
         </section>
       )}
+
+      {/* 1b. Optional slot — e.g. RealizingDisclosure card sits here */}
+      {afterDiagram}
 
       {/* 2. Decision matrix — replaces When-to-use + When-NOT */}
       <DecisionMatrix pattern={pattern} />

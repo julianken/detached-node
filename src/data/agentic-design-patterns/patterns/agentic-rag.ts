@@ -139,24 +139,40 @@ export {}
     },
   ],
   addedAt: '2026-05-04',
-  dateModified: '2026-05-05',
-  lastChangeNote: 'W3.3: add realizingInClaudeCode Tier C — decision-funnel MCP-grounded investigation as agentic RAG realization.',
-
+  dateModified: '2026-05-04',
+  lastChangeNote: 'Initial authoring of Agentic RAG pattern (iterative retrieval loop; contrasts with single-shot RAG).',
   realizingInClaudeCode: {
-    tier: 'C',
-
-    bodyMarkdown: `
-The [decision-funnel skill](https://github.com/julianken/detached-node/blob/main/.claude/skills/decision-funnel/SKILL.md) mandates agentic retrieval throughout every phase: "Throughout every phase, actively use available MCP servers to query for real data rather than relying on assumptions or stale knowledge." Each Phase 1 investigator actively queries Context7 for up-to-date library documentation, GitHub Issues for issue context, and codebase tools for current architecture before generating findings. This is the agentic variant of RAG — retrieval is driven by the agent mid-task via tool calls, not pre-loaded into a static prompt. The phase-0 context packet lists artifact paths and domain scope; investigators retrieve against those anchors on demand. [PR #336](https://github.com/julianken/detached-node/pull/336) shows a funnel run grounded in live codebase queries.
-`.trim(),
-
-    readerMove: {
-      text: 'Instruct each investigator to query MCP tools for real data throughout every phase; never pre-load static context.',
-      anchorUrl: 'https://github.com/julianken/detached-node/blob/main/.claude/skills/decision-funnel/SKILL.md',
-    },
-
+    keyMoves: [
+      'Expose your retrieval index as an [MCP](https://docs.claude.com/en/docs/claude-code/mcp) tool; Claude calls it iteratively inside the normal tool-use loop without extra orchestration.',
+      'Write the retrieval tool description to instruct re-querying — tell the model to refine and re-issue when initial passages are insufficient.',
+      'Use a [subagent](https://docs.claude.com/en/docs/claude-code/sub-agents) for retrieval-heavy tasks; it accumulates passages in its own context and returns a summary, keeping the main session clean.',
+      'Pin the stopping heuristic in [`CLAUDE.md`](https://docs.claude.com/en/docs/claude-code/memory): specify how many retrieval rounds are appropriate before the agent should answer on available evidence.',
+    ],
+    ccPrimitives: [
+      'MCP server (iterative retrieval)',
+      'CLAUDE.md (loop termination guidance)',
+      'Task tool (retrieval subagent)',
+      'settings.json tool allow-list',
+    ],
     seeAlso: {
-      skillPath: '.claude/skills/decision-funnel/SKILL.md',
-      siblingPatternSlugs: ['rag', 'tool-use-react', 'context-engineering'],
+      siblingPatternSlugs: ['rag', 'tool-use-react', 'reflexion'],
+    },
+  },
+  realizingInCursor: {
+    keyMoves: [
+      'Add a retrieval MCP server to `.cursor/mcp.json`; in Agent mode, the model issues multiple `retrieve` calls iteratively until it has enough evidence.',
+      'Use `@docs` to pre-index documentation sources; Cursor fetches and re-ranks on each retrieval call automatically.',
+      'Pass the initial query result back via `@file` and prompt the agent to refine the query if the result is insufficient.',
+      'Use [Plan mode](https://cursor.com/docs/agent/plan-mode) to sketch the retrieval strategy before the loop starts so you can review the intended hops.',
+    ],
+    ccPrimitives: [
+      '.cursor/mcp.json (retrieval server)',
+      '@docs (pre-indexed sources)',
+      '@file (intermediate result grounding)',
+      'Plan mode',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['rag', 'tool-use-react', 'reflexion'],
     },
   },
 }

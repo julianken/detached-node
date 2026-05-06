@@ -141,24 +141,39 @@ export {}
     },
   ],
   addedAt: '2026-05-04',
-  dateModified: '2026-05-05',
-  lastChangeNote: 'W3.3: add realizingInClaudeCode Tier C — decision-funnel Phase 3 synthesizers as multi-agent debate realization.',
-
+  dateModified: '2026-05-04',
+  lastChangeNote: 'Author Multi-Agent Debate satellite: parallel-agent answers, peer-critique rounds, deterministic aggregation; degeneration-of-thought gotcha.',
   realizingInClaudeCode: {
-    tier: 'C',
-
-    bodyMarkdown: `
-Phase 3 of the [decision-funnel skill](https://github.com/julianken/detached-node/blob/main/.claude/skills/decision-funnel/SKILL.md) is structured multi-agent debate with deterministic aggregation. Three synthesizers receive the same phase-2 packet; the orchestrator assigns each a specific task for that run — tasks are decided dynamically based on what Phase 2 produced, not fixed in advance. They run in parallel (dispatched in a single message) so their outputs are independent, then the orchestrator reads all three and produces the phase-3-packet comparing areas of agreement and divergence. Phase 4 resolves disagreements into a final plan. [PR #347](https://github.com/julianken/detached-node/pull/347) and [PR #348](https://github.com/julianken/detached-node/pull/348) both used the Phase 3 synthesis structure.
-`.trim(),
-
-    readerMove: {
-      text: 'Assign each synthesizer a distinct task against the shared phase-2-packet; dispatch all three in one message; aggregate in a separate orchestrator step.',
-      anchorUrl: 'https://github.com/julianken/detached-node/blob/main/.claude/skills/decision-funnel/SKILL.md',
-    },
-
+    keyMoves: [
+      'Dispatch N debater [subagents](https://docs.claude.com/en/docs/claude-code/sub-agents) in a single message — they produce independent first-round answers without seeing each other.',
+      'Write each debater\'s first-round output to a named disk file; the second round reads all files and produces a revised answer.',
+      'Assign distinct roles or temperatures to debaters via their [`SKILL.md`](https://docs.claude.com/en/docs/claude-code/skills) or brief — identical prompts converge, not debate.',
+      'Run the final aggregation as a separate judge subagent that reads all revised answers cold, without the debate transcript in context.',
+    ],
+    ccPrimitives: [
+      'Task tool (parallel debater subagents)',
+      'Single-message dispatch (isolation)',
+      'Disk-written round outputs',
+      'Judge subagent (final aggregation)',
+    ],
     seeAlso: {
-      skillPath: '.claude/skills/decision-funnel/SKILL.md',
-      siblingPatternSlugs: ['orchestrator-workers', 'evaluation-llm-as-judge', 'identity-separated-review'],
+      siblingPatternSlugs: ['parallelization', 'evaluation-llm-as-judge', 'orchestrator-workers'],
+    },
+  },
+  realizingInCursor: {
+    keyMoves: [
+      'Open N independent Agent chats on the same question — each produces a first-round answer without seeing the others.',
+      'Paste all first-round answers into a new Agent chat and ask for critique and revision; reference each via `@file` if saved to disk.',
+      'Assign different perspectives or constraints to each debater chat via the opening prompt to break the degeneration-of-thought pattern.',
+      'Use a final Agent session as the judge — provide only the closing statements, not the full debate transcript, to keep the verdict unbiased.',
+    ],
+    ccPrimitives: [
+      'Multiple Agent chats (parallel debaters)',
+      '@file (cross-chat answer sharing)',
+      'Agent mode',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['parallelization', 'evaluation-llm-as-judge', 'orchestrator-workers'],
     },
   },
 }

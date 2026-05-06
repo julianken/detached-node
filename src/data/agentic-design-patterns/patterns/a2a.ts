@@ -153,24 +153,39 @@ export {}
     },
   ],
   addedAt: '2026-05-03',
-  dateModified: '2026-05-05',
-  lastChangeNote: 'W3.3: add realizingInClaudeCode Tier C — subagent-workflow Task() dispatch as lightweight A2A realization.',
-
+  dateModified: '2026-05-04',
+  lastChangeNote: 'Author A2A satellite: Agent Card discovery, Task lifecycle, distinction from MCP and in-process Handoffs.',
   realizingInClaudeCode: {
-    tier: 'C',
-
-    bodyMarkdown: `
-The [subagent-workflow skill](https://github.com/julianken/detached-node/blob/main/.claude/skills/subagent-workflow/SKILL.md) realizes a lightweight in-process A2A protocol using Claude Code's Task() primitive. Each implementer, spec reviewer, and quality reviewer is dispatched with a structured prompt that functions as an implicit Agent Card: it names the agent's role, working directory, issue number, PR reference, and expected deliverable. The orchestrator sends tasks and receives completions without shared state — each agent is isolated to its worktree. The protocol does not use the Google A2A spec's JSON-over-HTTP Task lifecycle, but mirrors its conceptual shape: structured task dispatch, isolated execution, result surfaced back to the orchestrating agent. [PR #335](https://github.com/julianken/detached-node/pull/335) and [PR #344](https://github.com/julianken/detached-node/pull/344) are instances of this dispatch protocol completing in production.
-`.trim(),
-
-    readerMove: {
-      text: 'Write each Task() prompt as a structured agent card: role, working directory, issue reference, and expected deliverable format.',
-      anchorUrl: 'https://github.com/julianken/detached-node/blob/main/.claude/skills/subagent-workflow/SKILL.md',
-    },
-
+    keyMoves: [
+      'Expose an A2A endpoint from a Claude Code [subagent](https://docs.claude.com/en/docs/claude-code/sub-agents) by wrapping it in a JSON-RPC server the caller discovers via Agent Card.',
+      'Add the remote agent\'s A2A base URL to a task brief; the calling subagent fetches the Agent Card before posting the first Task.',
+      'Use an [MCP](https://docs.claude.com/en/docs/claude-code/mcp) server as the internal transport if caller and callee share a runtime — A2A is for cross-runtime boundaries only.',
+      'Declare the authentication scheme in the Agent Card; treat A2A endpoints as untrusted RPC surfaces requiring scoped credentials.',
+    ],
+    ccPrimitives: [
+      'Task tool (A2A caller subagent)',
+      'MCP server (same-runtime alternative)',
+      'CLAUDE.md Agent Card URL reference',
+    ],
     seeAlso: {
-      skillPath: '.claude/skills/subagent-workflow/SKILL.md',
-      siblingPatternSlugs: ['orchestrator-workers', 'handoffs-swarm', 'mcp'],
+      siblingPatternSlugs: ['mcp', 'tool-use-react', 'guardrails'],
+    },
+  },
+  realizingInCursor: {
+    keyMoves: [
+      'Wrap A2A JSON-RPC calls in an [MCP server](https://cursor.com/docs/mcp) — Cursor calls the MCP tool, which delegates to the remote agent.',
+      'Store the remote agent\'s base URL and auth credentials in `~/.cursor/mcp.json` env vars, not in the rule files.',
+      'Use `@docs` to index the remote agent\'s Agent Card schema; the model then constructs valid Task payloads without hallucinating field names.',
+      'Use Agent mode for A2A-orchestrated tasks; long-running remote Tasks benefit from the iterative polling the agent loop supports natively.',
+    ],
+    ccPrimitives: [
+      '.cursor/mcp.json (A2A transport wrapper)',
+      '~/.cursor/mcp.json (credential env vars)',
+      '@docs (Agent Card schema)',
+      'Agent mode',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['mcp', 'tool-use-react', 'guardrails'],
     },
   },
 }

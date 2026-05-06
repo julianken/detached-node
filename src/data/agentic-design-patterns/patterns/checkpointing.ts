@@ -83,38 +83,37 @@ export {}
   },
   relatedSlugs: [],
   realizingInClaudeCode: {
-    tier: 'A',
+    keyMoves: [
+      'Write each phase\'s outputs to deterministic disk paths before the next [subagent](https://docs.claude.com/en/docs/claude-code/sub-agents) wave dispatches — the filesystem is the checkpoint store.',
+      'Maintain a `STATUS.md` with one row per phase (status, artifact count, timestamp); a fresh session reads it to find the resume point without replaying transcripts.',
+      'Gate each phase transition on a shell assertion that all expected artifact files exist and are non-empty — fail loudly rather than forward silently.',
+      'Forward a compressed context packet (1–2 K tokens) between phases, not raw transcripts; this keeps successor contexts clean and bounded.',
+    ],
     ccPrimitives: [
-      'Disk-checkpoint discipline — each phase boundary writes artifacts to disk (phase-{N}/{role}-{slug}.md) before the next wave is dispatched; the filesystem is the checkpoint store, not an in-memory accumulator',
-      'STATUS.md as the synchronous recovery anchor — a single row per phase updated inline during execution; a fresh-context successor session reads STATUS.md first and reconstructs where the funnel stopped without replaying any prior transcript',
-      'init_funnel.sh boundary-enforcement script — initializes the phase artifact directory tree, writes the initial STATUS.md row, and gates execution: the funnel does not start if the output directories are not writable',
-      'verify_phase.sh phase-exit gate — asserts all expected phase-{N}/{role}-{slug}.md files exist and are non-empty before dispatching the next wave; a missing artifact fails loudly rather than silently forwarding an incomplete context packet',
-      'update_status.py inline STATUS.md writer — called synchronously at each phase boundary to mark the phase complete with a timestamp and artifact count; the STATUS.md row is the only persistent record the orchestrator session needs to resume',
-      'Context-packet forwarding — between phases the orchestrator assembles a 1–2 K token context packet from phase artifacts (not raw transcripts) and passes it as the dispatch payload for the next wave; the packet keeps successor-session contexts clean',
+      'Disk artifact checkpoint protocol',
+      'STATUS.md recovery anchor',
+      'Task tool (phase workers)',
+      'PreToolUse hooks (phase-exit gate)',
     ],
-    scaffolding: [
-      '.claude/skills/analysis-funnel/SKILL.md — the orchestrator prompt encoding the 5+5+3+1 phase structure, the disk-checkpoint rule ("write each phase\'s artifacts before dispatching the next"), the STATUS.md synchronization contract, and the context-packet forwarding convention; the SKILL.md is the boundary-enforcement specification',
-      'STATUS.md recovery anchor — one row per phase: phase number, status (pending / running / complete), artifact count, timestamp, and a one-line summary; the row is updated synchronously by update_status.py at each boundary; a new session that loses its context reads STATUS.md and knows exactly which phase to resume from',
-      'phase-{N}/{role}-{slug}.md artifact convention — each investigator, iterator, and synthesizer writes its output to a deterministic path on disk; the path is the identity of the artifact and the checkpoint; the orchestrator never holds phase outputs in-context after the phase completes',
-      'Context-packets directory — context-packets/phase-{N}-packet.md holds the 1–2 K token summary that crosses the boundary; it is the only inter-phase artifact the next wave\'s workers receive in addition to their brief; the full phase-{N}/ directory is available on disk but not forwarded into worker contexts',
-    ],
-    workedExample: {
-      url: 'https://github.com/julianken/detached-node/blob/main/.claude/skills/analysis-funnel/SKILL.md',
-      description: `The analysis-funnel SKILL.md documents the 5→5→3→1 disk-checkpoint discipline that is Checkpointing realized in Claude Code. The SKILL.md encodes the boundary protocol: write every phase's artifacts to disk before the next wave dispatches, update STATUS.md inline, forward a compressed context packet rather than raw transcripts. The three boundary-enforcement scripts — init_funnel.sh, verify_phase.sh, update_status.py — implement the checkpoint-write and gate-check steps that the pattern requires.
-
-The structural mechanics in the SKILL.md match Checkpointing's core invariant: no phase work is held only in-context. Phase 1 investigators write findings to phase-1/{role}-{slug}.md on disk; verify_phase.sh asserts those files exist before Phase 2 dispatches. Phase 2 iterators read Phase 1 artifacts from disk (not from the orchestrator's in-context memory), produce phase-2/{role}-{slug}.md, and the process repeats. At each boundary, update_status.py marks the phase complete in STATUS.md with a timestamp and artifact count. A fresh-context session that opens STATUS.md can reconstruct the funnel's state entirely from disk — no transcript replay required, no in-context accumulation from the prior phase needed.
-
-This realization is consistent with the durable-state-machine framing that LangGraph (BaseCheckpointSaver, thread_id-keyed snapshots) and Temporal (event-history replay, short-circuiting already-journaled Activities) describe in their documentation. The difference is the storage layer: production orchestration frameworks write to Postgres or a journal service; the analysis-funnel configuration writes to the local filesystem under a git-tracked directory tree. The recovery guarantee is weaker — a disk wipe loses the checkpoint — but the boundary discipline is identical: complete the step, persist the output, gate the next step on the persisted artifact.
-
-STATUS.md as a recovery anchor is convergent practice across software-development tooling. Linear ships a per-issue status field updated synchronously with each transition. GitHub Projects tracks per-card status across board columns. Babel maintained a STATUS.md that documented compatibility-table completion per transform. Vue used a similar STATUS.md convention during the Vue 3 migration to track plugin and library readiness. Rust's tracking issues name per-feature stabilization status with inline checklists. The analysis-funnel configuration adds one specific deployment: using the STATUS.md row as the disk-anchored recovery signal for a fresh-context agent session resuming mid-funnel — the file's name is the prior art; the deployment pattern is what this configuration contributes.`,
-    },
-    readerMove: {
-      text: "Write each phase's artifacts to disk before dispatching the next; sync STATUS.md inline.",
-      anchorUrl: 'https://github.com/julianken/detached-node/blob/main/.claude/skills/analysis-funnel/SKILL.md',
-    },
     seeAlso: {
-      skillPath: '.claude/skills/analysis-funnel/SKILL.md',
-      siblingPatternSlugs: ['orchestrator-workers', 'context-engineering'],
+      siblingPatternSlugs: ['orchestrator-workers', 'context-engineering', 'funnel-method'],
+    },
+  },
+  realizingInCursor: {
+    keyMoves: [
+      'Commit partial work to a dedicated branch after each milestone; [cloud agents](https://cursor.com/docs/cloud-agent) already work on isolated branches by default.',
+      'Use a `STATUS.md` or equivalent file in the repo root as the recovery anchor — reference it via `@file` at the start of a resumed session.',
+      'Write task progress to a [`.cursor/rules/*.mdc`](https://cursor.com/docs/rules) file with `alwaysApply: true` so context survives Cursor session restarts.',
+      'Reference committed artifacts via `@git` or file references when resuming so the agent reads the actual persisted state, not its in-context assumption.',
+    ],
+    ccPrimitives: [
+      'Cloud agents (branch isolation)',
+      '.cursor/rules/*.mdc (persistent state)',
+      '@file (recovery anchor)',
+      'Agent mode',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['orchestrator-workers', 'context-engineering', 'funnel-method'],
     },
   },
   frameworks: ['langgraph', 'mastra'],

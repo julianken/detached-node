@@ -99,7 +99,21 @@ export default async function PatternSatellitePage({
           <PatternStickyRail pattern={pattern} />
           <article className="flex flex-col gap-10">
             <PatternHeader pattern={pattern} />
-            <PatternBody pattern={pattern} />
+            <PatternBody
+              pattern={pattern}
+              afterDiagram={
+                <div className="flex flex-col gap-3">
+                  <RealizingDisclosure
+                    label="Claude Code"
+                    realizing={pattern.realizingInClaudeCode}
+                  />
+                  <RealizingDisclosure
+                    label="Cursor"
+                    realizing={pattern.realizingInCursor}
+                  />
+                </div>
+              }
+            />
             <ReferencesSection pattern={pattern} />
             {overviewLead && (
               <DisclosureSection
@@ -128,9 +142,6 @@ export default async function PatternSatellitePage({
                   ))}
                 </div>
               </DisclosureSection>
-            )}
-            {pattern.realizingInClaudeCode && (
-              <RealizingDisclosure pattern={pattern} />
             )}
           </article>
         </div>

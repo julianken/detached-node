@@ -135,24 +135,40 @@ export {}
     },
   ],
   addedAt: '2026-05-03',
-  dateModified: '2026-05-05',
-  lastChangeNote: 'W3.3: add realizingInClaudeCode Tier C — analysis-funnel context packets as structured RAG realization.',
-
+  dateModified: '2026-05-03',
+  lastChangeNote: 'Authored RAG pattern (vanilla retrieve-and-generate; agentic variant remains separate).',
   realizingInClaudeCode: {
-    tier: 'C',
-
-    bodyMarkdown: `
-The [analysis-funnel skill](https://github.com/julianken/detached-node/blob/main/.claude/skills/analysis-funnel/SKILL.md) practices structured RAG at every phase transition. Each wave produces detailed artifacts on disk; what flows to the next wave is not those artifacts but a compressed **context packet** — a purpose-built retrieval unit distilled from the raw output. The packet carries problem summary, key findings, carry-forward concerns, and artifact paths. Downstream agents receive the packet as pre-loaded context (retrieve) alongside their specific task (generate), following the classic RAG contract. The anti-bloat rules in the skill's Context Management section enforce the retrieval discipline: sending raw artifacts instead of packets is the named failure mode. [PR #339](https://github.com/julianken/detached-node/pull/339) is an instance of this pipeline operating in production.
-`.trim(),
-
-    readerMove: {
-      text: 'Write a compressed context packet after each phase; send the packet, not the raw artifacts, to the next phase\'s agents.',
-      anchorUrl: 'https://github.com/julianken/detached-node/blob/main/.claude/skills/analysis-funnel/SKILL.md',
-    },
-
+    keyMoves: [
+      'Use a [MCP](https://docs.claude.com/en/docs/claude-code/mcp) server to expose your retrieval index as a `search` tool; Claude calls it inside the normal tool-use loop.',
+      'Declare the retrieval tool in [`settings.json`](https://docs.claude.com/en/docs/claude-code/settings) `permissions.allow` so it fires without prompting on every session.',
+      'Pin the prompt template (evidence layout, citation instruction) in [`CLAUDE.md`](https://docs.claude.com/en/docs/claude-code/memory) so the grounding format is consistent across calls.',
+      'Use a [subagent](https://docs.claude.com/en/docs/claude-code/sub-agents) for retrieval-heavy tasks so the main session context stays clean from bulk passage text.',
+    ],
+    ccPrimitives: [
+      'MCP server (retrieval tool)',
+      'settings.json tool allow-list',
+      'CLAUDE.md prompt template',
+      'Task tool (retrieval subagent)',
+    ],
     seeAlso: {
-      skillPath: '.claude/skills/analysis-funnel/SKILL.md',
-      siblingPatternSlugs: ['agentic-rag', 'context-engineering', 'checkpointing'],
+      siblingPatternSlugs: ['agentic-rag', 'context-engineering', 'mcp'],
+    },
+  },
+  realizingInCursor: {
+    keyMoves: [
+      'Add a retrieval MCP server to `.cursor/mcp.json`; the agent calls it as a tool inside the standard Agent mode loop.',
+      'Use `@docs` to index a documentation URL directly into Cursor\'s context — no embedding pipeline setup required for known doc sites.',
+      'Reference retrieved files via `@file` to give the model grounding passages without embedding them in the prompt by hand.',
+      'Use `@codebase` for codebase-native retrieval — Cursor indexes the repo and retrieves relevant snippets automatically.',
+    ],
+    ccPrimitives: [
+      '.cursor/mcp.json (retrieval server)',
+      '@docs (URL indexing)',
+      '@codebase (repo retrieval)',
+      '@file (explicit grounding)',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['agentic-rag', 'context-engineering', 'mcp'],
     },
   },
 }

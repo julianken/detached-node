@@ -162,111 +162,43 @@ export {}
   ],
   addedAt: '2026-05-04',
   dateModified: '2026-05-05',
-  lastChangeNote: 'W3.1: add realizingInClaudeCode Tier U umbrella — openingFraming, 24 umbrellaPointers, closingRule (token-economics meta-rule canonical home).',
+  lastChangeNote: 'W3.0 — Update background-agent → cloud-agent URL in realizingInCursor.',
   realizingInClaudeCode: {
-    tier: 'U',
-    openingFraming: `The twelve factors of 12-factor-agent are not abstract ideals — they are the operational constraints that every production agent must satisfy to be legible, durable, and portable. Dexter Horthy's HumanLayer guide names them: own your prompts, own your context window, treat tools as structured outputs, unify execution and business state, expose launch and pause and resume as APIs, contact humans through tool calls, own your control flow, compact errors back into the window, keep agents small and focused, trigger from anywhere, and make the agent a stateless reducer over an event log. Each factor has a realization: a mechanism, a pattern, or a runtime primitive a team reaches for when that factor's constraint bites in production. The sibling patterns in this catalog are those realizations. Context Engineering makes Factor 3 concrete. Checkpointing makes Factors 5 and 12 operational. Human-in-the-Loop is one rigorous implementation of Factor 7. Parallelization and Orchestrator-Workers realize the small-focused-agents principle across different coordination shapes. The index below names each pattern's factor in the catalog. Read this entry as a methodology map: the factors are the requirements, and each sibling is a production implementation a team assembles, selects among, and owns.`,
+    openingFraming: '12-Factor Agent is a methodology, not a single mechanism. Each factor maps to one or more patterns in this catalog; the table below names the most direct correspondence. Apply the factors by reaching for the matching patterns in the order your agent needs them.',
     umbrellaPointers: [
-      {
-        patternSlug: 'context-engineering',
-        oneLine: 'Factor 3 — own your context window: ranks, packs, and lays out tokens before each call.',
-      },
-      {
-        patternSlug: 'memory-management',
-        oneLine: 'Factor 3 + token-economics: tiers working, episodic, and semantic state across session resets.',
-      },
-      {
-        patternSlug: 'checkpointing',
-        oneLine: 'Factor 5 + Factor 12 — unify state and pure reducer: persists run state so restarts lose nothing.',
-      },
-      {
-        patternSlug: 'tool-use-react',
-        oneLine: 'Factor 4 — tools as structured outputs: thought→tool-call→result loop with owned control flow.',
-      },
-      {
-        patternSlug: 'human-in-the-loop',
-        oneLine: 'Factor 7 — contact humans with tool calls: agent pauses and waits for a human signal.',
-      },
-      {
-        patternSlug: 'orchestrator-workers',
-        oneLine: 'Factor 6 — small focused agents: central planner spawns narrow workers rather than one monolith.',
-      },
-      {
-        patternSlug: 'parallelization',
-        oneLine: 'Factor 6 + Factor 8 — own the loop: fans fixed calls out simultaneously and collapses results deterministically.',
-      },
-      {
-        patternSlug: 'planning',
-        oneLine: 'Factor 8 — own your control flow: agent drafts, executes, and rewrites the plan in owned loop code.',
-      },
-      {
-        patternSlug: 'reflexion',
-        oneLine: 'Factor 9 — compact errors into context: writes self-critiques into memory to improve next attempts.',
-      },
-      {
-        patternSlug: 'evaluation-llm-as-judge',
-        oneLine: 'Factor 6 — small focused agents: stronger judge model, rubric-scoped and distinct from the candidate it grades.',
-      },
-      {
-        patternSlug: 'evaluator-optimizer',
-        oneLine: 'Factor 9 — compact errors back into the window: generate, score with rubric, refine until critic stops.',
-      },
-      {
-        patternSlug: 'prompt-chaining',
-        oneLine: 'Factor 2 + Factor 8 — own prompts and the loop: fixed sequence of LLM calls, each consuming prior output.',
-      },
-      {
-        patternSlug: 'routing',
-        oneLine: 'Factor 6 + Factor 11 — small focused agents, trigger from anywhere: classifies input and dispatches to matching handler.',
-      },
-      {
-        patternSlug: 'rag',
-        oneLine: 'Factor 3 adjacent — own the context window: retrieves passages from an external store and conditions the model.',
-      },
-      {
-        patternSlug: 'agentic-rag',
-        oneLine: 'Factor 3 + Factor 8 — own context and loop: agent reads partial passages and decides whether to re-query.',
-      },
-      {
-        patternSlug: 'guardrails',
-        oneLine: 'Factor 8 + safety layer — own the control flow: layered checks block unsafe input and output before either ships.',
-      },
-      {
-        patternSlug: 'mcp',
-        oneLine: 'Factor 4 — tools as structured outputs: open protocol for cross-vendor tool discovery and call.',
-      },
-      {
-        patternSlug: 'a2a',
-        oneLine: 'Factor 11 — trigger from anywhere: cross-runtime agents discover each other by URL and exchange tasks over HTTP+JSON.',
-      },
-      {
-        patternSlug: 'handoffs-swarm',
-        oneLine: 'Factor 6 + Factor 7 — small focused agents: transfer-as-tool-call hands conversation to specialist without shared memory.',
-      },
-      {
-        patternSlug: 'funnel-method',
-        oneLine: 'Factor 5 + Factor 12 — unified state and stateless reducer: disk-anchored phase boundaries over an owned event log.',
-      },
-      {
-        patternSlug: 'identity-separated-review',
-        oneLine: 'Factor 7 — contact humans with tool calls: separate machine-user identity runs rubric review before merge.',
-      },
-      {
-        patternSlug: 'multi-agent-debate',
-        oneLine: 'Factor 6 — small focused agents: several agents argue and critique each other to converge on one answer.',
-      },
-      {
-        patternSlug: 'code-agent',
-        oneLine: 'Factor 8 + Factor 4 — own the loop and tools: codebase-toolkit agent with an owned test runner.',
-      },
-      {
-        patternSlug: 'streaming',
-        oneLine: 'Factor 11 — trigger from anywhere: delivers partial output as generated for any consumer transport.',
-      },
+      { patternSlug: 'context-engineering', oneLine: 'Factor 3 (own your context window) — explicit context assembly over framework defaults.' },
+      { patternSlug: 'checkpointing', oneLine: 'Factor 5 (unify state) + Factor 12 (stateless reducer) — durable state machine the reducer runs over.' },
+      { patternSlug: 'tool-use-react', oneLine: 'Factor 4 (tools as structured outputs) — structured tool call shape the React loop emits.' },
+      { patternSlug: 'human-in-the-loop', oneLine: 'Factor 7 (contact humans via tool calls) — pause-and-resume pattern wired to the human approval gate.' },
+      { patternSlug: 'guardrails', oneLine: 'Factor 6 (own your control flow) — runtime enforcement layer the owning code can audit and update.' },
+      { patternSlug: 'evaluation-llm-as-judge', oneLine: 'Factor 11 (trigger from anywhere) — evaluator running as CI step independent of the agent runtime.' },
     ],
-    closingRule: `If a rule has a trigger ("when adding screenshots", "before committing", "during PR review"), it belongs in a skill, not here.`,
+    closingRule: 'Apply the factors in the order your agent needs them — not all at once. Start with Factor 3 (own your context window) and Factor 12 (stateless reducer); the others follow from there.',
+    ccPrimitives: [
+      'CLAUDE.md (prompt ownership)',
+      'settings.json (loop configuration)',
+      'Task tool (subagent boundaries)',
+      'Disk artifacts (unified state store)',
+    ],
     seeAlso: {
-      siblingPatternSlugs: ['context-engineering', 'memory-management', 'checkpointing', 'tool-use-react'],
+      siblingPatternSlugs: ['checkpointing', 'context-engineering', 'tool-use-react', 'evaluation-llm-as-judge'],
+    },
+  },
+  realizingInCursor: {
+    keyMoves: [
+      'Write the agent\'s prompt in a `.cursor/rules/*.mdc` file with `alwaysApply: true` — factor 2: prompt lives in the repo.',
+      'Use Agent mode for the executor loop; write intermediate state to disk files and read them back via `@file` — factor 5.',
+      'Use [Plan mode](https://cursor.com/docs/agent/plan-mode) to draft the step list before execution — factor 8 (own the loop).',
+      'Gate each phase on a CI check via [cloud agents](https://cursor.com/docs/cloud-agent) PR-based flow — factors 9 and 10.',
+    ],
+    ccPrimitives: [
+      '.cursor/rules/*.mdc (prompt ownership)',
+      '@file (unified state between steps)',
+      'Plan mode (explicit step list)',
+      'Cloud agents (CI-gated phases)',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['checkpointing', 'context-engineering', 'tool-use-react', 'evaluation-llm-as-judge'],
     },
   },
 }

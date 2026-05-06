@@ -143,14 +143,35 @@ export {}
   dateModified: '2026-05-05',
   lastChangeNote: 'W2.8 — Add realizingInClaudeCode Tier C cross-link: PreToolUse as harness-level enforcement primitive.',
   realizingInClaudeCode: {
-    tier: 'C',
-    bodyMarkdown: `Claude Code exposes PreToolUse hooks as a harness-level enforcement primitive: shell scripts declared in .claude/settings.json intercept Bash tool calls before they execute and abort on non-zero exit. This makes the hook a process-level guardrail around the Tool Use / ReAct loop itself — not a prompt constraint, but a runtime intercept that fires before the model's chosen action reaches the shell. The scripts are tracked in git and carry the executable bit; [PR #335](https://github.com/julianken/detached-node/pull/335) is the canonical demonstration. A hook script is a no-op by design when the file is absent — enforcement is gated by script presence on disk, which is why git tracking is the activation step.`,
-    readerMove: {
-      text: 'Add a PreToolUse hook to .claude/settings.json; track the script in git so enforcement is present on every clone.',
-      anchorUrl: 'https://github.com/julianken/detached-node/pull/335',
-    },
+    keyMoves: [
+      'Use a [PreToolUse hook](https://docs.claude.com/en/docs/claude-code/hooks) to intercept every tool call in the loop — exit non-zero to block the action before it fires.',
+      'Declare hooks in [`settings.json`](https://docs.claude.com/en/docs/claude-code/settings); track the hook scripts in git so they apply on every clone.',
+      'Scope the tool catalog with `permissions.allow` in [`settings.json`](https://docs.claude.com/en/docs/claude-code/settings) — narrow the catalog per project so the agent only sees actions it should take.',
+      'Use [`CLAUDE.md`](https://docs.claude.com/en/docs/claude-code/memory) for soft conventions; use hooks for hard runtime enforcement that fires regardless of model compliance.',
+    ],
+    ccPrimitives: [
+      'PreToolUse hooks (action intercept)',
+      'settings.json tool allow-list',
+      'CLAUDE.md (soft conventions)',
+    ],
     seeAlso: {
-      siblingPatternSlugs: ['code-agent', 'guardrails'],
+      siblingPatternSlugs: ['code-agent', 'guardrails', 'human-in-the-loop'],
+    },
+  },
+  realizingInCursor: {
+    keyMoves: [
+      'Use Agent mode — it runs the full Thought-Action-Observation loop autonomously across files and terminal commands.',
+      'Scope available tools via `.cursor/rules/*.mdc` instructions; tell the agent which commands it should and should not run.',
+      'Add a `.cursor/rules/*.mdc` with `alwaysApply: true` declaring tool-use constraints that apply on every turn.',
+      'Use [Plan mode](https://cursor.com/docs/agent/plan-mode) before complex multi-tool tasks to review the intended action sequence before execution begins.',
+    ],
+    ccPrimitives: [
+      'Agent mode (ReAct loop)',
+      '.cursor/rules/*.mdc (tool constraints)',
+      'Plan mode (pre-execution review)',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['code-agent', 'guardrails', 'human-in-the-loop'],
     },
   },
 }

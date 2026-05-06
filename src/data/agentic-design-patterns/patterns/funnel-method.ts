@@ -9,7 +9,7 @@ export const pattern: Pattern = {
   bodySummary: [
     'The Funnel Method is a four-phase multi-agent investigation and synthesis loop. Phase 1 fans out five parallel investigators, each exploring an independent facet of the problem space. Phase 2 fans out five iterators that develop, challenge, and extend the Phase 1 findings. Phase 3 fans out three synthesizers that converge through different analytical lenses. Phase 4 runs a single unifier that produces the final deliverable. Every phase boundary writes artifacts to disk before the next wave dispatches; a STATUS.md row updates synchronously at each transition; a compressed context packet (1–2 K tokens, not raw transcripts) flows forward as the dispatch payload. The next wave reads the packet plus its own brief — never the prior wave\'s full transcript.',
     'The 5+5+3+1 cardinality is one specific composition of well-established antecedents. The four-phase funnel shape is consistent with the Double Diamond framework (British Design Council, 2005), which names Discover, Define, Develop, and Deliver as the four moves in a design process. The parallel-then-converge dispatch mechanic draws on Nominal Group Technique (NGT, Delbecq and Van de Ven, 1971), which prescribes silent individual idea generation followed by group ranking — the same structural logic applied to agent waves. Anthropic\'s multi-agent research blog describes the lead-spawns-3-5-subagents primitive that is the direct computational ancestor of the parallel dispatch waves. LangGraph and Temporal own the durable-state-machine and phase-boundary-checkpoint framing that the disk-artifact protocol realizes at a simpler storage layer.',
-    'Three Claude Code skills encode the funnel as executable configuration: analysis-funnel (open-ended investigation), decision-funnel (option evaluation), and creative-funnel (parallel creative production). The same 5+5+3+1 structure appears across all three, applied to different triggering domains. The shared shape across three independent triggering domains is the practical validation that the cardinality is stable rather than accidental. The disk-artifact protocol — STATUS.md, phase-{N}/{role}-{slug}.md artifacts, context-packets/phase-{N}-packet.md — is the shared scaffolding that makes each skill resumable, inspectable, and auditable across domains.',
+    'Claude Code [skills](https://docs.claude.com/en/docs/claude-code/skills) encode the funnel as executable configuration, with variants for investigation, option evaluation, and creative production. The same 5+5+3+1 structure appears across all variants, applied to different triggering domains. The shared shape across independent triggering domains is the practical validation that the cardinality is stable rather than accidental. The disk-artifact protocol — STATUS.md, phase-{N}/{role}-{slug}.md artifacts, context-packets/phase-{N}-packet.md — is the shared scaffolding that makes each skill resumable, inspectable, and auditable across domains.',
   ],
   mermaidSource: `graph LR
   A[Brief + question] --> B[Phase 0: Frame]
@@ -47,7 +47,7 @@ export const pattern: Pattern = {
       sourceUrl: 'https://www.designcouncil.org.uk/our-resources/framework-for-innovation/',
     },
   ],
-  implementationSketch: `// Pseudocode — the actual implementation uses the analysis-funnel SKILL.md
+  implementationSketch: `// Pseudocode — the actual implementation uses a funnel SKILL.md
 // and the single-message multi-Task() dispatch mechanic.
 
 // Phase 0: frame the question, carve investigation areas
@@ -91,8 +91,8 @@ export {}
 `,
   sdkAvailability: 'no-sdk',
   readerGotcha: {
-    text: 'The context packet between phases must be a compressed summary (1–2 K tokens), never a dump of raw phase artifacts. Passing raw artifacts forward bloats each wave\'s context and re-exposes details the prior wave already resolved. The context packet is a design artifact: it encodes what the next wave needs to know, not everything the prior wave produced. Analysis-funnel SKILL.md encodes this as a hard constraint — context packet is the only inter-phase payload; the raw artifact directory stays on disk but is not forwarded into worker contexts.',
-    sourceUrl: 'https://github.com/julianken/detached-node/blob/main/.claude/skills/analysis-funnel/SKILL.md',
+    text: 'The context packet between phases must be a compressed summary (1–2 K tokens), never a dump of raw phase artifacts. Passing raw artifacts forward bloats each wave\'s context and re-exposes details the prior wave already resolved. The context packet is a design artifact: it encodes what the next wave needs to know, not everything the prior wave produced. Funnel SKILL.md encodes this as a hard constraint — the context packet is the only inter-phase payload; the raw artifact directory stays on disk but is not forwarded into worker contexts.',
+    sourceUrl: 'https://www.anthropic.com/engineering/multi-agent-research-system',
   },
   relatedSlugs: ['orchestrator-workers', 'parallelization', 'checkpointing', 'context-engineering'],
   frameworks: [],
@@ -170,73 +170,49 @@ export {}
   ],
   addedAt: '2026-05-05',
   dateModified: '2026-05-05',
-  lastChangeNote: 'W2.7 — New Layer-5 funnel-method satellite; Tier A realizingInClaudeCode populated from the start; companion bridge essay.',
+  lastChangeNote: 'W3.0 — Generalize skill-name references to generic framing; update Cursor cloud-agent URL; fix readerGotcha sourceUrl.',
 
   realizingInClaudeCode: {
-    tier: 'A',
-
+    keyMoves: [
+      'Dispatch all Phase 1 investigators in one assistant message so Claude Code runs them concurrently; wall-clock is bounded by the slowest, not the sum.',
+      'Write each wave\'s outputs to deterministic disk paths before dispatching the next wave — the filesystem is the checkpoint store and the phase boundary.',
+      'Forward a 1–2 K token context packet between waves, not raw phase transcripts; workers read the packet plus their own brief, keeping worker contexts independent.',
+      'Update a `STATUS.md` row synchronously at each phase boundary so a fresh-context session can reconstruct which phase to resume from without replaying transcripts.',
+    ],
     ccPrimitives: [
-      'single-message multi-Task() dispatch — all five Phase 1 investigators, all five Phase 2 iterators, and all three Phase 3 synthesizers are dispatched in a single assistant message each wave; Claude Code executes all Task() calls in the message concurrently, so wall-clock is bounded by the slowest agent in the wave rather than their sum',
-      'Task tool (sub-agent context isolation) — each investigator, iterator, and synthesizer runs in its own context window with its own brief and tool surface; agents within a wave do not see each other\'s intermediate work, which is the structural property that makes each wave\'s output an independent perspective rather than a consensus echo',
-      'Phase-boundary disk checkpoint — each wave writes its outputs to deterministic paths (phase-{N}/{role}-{slug}.md) before the next wave dispatches; the filesystem is the checkpoint store; verify_phase.sh asserts all expected files exist before the next wave fires, so a missing artifact halts the funnel loudly rather than forwarding a silent gap',
-      'STATUS.md synchronous update — update_status.py is called inline at each phase boundary to mark the phase complete with a timestamp and artifact count; a fresh-context session reading STATUS.md can reconstruct exactly which phase to resume from without replaying any prior transcript',
-      'Context-packet forwarding — between waves the orchestrator assembles a 1–2 K token summary from the phase artifacts and passes it as the dispatch payload for the next wave; workers read the packet plus their own brief, never the raw prior-phase artifacts; this keeps worker contexts clean and prevents the orchestrator context from growing unbounded across phases',
+      'Task tool (parallel wave dispatch)',
+      'Single-message multi-Task() dispatch',
+      'Disk phase checkpoints',
+      'STATUS.md phase tracking',
     ],
-
-    scaffolding: [
-      '.claude/skills/analysis-funnel/SKILL.md — the orchestrator prompt encoding the 5+5+3+1 phase structure, the single-message dispatch constraint ("dispatching Phase 1 investigators one at a time is treated as a defect, not a style preference"), the disk-checkpoint rule, the STATUS.md synchronization contract, and the context-packet forwarding convention; the SKILL.md is the boundary-enforcement specification and the artifact-naming convention source',
-      '.claude/skills/decision-funnel/SKILL.md — the same 5+5+3+1 structure applied to option evaluation: Phase 1 investigators explore option viability, Phase 2 iterators stress-test and develop the top options, Phase 3 synthesizers evaluate through cost/risk/timing lenses, Phase 4 unifier produces a decision recommendation; demonstrates that the cardinality is stable across triggering domains',
-      '.claude/skills/creative-funnel/SKILL.md — the same structure applied to parallel creative production: Phase 1 produces N independent creative variants, Phase 2 iterates and develops the strongest, Phase 3 synthesizes across style/structure/voice lenses; the third domain that validates the cross-domain stability of the 5+5+3+1 shape',
-      'phase-{N}/{role}-{slug}.md artifact convention — each worker writes its output to a deterministic file path; the path is the identity of the artifact and the checkpoint; the orchestrator never holds phase outputs in-context after the phase completes; the docs/agentic-bridge/funnel/ directory is the canonical in-repo instance of this artifact tree, with phase-1/ through phase-4/ directories and a STATUS.md tracking 5+5+3+1 completion',
-      'context-packets/phase-{N}-packet.md — the compressed inter-phase payload; the only artifact that crosses the phase boundary into worker contexts; full phase artifact directories are available on disk but not forwarded; the packet format (1–2 K tokens, prose summary, 3–5 key findings, open questions for next phase) is encoded in the SKILL.md',
-    ],
-
-    workedExample: {
-      url: 'https://github.com/julianken/detached-node/blob/main/.claude/skills/analysis-funnel/SKILL.md',
-      description: `The analysis-funnel SKILL.md is the primary realization of the Funnel Method in this repository. The docs/agentic-bridge/funnel/ directory is the artifact tree produced by a complete analysis-funnel run: phase-1/ through phase-4/ directories, STATUS.md tracking completion across all five phases (Phase 4 COMPLETE as of 2026-05-05T02:48:00Z), and context-packets/ holding the inter-phase summaries. The run analyzed the agentic bridge documentation strategy across five investigation areas (structure, voice, prior art, audience, scope), five iteration angles, three synthesis lenses (strategic, editorial, implementation), and produced a 481-line ~6,950-word final report at phase-4/analysis-report.md.
-
-The single-message multi-Task() dispatch is the structural primitive that made Phase 1's five-investigator run a parallel fan-out rather than a sequential chain. All five Task() calls appeared in one assistant message. Claude Code executed all five tool_use blocks concurrently. Each investigator wrote its findings to phase-1/{role}-{slug}.md before the orchestrator read them back. The elapsed time was bounded by the slowest investigator, not the sum of all five.
-
-The docs/read-along-feature/ directory is a second in-repo artifact tree from an earlier analysis-funnel run (read-along feature scope and implementation analysis), demonstrating that the same artifact convention applies across different triggering domains. Both trees follow the same phase-{N}/{role}-{slug}.md naming, the same STATUS.md structure, and the same context-packet forwarding between phases.
-
-This worked example also shows where the context-packet design matters in practice. The context-packets/phase-{N}-packet.md files in docs/agentic-bridge/funnel/ are each 300–500 words — deliberately compressed from the 3,000–5,000-word phase artifact trees they summarize. The compression is not a convenience; it is what keeps Phase 2 worker contexts clean enough to produce independent iterations rather than restatements of Phase 1 content. Workers that receive raw Phase 1 transcripts tend to elaborate rather than iterate; workers that receive a context packet tend to challenge and extend.`,
-    },
-
-    bodyMarkdown: `
-The Funnel Method in Claude Code reduces to a single structural discipline applied at every phase boundary: write the phase outputs to disk before dispatching the next wave. Everything else — the 5+5+3+1 cardinality, the context-packet compression, the STATUS.md synchronization — is scaffolding that makes that boundary discipline reliable across multiple phases and across sessions that may not be continuous.
-
-**Why the boundary is the primitive**
-
-A multi-phase agent loop without a hard phase boundary is a context-accumulation loop. The orchestrator's context grows with each wave's output; workers in later phases inherit a prompt that is weighted toward whatever the earlier phases produced. The investigation funnel becomes a confirmation funnel: Phase 2 iterators who read Phase 1 investigators' transcripts in-context tend to extend rather than challenge, because the transcripts are the most recent and most weighted tokens in their context. The phase boundary breaks this structural bias. Investigators write to disk; their transcripts leave the orchestrator's context; the context packet is the compressed summary of what mattered, not what was said.
-
-**The disk-artifact protocol**
-
-Three artifacts cross the phase boundary. The phase-{N}/{role}-{slug}.md files are each worker's output, written to disk synchronously before the orchestrator reads them. The STATUS.md row is updated inline at each boundary — one row per phase, with timestamp and artifact count — and is the only record a fresh-context session needs to reconstruct where a stopped funnel left off. The context-packets/phase-{N}-packet.md is assembled from the phase artifacts by the orchestrator and forwarded as the dispatch payload for the next wave's workers. Workers read the packet plus their own brief. They do not see the raw artifact directory. The compression is the design.
-
-**Cross-domain stability**
-
-The analysis-funnel, decision-funnel, and creative-funnel skills all encode 5+5+3+1 applied to different triggering domains. The shared cardinality is a pragmatic finding: five independent investigators cover a problem space without significant overlap; five iterators can each take a distinct angle on the findings without redundancy; three synthesizers can apply three genuinely different analytical lenses; one unifier can hold the synthesis outputs in context and produce a coherent final deliverable. The specific numbers come from running the structure across a range of inputs and finding that fewer investigators tend to miss important facets while more investigators tend to produce significant overlap. The cardinality is a configuration, not a theorem.
-
-**Prior art**
-
-The four-phase funnel shape is consistent with the British Design Council's Double Diamond (Discover, Define, Develop, Deliver) and draws on the NGT (Nominal Group Technique) parallel-then-converge mechanic for the investigator and iterator waves. Anthropic's multi-agent research blog describes the lead-spawns-3-5-subagents primitive at production scale. LangGraph and Temporal own the durable-state-machine and journal-based-recovery framing that the disk-artifact protocol approximates at a simpler storage layer. Microsoft and Google both document parallel and checkpoint patterns for multi-agent systems in their architecture guides. The 5+5+3+1 Funnel Method is one specific composition of those antecedents — what this repository converged on after running the structure across analysis, decision, and creative triggering domains.
-`.trim(),
-
-    readerMove: {
-      text: 'Load analysis-funnel SKILL.md, dispatch all five Phase 1 investigators in one message, write artifacts to disk before Phase 2.',
-      anchorUrl: 'https://github.com/julianken/detached-node/blob/main/.claude/skills/analysis-funnel/SKILL.md',
-    },
-
     seeAlso: {
-      skillPath: '.claude/skills/analysis-funnel/SKILL.md',
-      articleSlug: 'phase-boundary-loop',
       siblingPatternSlugs: [
         'orchestrator-workers',
         'parallelization',
         'checkpointing',
         'context-engineering',
-        '12-factor-agent',
-        'identity-separated-review',
+      ],
+    },
+  },
+  realizingInCursor: {
+    keyMoves: [
+      'Use [cloud agents](https://cursor.com/docs/cloud-agent) to run parallel investigation branches — each agent works in its own cloud session without seeing the others\' work.',
+      'Write phase outputs to a shared branch; reference them via `@branch` in the synthesis session so the synthesizer reads committed artifacts, not in-memory chat.',
+      'Compress each phase\'s findings into a handoff file before the next phase; pass it via `@file` to keep synthesizer contexts clean and independent.',
+      'Use [Plan mode](https://cursor.com/docs/agent/plan-mode) to draft the 5+5+3+1 phase structure before execution; review the plan and adjust cardinality before any agents fire.',
+    ],
+    ccPrimitives: [
+      'Cloud agents (parallel phase waves)',
+      '@branch (phase artifact access)',
+      '@file (context packet forwarding)',
+      'Plan mode (phase structure review)',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: [
+        'orchestrator-workers',
+        'parallelization',
+        'checkpointing',
+        'context-engineering',
       ],
     },
   },
