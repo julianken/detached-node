@@ -2,10 +2,9 @@ import { test, expect } from '@playwright/test'
 import type { Page } from '@playwright/test'
 
 /**
- * Verifies the magazine-scale typography spec
- * (docs/superpowers/specs/2026-05-05-magazine-scale-typography-design.md)
+ * Verifies the magazine-scale typography acceptance criteria for #361.
  *
- * Asserts computed CSS at the spec's three reference viewports:
+ * Asserts computed CSS at three reference viewports:
  *   375px → body 19px, frame fits viewport
  *   768px → body roughly mid-clamp
  *   1280px → body 22px, frame 1280px, prose 960px
