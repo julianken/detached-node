@@ -145,7 +145,7 @@ export {}
       'Move trigger-bearing rules into [skills](https://docs.claude.com/en/docs/claude-code/skills) — a `SKILL.md` loads only when its trigger fires, preserving always-on budget.',
       'Keep `CLAUDE.md` under 3 K tokens. Count with `wc -w × 1.8`; every extra line crowds out the actual task context.',
       'Use [`settings.json`](https://docs.claude.com/en/docs/claude-code/settings) to scope tool permissions per project — pin invariant config at the head so it cache-hits every session.',
-      'When a rule starts with "when X" or "before Y", that is a signal it belongs in a skill, not in always-on memory.',
+      'When a rule starts with "when X" or "before Y", it belongs in a skill, not here — keep `CLAUDE.md` to invariants.',
     ],
     ccPrimitives: [
       'CLAUDE.md (always-on context)',

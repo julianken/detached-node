@@ -157,7 +157,7 @@ export {}
       'Keep [`CLAUDE.md`](https://docs.claude.com/en/docs/claude-code/memory) small — it is working memory loaded on every session. Move trigger-bearing rules into [skills](https://docs.claude.com/en/docs/claude-code/skills) so they load only when needed.',
       'Use `.claude/skills/*/SKILL.md` as procedural memory — each skill loads only when its trigger fires, preserving the working-tier budget for task context.',
       'Write episodic state (progress, decisions, artifact lists) to disk files between sessions; read them back at session start via file references.',
-      'Audit always-on files with `wc -w × 1.8`; if the total exceeds 3 K tokens, migrate trigger-bearing rules to skills or `.claude/rules/*.md` path-scoped files.',
+      'Audit always-on files with `wc -w × 1.8`; if a rule has a trigger, it belongs in a skill, not here — migrate to skills.',
     ],
     ccPrimitives: [
       'CLAUDE.md (working memory)',

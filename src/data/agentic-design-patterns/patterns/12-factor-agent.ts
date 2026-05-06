@@ -173,7 +173,7 @@ export {}
       { patternSlug: 'guardrails', oneLine: 'Factor 6 (own your control flow) — runtime enforcement layer the owning code can audit and update.' },
       { patternSlug: 'evaluation-llm-as-judge', oneLine: 'Factor 11 (trigger from anywhere) — evaluator running as CI step independent of the agent runtime.' },
     ],
-    closingRule: 'Apply the factors in the order your agent needs them — not all at once. Start with Factor 3 (own your context window) and Factor 12 (stateless reducer); the others follow from there.',
+    closingRule: 'If a rule has a trigger ("when adding screenshots", "before committing", "during PR review"), it belongs in a skill, not here.',
     ccPrimitives: [
       'CLAUDE.md (prompt ownership)',
       'settings.json (loop configuration)',
