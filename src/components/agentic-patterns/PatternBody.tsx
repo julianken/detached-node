@@ -72,11 +72,11 @@ export function PatternBody({ pattern, afterDiagram }: PatternBodyProps) {
       {/* 1. Diagram */}
       {pattern.mermaidSource && (
         <section>
-          <figure>
+          <figure className="mx-auto max-w-3xl">
             {/* IMPORTANT: only `{ source: string }` crosses the server/client boundary. */}
             <MermaidDiagram source={pattern.mermaidSource} />
             {pattern.mermaidAlt && (
-              <figcaption className="mt-2 text-meta text-text-tertiary italic">
+              <figcaption className="mt-2 text-card-summary leading-relaxed text-text-tertiary italic">
                 {pattern.mermaidAlt}
               </figcaption>
             )}

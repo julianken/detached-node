@@ -93,7 +93,7 @@ function SubHeading({ children }: { children: React.ReactNode }) {
 
 function KeyMovesList({ items }: { items: string[] }) {
   return (
-    <ul className="flex flex-col gap-2.5 pl-5 text-body leading-relaxed text-text-primary [list-style:disc] marker:text-text-tertiary">
+    <ul className="flex flex-col gap-2.5 pl-5 text-card-summary leading-relaxed text-text-primary [list-style:disc] marker:text-text-tertiary">
       {items.map((move, idx) => (
         <li key={idx} className="[text-wrap:pretty]">
           {renderInline(move)}
@@ -196,7 +196,7 @@ function ExampleChip({ url }: { url: string }) {
 function InlineParagraphs({ text }: { text: string }) {
   const paragraphs = text.split(/\n\s*\n/).filter((p) => p.trim().length > 0)
   return (
-    <div className="flex flex-col gap-3 text-body leading-relaxed text-text-secondary [text-wrap:pretty]">
+    <div className="flex flex-col gap-3 text-card-summary leading-relaxed text-text-secondary [text-wrap:pretty]">
       {paragraphs.map((para, i) => (
         <p key={i}>{renderInline(para)}</p>
       ))}
@@ -220,7 +220,7 @@ export function RealizingDisclosure({ label, realizing: r, defaultOpen }: Realiz
       </summary>
       <div className="border-t border-border-subtle px-4 py-4">
         {!r ? (
-          <p className="text-body leading-relaxed text-text-tertiary italic">
+          <p className="text-card-summary leading-relaxed text-text-tertiary italic">
             Realization in {label} is not yet documented for this pattern.
           </p>
         ) : (
@@ -239,7 +239,7 @@ export function RealizingDisclosure({ label, realizing: r, defaultOpen }: Realiz
             {r.umbrellaPointers && r.umbrellaPointers.length > 0 && (
               <div>
                 <SubHeading>Pattern index</SubHeading>
-                <ul className="flex flex-col gap-2 text-body leading-relaxed text-text-primary">
+                <ul className="flex flex-col gap-2 text-card-summary leading-relaxed text-text-primary">
                   {r.umbrellaPointers.map((pointer) => (
                     <li key={pointer.patternSlug} className="flex items-baseline gap-2 [text-wrap:pretty]">
                       <span className="shrink-0 font-mono text-meta text-text-tertiary">{pointer.patternSlug}</span>
@@ -253,7 +253,7 @@ export function RealizingDisclosure({ label, realizing: r, defaultOpen }: Realiz
             {r.closingRule && (
               <div className="rounded-sm border border-border-subtle bg-zinc-50 px-3 py-3 dark:bg-zinc-800/60">
                 <SubHeading>Meta-rule</SubHeading>
-                <p className="text-body leading-relaxed text-text-secondary italic [text-wrap:pretty]">
+                <p className="text-card-summary leading-relaxed text-text-secondary italic [text-wrap:pretty]">
                   {renderInline(r.closingRule)}
                 </p>
               </div>
