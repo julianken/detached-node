@@ -11,7 +11,7 @@
   color: var(--prose-body);
   line-height: 1.75;
   transition: color 150ms ease;
-  font-size: 1.125rem;
+  font-size: var(--type-body);
 }
 
 .prose p {
@@ -46,6 +46,20 @@
 .prose h3 {
   font-size: 1.25em;
   margin-top: 1.75em;
+  margin-bottom: 0.5em;
+}
+
+/* Lock article-h1 at 2× body so it tracks the fluid body scale.
+   Set explicitly so we don't depend on browser-default drift. */
+.prose h1 {
+  font-size: 2em;
+  margin-top: 0;
+  margin-bottom: 0.5em;
+}
+
+.prose h4 {
+  font-size: 1.125em;
+  margin-top: 1.5em;
   margin-bottom: 0.5em;
 }
 
