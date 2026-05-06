@@ -287,14 +287,15 @@
   --font-sans: var(--font-sans-stack);
   --font-mono: var(--font-mono-stack);
 
-  /* Magazine-scale theme tokens — generate text-* and max-w-* utilities */
-  --font-size-body: var(--type-body);
-  --font-size-nav: var(--type-nav);
-  --font-size-brand: var(--type-brand);
-  --font-size-meta: var(--type-meta);
-  --font-size-card-title: var(--type-card-title);
-  --font-size-card-summary: var(--type-card-summary);
-  --font-size-page-h1: var(--type-page-h1);
+  /* Magazine-scale theme tokens — generate text-* and max-w-* utilities.
+     Tailwind 4 reads --text-{name} for font-size, not --font-size-{name}. */
+  --text-body: var(--type-body);
+  --text-nav: var(--type-nav);
+  --text-brand: var(--type-brand);
+  --text-meta: var(--type-meta);
+  --text-card-title: var(--type-card-title);
+  --text-card-summary: var(--type-card-summary);
+  --text-page-h1: var(--type-page-h1);
 
   --max-width-frame: var(--width-frame);
   --max-width-prose-wide: var(--width-prose);
