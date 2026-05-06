@@ -272,6 +272,19 @@
 
   --font-sans: var(--font-sans-stack);
   --font-mono: var(--font-mono-stack);
+
+  /* Magazine-scale theme tokens — generate text-* and max-w-* utilities */
+  --font-size-body: var(--type-body);
+  --font-size-nav: var(--type-nav);
+  --font-size-brand: var(--type-brand);
+  --font-size-meta: var(--type-meta);
+  --font-size-card-title: var(--type-card-title);
+  --font-size-card-summary: var(--type-card-summary);
+  --font-size-page-h1: var(--type-page-h1);
+
+  --max-width-frame: var(--width-frame);
+  --max-width-prose-wide: var(--width-prose);
+  --max-width-content-wide: var(--width-content);
 }
 
 /* ──────────────────────────────────────────────
