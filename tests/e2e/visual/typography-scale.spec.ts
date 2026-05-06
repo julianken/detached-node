@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import type { Page } from '@playwright/test'
 
 /**
  * Verifies the magazine-scale typography spec
@@ -15,7 +16,7 @@ import { test, expect } from '@playwright/test'
 
 const POST_SLUG = 'architecture-of-agent-systems'
 
-async function getComputedNumber(page, selector: string, prop: string): Promise<number> {
+async function getComputedNumber(page: Page, selector: string, prop: string): Promise<number> {
   return await page.locator(selector).first().evaluate(
     (el, p) => parseFloat(window.getComputedStyle(el).getPropertyValue(p)),
     prop,
@@ -23,7 +24,7 @@ async function getComputedNumber(page, selector: string, prop: string): Promise<
 }
 
 test.describe('Magazine-scale typography', () => {
-  test('body type at 1280 viewport is 22px (max of clamp)', async ({ page }) => {
+  test('body type at 1280 viewport reaches ~22px (clamp upper bound)', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 })
     await page.goto(`/posts/${POST_SLUG}`)
     const fontSize = await getComputedNumber(page, '.prose', 'font-size')
@@ -49,10 +50,21 @@ test.describe('Magazine-scale typography', () => {
   test('prose container max-width is 960px on desktop', async ({ page }) => {
     await page.setViewportSize({ width: 1600, height: 900 })
     await page.goto(`/posts/${POST_SLUG}`)
-    const proseWrapper = page.locator('main > div').first()
-    const w = await proseWrapper.evaluate(el =>
-      parseFloat(window.getComputedStyle(el).maxWidth)
-    )
+    // Find the first descendant of <main> with a numeric max-width.
+    // The PageLayout div carries the prose-width constraint; FadeReveal and
+    // article do not, so we walk and pick the first element where maxWidth
+    // resolves to a px value rather than 'none'.
+    const w = await page.evaluate(() => {
+      const main = document.querySelector('main')
+      if (!main) return null
+      for (const el of main.querySelectorAll<HTMLElement>('*')) {
+        const mw = window.getComputedStyle(el).maxWidth
+        if (mw && mw !== 'none' && mw.endsWith('px')) {
+          return parseFloat(mw)
+        }
+      }
+      return null
+    })
     expect(w).toBe(960)
   })
 
