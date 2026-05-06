@@ -1,19 +1,19 @@
 // ---------------------------------------------------------------------------
-// RealizingDisclosure — W4.0 reference-card redesign
+// RealizingDisclosure — IDE reference card
 // ---------------------------------------------------------------------------
-// Renders pattern.realizingInClaudeCode as an always-visible reference card
-// at the top of the satellite article (positioned by the slug page).
+// Renders one pattern's realization in a single IDE (e.g. Claude Code or
+// Cursor) as a collapsible card under the diagram on the slug page. Same
+// component, different `label` + `realizing` props per IDE; the slug page
+// invokes it once per IDE.
 //
-// Lead format for every tier: scannable `keyMoves` bullets first, followed by
-// the existing structured fields (pills, worked-example link, reader-move
-// callout, see-also chips). Long-form prose (`bodyMarkdown`) collapses into
-// an inner "Why this works" sub-disclosure for the rare deep-dive reader.
-//
-// Tier-specific extras render after the shared lead:
-//   Tier A — ccPrimitives + scaffolding pill rows + workedExample link
-//   Tier B — keyMoves + readerMove + seeAlso (+ bodyMarkdown if present)
-//   Tier C — keyMoves + readerMove + seeAlso (+ bodyMarkdown if present)
-//   Tier U — umbrellaPointers + closingRule + openingFraming (collapsed)
+// Surface order (any field renders only when populated):
+//   1. openingFraming         — inline paragraphs (umbrella patterns)
+//   2. keyMoves               — bulleted reference content (the lead)
+//   3. ccPrimitives           — pill row of IDE feature names
+//   4. umbrellaPointers       — sibling-pattern index (umbrella only)
+//   5. closingRule            — boxed verbatim rule (umbrella only)
+//   6. seeAlso                — sibling pattern link chips + article chip
+//   7. workedExample          — small footer Example link
 // ---------------------------------------------------------------------------
 
 import { Link } from 'next-view-transitions'

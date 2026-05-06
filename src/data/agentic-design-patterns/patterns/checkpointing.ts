@@ -102,7 +102,7 @@ export {}
   realizingInCursor: {
     keyMoves: [
       'Commit partial work to a dedicated branch after each milestone; [cloud agents](https://cursor.com/docs/cloud-agent) already work on isolated branches by default.',
-      'Use a `STATUS.md` or equivalent file in the repo root as the recovery anchor — reference it via `@file` at the start of a resumed session.',
+      'Use a `STATUS.md` at the repo root as the recovery anchor; reference it via `@file` at the start of a resumed session.',
       'Write task progress to a [`.cursor/rules/*.mdc`](https://cursor.com/docs/rules) file with `alwaysApply: true` so context survives Cursor session restarts.',
       'Reference committed artifacts via `@git` or file references when resuming so the agent reads the actual persisted state, not its in-context assumption.',
     ],
