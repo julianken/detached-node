@@ -45,7 +45,7 @@ function ReferenceItem({ reference }: { reference: Reference }) {
           href={reference.url}
           rel="noopener noreferrer"
           target="_blank"
-          className="text-nav font-medium text-accent underline underline-offset-4 hover:text-accent-muted"
+          className="text-body font-medium text-accent underline underline-offset-4 hover:text-accent-muted"
         >
           <cite className="not-italic">{reference.title}</cite>
         </a>

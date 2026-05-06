@@ -29,7 +29,7 @@ export function SourcedClaimTable({ pattern }: SourcedClaimTableProps) {
     <section id="in-the-wild" aria-labelledby="in-the-wild-heading" className="scroll-mt-24">
       <h2
         id="in-the-wild-heading"
-        className="font-mono text-base font-semibold uppercase tracking-[0.08em] text-text-tertiary"
+        className="font-mono text-nav font-semibold uppercase tracking-[0.08em] text-text-tertiary"
       >
         In the wild
       </h2>

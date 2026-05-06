@@ -55,7 +55,7 @@ function SlotHeading({ id, children }: { id: string; children: React.ReactNode }
   return (
     <h2
       id={id}
-      className="font-mono text-base font-semibold uppercase tracking-[0.08em] text-text-tertiary"
+      className="font-mono text-nav font-semibold uppercase tracking-[0.08em] text-text-tertiary"
     >
       {children}
     </h2>
