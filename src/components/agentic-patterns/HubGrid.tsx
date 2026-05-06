@@ -31,7 +31,7 @@ function LayerSectionTitle({ layer }: { layer: Layer }) {
         Layer {layer.number} — {layer.title}
       </h2>
       <p className="text-sm text-text-tertiary italic">{layer.question}</p>
-      <p className="max-w-prose text-base leading-6 text-text-secondary [text-wrap:pretty]">
+      <p className="max-w-prose text-body leading-relaxed text-text-secondary [text-wrap:pretty]">
         {layer.description}
       </p>
     </header>
