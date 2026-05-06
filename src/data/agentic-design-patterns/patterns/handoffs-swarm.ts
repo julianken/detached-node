@@ -150,4 +150,38 @@ export async function runSwarm(messages: { role: 'user' | 'assistant'; content: 
   addedAt: '2026-05-03',
   dateModified: '2026-05-04',
   lastChangeNote: 'Author Handoffs / Swarm satellite: sequential conversation ownership, transfer-as-tool-call, supervisor variant.',
+  realizingInClaudeCode: {
+    keyMoves: [
+      'Define each specialist as a separate [SKILL.md](https://docs.claude.com/en/docs/claude-code/skills) with its own tool surface and trigger condition.',
+      'Encode the handoff decision as a structured output step; the triage [subagent](https://docs.claude.com/en/docs/claude-code/sub-agents) emits the target skill name as a JSON field.',
+      'Pass a compact written context packet (not the full transcript) to the specialist at handoff — prevents the new agent re-interpreting prior framing.',
+      'Cap handoff depth in the orchestrator\'s instructions — declare a maximum count and treat exceeding it as a task-completion error.',
+    ],
+    ccPrimitives: [
+      'SKILL.md per specialist',
+      'Task tool (specialist subagents)',
+      'permissions.deny (scope guard)',
+      'Structured handoff output',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['routing', 'orchestrator-workers', 'planning'],
+    },
+  },
+  realizingInCursor: {
+    keyMoves: [
+      'Create one `.cursor/rules/*.mdc` per specialist with `alwaysApply: false` and activate via `@rule-name` when handing off.',
+      'Use Agent mode as the triage layer — it decides when to switch context; activate the specialist rule after the classification.',
+      'Pass a summary of the conversation to the specialist at handoff via `@file` rather than relying on the raw chat history.',
+      'Use [Plan mode](https://cursor.com/docs/agent/plan-mode) to draft the handoff sequence upfront for complex multi-specialist tasks.',
+    ],
+    ccPrimitives: [
+      '.cursor/rules/*.mdc (per-specialist rules)',
+      '@rule-name activation',
+      '@file (handoff context packet)',
+      'Agent mode',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['routing', 'orchestrator-workers', 'planning'],
+    },
+  },
 }

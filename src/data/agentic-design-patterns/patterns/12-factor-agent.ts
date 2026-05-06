@@ -161,6 +161,44 @@ export {}
     },
   ],
   addedAt: '2026-05-04',
-  dateModified: '2026-05-04',
-  lastChangeNote: 'Author 12-Factor Agent satellite: production methodology layered above mechanism patterns; HumanLayer/Horthy framing; stateless-reducer sketch; reducer-purity gotcha.',
+  dateModified: '2026-05-05',
+  lastChangeNote: 'W3.0 — Update background-agent → cloud-agent URL in realizingInCursor.',
+  realizingInClaudeCode: {
+    openingFraming: '12-Factor Agent is a methodology, not a single mechanism. Each factor maps to one or more patterns in this catalog; the table below names the most direct correspondence. Apply the factors by reaching for the matching patterns in the order your agent needs them.',
+    umbrellaPointers: [
+      { patternSlug: 'context-engineering', oneLine: 'Factor 3 (own your context window) — explicit context assembly over framework defaults.' },
+      { patternSlug: 'checkpointing', oneLine: 'Factor 5 (unify state) + Factor 12 (stateless reducer) — durable state machine the reducer runs over.' },
+      { patternSlug: 'tool-use-react', oneLine: 'Factor 4 (tools as structured outputs) — structured tool call shape the React loop emits.' },
+      { patternSlug: 'human-in-the-loop', oneLine: 'Factor 7 (contact humans via tool calls) — pause-and-resume pattern wired to the human approval gate.' },
+      { patternSlug: 'guardrails', oneLine: 'Factor 6 (own your control flow) — runtime enforcement layer the owning code can audit and update.' },
+      { patternSlug: 'evaluation-llm-as-judge', oneLine: 'Factor 11 (trigger from anywhere) — evaluator running as CI step independent of the agent runtime.' },
+    ],
+    closingRule: 'If a rule has a trigger ("when adding screenshots", "before committing", "during PR review"), it belongs in a skill, not here.',
+    ccPrimitives: [
+      'CLAUDE.md (prompt ownership)',
+      'settings.json (loop configuration)',
+      'Task tool (subagent boundaries)',
+      'Disk artifacts (unified state store)',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['checkpointing', 'context-engineering', 'tool-use-react', 'evaluation-llm-as-judge'],
+    },
+  },
+  realizingInCursor: {
+    keyMoves: [
+      'Write the agent\'s prompt in a `.cursor/rules/*.mdc` file with `alwaysApply: true` — factor 2: prompt lives in the repo.',
+      'Use Agent mode for the executor loop; write intermediate state to disk files and read them back via `@file` — factor 5.',
+      'Use [Plan mode](https://cursor.com/docs/agent/plan-mode) to draft the step list before execution — factor 8 (own the loop).',
+      'Gate each phase on a CI check via [cloud agents](https://cursor.com/docs/cloud-agent) PR-based flow — factors 9 and 10.',
+    ],
+    ccPrimitives: [
+      '.cursor/rules/*.mdc (prompt ownership)',
+      '@file (unified state between steps)',
+      'Plan mode (explicit step list)',
+      'Cloud agents (CI-gated phases)',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['checkpointing', 'context-engineering', 'tool-use-react', 'evaluation-llm-as-judge'],
+    },
+  },
 }

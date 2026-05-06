@@ -141,4 +141,38 @@ export {}
   addedAt: '2026-05-04',
   dateModified: '2026-05-04',
   lastChangeNote: 'Initial authoring of Agentic RAG pattern (iterative retrieval loop; contrasts with single-shot RAG).',
+  realizingInClaudeCode: {
+    keyMoves: [
+      'Expose your retrieval index as an [MCP](https://docs.claude.com/en/docs/claude-code/mcp) tool; Claude calls it iteratively inside the normal tool-use loop without extra orchestration.',
+      'Write the retrieval tool description to instruct re-querying — tell the model to refine and re-issue when initial passages are insufficient.',
+      'Use a [subagent](https://docs.claude.com/en/docs/claude-code/sub-agents) for retrieval-heavy tasks; it accumulates passages in its own context and returns a summary, keeping the main session clean.',
+      'Pin the stopping heuristic in [`CLAUDE.md`](https://docs.claude.com/en/docs/claude-code/memory): specify how many retrieval rounds are appropriate before the agent should answer on available evidence.',
+    ],
+    ccPrimitives: [
+      'MCP server (iterative retrieval)',
+      'CLAUDE.md (loop termination guidance)',
+      'Task tool (retrieval subagent)',
+      'settings.json tool allow-list',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['rag', 'tool-use-react', 'reflexion'],
+    },
+  },
+  realizingInCursor: {
+    keyMoves: [
+      'Add a retrieval MCP server to `.cursor/mcp.json`; in Agent mode, the model issues multiple `retrieve` calls iteratively until it has enough evidence.',
+      'Use `@docs` to pre-index documentation sources; Cursor fetches and re-ranks on each retrieval call automatically.',
+      'Pass the initial query result back via `@file` and prompt the agent to refine the query if the result is insufficient.',
+      'Use [Plan mode](https://cursor.com/docs/agent/plan-mode) to sketch the retrieval strategy before the loop starts so you can review the intended hops.',
+    ],
+    ccPrimitives: [
+      '.cursor/mcp.json (retrieval server)',
+      '@docs (pre-indexed sources)',
+      '@file (intermediate result grounding)',
+      'Plan mode',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['rag', 'tool-use-react', 'reflexion'],
+    },
+  },
 }

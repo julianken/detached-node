@@ -1,6 +1,11 @@
 ---
 name: analysis-funnel
 description: Structured 5→5→3→1 investigation pipeline that sends parallel agents to explore facets of a question, iterates on findings, and produces a comprehensive analysis report. Use this whenever the user asks to "analyze", "investigate", "audit", "assess", or "do a deep-dive on" a broad, open-ended topic where the goal is understanding (codebase health checks, technology assessments, architecture audits, research questions) rather than implementing a fix. Do NOT use for implementation planning (prefer decision-funnel or creative-funnel) or for tasks with a known answer.
+realizes:
+  - orchestrator-workers
+  - parallelization
+  - checkpointing
+  - prompt-chaining
 ---
 
 # Analysis Funnel: 5→5→3→1 Investigation Method

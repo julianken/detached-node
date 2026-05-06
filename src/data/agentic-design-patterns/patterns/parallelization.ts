@@ -150,59 +150,36 @@ export {}
   dateModified: '2026-05-05',
   lastChangeNote: 'W2.1: add realizingInClaudeCode Tier A — dispatch-mechanic altitude, PR #218 worked example, single-message multi-Task() mechanic.',
   realizingInClaudeCode: {
-    tier: 'A',
+    keyMoves: [
+      'Dispatch all N [subagents](https://docs.claude.com/en/docs/claude-code/sub-agents) in a single assistant message — Claude Code runs concurrent `Task()` blocks; serial messages serialize the wall-clock.',
+      'Write each worker\'s output to a deterministic disk path before the orchestrator reads results back.',
+      'Encode the aggregation rule in the orchestrator prompt before dispatching; don\'t let the aggregator be another model decision.',
+      'Use [`git worktree add`](https://git-scm.com/docs/git-worktree) per worker to prevent filesystem race conditions during parallel writes.',
+    ],
     ccPrimitives: [
-      'single-message multi-Task() mechanic — dispatching all N Task() calls inside one assistant message is the primitive that converts N serial round-trips into one parallel wall-clock window; Claude Code executes concurrent tool_use blocks for every call in the message simultaneously',
-      'Task tool (sub-agent dispatch) — each branch runs in its own context window with its own prompt, tool subset, and scratch space; branches are isolated by construction, not by opt-in configuration',
-      'Deterministic aggregation step — the dispatching session reads worker output files from disk after all Task() calls complete; the aggregation rule (concatenate by section, pick majority answer, schema-typed merge) is encoded in the orchestrator prompt, not delegated back to a model call',
+      'Task tool (parallel dispatch)',
+      'Single-message multi-Task() mechanic',
+      'Git worktrees (isolation)',
     ],
-    scaffolding: [
-      '.claude/skills/analysis-funnel/SKILL.md — the orchestrator prompt that encodes the phase cardinality (5+5+3+1), the single-message dispatch constraint, and the disk-checkpoint protocol between phases; loaded into the dispatching session before any Task() call fires',
-      'phase-{N}/{role}-{slug}.md artifact convention — each worker writes its output to a deterministic file path before the wave ends; the aggregation step reads these files rather than accumulating worker transcripts in the orchestrator context',
-      'context-packet forwarding — between phases the orchestrator assembles a 1–2 K token summary from the current-phase artifacts and passes it as the dispatch payload for the next wave; keeps worker contexts clean and prevents the orchestrator context from growing unbounded',
-      'Worktree-per-issue branch convention — each subagent workflow runs on a dedicated branch and a dedicated git worktree; the dispatching session and worker sessions do not share a working tree, which prevents file-system race conditions during parallel writes',
-      'Parallel fan-out cardinality — five investigators in Phase 1, five iterators in Phase 2, three synthesizers in Phase 3 (5+5+3+1 cardinality); the specific cardinality is a choice encoded in the analysis-funnel skill, not a CC-native primitive',
-      'Phase-boundary disk checkpoint — workers write findings to disk before the next phase dispatches; the checkpoint protocol is a convention encoded in the analysis-funnel SKILL.md, not a feature of Claude Code itself',
-    ],
-    workedExample: {
-      url: 'https://github.com/julianken/detached-node/pull/218',
-      description: `PR #218 — "feat: agentic design patterns reference — 23 satellites" — is the canonical instance of the Parallelization pattern at dispatch-mechanic altitude in this repository. The configuration that produced it ran the analysis-funnel skill and dispatched five parallel investigators in a single assistant message: schema design, satellite page layout, mermaid rendering, reference validation, and E2E coverage. All five Task() calls were issued in one message. Claude Code executed all five tool_use blocks concurrently. Each investigator wrote findings to a phase-1 artifact file on disk before the orchestrator read them back.
-
-The single-message dispatch is the structural detail that makes PR #218 evidence for Parallelization rather than for a sequential chain. The same five investigators run serially — one Task() call per assistant message — would produce identical output files and identical final PR content, but the elapsed time would be five times longer, because each investigator would have to wait for the prior one to complete before its tool_use block could start. The single-message fan-out is the specific mechanic that buys the latency reduction; everything else — the phase structure, the disk checkpoints, the context-packet forwarding — is scaffolding that makes the mechanic reliable across multiple waves.
-
-Anthropic's multi-agent research blog (https://www.anthropic.com/engineering/multi-agent-research-system) describes structurally identical mechanics at production scale. Their research system dispatches parallel subagents that explore branches of a search question concurrently, each in its own context window, with outputs later aggregated by a synthesis pass. The claimed ~90% latency reduction relative to a sequential search reflects the same arithmetic: wall-clock is bounded by the slowest branch, not the sum of all branches. The five-investigator run in PR #218 is the same shape at smaller cardinality — same parallel dispatch, same context isolation, same disk-read aggregation.
-
-The distinction from the Orchestrator-Workers framing is altitude, not mechanics. The Orchestrator-Workers realization frames PR #218 at the architecture altitude: a central planner decided at runtime how many workers to spawn and what each one was asked to do, based on the input scope. This section frames the same PR at the dispatch-mechanic altitude: the single-message multi-Task() block is the specific Claude Code primitive that realizes the fan-out topology, and the parallel-wall-clock arithmetic is the reason the mechanic is worth using. Both framings cite the same evidence anchor; they describe different questions about it.
-
-The worked example also shows where the pattern's aggregation discipline matters in practice. Phase 1 produces five artifact files; the aggregation step must read all five and produce a coherent context packet before Phase 2 can dispatch. If the aggregation rule is underspecified — if the orchestrator prompt does not tell the session how to resolve disagreements between investigators or how to weight their outputs — the context packet for Phase 2 will carry conflicting signals that downstream workers have to untangle. In PR #218, the analysis-funnel SKILL.md encodes the aggregation rule alongside the dispatch constraint, so both halves of the pattern are expressed in one artifact.`,
-    },
-    readerMove: {
-      text: 'Inspect every dispatch message: N Task() calls in one message buys parallel wall-clock; N messages × 1 call serializes the work.',
-      anchorUrl: 'https://github.com/julianken/detached-node/blob/main/.claude/skills/analysis-funnel/SKILL.md',
-    },
     seeAlso: {
-      skillPath: '.claude/skills/analysis-funnel/SKILL.md',
-      articleSlug: 'phase-boundary-loop',
       siblingPatternSlugs: ['orchestrator-workers', 'checkpointing', 'funnel-method'],
     },
-    bodyMarkdown: `Parallelization in Claude Code reduces to one structural choice: how many Task() calls appear in a single assistant message. Dispatching N workers in one message tells Claude Code to execute all N tool_use blocks concurrently — wall-clock is bounded by the slowest worker, not the sum. Dispatching one worker per message serializes the work and multiplies wall-clock by N. The fan-out shape, the context isolation, and the deterministic aggregator that the abstract pattern describes all depend on that single dispatch decision being made correctly.
-
-### The single-message mechanic
-
-A Task() call issues a sub-agent into its own context window with its own prompt, tool surface, and scratch space. When multiple Task() calls appear in the same assistant message, Claude Code runs them as concurrent tool_use blocks. The parallelism is not opt-in and requires no framework configuration — it is the default behavior when the dispatch message contains more than one tool call. The practitioner's job is to ensure that the N workers actually arrive in one message rather than being issued sequentially across N messages.
-
-The analysis-funnel SKILL.md encodes this as an explicit constraint: dispatching Phase 1 investigators one at a time is treated as a defect, not a style preference. The SKILL.md carries the phase cardinality (5+5+3+1), the disk-checkpoint protocol between phases, and the context-packet forwarding convention — but the single-message dispatch constraint is the load-bearing rule the skill exists to enforce.
-
-### Why the Anthropic blog arithmetic holds
-
-Anthropic's multi-agent research blog (https://www.anthropic.com/engineering/multi-agent-research-system) reports roughly 90% latency reduction from parallel dispatch relative to sequential search. The arithmetic is straightforward: if each worker takes time T and you dispatch N workers, sequential execution takes N × T while parallel execution takes max(T₁, T₂, … Tₙ). At five workers of roughly equal cost, the parallel wall-clock approaches 20% of the sequential wall-clock — the reported ~90% reduction is the same bound from the other side. The blog describes structurally identical mechanics at production scale; PR #218 is the same pattern at five-investigator cardinality.
-
-The token economics run in the opposite direction. N concurrent workers pay N times the prompt overhead. That cost is unavoidable and worth instrumenting: the analysis-funnel configuration pays five times the Phase 1 brief cost plus the skill context cost, and the aggregation step pays again over the merged artifacts. The pattern earns its token multiplier when the task is parallelisable enough that the wall-clock savings justify the cost — and when the fan-out topology maps cleanly to the actual sub-task structure.
-
-### Aggregation discipline
-
-A parallel fan-out without a specified aggregation rule is a pattern fragment. The outputs arrive on disk from all N workers; something has to read them and produce a single committable result. In the analysis-funnel configuration, the aggregation rule is encoded in the SKILL.md alongside the dispatch constraint: the orchestrator assembles a 1–2 K token context packet from the phase artifacts and passes it as the dispatch payload for the next wave. The rule is deterministic (the same N artifact files always collapse to the same context packet structure) and the context packet is what isolates the next wave's workers from each other's intermediate details.
-
-Parallelization is the abstract pattern. The single-message multi-Task() mechanic, the phase-artifact disk checkpoint, and the context-packet forwarding are the configuration that has realized it in this repository. The mechanics generalize; the 5+5+3+1 cardinality is one specific composition suited to the investigation-and-synthesis shape of the analysis-funnel skill.`,
+  },
+  realizingInCursor: {
+    keyMoves: [
+      'Open multiple [Cloud Agents](https://cursor.com/docs/cloud-agent) in parallel — each runs in its own isolated VM on a separate branch.',
+      'Scope each agent\'s task brief so workers do not overlap; write outputs to deterministic file paths or branches.',
+      'Aggregate by opening a new Agent chat that references the parallel branches via `@branch` after all workers complete.',
+      'Use `.cursor/rules/*.mdc` with `alwaysApply: true` for invariants that every parallel worker must respect.',
+    ],
+    ccPrimitives: [
+      'Cloud Agents (parallel isolated VMs)',
+      '@branch references',
+      '.cursor/rules/*.mdc (shared invariants)',
+      'Agent mode',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['orchestrator-workers', 'checkpointing', 'funnel-method'],
+    },
   },
 }

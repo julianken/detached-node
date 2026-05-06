@@ -92,31 +92,29 @@ export type CcUmbrellaPointer = {
 }
 
 /**
- * Discriminated union over four tiers:
- * - Tier A: full satellite (ccPrimitives + scaffolding + workedExample + readerMove + seeAlso)
- * - Tier B: compact (readerMove + seeAlso; bodyMarkdown optional)
- * - Tier C: cross-link paragraph (readerMove + seeAlso + bodyMarkdown)
- * - Tier U: umbrella index (openingFraming + umbrellaPointers ≥10 + closingRule + seeAlso)
+ * Reader-facing reference content for a pattern's Claude Code realization.
+ * All fields are optional; the renderer surfaces whatever is present.
  */
 export type RealizingInClaudeCode = {
-  tier: 'A' | 'B' | 'C' | 'U'
-  /** Required Tier A: CC primitive names that realize this pattern */
+  /** Top-of-card scannable bullets. Action-verb-led, plain technical voice. */
+  keyMoves?: string[]
+  /** Claude Code feature names that realize this pattern (rendered as pills). */
   ccPrimitives?: CcPrimitive[]
-  /** Required Tier A: scaffolding artifacts (SKILL.md paths, config files) */
+  /** Optional repo-shape artifacts. No longer rendered in the reader UI. */
   scaffolding?: CcScaffolding[]
-  /** Required Tier A: one verified worked-example PR or tree URL */
+  /** Optional concrete example link (rendered as a small footer chip). */
   workedExample?: CcWorkedExample
-  /** Required Tier A, B, C: the Monday-morning reader move */
+  /** Deprecated authoring field; no longer rendered. */
   readerMove?: CcReaderMove
-  /** Required all tiers: cross-link block */
+  /** Cross-link block: sibling slugs and optional article slug. */
   seeAlso?: CcSeeAlso
-  /** Tier C (and Tier A supplementary): compact paragraph prose */
+  /** Optional deep-dive prose. Collapsed inside a "Why this works" sub-disclosure. */
   bodyMarkdown?: string
-  /** Tier U only: ≥10 umbrella pointer rows */
+  /** Umbrella patterns only: pointer rows mapping each sibling to a one-liner. */
   umbrellaPointers?: CcUmbrellaPointer[]
-  /** Tier U only: opening framing paragraph (~100w) */
+  /** Umbrella patterns only: opening framing paragraph. */
   openingFraming?: string
-  /** Tier U only: closing rule sentence (verbatim meta-rule) */
+  /** Umbrella patterns only: closing rule sentence. */
   closingRule?: string
 }
 
@@ -145,8 +143,10 @@ export type Pattern = {
   dateModified: string        // ISO date — last meaningful content edit
   lastChangeNote?: string     // 1-line description of last edit
   archived?: boolean          // true when retired
-  /** W1.0: optional bridge field; absent for all 23 patterns until W1.1+ fills them */
+  /** Claude Code realization of this pattern (renders as a collapsible card under the diagram). */
   realizingInClaudeCode?: RealizingInClaudeCode
+  /** Cursor realization of this pattern (parallel to Claude Code; empty for most patterns until populated). */
+  realizingInCursor?: RealizingInClaudeCode
 }
 
 export type ChangelogEntryType = 'added' | 'edited' | 'retired'

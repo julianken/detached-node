@@ -143,4 +143,37 @@ export {}
   addedAt: '2026-05-03',
   dateModified: '2026-05-03',
   lastChangeNote: 'Initial authoring of the Routing pattern (wave-1, issue #173).',
+  realizingInClaudeCode: {
+    keyMoves: [
+      'Declare each handler as a separate [SKILL.md](https://docs.claude.com/en/docs/claude-code/skills) with a `description` matching its intent class.',
+      'Use structured output in the classifier step; write the label to a scratchpad file the routing logic reads.',
+      'Pin classifier and each handler to separate [subagents](https://docs.claude.com/en/docs/claude-code/sub-agents) so tool surfaces stay narrow per handler.',
+      'Log the chosen label and handler in [`CLAUDE.md`](https://docs.claude.com/en/docs/claude-code/memory) telemetry notes to surface misclassification over time.',
+    ],
+    ccPrimitives: [
+      'SKILL.md description-based dispatch',
+      'Task tool (handler subagents)',
+      'settings.json tool scoping per handler',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['prompt-chaining', 'orchestrator-workers', 'handoffs-swarm'],
+    },
+  },
+  realizingInCursor: {
+    keyMoves: [
+      'Create one `.cursor/rules/*.mdc` file per handler with `globs` scoped to the files that handler edits.',
+      'Use Agent mode for the classifier turn; pin model selection per route via Cursor\'s model picker if cost tiers differ.',
+      'Reference handler-specific docs with `@docs` so each handler has the right context without cross-contamination.',
+      'Set `alwaysApply: false` on handler rules; activate via `@rule-name` after the classifier emits its label.',
+    ],
+    ccPrimitives: [
+      '.cursor/rules/*.mdc (per-handler rules)',
+      'globs scoping',
+      '@docs references',
+      'Agent mode',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['prompt-chaining', 'orchestrator-workers', 'handoffs-swarm'],
+    },
+  },
 }

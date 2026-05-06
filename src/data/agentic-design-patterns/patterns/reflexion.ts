@@ -145,4 +145,37 @@ export {}
   addedAt: '2026-05-02',
   dateModified: '2026-05-03',
   lastChangeNote: 'Initial authoring as the Phase-1 exemplar.',
+  realizingInClaudeCode: {
+    keyMoves: [
+      'Write verbal critiques to a named file after each failed attempt; load that file at the top of the next attempt\'s [`CLAUDE.md`](https://docs.claude.com/en/docs/claude-code/memory) context.',
+      'Scope critique storage to the task class — a per-project directory in `.claude/` works; key by task type, not by individual run.',
+      'Use a separate [subagent](https://docs.claude.com/en/docs/claude-code/sub-agents) as the critic to avoid same-model self-approval; pass it the trajectory as a file reference.',
+      'Compact the critique buffer periodically — a long-term store of all failures degrades retrieval quality for the next attempt.',
+    ],
+    ccPrimitives: [
+      'CLAUDE.md lesson injection',
+      'Task tool (isolated critic)',
+      'Disk-stored critique files',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['evaluator-optimizer', 'memory-management', 'evaluation-llm-as-judge'],
+    },
+  },
+  realizingInCursor: {
+    keyMoves: [
+      'Append critique notes to a [`.cursor/rules/*.mdc`](https://cursor.com/docs/rules) file after each failed attempt; `alwaysApply: true` loads them on the next session.',
+      'Reference the critique file explicitly via `@file` at the start of the retry attempt so the agent reads it first.',
+      'Scope critique rules by task class — one `.mdc` file per problem domain keeps lessons targeted and avoids stale notes diluting unrelated tasks.',
+      'Limit each critique rule file to under 100 lines; split by task class if the file grows beyond that to preserve retrieval quality.',
+    ],
+    ccPrimitives: [
+      '.cursor/rules/*.mdc (critique rules)',
+      'alwaysApply rule loading',
+      '@file references',
+      'Agent mode',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['evaluator-optimizer', 'memory-management', 'evaluation-llm-as-judge'],
+    },
+  },
 }

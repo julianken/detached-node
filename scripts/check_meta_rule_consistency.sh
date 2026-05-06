@@ -12,10 +12,10 @@ PATTERNS_DIR="$REPO_ROOT/src/data/agentic-design-patterns/patterns"
 META_RULE='it belongs in a skill, not here'
 
 # Files that must contain the meta-rule when they exist.
-# 12-factor-agent.ts will be added here once W3.1 (#322) lands.
 TARGETS=(
   "$PATTERNS_DIR/context-engineering.ts"
   "$PATTERNS_DIR/memory-management.ts"
+  "$PATTERNS_DIR/12-factor-agent.ts"
 )
 
 FAILED=0

@@ -138,4 +138,38 @@ export {}
   addedAt: '2026-05-03',
   dateModified: '2026-05-03',
   lastChangeNote: 'Initial authoring of Prompt Chaining pattern (wave 1).',
+  realizingInClaudeCode: {
+    keyMoves: [
+      'Define each pipeline stage as a named step in [`CLAUDE.md`](https://docs.claude.com/en/docs/claude-code/memory) so the agent follows the same decomposition every run.',
+      'Use a [hook](https://docs.claude.com/en/docs/claude-code/hooks) to validate structured output between stages; exit non-zero to retry the failing stage.',
+      'Pin the stage order in [`settings.json`](https://docs.claude.com/en/docs/claude-code/settings) via an allowed tool sequence — prevents the agent skipping gates under time pressure.',
+      'Keep each stage in a separate [subagent](https://docs.claude.com/en/docs/claude-code/sub-agents) when stages need clean context isolation from one another.',
+    ],
+    ccPrimitives: [
+      'CLAUDE.md stage definitions',
+      'PreToolUse hooks (inter-stage gates)',
+      'Task tool (per-stage subagents)',
+      'settings.json tool allow-list',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['routing', 'parallelization', 'orchestrator-workers'],
+    },
+  },
+  realizingInCursor: {
+    keyMoves: [
+      'Add a `.cursor/rules/*.mdc` file listing each pipeline stage and its acceptance criteria.',
+      'Use Agent mode with [Plan mode](https://cursor.com/docs/agent/plan-mode) first — review the generated step list before execution begins.',
+      'Reference the output schema of each stage with `@file` so the next stage prompt sees the contract.',
+      'Set `alwaysApply: false` on stage rules and trigger them via `@rule-name` only when that stage is active.',
+    ],
+    ccPrimitives: [
+      '.cursor/rules/*.mdc (stage rules)',
+      'Plan mode (upfront step review)',
+      '@file references',
+      'Agent mode',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['routing', 'parallelization', 'orchestrator-workers'],
+    },
+  },
 }

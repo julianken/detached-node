@@ -152,6 +152,39 @@ export {}
     },
   ],
   addedAt: '2026-05-03',
-  dateModified: '2026-05-03',
-  lastChangeNote: 'Author Planning satellite: planner-executor split, re-plan loop, ToT/HuggingGPT/Plan-and-Solve variants.',
+  dateModified: '2026-05-05',
+  lastChangeNote: 'W3.0 — Update background-agent → cloud-agent URL in realizingInCursor.',
+  realizingInClaudeCode: {
+    keyMoves: [
+      'Write the step list to a `plan.md` file before executing any steps — the plan is a disk artifact a reviewer can inspect.',
+      'Execute each step as a separate [subagent](https://docs.claude.com/en/docs/claude-code/sub-agents) dispatch; pass only the current step brief and prior observations, not the full plan.',
+      'Assert step success before advancing — a [PreToolUse hook](https://docs.claude.com/en/docs/claude-code/hooks) or a structured tool result gates the next dispatch.',
+      'Rewrite the tail of `plan.md` when a step fails; preserve completed steps so the resume starts from the last successful checkpoint.',
+    ],
+    ccPrimitives: [
+      'Disk plan.md (inspectable step list)',
+      'Task tool (per-step executor)',
+      'PreToolUse hooks (step gate)',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['orchestrator-workers', 'checkpointing', 'tool-use-react'],
+    },
+  },
+  realizingInCursor: {
+    keyMoves: [
+      'Use [Plan mode](https://cursor.com/docs/agent/plan-mode) to generate the step list; review and edit it before execution begins — the plan is the contract.',
+      'Execute one step at a time in Agent mode; review each diff before accepting and moving to the next step.',
+      'Write step outputs to named files; reference them via `@file` in the next step\'s prompt to carry context forward without relying on chat history.',
+      'Use [cloud agents](https://cursor.com/docs/cloud-agent) for long-running plans; the branch-and-PR shape gives you a review gate at each phase boundary.',
+    ],
+    ccPrimitives: [
+      'Plan mode (step list generation and review)',
+      'Agent mode (step executor)',
+      '@file (step output forwarding)',
+      'Cloud agents (long-running plans)',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['orchestrator-workers', 'checkpointing', 'tool-use-react'],
+    },
+  },
 }
