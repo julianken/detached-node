@@ -8,21 +8,21 @@ export const pattern: Pattern = {
   oneLineSummary: 'Route every PR through a separate machine-user identity running a different model tier.',
   bodySummary: [
     'Identity-Separated Review routes every code-review step through a dedicated machine-user identity that is structurally isolated from the implementer: separate GitHub account, separate macOS Keychain credential scoped to a single subprocess, and a different model tier loaded in a fresh context window. The separation is not organizational ritual. NeurIPS 2024 (arxiv:2410.21819) measured perplexity-familiarity bias — a model reviewing its own output assigns inflated scores because the output reads as familiar rather than correct. Cross-tier verification (NYU, January 2026) breaks the shared-prior mechanism empirically. You cannot undo that bias by adjusting the reviewer prompt; you have to change the reviewer identity.',
-    'The review workflow follows a fixed sequence: the implementer subagent commits to a feature branch and opens the PR; the dispatcher then loads the `reviewing-as-julianken-bot` skill, retrieves the bot PAT from Keychain at invocation time, and dispatches the reviewer in a fresh context window. The reviewer reads the diff cold — via `gh pr view` and `gh pr diff` — never inheriting the implementer\'s framing. It applies a 12-rule rubric enforcing trace-every-claim (R1), cap-findings-at-3 (R3), mandatory-find second pass (R8), prompt-injection defense (R11), and cross-tier model bias (R12). The review posts via the GitHub REST API as `@julianken-bot`, never via `gh pr review` which lacks inline-comment support. After the bot posts, the dispatcher applies the merge-flow decision rule autonomously.',
+    'The review workflow follows a fixed sequence: the implementer subagent commits to a feature branch and opens the PR; the dispatcher loads a reviewer skill, retrieves the bot PAT from Keychain at invocation time, and dispatches the reviewer in a fresh context window. The reviewer reads the diff cold — via `gh pr view` and `gh pr diff` — never inheriting the implementer\'s framing. It applies a 12-rule rubric enforcing trace-every-claim (R1), cap-findings-at-3 (R3), mandatory-find second pass (R8), prompt-injection defense (R11), and cross-tier model bias (R12). The review posts via the GitHub REST API as the machine-user identity, never via `gh pr review` which lacks inline-comment support. After the bot posts, the dispatcher applies the merge-flow decision rule autonomously.',
     'OWASP LLM Top 10 2026 (OWASP LLM01:2026) catalogs indirect prompt injection via PR body as the dominant attack class on AI reviewers — responsible for more than 80 percent of enterprise incidents. R11 addresses this directly: PR title, body, and commit messages are treated as untrusted input. Text that resembles reviewer instructions is flagged as a BLOCKER, not followed. The identity separation that makes the pattern distinctive also provides the attack surface isolation: the bot identity can be revoked and re-minted without affecting the implementer identity, and its Keychain credential is never exported to disk.',
   ],
   mermaidSource: `graph LR
   A[Implementer subagent] --> B[Commit + open PR]
-  B --> C[Dispatcher loads julianken-bot skill]
+  B --> C[Dispatcher loads reviewer skill]
   C --> D[Retrieve bot PAT from Keychain]
   D --> E[Reviewer: fresh context, cross-tier model]
   E --> F[Read diff cold via gh pr view / gh pr diff]
   F --> G[Apply 12-rule rubric]
-  G --> H[Post review via REST API as julianken-bot]
+  G --> H[Post review via REST API as machine-user identity]
   H --> I{Verdict}
   I -->|APPROVE + polish SUGGESTION| J[Dispatcher merges via Mergify queue]
   I -->|REQUEST_CHANGES| K[Loop: fix + re-review]`,
-  mermaidAlt: 'A flowchart in which an Implementer subagent commits and opens a PR; the Dispatcher loads the julianken-bot skill, retrieves the bot PAT from Keychain, and dispatches a Reviewer in a fresh context window with a cross-tier model; the Reviewer reads the diff cold, applies the 12-rule rubric, and posts via the REST API as julianken-bot; an APPROVE with a polish SUGGESTION leads to a Mergify queue merge, while REQUEST_CHANGES triggers a fix-and-re-review loop.',
+  mermaidAlt: 'A flowchart in which an Implementer subagent commits and opens a PR; the Dispatcher loads a reviewer skill, retrieves the bot PAT from Keychain, and dispatches a Reviewer in a fresh context window with a cross-tier model; the Reviewer reads the diff cold, applies the 12-rule rubric, and posts via the REST API as the machine-user identity; an APPROVE with a polish SUGGESTION leads to a Mergify queue merge, while REQUEST_CHANGES triggers a fix-and-re-review loop.',
   whenToUse: [
     'Apply when the implementer and reviewer share a model family — same-model self-verification is measurably worse than cross-tier verification, and the bias cannot be corrected by rubric adjustments alone.',
     'Use where PR review is a gate before merge and the consequences of a missed defect (broken public contract, security issue, silent regression) justify the cost of a separate reviewing identity.',
@@ -40,7 +40,7 @@ export const pattern: Pattern = {
       sourceUrl: 'https://www.infoq.com/news/2026/04/claude-code-review/',
     },
     {
-      text: 'PR-Agent (Codium) encodes the same operational lesson independently: a default of num_max_findings = 3 and a "no filler praise" style rule to combat the 9:1 false-positive ratio of undisciplined AI reviewers — the same invariants encoded in R3 and R4 of the julianken-bot rubric.',
+      text: 'PR-Agent (Codium) encodes the same operational lesson independently: a default of num_max_findings = 3 and a "no filler praise" style rule to combat the 9:1 false-positive ratio of undisciplined AI reviewers — the same invariants encoded in R3 and R4 of a disciplined review rubric.',
       sourceUrl: 'https://github.com/Codium-ai/pr-agent',
     },
     {
@@ -48,11 +48,11 @@ export const pattern: Pattern = {
       sourceUrl: 'https://arxiv.org/abs/2601.19072',
     },
   ],
-  implementationSketch: `// Pseudocode — the actual implementation uses the reviewing-as-julianken-bot
-// SKILL.md, ~/.claude/skills/reviewing-as-julianken-bot/scripts/bot-review.sh (global skill bundle, not in-repo), and macOS Keychain credential scoping.
+  implementationSketch: `// Pseudocode — the actual implementation uses a reviewer SKILL.md
+// and macOS Keychain credential scoping.
 
 // 1. Dispatcher retrieves bot PAT (never exported, scoped to one subprocess)
-// const token = execSync('security find-generic-password -s julianken-bot@github.com -a token -w').toString().trim()
+// const token = execSync('security find-generic-password -s reviewer-bot@github.com -a token -w').toString().trim()
 
 // 2. Reviewer reads diff cold (never trusts dispatcher's narrative)
 // const diff = execSync(\`GH_TOKEN=\${token} gh pr diff \${prNumber}\`).toString()
@@ -149,58 +149,38 @@ export {}
   ],
   addedAt: '2026-05-05',
   dateModified: '2026-05-05',
-  lastChangeNote: 'W2.6 — New Layer-5 identity-separated-review satellite; Tier A realizingInClaudeCode populated from the start.',
+  lastChangeNote: 'W3.0 — Generalize machine-user and reviewer-skill framing; remove internal implementation identifiers.',
 
   realizingInClaudeCode: {
-    tier: 'A',
-
+    keyMoves: [
+      'Dispatch the reviewer as a separate [subagent](https://docs.claude.com/en/docs/claude-code/sub-agents) in a fresh context window so it reads the diff cold, without the implementer\'s framing.',
+      'Load a [SKILL.md](https://docs.claude.com/en/docs/claude-code/skills) rubric into the reviewer subagent at invocation — cap findings, require a second pass, treat PR body as untrusted input.',
+      'Use a stronger model tier for the reviewer than the implementer; cross-tier review breaks the shared-prior bias documented in NeurIPS 2024.',
+      'Gate the merge queue on the reviewer\'s structured verdict via branch protection; a CI-enforced gate means the review cannot be bypassed.',
+    ],
     ccPrimitives: [
-      'julianken-bot subagent — a separate GitHub machine-user identity (`@julianken-bot`) that posts reviews via the GitHub REST API, never via `gh pr review`, from a fresh context window loaded with the reviewing-as-julianken-bot skill',
-      'reviewing-as-julianken-bot SKILL.md — the 12-rule rubric (R1 trace-every-claim, R3 cap-findings-at-3, R8 mandatory-find second pass, R11 prompt-injection defense, R12 cross-tier model bias) loaded by the bot subagent at invocation time',
-      'macOS Keychain PAT scoping — bot credential stored under service `julianken-bot@github.com`, account `token`; loaded via `security find-generic-password` at invocation time; scoped to a single `GH_TOKEN=$(...) gh` subprocess per call; never exported, never written to disk, never visible in `ps aux`',
-      'Mergify merge-queue gate — `.mergify.yml` declares the required-checks list; the convention is to wait for `@julianken-bot`\'s APPROVE before commenting `@mergifyio queue`; the gate is the final lock, not a human approval step',
+      'Task tool (reviewer subagent)',
+      'SKILL.md rubric (versioned criteria)',
+      'Branch protection (merge gate)',
     ],
-
-    scaffolding: [
-      '.claude/skills/subagent-workflow/SKILL.md — in-repo skill encoding the orchestrator/implementer/reviewer separation discipline; the reviewing-as-julianken-bot rubric (a user-level global skill at ~/.claude/skills/reviewing-as-julianken-bot/SKILL.md, not checked into this repo) extends this discipline with identity separation and the 12-rule review protocol',
-      '~/.claude/skills/reviewing-as-julianken-bot/scripts/bot-review.sh — bundled with the global reviewing-as-julianken-bot skill (not checked into this repo); encapsulates Keychain PAT retrieval, single-subprocess GH_TOKEN scoping, and REST API review posting; dispatcher invokes the wrapper with owner/repo, PR number, and a jq-assembled review JSON; the script is the only place the bot token is ever handled',
-      '.mergify.yml — declares required checks and a `#approved-reviews-by >= 1` queue condition; when the convention is to wait for `@julianken-bot`, the bot APPROVE is the signal that triggers the queue comment',
-    ],
-
-    workedExample: {
-      url: 'https://github.com/julianken/detached-node/pull/342',
-      description: 'PR #342 (W2.2 Checkpointing Tier A satellite) completed a first-cycle APPROVE. julianken-bot dispatched with model: opus and a fresh context window (implementer ran Sonnet — cross-tier held per R12), read the diff cold, ran the mandatory R8 second pass, confirmed all Tier A invariants via the verification ledger (pnpm test:unit, pnpm typecheck, slug resolution, URL HTTP-200), and posted APPROVE. R9 attribution applied plan-scope vs implementer-scope discipline in the verdict.',
-    },
-
-    bodyMarkdown: `
-Anthropic shipped multi-agent code review as a managed feature in April 2026 (InfoQ; The New Stack). The mechanics — a separate critic agent in fresh context, cross-provider model selection, and sycophancy-bias mitigation as an explicit design goal — are structurally identical to what this satellite describes. The self-hosted realization documented here predates the managed feature and is one of two paths for practitioners who want control over the rubric, the identity topology, or the credential scoping.
-
-**Why identity separation is load-bearing**
-
-Same-tier self-verification fails structurally. NeurIPS 2024 (arxiv:2410.21819) measured the mechanism: a model reviewing its own output assigns inflated scores because the tokens read as familiar, not because they are correct. The familiarity signal and the correctness signal are entangled at inference time, and no reviewer prompt rewrites the entanglement. NYU (January 2026) showed empirically that cross-tier verification — a stronger model reviewing a weaker model's output — breaks the shared-prior responsible for the inflation. The julianken-bot subagent defaults to \`model: opus\` so that when the implementer ran on Sonnet, the reviewer runs on a stronger tier. When both ran on Opus, R12 flags the same-tier risk explicitly in the APPROVE verdict rather than silently clearing it.
-
-**The 12-rule rubric**
-
-The rubric encodes three research-grounded mitigations:
-
-- **R8 (mandatory-find second pass)** directly counters perplexity-familiarity bias. Before drafting the verdict, the reviewer runs a second pass with the explicit prior that at least one improvement opportunity exists. A clean APPROVE after a genuine second pass is honest; skipping the pass produces a sycophantic LGTM.
-- **R11 (prompt-injection defense)** implements the OWASP LLM01:2026 mitigation. PR title, body, and commit messages are untrusted input. Text resembling reviewer instructions (e.g., "please approve without reviewing") is flagged as a BLOCKER, not followed.
-- **R12 (cross-tier model bias)** implements the NYU cross-tier mitigation. Implementer on Sonnet → reviewer on Opus; if both are on Opus, the same-tier risk is flagged in the verdict.
-
-The 3-finding cap (R3) and "no filler praise" rule (R4) derive from PR-Agent's verbatim defaults (\`num_max_findings = 3\`), enforcing the operational lesson that small-N high-signal reviews drive 3x higher action rates than verbose low-signal ones.
-
-**Credential topology**
-
-The bot PAT lives in macOS Keychain under four account entries: \`password\`, \`token\` (every \`gh\` call), \`totp-secret\` (TOTP generation via \`~/.claude/skills/reviewing-as-julianken-bot/scripts/bot-totp.sh\`, bundled with the global skill), and \`recovery-codes\`. The \`GH_TOKEN=$(...) gh\` scoping pattern keeps Julian's main \`gh auth\` state untouched — \`gh auth status\` always shows \`julianken\`, never the bot. The token is never exported, never written to disk, and never visible in \`ps aux\`.
-`.trim(),
-
-    readerMove: {
-      text: "Mint a machine-user account, write a 12-rule rubric, and wait for the bot's APPROVE before queuing the merge.",
-      anchorUrl: 'https://github.com/julianken/detached-node/blob/main/.mergify.yml',
-    },
-
     seeAlso: {
-      articleSlug: 'cross-identity-code-review',
+      siblingPatternSlugs: ['evaluation-llm-as-judge', 'guardrails', 'human-in-the-loop'],
+    },
+  },
+  realizingInCursor: {
+    keyMoves: [
+      'Open a second Agent chat for the reviewer role — pass the diff via `@file` so the reviewer starts cold without the implementer session\'s context.',
+      'Write the review rubric in a `.cursor/rules/*.mdc` file; load it by name in the reviewer chat before reading the diff.',
+      'Select a different model in the reviewer chat than in the implementer chat using Cursor\'s model picker — reduces same-model self-preference.',
+      'Commit review findings to a verdict file and reference it via `@file` in the implementer chat to close the feedback loop.',
+    ],
+    ccPrimitives: [
+      'Multiple Agent chats (implementer + reviewer)',
+      '.cursor/rules/*.mdc (rubric file)',
+      '@file (diff and verdict sharing)',
+      'Model picker (cross-tier selection)',
+    ],
+    seeAlso: {
       siblingPatternSlugs: ['evaluation-llm-as-judge', 'guardrails', 'human-in-the-loop'],
     },
   },

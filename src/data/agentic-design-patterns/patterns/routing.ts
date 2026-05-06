@@ -141,24 +141,39 @@ export {}
     },
   ],
   addedAt: '2026-05-03',
-  dateModified: '2026-05-05',
-  lastChangeNote: 'W3.3: add realizingInClaudeCode Tier C — decision-funnel domain detection as routing realization.',
-
+  dateModified: '2026-05-03',
+  lastChangeNote: 'Initial authoring of the Routing pattern (wave-1, issue #173).',
   realizingInClaudeCode: {
-    tier: 'C',
-
-    bodyMarkdown: `
-The [decision-funnel skill](https://github.com/julianken/detached-node/blob/main/.claude/skills/decision-funnel/SKILL.md) encodes a routing table as its Domain Detection section: twelve domains (UI/Visual, React/Components, Auth/Security, and more) each map to a preferred \`subagent_type\` value. Phase 0 classifies the problem against that table and the classification determines which specialist agent receives each investigation area in Phase 1. No separate router agent is required — the orchestrator reads the table and routes directly. The domain-to-agent-type mapping in the skill's D.4 Agent Type Selection section is the routing logic; the phase-0 domain tags are the runtime signal that triggers it. [PR #337](https://github.com/julianken/detached-node/pull/337) introduced the dispatch mechanic this routing table feeds.
-`.trim(),
-
-    readerMove: {
-      text: 'Build a domain-to-agent-type table in your SKILL.md; route Phase 1 investigators by domain tag, not by model default.',
-      anchorUrl: 'https://github.com/julianken/detached-node/blob/main/.claude/skills/decision-funnel/SKILL.md',
-    },
-
+    keyMoves: [
+      'Declare each handler as a separate [SKILL.md](https://docs.claude.com/en/docs/claude-code/skills) with a `description` matching its intent class.',
+      'Use structured output in the classifier step; write the label to a scratchpad file the routing logic reads.',
+      'Pin classifier and each handler to separate [subagents](https://docs.claude.com/en/docs/claude-code/sub-agents) so tool surfaces stay narrow per handler.',
+      'Log the chosen label and handler in [`CLAUDE.md`](https://docs.claude.com/en/docs/claude-code/memory) telemetry notes to surface misclassification over time.',
+    ],
+    ccPrimitives: [
+      'SKILL.md description-based dispatch',
+      'Task tool (handler subagents)',
+      'settings.json tool scoping per handler',
+    ],
     seeAlso: {
-      skillPath: '.claude/skills/decision-funnel/SKILL.md',
-      siblingPatternSlugs: ['orchestrator-workers', 'handoffs-swarm', 'planning'],
+      siblingPatternSlugs: ['prompt-chaining', 'orchestrator-workers', 'handoffs-swarm'],
+    },
+  },
+  realizingInCursor: {
+    keyMoves: [
+      'Create one `.cursor/rules/*.mdc` file per handler with `globs` scoped to the files that handler edits.',
+      'Use Agent mode for the classifier turn; pin model selection per route via Cursor\'s model picker if cost tiers differ.',
+      'Reference handler-specific docs with `@docs` so each handler has the right context without cross-contamination.',
+      'Set `alwaysApply: false` on handler rules; activate via `@rule-name` after the classifier emits its label.',
+    ],
+    ccPrimitives: [
+      '.cursor/rules/*.mdc (per-handler rules)',
+      'globs scoping',
+      '@docs references',
+      'Agent mode',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['prompt-chaining', 'orchestrator-workers', 'handoffs-swarm'],
     },
   },
 }

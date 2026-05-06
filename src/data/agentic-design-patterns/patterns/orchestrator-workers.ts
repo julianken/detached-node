@@ -87,42 +87,37 @@ export {}
   },
   relatedSlugs: [],
   realizingInClaudeCode: {
-    tier: 'A',
+    keyMoves: [
+      'Keep the orchestrator session as a planner only — it issues [`Task()`](https://docs.claude.com/en/docs/claude-code/sub-agents) calls and reads outputs; it never edits files.',
+      'Dispatch all workers in a single assistant message so they run concurrently; serial dispatch multiplies wall-clock by N.',
+      'Write each worker\'s output to a deterministic path on disk; the orchestrator reads those files for aggregation.',
+      'Encode the decomposition policy in a [SKILL.md](https://docs.claude.com/en/docs/claude-code/skills) loaded before dispatch so the planner prompt is versioned and reviewable.',
+    ],
     ccPrimitives: [
-      'Task tool dispatch — each worker is spawned via a Task() call in a single assistant message; Claude Code runs concurrent tool_use blocks for all workers in parallel',
-      'Subagent (type: general-purpose) — each worker runs in its own context window with its own prompt, tool surface, and scratch space; context isolation is the default, not opt-in',
-      'Orchestrator role (lead agent) — the invoking Claude Code session holds the plan, dispatches all workers, and performs the aggregation step; the lead never edits files during a worker wave',
-      'Parallel fan-out mechanic — dispatching N Task() calls in one assistant message is the single structural move that converts serial token cost into parallel wall-clock; every worker pays its own prompt overhead, but the elapsed time is the longest worker, not the sum',
-      'SKILL.md context injection — the analysis-funnel SKILL.md is loaded into the orchestrator context before dispatch; it carries the phase cardinality (5+5+3+1), the disk-checkpoint rule, and the single-message dispatch constraint; workers receive only their brief plus the tools they need',
+      'Task tool (worker dispatch)',
+      'Single-message parallel fan-out',
+      'SKILL.md orchestrator prompt',
+      'Disk artifact convention',
     ],
-    scaffolding: [
-      '.claude/skills/analysis-funnel/SKILL.md — the orchestrator prompt that encodes the 5+5+3+1 phase structure, the parallel-dispatch constraint, the disk-checkpoint protocol between phases, and the context-packet forwarding convention',
-      'Worktree-per-issue branch convention — each subagent workflow runs on a dedicated branch (e.g. feat/orchestrator-workers-realizing) and a dedicated git worktree so lead agent and worker agents do not share a working tree',
-      'Phase artifact directories — Phase 1 investigators write findings to phase-1/{role}-{slug}.md; Phase 2 iterators read those files, produce phase-2/{role}-{slug}.md; Phase 3 synthesizers produce phase-3/{lens}-synthesis.md; Phase 4 unifier reads all three and produces the final report',
-      'Context-packet forwarding — between phases the orchestrator assembles a 1–2 K token context packet (not raw worker transcripts) and passes it as the dispatch payload for the next wave; this keeps worker contexts clean and prevents the orchestrator context from growing with intermediate detail',
-      'GitHub PR as the delivery artifact — the orchestrator opens a PR once all workers finish and the aggregation step is complete; the PR body follows a five-section structure (Diagrams / Summary / Screenshots / Test plan / Plan reference)',
-      'Mergify required-checks queue — CI gates (ESLint, TypeScript, Vitest, Next.js Build, four E2E shards, CodeQL) must pass before the merge queue advances; the orchestrator-workers pattern is realized at the merge boundary as well as the dispatch boundary',
-    ],
-    workedExample: {
-      url: 'https://github.com/julianken/detached-node/pull/218',
-      description: `PR #218 — "feat: agentic design patterns reference — 23 satellites" — is the canonical instance of the Orchestrator-Workers pattern in this repository. The configuration that produced it ran the analysis-funnel skill, dispatching five parallel investigators in a single assistant message to explore distinct facets of the ADP catalog question: schema design, satellite page layout, mermaid rendering, reference validation, and E2E coverage. Each investigator wrote findings to a phase-1 artifact file on disk before the orchestrator assembled a context packet and dispatched five parallel iterators in Phase 2. Three synthesizers ran in parallel during Phase 3; one unifier produced the implementation plan that the lead agent executed in Phase 4.
-
-The structural mechanics visible in PR #218 match the pattern this satellite describes. The orchestrator (the Claude Code session invoking the skill) never edited files during the worker waves — it held the plan, dispatched all Task() calls in single messages, and aggregated outputs via disk reads rather than in-context accumulation. The 23-satellite scope illustrates why the decomposition had to be dynamic: the orchestrator chose at runtime which facets to assign to which investigator based on the input scope, not from a fixed template. Workers operated in isolation — no worker read another worker's transcript; context pollution between workers was prevented by design.
-
-The token economics visible here match the pattern's gotcha note: the orchestrator paid its own prompt overhead once; each of the five Phase 1 workers paid the prompt overhead for its brief plus the skill context; the aggregation step paid over the merged phase-1 artifacts. Anthropic's multi-agent research blog (https://www.anthropic.com/engineering/multi-agent-research-system) describes structurally identical mechanics at larger scale — a lead Claude agent plans the search, spawns subagents that explore branches in parallel with their own context windows, and a final agent synthesises the report. The mechanics described in that post and the mechanics that produced PR #218 are the same pattern at different cardinalities: one repo's five-investigator run versus Anthropic's research system running at production scale.
-
-The wall-clock gain from single-message parallel dispatch is the configuration's primary leverage point. Dispatching five investigators sequentially — one per assistant message — would produce identical output but take five times the elapsed time, because each worker must wait for the prior one to complete before the next tool_use block starts. The single-message fan-out is what makes the orchestrator-workers shape worth its token multiplier in latency-sensitive contexts. PR #218 shipped 23 satellite pages, schema validation, four lint guardrails, six E2E tests, and OG image generation; the scope was tractable because parallel dispatch made the investigation phase finish in one wall-clock window rather than five.
-
-The configuration described here — analysis-funnel SKILL.md, phase-artifact disk checkpoints, context-packet forwarding, five-section PR body — is what worked in this repo across this domain. The abstract pattern (dynamic decomposition, parallel dispatch, tree topology, aggregation step) is what Anthropic names as the right answer "when you can't predict the subtasks." PR #218 is one evidence anchor for that claim.`,
-    },
-    readerMove: {
-      text: 'Spawn one Task() per worker in a single message; never serialize when work is independent.',
-      anchorUrl: 'https://github.com/julianken/detached-node/blob/main/.claude/skills/analysis-funnel/SKILL.md',
-    },
     seeAlso: {
-      skillPath: '.claude/skills/analysis-funnel/SKILL.md',
-      articleSlug: 'subagent-orchestration-workflow',
-      siblingPatternSlugs: ['parallelization', 'planning'],
+      siblingPatternSlugs: ['parallelization', 'planning', 'funnel-method'],
+    },
+  },
+  realizingInCursor: {
+    keyMoves: [
+      'Use [Plan mode](https://cursor.com/docs/agent/plan-mode) to draft the worker decomposition before any code changes; review the step list before execution.',
+      'Launch one [Cloud Agent](https://cursor.com/docs/cloud-agent) per worker task — each runs in an isolated VM on its own branch.',
+      'Set shared invariants in a `.cursor/rules/*.mdc` file with `alwaysApply: true` so every worker context loads the same constraints.',
+      'Aggregate by opening an Agent chat that references all worker branches via `@branch` after workers complete.',
+    ],
+    ccPrimitives: [
+      'Plan mode (orchestrator decomposition)',
+      'Cloud Agents (worker isolation)',
+      '@branch references (aggregation)',
+      '.cursor/rules/*.mdc',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['parallelization', 'planning', 'funnel-method'],
     },
   },
   frameworks: ['langgraph', 'crew-ai', 'autogen', 'vercel-ai-sdk'],

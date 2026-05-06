@@ -9,7 +9,7 @@ export const pattern: Pattern = {
   bodySummary: [
     'Streaming changes when the model\'s output reaches the consumer: bytes leave the inference server the moment they are generated, rather than accumulating until the full response is ready. The transport is almost always Server-Sent Events — a long-lived HTTP response whose body is a sequence of newline-delimited data frames the client parses as it reads. Each frame carries a small typed delta: a chunk of generated text, a partial JSON fragment of a tool call, an updated finish reason, or a terminal event that closes the stream. The consumer reconstructs the final state by accumulating deltas in order; nothing is broadcast and nothing is replayed.',
     'Three sub-variants share the same wire shape but differ in what is being incrementally revealed. Token streaming emits text deltas one fragment at a time and is what every chat UI renders character-by-character. Structured streaming emits a partial JSON object whose shape is fixed by a schema — the Vercel AI SDK\'s streamObject exposes the partial as a typed value at every step, so a form fills in field-by-field instead of appearing all at once. Tool-call streaming emits the arguments of a function call as they are generated; a long argument list becomes visible before the model has finished writing it, and a UI can begin rendering the call before dispatch.',
-    'The pattern is a UX contract change as much as a transport detail. A thirty-second response that streams feels usable because the user sees evidence of work within the first hundred milliseconds; the same thirty seconds behind a single blocking request reads as a hung connection. Streaming is distinct from polling, where the client repeatedly asks whether the result is ready, and from progress events, which are out-of-band metadata about an otherwise-blocking operation. With streaming, the partial output is the operation. Streaming does not have its own Claude Code realization in this catalog yet; the closest in-repo realization of incremental tool-call output is `tool-use-react` — that pattern\'s PreToolUse hook intercepts the call at the argument-complete boundary, which is the harness-level equivalent of acting on a stream at the moment the argument delta closes rather than after the full response returns.',
+    'The pattern is a UX contract change as much as a transport detail. A thirty-second response that streams feels usable because the user sees evidence of work within the first hundred milliseconds; the same thirty seconds behind a single blocking request reads as a hung connection. Streaming is distinct from polling, where the client repeatedly asks whether the result is ready, and from progress events, which are out-of-band metadata about an otherwise-blocking operation. With streaming, the partial output is the operation.',
   ],
   mermaidSource: `graph LR
   A[Client request] --> B[Inference server]
@@ -137,6 +137,39 @@ export {}
     },
   ],
   addedAt: '2026-05-03',
-  dateModified: '2026-05-05',
-  lastChangeNote: 'W3.2 — Tier D honest-absence pointer: adjacent realization → tool-use-react.',
+  dateModified: '2026-05-04',
+  lastChangeNote: 'Author Streaming satellite: SSE event-flow, token vs structured vs tool-call variants, mid-stream-error gotcha.',
+  realizingInClaudeCode: {
+    keyMoves: [
+      'Claude Code streams tool output to the terminal by default — no configuration needed for the core streaming UX.',
+      'Use [hooks](https://docs.claude.com/en/docs/claude-code/hooks) to intercept `PostToolUse` events and act on completed tool results before the next model call.',
+      'In custom agent code, use `streamText` from the AI SDK and inspect mid-stream `error` frames — an HTTP 200 does not guarantee a clean stream.',
+      'Pin `maxRetries` on your streaming client; a buffering reverse proxy holds the response until the stream closes, defeating incremental delivery.',
+    ],
+    ccPrimitives: [
+      'PostToolUse hooks (post-tool event handling)',
+      'Terminal streaming (built-in)',
+      'Vercel AI SDK streamText',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['tool-use-react', 'mcp', 'a2a'],
+    },
+  },
+  realizingInCursor: {
+    keyMoves: [
+      'Cursor streams tokens in the chat panel by default — the incremental UX is built-in for all Agent and Ask mode responses.',
+      'Reference large files via `@file` rather than pasting content; Cursor fetches and injects context on demand without pre-loading everything.',
+      'Use Ask mode for read-only queries where you want to inspect the partial output before any edits are applied.',
+      'Use [cloud agents](https://cursor.com/docs/cloud-agent) for long-running tasks; they run in isolated cloud environments and surface progress through the Cursor web interface.',
+    ],
+    ccPrimitives: [
+      'Built-in chat streaming',
+      'Ask mode (read-only stream)',
+      'Cloud agents (async long-running tasks)',
+      '@file references',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['tool-use-react', 'mcp', 'a2a'],
+    },
+  },
 }

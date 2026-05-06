@@ -153,25 +153,39 @@ export {}
   ],
   addedAt: '2026-05-03',
   dateModified: '2026-05-05',
-  lastChangeNote: 'W2.5: add realizingInClaudeCode Tier B (MCP in active Claude Code config; PR #287 cited as decommissioning-maintenance evidence).',
+  lastChangeNote: 'W2.5: add realizingInClaudeCode Tier B (MCP in active Claude Code config; stale-allowlist maintenance note added).',
   realizingInClaudeCode: {
-    tier: 'B',
-    bodyMarkdown: `
-In a working Claude Code setup, MCP shows up as the contents of the \`enabledPlugins\` and \`permissions.allow\` sections of \`~/.claude/settings.json\`. Five servers are active in this repo's config at authoring time: **context7** (documentation lookup), **github** (PR/issue operations), **playwright** (browser automation), **linear-server** (issue tracking), and **chrome-devtools-mcp** (runtime debugging). Each exposes its catalog over the same wire format; Claude Code calls \`list_tools\` on session start and the full catalog is available without any host-side adapter code.
-
-MCP configs require periodic maintenance as servers are added or decommissioned. [PR #287](https://github.com/julianken/detached-node/pull/287) is a routine instance of that discipline: it strips 13 stale \`mcp__vercel__*\` permission entries from \`.claude/settings.local.json\` after the Vercel MCP server was removed from the active set. The entries had accumulated silently — the protocol adds tools on connect, but nothing removes stale allow-list entries when a server is decommissioned. The pattern's value proposition (write the connector once, consume everywhere) carries a corresponding maintenance commitment: every server in the config is a standing permission surface that benefits from periodic review when the active server set changes.
-`.trim(),
-    workedExample: {
-      url: 'https://github.com/julianken/detached-node/pull/287',
-      description: 'PR #287 strips 13 stale mcp__vercel__* permission entries after the Vercel MCP server was removed — a routine maintenance pass demonstrating the standing-permission-surface review that MCP allow-lists benefit from when the active server set changes.',
-    },
-    readerMove: {
-      text: 'Add context7 + your equivalents to your CC config; reload session; new tool appears.',
-      anchorUrl: 'https://code.claude.com/docs/en/mcp',
-    },
+    keyMoves: [
+      'Add MCP servers to [`~/.claude/settings.json`](https://docs.claude.com/en/docs/claude-code/mcp) under `mcpServers`; Claude Code calls `list_tools` on session start and the catalog is immediately available.',
+      'Allowlist each server\'s tools in `permissions.allow` via [`settings.json`](https://docs.claude.com/en/docs/claude-code/settings) to avoid per-call prompts for trusted servers.',
+      'Review the allow-list periodically — stale entries from removed servers accumulate silently and expand the permission surface without active use.',
+      'Prefer project-level `~/.claude/settings.json` for project-specific servers; global `~/` config for servers used across all projects.',
+    ],
+    ccPrimitives: [
+      'settings.json mcpServers config',
+      'permissions.allow (tool allow-list)',
+      'MCP stdio transport (local)',
+      'MCP HTTP transport (remote)',
+    ],
     seeAlso: {
-      articleSlug: 'rethinking-systems-in-the-agentic-age',
-      siblingPatternSlugs: ['tool-use-react', 'guardrails'],
+      siblingPatternSlugs: ['tool-use-react', 'guardrails', 'context-engineering'],
+    },
+  },
+  realizingInCursor: {
+    keyMoves: [
+      'Add servers to `.cursor/mcp.json` (project) or `~/.cursor/mcp.json` (global) in the `mcpServers` object with `command` and `args`.',
+      'Remote servers use a `url` field instead of `command`; Cursor handles OAuth automatically for marketplace-installed servers.',
+      'Enable auto-run for trusted servers in Cursor settings to avoid per-call approval prompts during Agent sessions.',
+      'Review `.cursor/mcp.json` when removing servers — Cursor does not automatically remove stale tool entries from the active session.',
+    ],
+    ccPrimitives: [
+      '.cursor/mcp.json (project MCP config)',
+      '~/.cursor/mcp.json (global MCP config)',
+      'Cursor Marketplace (one-click install)',
+      'Agent mode (MCP tool consumer)',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['tool-use-react', 'guardrails', 'context-engineering'],
     },
   },
 }

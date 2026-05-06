@@ -138,52 +138,40 @@ export {}
   ],
   addedAt: '2026-05-03',
   dateModified: '2026-05-05',
-  lastChangeNote: 'W3.1 additive: add 12-factor-agent to seeAlso.siblingPatternSlugs, resolving W1.2 forward-reference.',
+  lastChangeNote: 'W2.9 additive: 5-section PR body as reviewer context packet cross-link.',
   realizingInClaudeCode: {
-    tier: 'A',
+    keyMoves: [
+      'Put always-on project rules in [`CLAUDE.md`](https://docs.claude.com/en/docs/claude-code/memory). Claude reads it at the start of every session before any tool call.',
+      'Move trigger-bearing rules into [skills](https://docs.claude.com/en/docs/claude-code/skills) — a `SKILL.md` loads only when its trigger fires, preserving always-on budget.',
+      'Keep `CLAUDE.md` under 3 K tokens. Count with `wc -w × 1.8`; every extra line crowds out the actual task context.',
+      'Use [`settings.json`](https://docs.claude.com/en/docs/claude-code/settings) to scope tool permissions per project — pin invariant config at the head so it cache-hits every session.',
+      'When a rule starts with "when X" or "before Y", it belongs in a skill, not here — keep `CLAUDE.md` to invariants.',
+    ],
     ccPrimitives: [
-      'CLAUDE.md always-on-files trio (CLAUDE.md, settings.json, .claude/skills/)',
-      'prompt-caching prefix pinning (invariant system prompt at window head)',
-      'tiktoken cl100k_base token counting / wc -w × 1.8 fallback',
+      'CLAUDE.md (always-on context)',
+      'SKILL.md (trigger-conditional context)',
+      'settings.json (tool scoping)',
+      'Prompt-caching prefix pinning',
     ],
-    scaffolding: [
-      'CLAUDE.md (always-on project-level instructions)',
-      '.claude/skills/analysis-funnel/SKILL.md (carry-forward context structure)',
-    ],
-    workedExample: {
-      url: 'https://github.com/julianken/detached-node/blob/main/CLAUDE.md',
-      description: 'The project-root CLAUDE.md is itself a worked example of context engineering: it loads on every Claude Code session as always-on context, before any tool call or task instruction. Its contents enact the editorial discipline the pattern describes — unconditional project facts (framework, conventions, design system) stay in the file; trigger-bearing rules migrate to `.claude/skills/` so they consume window budget only when the trigger fires. Reading the file end-to-end shows what survives the always-on slot and what is structured to load on demand.',
-    },
-    readerMove: {
-      text: 'Count your three always-on files with tiktoken cl100k_base or wc -w × 1.8; if over 3 K tokens, move trigger-bearing rules into skills.',
-      anchorUrl: 'https://github.com/julianken/detached-node/blob/main/CLAUDE.md',
-    },
     seeAlso: {
-      skillPath: '.claude/skills/analysis-funnel/SKILL.md',
       siblingPatternSlugs: ['memory-management', 'checkpointing', '12-factor-agent'],
     },
-    bodyMarkdown: `Context engineering in a Claude Code setup begins with the three files that load on every session — \`CLAUDE.md\`, \`settings.json\`, and the skills directory. These are the always-on context: they arrive before any tool call, before any task instruction, before any retrieved content. The user-level \`~/.claude/CLAUDE.md\` token-economics meta-rule captures the load-bearing editorial discipline for this file class: "If a rule has a trigger ("when adding screenshots", "before committing", "during PR review"), it belongs in a skill, not here." ([source](https://github.com/julianken/detached-node/blob/main/CLAUDE.md)). Rules without triggers stay in \`CLAUDE.md\`; rules with triggers migrate to skills. The discipline is token-economic: every unconditional rule that migrates to a skill is a line evicted from the always-on budget.
-
-### Realization in this repo
-
-The project-root [\`CLAUDE.md\`](https://github.com/julianken/detached-node/blob/main/CLAUDE.md) is the worked example: every Claude Code session in this repo loads it before any tool call, so its contents define what the model sees while answering. Read end-to-end, the file is a deliberately curated set of unconditional project facts — framework choice, design-system pointers, content-model summary, phase status — and a "Files to Read First" pointer list that nominates the next budgeted reads. Trigger-bearing behaviors are absent by design: pre-commit checks, screenshot procedures, and PR review rubrics live in \`.claude/skills/\` and load only when invoked. The split is the pattern in action — selection happens upstream of generation, and the always-on slot pays its rent in signal per token.
-
-The three-move mechanical implementation mirrors the pattern's abstract structure. A relevance signal — the editorial test "does this rule have a trigger?" — orders candidates between the always-on file and the on-demand skills. A budget — the target token count for the three-file always-on slot, calibrated so retrieved content and task instructions still fit the session's practical limit — caps what survives in \`CLAUDE.md\`. A layout — project invariants pinned at the \`CLAUDE.md\` head, then any phase-boundary summary the user has produced, then the live task — places surviving tokens where attention is strongest.
-
-Measuring the always-on budget is the prerequisite step. Count tokens in \`CLAUDE.md\` + \`settings.json\` + the relevant skill using tiktoken \`cl100k_base\`, or multiply the raw word count by 1.8 as a fast proxy (tiktoken cl100k_base is the canonical measure; wc -w × 1.8 is the fast fallback). If the total exceeds 3 K tokens, the always-on context is consuming budget that limits how much retrieved or task-specific content can be packed in. The repair is the meta-rule: any rule with a trigger migrates to a skill so it loads only when the trigger fires.
-
-<details>
-<summary>Cross-link: minimal-CLAUDE.md pattern</summary>
-
-The minimal-CLAUDE.md configuration applies the same token-economics meta-rule at the file level. The editorial split is: unconditional facts about the project (framework, conventions, non-goals) stay in \`CLAUDE.md\`; triggered behaviors (pre-commit checks, screenshot procedures, PR review rubrics) live in \`.claude/skills/\` and load only when invoked. The result is a \`CLAUDE.md\` that is dense with signal per token rather than exhaustive. The user-level meta-rule — "If a rule has a trigger, it belongs in a skill, not here" — is the one-sentence specification for this configuration. Context Engineering names the budget rationale; minimal-CLAUDE.md names the file-level split that implements it.
-
-</details>
-
-<details>
-<summary>Cross-link: 5-section PR body as reviewer context packet</summary>
-
-The five-section PR body (Diagrams / Summary / Screenshots / Test plan / Plan reference) is an engineered context packet for the reviewer's first read. Each section maps to a distinct attention slot: Diagrams anchors visual changes before the diff is opened; Summary compresses scope to a single scroll; Test plan itemizes the pre-review checklist the bot is expected to verify claim-by-claim before scoring the implementation. Placing Test plan before Plan reference is a layout choice, not convention — the sections that require active checking arrive before the sections that are reference-only, matching the U-shape recall curve the pattern documents. [PR #339 (W1.1 Orchestrator-Workers)](https://github.com/julianken/detached-node/pull/339) shows the full five-section structure as read by the julianken-bot reviewer on its first cycle.
-
-</details>`,
+  },
+  realizingInCursor: {
+    keyMoves: [
+      'Set `alwaysApply: true` in [`.cursor/rules/*.mdc`](https://cursor.com/docs/rules) only for project-wide invariants — every other rule pays that token budget on every turn.',
+      'Use `globs` in rule frontmatter to scope rules to specific file types; a rule for `**/*.tsx` fires only when those files are in context.',
+      'Keep total `alwaysApply` rule content under ~500 lines combined — beyond that, the working context fills before the task description lands.',
+      'Use @-references to inject specific files, folders, or terminal output on demand rather than loading everything up front.',
+    ],
+    ccPrimitives: [
+      '.cursor/rules/*.mdc',
+      'alwaysApply frontmatter',
+      'globs scoping',
+      '@-references (on-demand injection)',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['memory-management', 'checkpointing', '12-factor-agent'],
+    },
   },
 }

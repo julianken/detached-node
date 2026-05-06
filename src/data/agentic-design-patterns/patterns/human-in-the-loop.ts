@@ -155,25 +155,40 @@ export {}
   ],
   addedAt: '2026-05-04',
   dateModified: '2026-05-05',
-  lastChangeNote: 'W3.3 additive over W2.9: second HITL realization — subagent-workflow within-task review gates.',
+  lastChangeNote: 'W2.9 additive: Tier C realizingInClaudeCode — Mergify merge-queue as deployment-layer HITL gate.',
 
   realizingInClaudeCode: {
-    tier: 'C',
-
-    bodyMarkdown: `
-The merge queue is the deployment-layer realization of Human in the Loop at the merge boundary. In this repo, Mergify enforces the gate structurally: the [\`.mergify.yml\`](https://github.com/julianken/detached-node/blob/main/.mergify.yml) declares a \`queue_conditions\` block requiring \`#approved-reviews-by >= 1\` and all CI checks passing before a squash-merge proceeds. The human signal — an explicit collaborator approval — is the precondition the queue checks before the run continues. No approval, no merge; the pending PR sits in the queue until the signal arrives, exactly the pause-and-resume contract the pattern names. The convention in this repo is to wait for the julianken-bot APPROVE before commenting \`@mergifyio queue\`, making the reviewer's verdict the trigger that opens the merge boundary. (Mergify is paid SaaS; GitHub-native merge queue is the OSS substitute.)
-
-**Within-task review gates (W3.3 addition).** The [subagent-workflow skill](https://github.com/julianken/detached-node/blob/main/.claude/skills/subagent-workflow/SKILL.md) adds two earlier HITL gates inside the per-issue loop. After the implementer completes the PR, a spec-compliance reviewer explicitly reads acceptance criteria and reports SPEC COMPLIANT or SPEC GAPS FOUND — the operator reads this verdict before quality review proceeds. After quality review passes, the operator comments \`@mergifyio queue\` to trigger the merge boundary gate. The pattern runs twice per issue: once as an agent-to-agent handoff signal, and once as the human-signal merge gate. Both are pause-and-resume; neither is optional. [PR #349](https://github.com/julianken/detached-node/pull/349) documents a completed cycle of both gates in a single merge.
-`.trim(),
-
-    readerMove: {
-      text: 'Add `#approved-reviews-by >= 1` to `.mergify.yml` queue_conditions; comment `@mergifyio queue` after the bot approves.',
-      anchorUrl: 'https://github.com/julianken/detached-node/blob/main/.mergify.yml',
-    },
-
+    keyMoves: [
+      'Use a [PreToolUse hook](https://docs.claude.com/en/docs/claude-code/hooks) to pause execution before side-effecting tool calls — exit non-zero blocks the call until a human allows it.',
+      'List sensitive tool patterns in [`settings.json`](https://docs.claude.com/en/docs/claude-code/settings) `permissions.deny`; Claude prompts for approval before each match.',
+      'Use the GitHub merge queue as the deployment-layer HITL gate — require at least one human approval before any PR advances to merge.',
+      'Expose the agent\'s rationale alongside the approval request — reviewers who cannot see the reasoning default to rubber-stamping.',
+    ],
+    ccPrimitives: [
+      'PreToolUse hooks (pause gate)',
+      'settings.json permissions.deny',
+      'Claude Code approval prompts',
+      'Merge queue (deployment HITL)',
+    ],
     seeAlso: {
-      skillPath: '.claude/skills/subagent-workflow/SKILL.md',
-      siblingPatternSlugs: ['evaluation-llm-as-judge', 'guardrails', 'checkpointing'],
+      siblingPatternSlugs: ['guardrails', 'checkpointing', 'evaluation-llm-as-judge'],
+    },
+  },
+  realizingInCursor: {
+    keyMoves: [
+      'Use Agent mode with Cursor\'s diff-review UI — every file edit surfaces as a reviewable diff; accept or reject each change individually before it lands.',
+      'For destructive operations (file deletions, config changes), add a `.cursor/rules/*.mdc` instruction to ask for confirmation before proceeding.',
+      'Use [cloud agents](https://cursor.com/docs/cloud-agent) for long tasks — they push to a branch and open a PR for human review before any merge occurs.',
+      'Use [Plan mode](https://cursor.com/docs/agent/plan-mode) as the lightweight HITL step for complex tasks — review and edit the plan before execution begins.',
+    ],
+    ccPrimitives: [
+      'Diff-by-diff review UI',
+      'Cloud agents (PR-based HITL)',
+      'Plan mode (pre-execution approval)',
+      '.cursor/rules/*.mdc (confirmation rules)',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['guardrails', 'checkpointing', 'evaluation-llm-as-judge'],
     },
   },
 }
