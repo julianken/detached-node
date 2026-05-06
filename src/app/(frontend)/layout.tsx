@@ -92,11 +92,11 @@ export default function FrontendLayout({
           <TextureOverlay />
           <div className="site-frame mx-auto my-4 flex min-h-[calc(100vh-2rem)] max-w-frame flex-col rounded-sm border border-border sm:my-6 sm:min-h-[calc(100vh-3rem)]">
             <header className="flex items-center justify-between border-b border-border px-4 py-3 sm:px-6">
-              <Link href="/" className="font-mono text-lg font-semibold tracking-tight text-accent lowercase focus-ring">
+              <Link href="/" className="font-mono text-brand font-semibold tracking-tight text-accent lowercase focus-ring">
                 d-n
               </Link>
               <div className="flex items-center gap-4">
-                <nav className="flex flex-wrap items-center gap-4 text-sm font-mono tracking-[0.04em] text-text-secondary sm:gap-6" aria-label="Main navigation">
+                <nav className="flex flex-wrap items-center gap-4 text-nav font-mono tracking-[0.04em] text-text-secondary sm:gap-6" aria-label="Main navigation">
                   <Link className="hover:text-accent py-2 transition-colors focus-ring" href="/">
                     Home
                   </Link>
