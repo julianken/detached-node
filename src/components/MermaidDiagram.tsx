@@ -12,10 +12,10 @@ interface Props {
 
 // Cap each diagram's render scale to this value so text size is
 // consistent across diagrams of different intrinsic widths. Tuned so
-// a viewBox-1230 diagram caps at ~1045 (TARGET_SCALE × 1230); the
-// figure's max-w-5xl (1024px) and the right column (~950px on the
-// slug page) provide the harder visual cap. Narrower diagrams keep
-// their relative scale (e.g. viewBox 700 → cap 595).
+// a viewBox-1230 diagram caps at ~1046 (TARGET_SCALE × 1230); the
+// figure's max-w-prose-wide (960px) and the right column (~950px on
+// the slug page) provide the harder visual cap. Narrower diagrams
+// keep their relative scale (e.g. viewBox 700 → cap 595).
 const TARGET_SCALE = 0.85
 
 export function capDiagramWidth(svgMarkup: string): string {
