@@ -2,8 +2,8 @@
 //
 // Two-column on lg+: sticky meta rail (left, 14rem) + content article (right).
 // Below lg the rail collapses to a non-sticky horizontal block above the
-// content. PageLayout uses `content` (max-w-5xl, 1024px) to give the rail
-// room without crushing the prose column.
+// content. PageLayout uses `full` so the rail starts flush with the frame's
+// inner padding — no extra gutter from a centered max-width.
 //
 // Routing:
 //   - generateStaticParams emits the full set of non-archived slugs
@@ -88,7 +88,7 @@ export default async function PatternSatellitePage({
           generateHubChildBreadcrumb(pattern.slug, pattern.name),
         ]}
       />
-      <PageLayout maxWidth="content">
+      <PageLayout maxWidth="full">
         <Link
           href="/agentic-design-patterns"
           className="text-sm text-text-tertiary hover:text-accent transition-colors focus-ring"
