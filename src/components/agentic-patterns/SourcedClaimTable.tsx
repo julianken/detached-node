@@ -34,7 +34,7 @@ export function SourcedClaimTable({ pattern }: SourcedClaimTableProps) {
         In the wild
       </h2>
       <div className="mt-4 overflow-x-auto">
-        <table className="w-full border border-border text-sm">
+        <table className="w-full border border-border text-card-summary">
           <thead>
             <tr>
               <th

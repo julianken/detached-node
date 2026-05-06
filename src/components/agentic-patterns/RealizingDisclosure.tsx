@@ -101,7 +101,7 @@ function ReaderMoveBlock({ text, anchorUrl }: { text: string; anchorUrl: string 
   return (
     <div className="rounded-sm border border-border-subtle bg-zinc-50 px-3 py-2.5 dark:bg-zinc-800/60">
       <SubHeading>Monday-morning move</SubHeading>
-      <p className="text-sm leading-6 text-text-secondary">
+      <p className="text-card-summary leading-6 text-text-secondary">
         {text}{' '}
         <a
           href={anchorUrl}
@@ -142,7 +142,7 @@ function TierABody({ r }: { r: RealizingInClaudeCode }) {
           <SubHeading>Worked example</SubHeading>
           <a
             href={r.workedExample.url}
-            className="text-sm text-accent underline underline-offset-2 hover:no-underline"
+            className="text-card-summary text-accent underline underline-offset-2 hover:no-underline"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -168,7 +168,7 @@ function TierBBody({ r }: { r: RealizingInClaudeCode }) {
   return (
     <div className="flex flex-col gap-4">
       {r.bodyMarkdown && (
-        <p className="text-sm leading-6 text-text-secondary [text-wrap:pretty]">
+        <p className="text-card-summary leading-6 text-text-secondary [text-wrap:pretty]">
           {r.bodyMarkdown}
         </p>
       )}
@@ -190,7 +190,7 @@ function TierCBody({ r }: { r: RealizingInClaudeCode }) {
   return (
     <div className="flex flex-col gap-4">
       {r.bodyMarkdown && (
-        <p className="text-sm leading-6 text-text-secondary [text-wrap:pretty]">
+        <p className="text-card-summary leading-6 text-text-secondary [text-wrap:pretty]">
           {r.bodyMarkdown}
         </p>
       )}
@@ -212,7 +212,7 @@ function TierUBody({ r }: { r: RealizingInClaudeCode }) {
   return (
     <div className="flex flex-col gap-4">
       {r.openingFraming && (
-        <p className="text-sm leading-6 text-text-secondary [text-wrap:pretty]">
+        <p className="text-card-summary leading-6 text-text-secondary [text-wrap:pretty]">
           {r.openingFraming}
         </p>
       )}
@@ -224,7 +224,7 @@ function TierUBody({ r }: { r: RealizingInClaudeCode }) {
             {r.umbrellaPointers.map((pointer) => (
               <li
                 key={pointer.patternSlug}
-                className="flex items-baseline gap-2 text-sm text-text-secondary"
+                className="flex items-baseline gap-2 text-card-summary text-text-secondary"
               >
                 <span className="shrink-0 font-mono text-xs text-text-tertiary">
                   {pointer.patternSlug}

@@ -30,7 +30,7 @@ function LayerSectionTitle({ layer }: { layer: Layer }) {
       >
         Layer {layer.number} — {layer.title}
       </h2>
-      <p className="text-sm text-text-tertiary italic">{layer.question}</p>
+      <p className="text-meta text-text-tertiary italic">{layer.question}</p>
       <p className="max-w-prose text-body leading-relaxed text-text-secondary [text-wrap:pretty]">
         {layer.description}
       </p>
@@ -63,7 +63,7 @@ function SubTier({ title, patterns }: SubTierProps) {
   const count = patterns.length;
   return (
     <div className="flex flex-col gap-4">
-      <h3 className="font-mono text-lg font-semibold tracking-tight text-text-secondary">
+      <h3 className="font-mono text-card-title font-semibold tracking-tight text-text-secondary">
         {title} <span className="text-text-tertiary font-normal">({count})</span>
       </h3>
       {/* Cards under sub-tier are <h4> because parent heading is <h3>. */}

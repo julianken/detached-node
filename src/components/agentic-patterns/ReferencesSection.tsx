@@ -45,12 +45,12 @@ function ReferenceItem({ reference }: { reference: Reference }) {
           href={reference.url}
           rel="noopener noreferrer"
           target="_blank"
-          className="text-base font-medium text-accent underline underline-offset-4 hover:text-accent-muted"
+          className="text-nav font-medium text-accent underline underline-offset-4 hover:text-accent-muted"
         >
           <cite className="not-italic">{reference.title}</cite>
         </a>
       </div>
-      <div className="text-sm text-text-secondary">
+      <div className="text-meta text-text-secondary">
         <span>{reference.authors}</span>
         <span className="mx-1.5 text-text-tertiary">·</span>
         <span>{reference.year}</span>
@@ -74,7 +74,7 @@ function ReferenceItem({ reference }: { reference: Reference }) {
         )}
       </div>
       {reference.note && (
-        <p className="text-sm text-text-tertiary [text-wrap:pretty]">{reference.note}</p>
+        <p className="text-meta text-text-tertiary [text-wrap:pretty]">{reference.note}</p>
       )}
     </li>
   );

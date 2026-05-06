@@ -74,7 +74,7 @@ export function PatternBody({ pattern }: PatternBodyProps) {
             {/* IMPORTANT: only `{ source: string }` crosses the server/client boundary. */}
             <MermaidDiagram source={pattern.mermaidSource} />
             {pattern.mermaidAlt && (
-              <figcaption className="mt-2 text-sm text-text-tertiary italic">
+              <figcaption className="mt-2 text-meta text-text-tertiary italic">
                 {pattern.mermaidAlt}
               </figcaption>
             )}
@@ -93,7 +93,7 @@ export function PatternBody({ pattern }: PatternBodyProps) {
         <section id="reader-gotcha" aria-labelledby="gotcha-heading" className="scroll-mt-24">
           <SlotHeading id="gotcha-heading">Reader gotcha</SlotHeading>
           <div className="mt-4 rounded-sm border-l-2 border-rose-400/60 border-y border-r border-border-subtle bg-surface p-4">
-            <p className="text-base leading-7 text-text-secondary [text-wrap:pretty]">
+            <p className="text-body leading-7 text-text-secondary [text-wrap:pretty]">
               {pattern.readerGotcha.text}{" "}
               <a
                 href={pattern.readerGotcha.sourceUrl}
@@ -118,7 +118,7 @@ export function PatternBody({ pattern }: PatternBodyProps) {
           {showPseudocodeBanner && (
             <div
               role="note"
-              className="mb-4 rounded-sm border border-border-subtle bg-surface px-4 py-3 text-sm text-text-tertiary"
+              className="mb-4 rounded-sm border border-border-subtle bg-surface px-4 py-3 text-meta text-text-tertiary"
             >
               <span className="font-mono uppercase tracking-[0.05em] text-text-secondary">
                 Pseudocode:

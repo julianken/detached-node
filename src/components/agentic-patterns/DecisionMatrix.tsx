@@ -42,7 +42,7 @@ export function DecisionMatrix({ pattern }: DecisionMatrixProps) {
         Decision
       </h2>
       <div className="mt-4 overflow-x-auto">
-        <table className="w-full table-fixed border border-border text-sm">
+        <table className="w-full table-fixed border border-border text-card-summary">
           <thead>
             <tr>
               <th
