@@ -22,12 +22,12 @@ const FIXTURE_SVG = `<svg aria-roledescription="sequence" role="graphics-documen
 </svg>`
 
 describe('capDiagramWidth', () => {
-  it('caps max-width to viewBox width × TARGET_SCALE (0.625), rounded', () => {
-    // viewBox width = 1230 → 1230 × 0.625 = 768.75 → Math.round → 769
+  it('caps max-width to viewBox width × TARGET_SCALE (0.85), rounded', () => {
+    // viewBox width = 1230 → 1230 × 0.85 = 1045.5 → Math.round → 1046
     const result = capDiagramWidth(
       '<svg viewBox="0 0 1230 512" style="max-width: 1230px;">content</svg>',
     )
-    expect(result).toContain('max-width: 769px')
+    expect(result).toContain('max-width: 1046px')
   })
 
   it('leaves the viewBox attribute unchanged', () => {
@@ -42,11 +42,11 @@ describe('capDiagramWidth', () => {
   })
 
   it('handles floating-point viewBox dimensions (rounds correctly)', () => {
-    // viewBox width = 1230.5 → 1230.5 × 0.625 = 769.0625 → Math.round → 769
+    // viewBox width = 1230.5 → 1230.5 × 0.85 = 1045.925 → Math.round → 1046
     const result = capDiagramWidth(
       '<svg viewBox="-50 -10 1230.5 1426" style="max-width: 1230.5px;">content</svg>',
     )
-    expect(result).toContain('max-width: 769px')
+    expect(result).toContain('max-width: 1046px')
   })
 })
 
@@ -76,7 +76,7 @@ describe('capDiagramWidth + uncapDiagramWidth — guard test with realistic fixt
     expect(cappedWidthMatch).not.toBeNull()
     const cappedWidth = parseInt(cappedWidthMatch![1], 10)
     expect(cappedWidth).toBeLessThan(1230)
-    expect(cappedWidth).toBe(769)
+    expect(cappedWidth).toBe(1046)
 
     // (b) viewBox is untouched through the cap pass
     expect(capped).toContain('viewBox="-50 -10 1230 512"')

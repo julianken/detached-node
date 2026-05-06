@@ -11,11 +11,12 @@ interface Props {
 }
 
 // Cap each diagram's render scale to this value so text size is
-// consistent across diagrams of different intrinsic widths. With a
-// ~768px column, a sequence diagram of viewBox width ~1230 caps at
-// scale 0.624 — pinning the global cap there keeps narrow diagrams
-// from rendering at 1:1 (which would make their text visibly larger).
-const TARGET_SCALE = 0.625
+// consistent across diagrams of different intrinsic widths. Tuned so
+// a viewBox-1230 diagram caps at ~1046 (TARGET_SCALE × 1230); the
+// figure's max-w-prose-wide (960px) and the right column (~950px on
+// the slug page) provide the harder visual cap. Narrower diagrams
+// keep their relative scale (e.g. viewBox 700 → cap 595).
+const TARGET_SCALE = 0.85
 
 export function capDiagramWidth(svgMarkup: string): string {
   const vbMatch = svgMarkup.match(/viewBox="[^"]*?\s(\d+(?:\.\d+)?)\s+\d+(?:\.\d+)?"/)

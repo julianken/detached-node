@@ -35,7 +35,7 @@ function NavLink({ pattern, direction }: NavLinkProps) {
       <span className="font-mono text-xs uppercase tracking-[0.1em] text-text-tertiary">
         {isPrev ? "← Previous" : "Next →"}
       </span>
-      <span className="font-mono text-base font-semibold text-text-primary group-hover:text-accent">
+      <span className="font-mono text-nav font-semibold text-text-primary group-hover:text-accent">
         {pattern.name}
       </span>
     </Link>
@@ -56,7 +56,7 @@ function NavPlaceholder({ direction }: { direction: "prev" | "next" }) {
       <span className="font-mono text-xs uppercase tracking-[0.1em] text-text-tertiary opacity-40">
         {isPrev ? "← Previous" : "Next →"}
       </span>
-      <span className="font-mono text-base text-text-tertiary opacity-40">—</span>
+      <span className="font-mono text-nav text-text-tertiary opacity-40">—</span>
     </div>
   );
 }

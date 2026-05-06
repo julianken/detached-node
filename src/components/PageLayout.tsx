@@ -21,8 +21,8 @@ const gapClasses = {
 
 const maxWidthClasses = {
   full: "",
-  prose: "max-w-3xl mx-auto",
-  content: "max-w-5xl mx-auto",
+  prose: "max-w-prose-wide mx-auto",
+  content: "max-w-content-wide mx-auto",
 } as const;
 
 /**

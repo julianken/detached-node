@@ -35,15 +35,15 @@ export function PatternCard({ pattern, headingLevel }: PatternCardProps) {
       href={href}
       className="group card-trace card-scanline relative block rounded-sm border border-border bg-surface p-6 transition-colors hover:border-border-hover hover:bg-hover-bg hover:shadow-sm focus-ring"
     >
-      <Heading className="font-mono text-lg font-semibold tracking-tight text-text-primary [text-wrap:balance]">
+      <Heading className="font-mono text-card-title font-semibold tracking-tight text-text-primary [text-wrap:balance]">
         {pattern.name}
       </Heading>
       {pattern.oneLineSummary && (
-        <p className="mt-2 max-w-prose text-base leading-6 text-text-secondary [text-wrap:pretty]">
+        <p className="mt-2 max-w-prose text-card-summary leading-relaxed text-text-secondary [text-wrap:pretty]">
           {pattern.oneLineSummary}
         </p>
       )}
-      <p className="mt-3 text-sm font-medium text-accent group-hover:text-accent-muted transition-colors">
+      <p className="mt-3 text-meta font-medium text-accent group-hover:text-accent-muted transition-colors">
         Open pattern →
       </p>
     </Link>
