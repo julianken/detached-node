@@ -46,11 +46,11 @@ export function PostCard({
         </div>
       )}
       <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-        <h2 className="font-mono text-lg font-semibold tracking-tight text-text-primary [text-wrap:balance]">{title}</h2>
-        {date && <span className="text-xs tracking-[0.03em] text-text-tertiary sm:whitespace-nowrap">{date}</span>}
+        <h2 className="font-mono text-card-title font-semibold tracking-tight text-text-primary [text-wrap:balance]">{title}</h2>
+        {date && <span className="text-meta tracking-[0.03em] text-text-tertiary sm:whitespace-nowrap">{date}</span>}
       </div>
-      <p className="mt-2 max-w-prose text-base leading-6 text-text-secondary [text-wrap:pretty]">{summary}</p>
-      <p className="mt-3 text-sm font-medium text-accent group-hover:text-accent-muted transition-colors">
+      <p className="mt-2 max-w-prose text-card-summary leading-relaxed text-text-secondary [text-wrap:pretty]">{summary}</p>
+      <p className="mt-3 text-meta font-medium text-accent group-hover:text-accent-muted transition-colors">
         Read more →
       </p>
     </Link>
