@@ -720,7 +720,9 @@ a.card-scanline:active {
     color-mix(in srgb, var(--accent) 12%, transparent) 3px,
     color-mix(in srgb, var(--accent) 12%, transparent) 5px
   );
-  z-index: 2;
+  /* Above .ascii-preview-img (z:2) so scanlines paint on top of the
+     loaded image, not behind a same-z DOM-order tiebreak. */
+  z-index: 3;
 }
 
 /* ──────────────────────────────────────────────
