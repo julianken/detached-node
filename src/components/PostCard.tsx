@@ -42,6 +42,7 @@ export function PostCard({
             className="transition-transform group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, 720px"
             focalPoint={focalPoint}
+            aspectRatio="4 / 1"
           />
         </div>
       )}
