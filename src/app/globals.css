@@ -698,6 +698,32 @@ a.card-scanline:active {
 }
 
 /* ──────────────────────────────────────────────
+   HERO FILTER
+   Theme-tinted scanline overlay for the hero image.
+   Inherits --accent so the wash flips from purple
+   (#7c3aed) to lavender (#b49cff) on theme toggle.
+   ────────────────────────────────────────────── */
+
+.hero-filter {
+  position: relative;
+}
+
+.hero-filter::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent 0px,
+    transparent 3px,
+    color-mix(in srgb, var(--accent) 12%, transparent) 3px,
+    color-mix(in srgb, var(--accent) 12%, transparent) 5px
+  );
+  z-index: 2;
+}
+
+/* ──────────────────────────────────────────────
    REDUCED MOTION
    Disable all animations and transitions when
    the user has reduced motion preference enabled.

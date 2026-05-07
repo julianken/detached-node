@@ -171,6 +171,20 @@ describe("ThemeAwareHero", () => {
     expect(wrapper.style.aspectRatio).toBe("1200 / 630");
   });
 
+  it("honors an explicit aspectRatio prop over the natural ratio", () => {
+    const { container } = render(
+      <ThemeAwareHero
+        light={lightMedia}
+        dark={darkMedia}
+        alt="Hero"
+        aspectRatio="4 / 1"
+      />
+    );
+
+    const wrapper = container.firstChild as HTMLElement;
+    expect(wrapper.style.aspectRatio).toBe("4 / 1");
+  });
+
   it("falls back to the provided alt when a variant lacks alt text", () => {
     const lightNoAlt = makeMedia({ ...lightMedia, alt: "" });
     render(
