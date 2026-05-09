@@ -6,7 +6,7 @@ export const pattern: Pattern = {
   alternativeNames: ['Agent Handoff', 'Swarm', 'Triage-and-Transfer'],
   layerId: 'topology',
   topologySubtier: 'multi-agent',
-  oneLineSummary: 'One agent owns the conversation; transfer-as-tool-call hands it to a specialist.',
+  oneLineSummary: 'Lets one agent own the dialogue and hand control off via a transfer tool call.',
   bodySummary: [
     'Handoffs treat a multi-agent system as a single conversation with a moving owner. One agent holds the dialogue at a time; when its scope runs out, it emits a transfer (a tool call whose return value is another agent rather than a string) and the runner switches the active agent for the next turn. The new agent inherits the message history and continues from where the previous one stopped, so the user sees one coherent thread even though several prompts and tool sets handled it. OpenAI shipped this as Swarm in 2024 and folded it into the Agents SDK as `handoff()`; both stay small because the runtime work is just a loop over messages and a pointer to the current agent.',
     'The pattern only earns its name when the transfer is the agent\'s own decision and the chosen specialist takes the conversation forward without supervision. A triage agent inspects the request, picks among a registry of specialists, and yields control; the specialist may hand back, hand to a peer, or finish. Roles are encoded as system prompts plus narrow tool surfaces, and the handoff vocabulary as the names of the transfer tools. Every transition is then a recorded tool call with arguments, replayable from the trace and editable by changing one specialist\'s instructions without touching the others.',

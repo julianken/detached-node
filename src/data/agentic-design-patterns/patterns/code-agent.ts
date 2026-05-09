@@ -7,7 +7,7 @@ export const pattern: Pattern = {
   layerId: 'topology',
   topologySubtier: 'single-agent',
   parentPatternSlug: 'tool-use-react',
-  oneLineSummary: 'Tool-using agent whose primary toolkit is a codebase, an editor, and a test runner.',
+  oneLineSummary: 'Wires the tool-use loop to a codebase, an editor, a shell, and a test runner.',
   bodySummary: [
     'Code Agent is the Tool Use / ReAct loop wired to a software-engineering toolkit. The agent is given a goal stated against a working tree (fix this failing test, implement this ticket, refactor this module) and a small load-bearing set of actions: list files, open and search a file, edit a file by patch, run a shell command, read the result. Each turn is a thought, one of those actions, and the observation produced by running it against a real or sandboxed checkout. The loop terminates when the agent emits a final answer or, more commonly, when the test suite the user pinned as the success criterion comes back green.',
     'What separates the pattern from generic Tool Use is that the toolkit is designed for the agent, not borrowed from a human. SWE-agent calls this layer the Agent-Computer Interface and reports that swapping the bare Linux shell for a line-numbered file viewer, structured edit verbs, and a syntax-checked patch tool roughly doubles SWE-bench Verified scores at the same model. OpenHands generalises the move into a sandboxed runtime with an editor, a Jupyter kernel, and a browser hung off the same loop. Aider sits at the opposite end: a thin terminal that pairs a repository map with two narrow edit formats and forces the model to commit through git on every turn.',

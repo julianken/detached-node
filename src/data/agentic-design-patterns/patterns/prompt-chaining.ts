@@ -6,7 +6,7 @@ export const pattern: Pattern = {
   alternativeNames: ['Pipeline', 'Sequential Prompting', 'LLM Pipeline'],
   layerId: 'topology',
   topologySubtier: 'single-agent',
-  oneLineSummary: 'A fixed sequence of LLM calls, each consuming the previous step\'s output.',
+  oneLineSummary: 'Decomposes a task into a fixed chain of LLM calls, each consuming the previous output.',
   bodySummary: [
     'Prompt chaining decomposes a task into a fixed sequence of LLM calls in which each step\'s output becomes the next step\'s input. The decomposition is editorial: a human picks the seams, names the intermediate artifacts, and writes one prompt per stage so each prompt is small enough to be reliable on its own. Between stages the program holds the artifact in plain memory, and often runs a deterministic gate (a schema validator, a regex, a length check) that decides whether to advance, retry, or fail closed.',
     'The pattern is the first thing the Anthropic taxonomy reaches for when a task can be split cleanly. The trade is latency for accuracy: two or three smaller prompts produce more dependable answers than one heroic prompt that has to plan, retrieve, draft, and proofread inside one inference. Structured output earns the chain its reliability: each stage emits JSON or some other parseable shape so the next stage receives an object, not a paragraph, and the seams stay machine-readable. Without the gates, errors at stage one quietly ride through the rest of the chain.',

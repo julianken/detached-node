@@ -7,7 +7,7 @@ export const pattern: Pattern = {
   layerId: 'topology',
   topologySubtier: 'single-agent',
   parentPatternSlug: 'rag',
-  oneLineSummary: 'Agent reads partial passages, decides whether to re-query, and stops on its own.',
+  oneLineSummary: 'Lets the model issue retrieval as a tool call and decide when to stop searching.',
   bodySummary: [
     'Agentic RAG turns retrieval into a tool the model can call as many times as the task warrants. The agent inspects the question, issues a first query, reads what came back, and then decides, based on what it found and what it still needs, whether to rephrase, narrow to a subtopic, fetch a different corpus, or stop and answer. Retrieval is no longer a fixed pre-step that runs before generation; it becomes one action in a Thought–Action–Observation loop, indistinguishable from any other tool call. The runtime owns the bound on iteration; the model owns the decision to keep going.',
     'The pattern sits one layer above vanilla RAG (authored separately at /agentic-design-patterns/rag), which fires a single similarity search and concatenates the top-k chunks into the prompt. That single-shot pipeline is cheap and inspectable but folds on multi-hop questions where the bridging fact lives in a chunk no embedding of the original phrasing will surface. The agentic variant addresses that gap by letting the model rewrite the query mid-trajectory: read the first hit, notice the entity it actually needs, search again. Self-RAG goes further and trains the model to emit reflection tokens that decide when to retrieve, when retrieved passages are relevant, and when the draft is supported. The same control flow is learned end-to-end rather than orchestrated externally.',

@@ -5,7 +5,7 @@ export const pattern: Pattern = {
   name: 'MCP',
   alternativeNames: ['Model Context Protocol'],
   layerId: 'interfaces',
-  oneLineSummary: 'Open protocol for agents to discover and call tools across vendors over one wire format.',
+  oneLineSummary: 'Standardises how an agent host discovers and calls tools across vendors over JSON-RPC.',
   bodySummary: [
     'Model Context Protocol (MCP) is an open standard, published by Anthropic in November 2024, for how an agent host talks to external tools and data sources. The protocol fixes the wire format (JSON-RPC 2.0 over stdio for local servers, streamable HTTP for remote ones), the handshake (capability negotiation on connect), and three primitives a server can expose: tools the agent can invoke, resources the agent can read, and prompts the agent can substitute into its own context. Anything that follows the spec is wire-compatible with anything else that does, regardless of which model sits on the host side or which backend sits behind the server.',
     'The point of the protocol is the inverse of bespoke tool integration. Without MCP, every host re-implements the connector for every backend it wants to expose; with MCP, a single server is written once and consumed by any compliant host. Discovery is server-side: the host calls list_tools and receives the JSON-schema-typed catalog at runtime, so the host never knew the schema in advance and the server can publish a new tool without a host release. Capability negotiation lets the two sides agree on which features apply to a given session (sampling, roots, streaming) and the host adapts.',
