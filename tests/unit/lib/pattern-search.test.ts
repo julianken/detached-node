@@ -63,11 +63,11 @@ const FIXTURES: Pattern[] = [
 ];
 
 const LAYER_LABELS: LayerLabelMap = {
-  topology: "Layer 1 — Topology / Control Flow",
-  quality: "Layer 2 — Quality & Control Gates",
-  state: "Layer 3 — State & Context",
-  interfaces: "Layer 4 — Interfaces & Transport",
-  methodology: "Layer 5 — Methodology",
+  topology: "Layer 1: Topology / Control Flow",
+  quality: "Layer 2: Quality & Control Gates",
+  state: "Layer 3: State & Context",
+  interfaces: "Layer 4: Interfaces & Transport",
+  methodology: "Layer 5: Methodology",
 };
 
 // ---------------------------------------------------------------------------
