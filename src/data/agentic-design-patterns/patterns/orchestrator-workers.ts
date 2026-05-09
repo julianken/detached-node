@@ -6,7 +6,7 @@ export const pattern: Pattern = {
   alternativeNames: ['Manager-Workers', 'Hierarchical Multi-Agent', 'Coordinator-Specialist'],
   layerId: 'topology',
   topologySubtier: 'multi-agent',
-  oneLineSummary: 'A central planner spawns worker agents per task, then merges their outputs.',
+  oneLineSummary: 'Has a central orchestrator dispatch sub-tasks to fresh workers and merge their outputs.',
   bodySummary: [
     'Orchestrator-Workers structures a multi-agent run as a hub with spokes. A central orchestrator inspects the incoming request, decides at runtime which sub-tasks the work decomposes into, and dispatches each one to a fresh worker agent with its own prompt, tool surface, and context window. When the workers return, the orchestrator aggregates their outputs into the response the caller sees. The decomposition is dynamic: the orchestrator chooses how many workers to spawn and what each one is asked to do based on the request, not by reading off a fixed pipeline. Workers do not talk to each other; they talk only to the orchestrator, and the topology stays a tree.',
     'The pattern sits between two simpler shapes that resemble it. Parallelization fans the same prompt across a fixed number of workers and votes; the decomposition is decided at design time, not by an LLM at runtime. Planning splits a single agent into a planner and an executor, but the executor walks one step list in one process; there is no second model call per step in a separate context. Orchestrator-Workers earns its name when both conditions hold: the sub-tasks are not enumerable up front, and each one benefits from running in isolation. AutoGen and MetaGPT formalise the role split; Anthropic frames the workflow as the right answer when "you can\'t predict the subtasks."',

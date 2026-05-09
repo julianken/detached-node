@@ -6,7 +6,7 @@ export const pattern: Pattern = {
   alternativeNames: ['Generator-Critic Loop', 'Self-Refine', 'Iterative Refinement'],
   layerId: 'topology',
   topologySubtier: 'single-agent',
-  oneLineSummary: 'Generate a draft, score it against a rubric, refine until the critic stops complaining.',
+  oneLineSummary: 'Drafts an answer, scores it against a rubric, and regenerates with the critique appended.',
   bodySummary: [
     'Evaluator-Optimizer wraps a single task in a generator-critic loop. A first model call drafts an answer, a second call scores that draft against a written rubric and emits a structured judgement, and a third call regenerates the answer with the critique appended to the prompt. The loop runs until the judgement clears a threshold or a hard iteration cap fires. The critic is what the prompt makes it: a list of acceptance criteria, a unit test runner, an external API check, or another LLM tasked with finding a flaw. The optimizer is the same generator the loop started with, prompted again with everything it produced so far plus the verdict on why that output failed.',
     'The pattern only earns its cost when the rubric is sharper than what the generator can self-correct in a single shot. Translation between languages, code that has to compile, structured outputs that must validate against a schema, and long-form writing with explicit style constraints all expose enough surface for a separate critic to catch what the writer missed. The loop converges when the critique from iteration N flips from listing concrete defects to producing diminishing or contradictory feedback. That flip is the operational signal to stop refining and ship.',

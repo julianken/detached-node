@@ -5,7 +5,7 @@ export const pattern: Pattern = {
   name: 'Memory Management',
   alternativeNames: ['Agent Memory', 'Long-Term Memory', 'Working Memory + Long-Term Memory'],
   layerId: 'state',
-  oneLineSummary: 'Tier the agent into working, episodic, and semantic stores it can read and edit.',
+  oneLineSummary: 'Splits agent state into a working window plus episodic and semantic durable stores.',
   bodySummary: [
     "Memory Management treats the agent's state as a tiered system rather than a single ever-growing prompt. The working tier is whatever currently fits in the context window: the system message, the most recent turns, the active tool outputs. Around it sit one or more out-of-context stores the agent reads from and writes to: an episodic log keyed by session or task, a semantic store that holds learned facts about the user or the world, and sometimes a procedural store of routines the agent has learned to invoke. The tiers are connected by explicit operations the agent calls (append, summarise, retrieve, evict) rather than by hidden window-management heuristics.",
     "The pattern earns its keep when conversations or task threads outlive a single context window. MemGPT framed this as paging between fast and slow memory under the agent's own control; LangGraph and Mastra ship the same idea as a store keyed by `(thread_id, namespace)` that survives process restarts. The episodic tier records what happened. The semantic tier records what was learned. A summariser collapses old episodes into stable facts so the working tier stays small. Without the summariser the long-term store grows linearly and retrieval drowns in stale context; without the episodic log the agent forgets the same lesson on every session.",

@@ -6,7 +6,7 @@ export const pattern: Pattern = {
   alternativeNames: ['Plan-and-Execute', 'Decompose-then-Act'],
   layerId: 'topology',
   topologySubtier: 'single-agent',
-  oneLineSummary: 'Agent drafts a multi-step plan, executes it, and rewrites the tail when reality bites.',
+  oneLineSummary: 'Drafts a multi-step plan, executes it, and revises the tail when a step fails.',
   bodySummary: [
     'Planning splits an agent run into two phases the literature treats as separable: a planner that decomposes a goal into ordered steps, and an executor that takes one step at a time. The planner reasons about the task end-to-end before any tool fires, so the system commits to a structure rather than improvising token by token. The executor walks the step list, calling tools or sub-agents, and the orchestration layer holds onto the plan as a contract the run can be checked against. The split exists because language-model strengths on long-horizon tasks live mostly in the upfront decomposition, not in step-wise reactive choice.',
     'The pattern only earns its name when the plan can be revised. After each step the executor compares results against the plan and routes back to the planner whenever a precondition fails, a tool returns the wrong shape, or a later step turns out to be unreachable. The planner edits the tail rather than restarting, preserving work already done and bounding the cost of a mistake. Variants branch differently: tree-of-thoughts expands candidate plans in parallel and prunes by a value heuristic; HuggingGPT picks tools eagerly from a registry; Plan-and-Solve prompting collapses the loop into a single chain-of-thought that emits the plan inline.',

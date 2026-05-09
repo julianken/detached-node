@@ -7,7 +7,7 @@ export const pattern: Pattern = {
   layerId: 'topology',
   secondaryLayerId: 'state',
   topologySubtier: 'single-agent',
-  oneLineSummary: 'Agent writes self-critiques into memory to improve next attempts.',
+  oneLineSummary: 'Writes a critique after each attempt and retrieves prior critiques on the next attempt.',
   bodySummary: [
     'Reflexion teaches a language agent to learn from its own trajectories without touching model weights. After each attempt, the agent inspects the trajectory and any environment feedback, then writes a short verbal critique: a paragraph that names what went wrong and what to try next. That critique is appended to an episodic memory buffer keyed by task or task class. On the next attempt, the agent retrieves the most recent and most relevant critiques and conditions its plan on them, treating prior failures as instructions rather than as silent gradient signal.',
     'The pattern straddles two layers. As Topology it shapes the control flow: a generator-execute-evaluate loop that, on failure, branches into a critique step before retrying. As State it maintains durable, retrievable memory whose unit is a natural-language lesson, not an embedding of a previous answer. The mechanism only earns its keep when failures are diagnosable from the trajectory itself: the agent must be able to articulate, in words, what an outside observer could also see. Tasks where failure is invisible (a stale tool, a wrong premise the agent never questioned) defeat the loop, because the critique is grounded in nothing.',

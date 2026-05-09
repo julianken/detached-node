@@ -5,7 +5,7 @@ export const pattern: Pattern = {
   name: 'Context Engineering',
   alternativeNames: ['Context Curation', 'Context Window Management'],
   layerId: 'state',
-  oneLineSummary: 'Pick which tokens enter the window, in what order, with what weighting.',
+  oneLineSummary: 'Decides which tokens fill the model\'s window, in what order, at what fraction of budget.',
   bodySummary: [
     "Context engineering is the discipline of deciding what fills the model's window before each call: which system instructions, which retrieved passages, which tool outputs, which scratchpad notes, which prior turns, in what order, and at what fraction of the budget. The pattern treats the window as a finite resource the runtime allocates, not as a place to dump everything that might be relevant. Selection happens upstream of generation: a step ranks candidate items by signal-to-cost, packs the highest-yield ones into a budget, and lays them out so the model attends to the parts that matter most. Longer windows did not eliminate the cost of choosing; they made the choice more consequential.",
     "The pattern is broader than retrieval-augmented generation, which is one specific way to populate the window. RAG answers where new tokens come from; context engineering answers which tokens, of all the candidates, get a seat at the table this turn. It also sits next to but distinct from prompt chaining, which decomposes the task into stages: chaining changes what the model is asked, while context engineering changes what the model sees while answering. A typical implementation composes both: the chain decides the stage, the engineer decides which retrieved chunks, prior summaries, and tool transcripts that stage will read.",

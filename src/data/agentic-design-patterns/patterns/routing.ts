@@ -6,7 +6,7 @@ export const pattern: Pattern = {
   alternativeNames: ['Classifier-and-Dispatch', 'Conditional Branching', 'LLM Router'],
   layerId: 'topology',
   topologySubtier: 'single-agent',
-  oneLineSummary: 'Classify the input, then dispatch it to the handler that fits.',
+  oneLineSummary: 'Classifies the input, then forwards it to the matching prompt, model, or sub-agent.',
   bodySummary: [
     'Routing splits a workload into a classifier and a set of specialised handlers. The classifier inspects the incoming request (text, structured payload, partial trajectory) and emits a label drawn from a small fixed vocabulary. A switch downstream reads the label and forwards the request to the matching prompt, model, tool chain, or sub-agent. The pattern earns its place when the request distribution is genuinely heterogeneous: a single prompt that tries to cover billing, technical support, and refund disputes degrades on each subset to subsidise the others, while three narrower prompts each compile to something tighter and easier to audit.',
     'The classifier itself can be a small LLM called with a constrained output schema, an embedding-nearest-neighbour over a labelled prototype set, a discriminative classifier fine-tuned on logged traffic, or a deterministic rule table over keywords and metadata. Each option trades latency, cost, and recoverability differently, but the topology is the same: a decision node with k outgoing edges, exactly one of which fires per request. A second axis routes by capability rather than by intent: cheap models for tractable queries, frontier models for ones the cheap model would fumble. This is the form Anthropic\'s essay highlights as the default cost lever and that RouteLLM measures on MT-Bench, MMLU, and GSM8K.',

@@ -5,7 +5,7 @@ export const pattern: Pattern = {
   name: 'Guardrails',
   alternativeNames: ['Safety Patterns', 'Programmable Rails', 'Input/Output Filters'],
   layerId: 'quality',
-  oneLineSummary: 'Layered checks around the model that block unsafe input and output before either ships.',
+  oneLineSummary: 'Wraps the model in input and output checks that block, rewrite, or refuse the response.',
   bodySummary: [
     'Guardrails wrap a language model with checks that fire before it sees an input and after it produces an output. The input rail inspects the user message, retrieved context, or tool result for prompt injection, disallowed topics, PII, and policy violations; if anything trips, the request never reaches the primary model and a refusal returns instead. The output rail inspects the response for the same hazards plus hallucinated citations, jailbroken text, and shape errors, then rewrites, redacts, or replaces it before the caller sees it. The rails are separable: a system can run input checks only, output checks only, or both.',
     'The pattern is canonically a layered defence rather than one model judging another. NeMo Guardrails composes programmable rails as a flow language so authors declare which checks fire in what order; Llama Guard ships a fine-tuned classifier scoring a conversation against a published taxonomy; constitutional training bakes one behaviour layer into the primary model. Each layer trades differently: an external classifier is auditable and swappable but adds a network hop; a self-check inside the primary call is cheap but inherits the failure modes of the model judging itself; regex and allow-lists are fastest and most brittle. Production stacks two or three because each catches what the others miss.',

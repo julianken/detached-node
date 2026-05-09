@@ -5,7 +5,7 @@ export const pattern: Pattern = {
   name: '12-Factor Agent',
   alternativeNames: ['12-Factor Agents', '12FA'],
   layerId: 'methodology',
-  oneLineSummary: 'A dozen production principles for hardening LLM software you actually have to ship.',
+  oneLineSummary: 'Catalogues twelve principles a team applies to push an agent from demo to production.',
   bodySummary: [
     "12-Factor Agent is a methodology, not a mechanism. Dexter Horthy and the HumanLayer community catalogued twelve principles a team applies to push an agent across the gap between a 70-percent demo and software a customer touches: own your prompts, own your context window, treat tools as structured outputs, unify execution and business state, expose launch / pause / resume as APIs, contact humans through tool calls, own your control flow, compact errors back into the window, keep agents small and focused, trigger from anywhere, and make the agent a stateless reducer over an event log. The lineage to Adam Wiggins' 12-Factor App is deliberate: a cloud-portable operational mindset, applied to LLM-powered software.",
     "The pattern sits one layer up from the rest of this catalog. Reflexion, Checkpointing, Tool Use ReAct, and the others are mechanisms: concrete loops or protocols a system either runs or does not. 12-Factor is the lens that decides which mechanisms an agent assembles, which abstractions it owns rather than imports, and which framework defaults it dismantles to keep production behaviour legible. The methodology is opinionated about plumbing: the loop is code a developer can step through, the prompt lives in the repo, the context window is assembled by a function a reviewer can read, and the run survives a restart because its state is durable and its reducer is pure.",

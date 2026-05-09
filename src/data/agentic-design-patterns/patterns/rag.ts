@@ -6,7 +6,7 @@ export const pattern: Pattern = {
   alternativeNames: ['Retrieval-Augmented Generation', 'Retrieve-and-Generate'],
   layerId: 'topology',
   topologySubtier: 'single-agent',
-  oneLineSummary: 'Retrieve passages from an external store and condition the model on them.',
+  oneLineSummary: 'Pulls documents from an external store and uses them as context for the model\'s answer.',
   bodySummary: [
     'Retrieval-Augmented Generation pairs a frozen language model with an external store of documents the model was never trained on. At query time the system embeds the question, scores it against a precomputed index of chunked text, and selects the top handful of passages by cosine similarity or hybrid sparse-dense ranking. Those passages are concatenated into the prompt as evidence the model is told to ground its answer in. The model then generates a response that, in the well-tuned case, cites or quotes the retrieved snippets rather than fabricating from parametric memory.',
     "The pattern's leverage is that knowledge can change without retraining: swap the index, update a chunk, redeploy nothing. The cost is that retrieval becomes the silent tail that dominates accuracy. Chunk size, overlap, embedding model, distance metric, top-k, prompt template, and reranker each have a budget of free parameters and each interacts with the others. Even the embedding's distance function is load-bearing: a passage that should rank first under cosine often ranks fifth under dot-product on the same vectors. Most production RAG quality work is retrieval engineering wearing a generation costume.",

@@ -5,7 +5,7 @@ export const pattern: Pattern = {
   name: 'A2A',
   alternativeNames: ['Agent2Agent', 'Inter-Agent Communication', 'Agent-to-Agent Protocol'],
   layerId: 'interfaces',
-  oneLineSummary: 'Cross-runtime agents discover each other by URL and exchange tasks over HTTP+JSON.',
+  oneLineSummary: 'Lets one agent call another over HTTP by fetching an Agent Card and posting a Task.',
   bodySummary: [
     "A2A defines a wire protocol for one agent to call another it did not author and may not share a runtime with. The remote agent advertises itself by serving an Agent Card (a JSON document at a well-known path under its base URL) that lists the skills it offers, declares supported transports, and names which auth schemes a caller must satisfy. A client agent fetches that card, picks a matching skill, and posts a Task over JSON-RPC, REST, or gRPC. The Task carries a stable identifier and a lifecycle (submitted, working, completed, failed, cancelled) so a long-running call can be polled or streamed without holding the request open.",
     "The pattern's load-bearing claim is opacity. The remote agent is not a tool the caller introspects; it is a black box that owns its own model, prompt, memory, and tool catalogue, and the contract is the Agent Card plus the Task envelope rather than shared code. That separation is what lets a LangGraph agent in one company's VPC delegate to a CrewAI agent in another's without either side importing the other's framework. Capability negotiation happens at the card level, before any task is posted, so a missing skill is a 4xx rather than a runtime mystery.",
