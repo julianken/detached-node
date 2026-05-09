@@ -8,9 +8,9 @@ export const pattern: Pattern = {
   topologySubtier: 'multi-agent',
   oneLineSummary: 'One agent owns the conversation; transfer-as-tool-call hands it to a specialist.',
   bodySummary: [
-    'Handoffs treat a multi-agent system as a single conversation with a moving owner. One agent holds the dialogue at a time; when its scope runs out, it emits a transfer — a tool call whose return value is another agent rather than a string — and the runner switches the active agent for the next turn. The new agent inherits the message history and continues from where the previous one stopped, so the user sees one coherent thread even though several prompts and tool sets handled it. OpenAI shipped this as Swarm in 2024 and folded it into the Agents SDK as `handoff()`; both stay small because the runtime work is just a loop over messages and a pointer to the current agent.',
+    'Handoffs treat a multi-agent system as a single conversation with a moving owner. One agent holds the dialogue at a time; when its scope runs out, it emits a transfer (a tool call whose return value is another agent rather than a string) and the runner switches the active agent for the next turn. The new agent inherits the message history and continues from where the previous one stopped, so the user sees one coherent thread even though several prompts and tool sets handled it. OpenAI shipped this as Swarm in 2024 and folded it into the Agents SDK as `handoff()`; both stay small because the runtime work is just a loop over messages and a pointer to the current agent.',
     'The pattern only earns its name when the transfer is the agent\'s own decision and the chosen specialist takes the conversation forward without supervision. A triage agent inspects the request, picks among a registry of specialists, and yields control; the specialist may hand back, hand to a peer, or finish. Roles are encoded as system prompts plus narrow tool surfaces, and the handoff vocabulary as the names of the transfer tools. Every transition is then a recorded tool call with arguments, replayable from the trace and editable by changing one specialist\'s instructions without touching the others.',
-    'Handoffs sit next to but distinct from Routing, Orchestrator-Workers, and Multi-Agent Debate. Routing is a one-shot classifier that fires before any agent runs and never re-routes; orchestrator-workers keeps a central planner that fans sub-tasks out in parallel and synthesises; multi-agent debate runs peer agents in parallel and cross-critiques. Handoffs are sequential and peer-to-peer — exactly one agent is live at any moment and the context is the message history itself. The cost is operational: deciding which agent owns scope creep, preventing two specialists from ping-ponging the same request, and bounding how many turns the swarm can spend electing not to finish.',
+    'Handoffs sit next to but distinct from Routing, Orchestrator-Workers, and Multi-Agent Debate. Routing is a one-shot classifier that fires before any agent runs and never re-routes; orchestrator-workers keeps a central planner that fans sub-tasks out in parallel and synthesises; multi-agent debate runs peer agents in parallel and cross-critiques. Handoffs are sequential and peer-to-peer: exactly one agent is live at any moment and the context is the message history itself. The cost is operational: deciding which agent owns scope creep, preventing two specialists from ping-ponging the same request, and bounding how many turns the swarm can spend electing not to finish.',
   ],
   mermaidSource: `graph TD
   A[User message] --> B[Triage agent]
@@ -25,10 +25,10 @@ export const pattern: Pattern = {
   D --> H`,
   mermaidAlt: 'A flowchart in which a user message reaches a triage agent that either answers in turn, transfers to a billing specialist, or transfers to a refunds specialist; each specialist either replies to the user when done or hands the conversation back to the triage agent for re-routing.',
   whenToUse: [
-    'Apply when a single conversation spans multiple narrow specialisations and the right specialist is only knowable after the user has spoken (customer support triage, multi-domain copilots, intake-then-treatment flows).',
-    'Use where each specialist needs a different system prompt, tool surface, or model tier, and you want the boundary between roles to be visible in the trace as a named transfer rather than buried inside one prompt.',
-    'Reach for it when authority and audit matter — handoffs make the moment a conversation crossed from a generalist to a privileged tool surface (refunds, account changes, code-write access) an explicit, logged event.',
-    'Prefer it when conversational continuity is the product: the user is talking to one assistant whose voice happens to shift, not filing tickets that get routed and replied to asynchronously.',
+    'Right call when a single conversation spans multiple narrow specialisations and the right specialist is only knowable after the user has spoken (customer support triage, multi-domain copilots, intake-then-treatment flows).',
+    'Justified where each specialist needs a different system prompt, tool surface, or model tier, and you want the boundary between roles to be visible in the trace as a named transfer rather than buried inside one prompt.',
+    'A good fit when authority and audit matter: handoffs make the moment a conversation crossed from a generalist to a privileged tool surface (refunds, account changes, code-write access) an explicit, logged event.',
+    'Useful when conversational continuity is the product: the user is talking to one assistant whose voice happens to shift, not filing tickets that get routed and replied to asynchronously.',
   ],
   whenNotToUse: [
     'When the work decomposes into independent parallel sub-tasks that fan out and synthesise, an orchestrator-workers pipeline produces results faster and with fewer round trips than a sequential chain of handoffs.',
@@ -45,7 +45,7 @@ export const pattern: Pattern = {
       sourceUrl: 'https://openai.github.io/openai-agents-js/guides/handoffs/',
     },
     {
-      text: 'LangGraph documents a Multi-Agent Supervisor pattern in which a supervisor node decides which worker agent runs next based on conversation state, then routes back to itself when the worker finishes — the same handoff-and-return loop expressed as graph edges.',
+      text: 'LangGraph documents a Multi-Agent Supervisor pattern in which a supervisor node decides which worker agent runs next based on conversation state, then routes back to itself when the worker finishes. The wiring is the same handoff-and-return loop expressed as graph edges.',
       sourceUrl: 'https://langchain-ai.github.io/langgraph/tutorials/multi_agent/agent_supervisor/',
     },
   ],
@@ -78,7 +78,7 @@ export async function runSwarm(messages: { role: 'user' | 'assistant'; content: 
 `,
   sdkAvailability: 'first-party-ts',
   readerGotcha: {
-    text: 'Cognition argues from production experience that conversation-spanning handoffs reliably break because each new agent reads the same message history but reconstructs a different latent context, then makes decisions inconsistent with the prior agent\'s. The fix is not better prompts on each specialist — it is reducing the number of handoffs, or sharing a compact written context that travels with the transfer rather than relying on the raw message log.',
+    text: 'Cognition argues from production experience that conversation-spanning handoffs reliably break because each new agent reads the same message history but reconstructs a different latent context, then makes decisions inconsistent with the prior agent\'s. The fix is not better prompts on each specialist; it is reducing the number of handoffs, or sharing a compact written context that travels with the transfer rather than relying on the raw message log.',
     sourceUrl: 'https://cognition.ai/blog/dont-build-multi-agents',
   },
   relatedSlugs: ['routing', 'planning'],

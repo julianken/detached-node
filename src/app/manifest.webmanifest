@@ -1,7 +1,7 @@
 {
   "name": "Detached Node",
   "short_name": "Detached",
-  "description": "A tech blog exploring modern agentic AI workflows, autonomous systems, and the philosophy of machine intelligence.",
+  "description": "A tech blog and reference catalog on agentic AI.",
   "start_url": "/",
   "display": "standalone",
   "theme_color": "#7c3aed",

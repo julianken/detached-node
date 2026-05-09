@@ -34,8 +34,7 @@ export const revalidate = 3600;
 
 const PAGE_URL = `${siteUrl}/agentic-design-patterns`;
 const PAGE_TITLE = "Agentic Design Patterns";
-const PAGE_DESCRIPTION =
-  "A field-aware reference covering patterns for building agentic AI systems — organized by the question each pattern answers, not by the year it was named.";
+const PAGE_DESCRIPTION = "Agentic AI design patterns reference.";
 
 export const metadata: Metadata = {
   title: PAGE_TITLE,

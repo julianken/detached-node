@@ -8,7 +8,7 @@ export const pattern: Pattern = {
   oneLineSummary: 'Agent pauses on a designated step and waits for a human signal before continuing.',
   bodySummary: [
     'Human in the Loop (HITL) is the runtime discipline of pausing an agent at a designated step, surfacing the pending decision to a person, and resuming only after that person approves, rejects, or edits what the agent proposed. The interruption is structural rather than incidental: the orchestrator declares which tool calls or branch transitions require a signal, serialises the run state at the boundary, and exposes a queue or callback the human reviewer drives. When the signal arrives the run rehydrates from the same checkpoint and continues with the approved arguments, the rejection reason, or the edited payload spliced in.',
-    'Three sub-variants share that skeleton. Approve-before-tool-call gates a single side-effecting action (a payment, a destructive shell command, an email send) on a yes-or-no acknowledgement; Claude Code\'s permission prompts and the OpenAI Agents SDK\'s `needs_approval` flag both ship this shape. Choose-between-options surfaces N candidates the agent generated and asks the reviewer to pick or rank — Cursor\'s diff-by-diff accept-and-reject UI on a multi-file edit, or RLHF preference labelling at training time, are both this variant moved to different lifecycle points. Free-form correction lets the reviewer rewrite the proposed arguments, the trajectory, or the next plan step before resume, which LangGraph\'s interrupt primitive supports through state edits between checkpoints.',
+    'Three sub-variants share that skeleton. Approve-before-tool-call gates a single side-effecting action (a payment, a destructive shell command, an email send) on a yes-or-no acknowledgement; Claude Code\'s permission prompts and the OpenAI Agents SDK\'s `needs_approval` flag both ship this shape. Choose-between-options surfaces N candidates the agent generated and asks the reviewer to pick or rank: Cursor\'s diff-by-diff accept-and-reject UI on a multi-file edit, or RLHF preference labelling at training time, are both this variant moved to different lifecycle points. Free-form correction lets the reviewer rewrite the proposed arguments, the trajectory, or the next plan step before resume, which LangGraph\'s interrupt primitive supports through state edits between checkpoints.',
     'HITL is distinct from Guardrails, which screens input and output automatically without a person on the path, and from Evaluator-Optimizer, where the critic is another model. The pattern earns its keep when an irreversible action or a reputational risk wants a person\'s name on the commit, and when the queue of pending approvals is staffed densely enough that the wait does not eclipse the work. The cost is wall-clock and operational: an interruption that nobody answers strands the run, a queue routed to one over-loaded reviewer becomes the bottleneck, and a UI that hides the agent\'s rationale produces rubber-stamping that recovers none of the safety the pattern was deployed for.',
   ],
   mermaidSource: `graph TD
@@ -26,10 +26,10 @@ export const pattern: Pattern = {
   C --> A`,
   mermaidAlt: 'A top-down flowchart in which an Agent step branches on whether the next action is sensitive: non-sensitive actions execute and loop back, while sensitive ones snapshot state, pause, and surface the request to a reviewer whose approve, edit, or reject signal either resumes the loop with original or edited arguments, or aborts the run.',
   whenToUse: [
-    'Apply when a tool call is irreversible or hard to recover from — money movement, destructive filesystem or database operations, sending external messages — and a wrong call costs more than the latency of waiting.',
-    'Use where regulation or policy demands a named human on the commit (clinical orders, legal filings, hiring decisions) so the audit trail attributes the action to a person, not the model.',
-    'Reach for it when the task is rare or low-volume enough that a queue of pending approvals stays small, and a reviewer answers within the trust budget of the upstream caller.',
-    'Prefer it over fully autonomous execution when the agent\'s confidence on the next step is low, ambiguous, or contested — high-stakes branch points where a fallback prompt is cheaper than a recovery rollback.',
+    'Worth the cost when a tool call is irreversible or hard to recover from (money movement, destructive filesystem or database operations, sending external messages) and a wrong call costs more than the latency of waiting.',
+    'Required where regulation or policy demands a named human on the commit (clinical orders, legal filings, hiring decisions) so the audit trail attributes the action to a person, not the model.',
+    'A good fit when the task is rare or low-volume enough that a queue of pending approvals stays small, and a reviewer answers within the trust budget of the upstream caller.',
+    'Better than fully autonomous execution when the agent\'s confidence on the next step is low, ambiguous, or contested. Those are the high-stakes branch points where a fallback prompt is cheaper than a recovery rollback.',
   ],
   whenNotToUse: [
     'When the action volume exceeds the reviewer staffing budget, the queue grows without bound and the pattern collapses into either silent timeouts or rubber-stamping that recovers no safety.',
@@ -38,7 +38,7 @@ export const pattern: Pattern = {
   ],
   realWorldExamples: [
     {
-      text: 'Claude Code\'s permission system pauses execution on every tool invocation that matches a non-allowlisted pattern (`Bash(rm:*)`, `Write(/etc/*)`) and prompts the operator in-terminal to allow once, allow always, or deny — a per-call human approval gate built on the same pause-and-resume primitive the pattern names.',
+      text: 'Claude Code\'s permission system pauses execution on every tool invocation that matches a non-allowlisted pattern (`Bash(rm:*)`, `Write(/etc/*)`) and prompts the operator in-terminal to allow once, allow always, or deny. The result is a per-call human approval gate built on the same pause-and-resume primitive the pattern names.',
       sourceUrl: 'https://code.claude.com/docs/en/iam',
     },
     {
@@ -46,7 +46,7 @@ export const pattern: Pattern = {
       sourceUrl: 'https://openai.github.io/openai-agents-python/tools/',
     },
     {
-      text: 'Anthropic\'s Computer Use documentation explicitly recommends asking a human to confirm decisions with meaningful real-world consequences and any tasks requiring affirmative consent — accepting cookies, executing financial transactions, agreeing to terms of service — as a primary risk mitigation for the beta agent loop.',
+      text: 'Anthropic\'s Computer Use documentation explicitly recommends asking a human to confirm decisions with meaningful real-world consequences and any tasks requiring affirmative consent (accepting cookies, executing financial transactions, agreeing to terms of service) as a primary risk mitigation for the beta agent loop.',
       sourceUrl: 'https://platform.claude.com/docs/en/agents-and-tools/tool-use/computer-use-tool',
     },
   ],
@@ -83,7 +83,7 @@ export {}
 `,
   sdkAvailability: 'first-party-ts',
   readerGotcha: {
-    text: 'Reviewers exposed to a long stream of agent proposals drift toward automation bias — they approve faster than they read, the gate becomes a click-through, and the pattern recovers none of the safety it was deployed for. Goddard, Roudsari and Wyatt\'s systematic review of decision-support studies finds that the rate of automation-driven errors rises with reviewer workload and falls when the system surfaces its rationale alongside the proposal. A HITL UI that hides the agent\'s reasoning replicates the same failure mode at agent scale: the reviewer rubber-stamps and the audit trail records consent the operator never actually exercised.',
+    text: 'Reviewers exposed to a long stream of agent proposals drift toward automation bias: they approve faster than they read, the gate becomes a click-through, and the pattern recovers none of the safety it was deployed for. Goddard, Roudsari and Wyatt\'s systematic review of decision-support studies finds that the rate of automation-driven errors rises with reviewer workload and falls when the system surfaces its rationale alongside the proposal. A HITL UI that hides the agent\'s reasoning replicates the same failure mode at agent scale: the reviewer rubber-stamps and the audit trail records consent the operator never actually exercised.',
     sourceUrl: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC3240751/',
   },
   relatedSlugs: ['guardrails', 'checkpointing', 'tool-use-react'],

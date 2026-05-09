@@ -19,7 +19,7 @@
 import type { LayerId, Pattern } from "@/data/agentic-design-patterns/types";
 
 /**
- * Map of layer id → human-readable label (e.g. "Layer 1 — Topology / Control Flow").
+ * Map of layer id → human-readable label (e.g. "Layer 1: Topology / Control Flow").
  * Passed in from the caller so this lib stays free of UI-shaped strings.
  */
 export type LayerLabelMap = Partial<Record<LayerId, string>>;

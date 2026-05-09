@@ -117,7 +117,7 @@ export function HubFilterableContent({ patterns, layerFiltered = false }: HubFil
   const layerLabels = useMemo(() => {
     const out: Record<string, string> = {};
     for (const l of LAYERS) {
-      out[l.id] = `Layer ${l.number} — ${l.title}`;
+      out[l.id] = `Layer ${l.number}: ${l.title}`;
     }
     return out;
   }, []);
@@ -212,7 +212,7 @@ export function HubFilterableContent({ patterns, layerFiltered = false }: HubFil
                   id={`filtered-layer-heading-${layer.id}`}
                   className="font-mono text-2xl font-semibold tracking-tight text-text-primary"
                 >
-                  Layer {layer.number} — {layer.title}
+                  Layer {layer.number}: {layer.title}
                 </h2>
                 <p className="text-meta text-text-tertiary italic">{layer.question}</p>
               </header>

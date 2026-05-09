@@ -13,44 +13,34 @@ export const LAYERS: Layer[] = [
     number: 1,
     title: 'Topology / Control Flow',
     question: 'How should my agent calls be arranged and sequenced?',
-    description:
-      'Patterns that govern the structural shape of an agent system — how steps are ordered, ' +
-      'branched, parallelized, and delegated across single-agent and multi-agent topologies.',
+    description: 'Patterns for arranging and sequencing agent calls.',
   },
   {
     id: 'quality',
     number: 2,
     title: 'Quality & Control Gates',
     question: 'How do I catch errors, enforce safety, and know when to stop?',
-    description:
-      'Patterns for verifying outputs, enforcing policy constraints, and injecting human judgment ' +
-      'at the points where autonomous decisions carry meaningful risk.',
+    description: 'Output verification, policy gates, human review, and abort thresholds.',
   },
   {
     id: 'state',
     number: 3,
     title: 'State & Context',
     question: 'How does my agent retain and manage what it knows across steps?',
-    description:
-      'Patterns that manage working memory, persistent state, and context compression — ' +
-      'how an agent carries information across turns, steps, and sessions.',
+    description: 'Where agents keep what they need across steps, sessions, and restarts.',
   },
   {
     id: 'interfaces',
     number: 4,
     title: 'Interfaces & Transport',
     question: 'How do agents and tools communicate with each other and external systems?',
-    description:
-      'Patterns governing the protocols, wire formats, and integration surfaces by which ' +
-      'agents expose capabilities to callers and consume capabilities from external systems.',
+    description: 'The wire formats and protocols between agents and external systems.',
   },
   {
     id: 'methodology',
     number: 5,
     title: 'Methodology',
     question: 'What principles should guide how I design and operate agent systems?',
-    description:
-      'Cross-cutting stances and design philosophies that shape how you approach agentic ' +
-      'system design as a whole — beyond any single component or interaction pattern.',
+    description: 'Cross-cutting design principles, applied to all of the above.',
   },
 ]

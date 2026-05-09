@@ -7,8 +7,8 @@ export const pattern: Pattern = {
   layerId: 'state',
   oneLineSummary: 'Agent persists its run state at safe boundaries so a crash mid-loop loses no work.',
   bodySummary: [
-    'Checkpointing makes an agent run survive the failure of the process executing it. The orchestrator writes the run\'s state — accumulated messages, completed tool results, the next pending step, any pending writes — to durable storage at well-defined boundaries, keyed by a stable run identifier. When the worker dies mid-loop because a Kubernetes pod was evicted, a serverless function timed out, or an LLM call took fifteen minutes and the connection dropped, a fresh worker reads the last checkpoint, rehydrates the agent\'s state, and resumes from the boundary rather than from the prompt. The unit of recovery is the boundary, not the run; work already done is not redone.',
-    'Two implementations dominate. Snapshot checkpointing — what LangGraph, Mastra, and the Anthropic Agent SDK ship — atomically writes the full state object after each step into a backend (in-memory for development, SQLite or Postgres for production) and resumes by loading the latest record for that thread or session. Replay-based durable execution — Temporal, Inngest, Restate — instead records a journal of completed steps and their results, then re-runs the agent code from the top on recovery, short-circuiting any step whose result is already in the journal. Both reach the same place: the LLM does not get called twice for the same prompt, and the tool whose side effect already fired does not fire again.',
+    'Checkpointing makes an agent run survive the failure of the process executing it. The orchestrator writes the run\'s state (accumulated messages, completed tool results, the next pending step, any pending writes) to durable storage at well-defined boundaries, keyed by a stable run identifier. When the worker dies mid-loop because a Kubernetes pod was evicted, a serverless function timed out, or an LLM call took fifteen minutes and the connection dropped, a fresh worker reads the last checkpoint, rehydrates the agent\'s state, and resumes from the boundary rather than from the prompt. The unit of recovery is the boundary, not the run; work already done is not redone.',
+    'Two implementations dominate. Snapshot checkpointing (what LangGraph, Mastra, and the Anthropic Agent SDK ship) atomically writes the full state object after each step into a backend (in-memory for development, SQLite or Postgres for production) and resumes by loading the latest record for that thread or session. Replay-based durable execution (Temporal, Inngest, Restate) instead records a journal of completed steps and their results, then re-runs the agent code from the top on recovery, short-circuiting any step whose result is already in the journal. Both reach the same place: the LLM does not get called twice for the same prompt, and the tool whose side effect already fired does not fire again.',
     'The pattern is distinct from Memory Management, which retrieves prior context to inject into the next prompt, and from generic database transactions, which protect a single write. Checkpointing protects the unit-of-work that is the agent run itself. The cost is operational: someone owns the schema as it migrates between releases, the determinism contract if the implementation is replay-based, the retention policy for stale checkpoints, and the question of what happens when a checkpoint is loaded by a worker running a different version of the agent code than the one that wrote it.',
   ],
   mermaidSource: `graph LR
@@ -22,9 +22,9 @@ export const pattern: Pattern = {
   mermaidAlt: 'A horizontal flowchart in which an Agent step executes an LLM call or tool, then atomically writes a checkpoint containing the state, the next step, and the result; if the worker is alive the loop continues, but if the worker crashes a new worker loads the latest checkpoint by run id and resumes the loop from the same point.',
   whenToUse: [
     'Apply when an agent run is long enough that a process restart between steps is likely (multi-minute tool calls, multi-hour batch jobs, sessions that span days).',
-    'Use where steps have side effects you cannot afford to fire twice (charging a card, sending an email, opening a pull request) and need an idempotency anchor that survives crashes.',
-    'Reach for it when the deployment target is preemptible — spot instances, serverless functions with execution caps, Kubernetes pods that the autoscaler may evict — and the agent must continue on a new worker without losing context.',
-    'Prefer it when an operator needs to inspect or rewind a run between steps for debugging, audit, or human review of the trajectory before it continues.',
+    'Required where steps have side effects you cannot afford to fire twice (charging a card, sending an email, opening a pull request) and need an idempotency anchor that survives crashes.',
+    'A good fit when the deployment target is preemptible (spot instances, serverless functions with execution caps, Kubernetes pods that the autoscaler may evict) and the agent must continue on a new worker without losing context.',
+    'Useful when an operator needs to inspect or rewind a run between steps for debugging, audit, or human review of the trajectory before it continues.',
   ],
   whenNotToUse: [
     'When the run is single-shot, completes inside one short request, and the cost of restarting from the prompt is lower than the cost of a checkpoint write on every step.',
@@ -37,11 +37,11 @@ export const pattern: Pattern = {
       sourceUrl: 'https://docs.langchain.com/oss/python/langgraph/persistence',
     },
     {
-      text: 'Temporal records a complete event history for every workflow execution and recovers from worker crashes by replaying that history on a new worker, short-circuiting Activities (LLM calls, tool invocations) whose results are already journaled — the same primitive Vercel\'s AI SDK durability plugin uses to make generateText() crash-safe.',
+      text: 'Temporal records a complete event history for every workflow execution and recovers from worker crashes by replaying that history on a new worker, short-circuiting Activities (LLM calls, tool invocations) whose results are already journaled. The same primitive backs Vercel\'s AI SDK durability plugin and makes generateText() crash-safe.',
       sourceUrl: 'https://temporal.io/blog/building-durable-agents-with-temporal-and-ai-sdk-by-vercel',
     },
     {
-      text: 'The Anthropic Claude Agent SDK persists every session — prompt, tool calls, tool results, responses — to disk under ~/.claude/projects/ as JSONL and exposes resume, continue, and fork options on query() so a process restart on the same machine picks up the conversation with full context intact.',
+      text: 'The Anthropic Claude Agent SDK persists every session (prompt, tool calls, tool results, responses) to disk under ~/.claude/projects/ as JSONL and exposes resume, continue, and fork options on query() so a process restart on the same machine picks up the conversation with full context intact.',
       sourceUrl: 'https://code.claude.com/docs/en/agent-sdk/sessions',
     },
   ],
@@ -78,7 +78,7 @@ export {}
 `,
   sdkAvailability: 'community-ts',
   readerGotcha: {
-    text: 'Replay-based durable execution requires workflow code to be deterministic — the same input history must yield the same decisions on every replay. A stray Date.now(), a Math.random(), or an unguarded network call inside the workflow function will diverge from the journaled history on recovery and the runtime will throw a non-determinism error mid-replay. Temporal documents this as the cost of admission: side-effecting work must live inside Activities, not in the workflow body.',
+    text: 'Replay-based durable execution requires workflow code to be deterministic: the same input history must yield the same decisions on every replay. A stray Date.now(), a Math.random(), or an unguarded network call inside the workflow function will diverge from the journaled history on recovery and the runtime will throw a non-determinism error mid-replay. Temporal documents this as the cost of admission: side-effecting work must live inside Activities, not in the workflow body.',
     sourceUrl: 'https://docs.temporal.io/workflows',
   },
   relatedSlugs: [],

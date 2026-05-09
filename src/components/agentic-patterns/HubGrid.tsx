@@ -28,7 +28,7 @@ function LayerSectionTitle({ layer }: { layer: Layer }) {
         id={`layer-heading-${layer.id}`}
         className="font-mono text-2xl font-semibold tracking-tight text-text-primary"
       >
-        Layer {layer.number} — {layer.title}
+        Layer {layer.number}: {layer.title}
       </h2>
       <p className="text-meta text-text-tertiary italic">{layer.question}</p>
       <p className="max-w-prose text-body leading-relaxed text-text-secondary [text-wrap:pretty]">

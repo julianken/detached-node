@@ -42,7 +42,7 @@ export default async function OgImage({ params }: OgImageProps) {
 
   const layer = LAYERS.find((l) => l.id === pattern.layerId);
   const layerLabel = layer
-    ? `Layer ${layer.number} — ${layer.title}`
+    ? `Layer ${layer.number}: ${layer.title}`
     : pattern.layerId;
   const summary = pattern.oneLineSummary;
 

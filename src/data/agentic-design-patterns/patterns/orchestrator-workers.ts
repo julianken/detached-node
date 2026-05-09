@@ -9,8 +9,8 @@ export const pattern: Pattern = {
   oneLineSummary: 'A central planner spawns worker agents per task, then merges their outputs.',
   bodySummary: [
     'Orchestrator-Workers structures a multi-agent run as a hub with spokes. A central orchestrator inspects the incoming request, decides at runtime which sub-tasks the work decomposes into, and dispatches each one to a fresh worker agent with its own prompt, tool surface, and context window. When the workers return, the orchestrator aggregates their outputs into the response the caller sees. The decomposition is dynamic: the orchestrator chooses how many workers to spawn and what each one is asked to do based on the request, not by reading off a fixed pipeline. Workers do not talk to each other; they talk only to the orchestrator, and the topology stays a tree.',
-    'The pattern sits between two simpler shapes that resemble it. Parallelization fans the same prompt across a fixed number of workers and votes; the decomposition is decided at design time, not by an LLM at runtime. Planning splits a single agent into a planner and an executor, but the executor walks one step list in one process — there is no second model call per step in a separate context. Orchestrator-Workers earns its name when both conditions hold: the sub-tasks are not enumerable up front, and each one benefits from running in isolation. AutoGen and MetaGPT formalise the role split; Anthropic frames the workflow as the right answer when "you can\'t predict the subtasks."',
-    'The hard part is the orchestrator, not the workers. A planner that under-decomposes hands a single worker the whole job and adds latency for nothing; one that over-decomposes shatters context the workers needed and pays N times for the same prompt overhead. The aggregation step is where partial worker failures and disagreements surface, and a naive orchestrator that concatenates worker outputs verbatim leaks duplicate sentences and contradicts itself. Production deployments instrument worker count, fan-out latency, and aggregation conflicts, and treat the orchestrator prompt as the critical path — every regression there multiplies through the workers below.',
+    'The pattern sits between two simpler shapes that resemble it. Parallelization fans the same prompt across a fixed number of workers and votes; the decomposition is decided at design time, not by an LLM at runtime. Planning splits a single agent into a planner and an executor, but the executor walks one step list in one process; there is no second model call per step in a separate context. Orchestrator-Workers earns its name when both conditions hold: the sub-tasks are not enumerable up front, and each one benefits from running in isolation. AutoGen and MetaGPT formalise the role split; Anthropic frames the workflow as the right answer when "you can\'t predict the subtasks."',
+    'The hard part is the orchestrator, not the workers. A planner that under-decomposes hands a single worker the whole job and adds latency for nothing; one that over-decomposes shatters context the workers needed and pays N times for the same prompt overhead. The aggregation step is where partial worker failures and disagreements surface, and a naive orchestrator that concatenates worker outputs verbatim leaks duplicate sentences and contradicts itself. Production deployments instrument worker count, fan-out latency, and aggregation conflicts, and treat the orchestrator prompt as the critical path. Every regression there multiplies through the workers below.',
   ],
   mermaidSource: `graph TD
   A[Incoming task] --> B[Orchestrator]
@@ -24,10 +24,10 @@ export const pattern: Pattern = {
   G --> H[Synthesised response]`,
   mermaidAlt: 'A flowchart in which an incoming task feeds an orchestrator node that produces a plan listing worker briefs; the plan fans out to N parallel worker nodes whose outputs converge on an aggregator node that emits a single synthesised response.',
   whenToUse: [
-    'Apply when the request decomposes into sub-tasks the planner can only enumerate after reading the input — multi-file code edits, deep research over an open question set, document pipelines that branch by content type.',
-    'Use where each sub-task benefits from a clean context (its own prompt, tool subset, and scratch space) so workers do not pollute each other or the orchestrator.',
-    'Reach for it when the orchestrator can be a stronger model than the workers and the cost is dominated by worker turns — Anthropic\'s research system pairs an Opus orchestrator with Sonnet workers for that reason.',
-    'Prefer it when the aggregation step has clear merge semantics (concatenation by section, voting, schema-typed merge) so the orchestrator can write an aggregator the workers all target.',
+    'Use this when the request decomposes into sub-tasks the planner can only enumerate after reading the input (multi-file code edits, deep research over an open question set, document pipelines that branch by content type).',
+    'Justified where each sub-task benefits from a clean context (its own prompt, tool subset, and scratch space) so workers do not pollute each other or the orchestrator.',
+    'A good fit when the orchestrator can be a stronger model than the workers and the cost is dominated by worker turns. Anthropic\'s research system pairs an Opus orchestrator with Sonnet workers for that reason.',
+    'Best when the aggregation step has clear merge semantics (concatenation by section, voting, schema-typed merge) so the orchestrator can write an aggregator the workers all target.',
   ],
   whenNotToUse: [
     'When the sub-tasks are known in advance and identical, Parallelization is the simpler shape and avoids paying for the orchestrator turn on every request.',
@@ -36,11 +36,11 @@ export const pattern: Pattern = {
   ],
   realWorldExamples: [
     {
-      text: 'Anthropic documents Claude\'s Research feature as an orchestrator-workers system: a lead Claude agent plans the search, spawns subagents that explore branches in parallel with their own context windows, and a final agent synthesises the report — exactly the hub-and-spoke shape this pattern names.',
+      text: 'Anthropic documents Claude\'s Research feature as an orchestrator-workers system: a lead Claude agent plans the search, spawns subagents that explore branches in parallel with their own context windows, and a final agent synthesises the report. The wiring matches the hub-and-spoke shape this pattern names.',
       sourceUrl: 'https://www.anthropic.com/engineering/multi-agent-research-system',
     },
     {
-      text: 'CrewAI ships a hierarchical Process in which a manager agent — generated by the framework or supplied by the developer — assigns tasks to specialist agents and reviews their outputs before composing the final result.',
+      text: 'CrewAI ships a hierarchical Process in which a manager agent (generated by the framework or supplied by the developer) assigns tasks to specialist agents and reviews their outputs before composing the final result.',
       sourceUrl: 'https://docs.crewai.com/en/concepts/processes',
     },
     {
@@ -82,7 +82,7 @@ export {}
 `,
   sdkAvailability: 'first-party-ts',
   readerGotcha: {
-    text: 'Anthropic reports their multi-agent research system uses about 15× the tokens of a single Claude chat — the planner pays once, every spawned worker pays the prompt overhead again, and the aggregator pays a third time over the merged context. The pattern only earns the cost when the task is parallelisable enough that wall-clock and quality wins outweigh the multiplier.',
+    text: 'Anthropic reports their multi-agent research system uses about 15× the tokens of a single Claude chat: the planner pays once, every spawned worker pays the prompt overhead again, and the aggregator pays a third time over the merged context. The pattern only earns the cost when the task is parallelisable enough that wall-clock and quality wins outweigh the multiplier.',
     sourceUrl: 'https://www.anthropic.com/engineering/multi-agent-research-system',
   },
   relatedSlugs: [],

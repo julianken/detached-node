@@ -25,7 +25,7 @@ import type { ChangelogEntry, ChangelogEntryType } from "@/data/agentic-design-p
 export const dynamic = "force-static";
 
 const PAGE_URL = `${siteUrl}/agentic-design-patterns/changelog`;
-const PAGE_TITLE = "Changelog — Agentic Design Patterns";
+const PAGE_TITLE = "Changelog: Agentic Design Patterns";
 const PAGE_DESCRIPTION =
   "Append-only audit trail of additions, edits, and retirements in the agentic design patterns catalog.";
 

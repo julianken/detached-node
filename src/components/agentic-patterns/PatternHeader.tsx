@@ -20,7 +20,7 @@ interface PatternHeaderProps {
 function getLayerLabel(layerId: LayerId): string {
   const layer = LAYERS.find((l) => l.id === layerId);
   if (!layer) return layerId;
-  return `Layer ${layer.number} — ${layer.title}`;
+  return `Layer ${layer.number}: ${layer.title}`;
 }
 
 export function PatternHeader({ pattern }: PatternHeaderProps) {

@@ -17,16 +17,14 @@
 // here either has a single literal string or sets display: flex explicitly.
 
 import { ImageResponse } from "next/og";
-import { getCatalogPatternCount } from "@/data/agentic-design-patterns/index";
 
-export const alt = "Agentic Design Patterns — a field-aware reference catalog";
+export const alt = "Agentic Design Patterns reference catalog";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export default async function OgImage() {
-  const count = getCatalogPatternCount();
-  const subtitle = `A field-aware reference covering ${count} patterns for building agentic systems.`;
-  const footerStat = `5 layers · ${count} patterns`;
+  const subtitle = "A reference catalog of agentic AI design patterns.";
+  const footerStat = "5 layers · reference catalog";
 
   return new ImageResponse(
     (

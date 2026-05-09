@@ -35,9 +35,6 @@ export default async function Home() {
         <h2 className="font-mono text-xl font-semibold tracking-tight text-text-primary">
           Latest posts
         </h2>
-        <p className="mt-2 text-base leading-6 text-text-secondary">
-          Recent writing on AI agents, workflows, and systems.
-        </p>
         <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {featuredPosts.length > 0 ? (
             featuredPosts.map((post) => (

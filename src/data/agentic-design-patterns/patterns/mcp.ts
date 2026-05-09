@@ -8,7 +8,7 @@ export const pattern: Pattern = {
   oneLineSummary: 'Open protocol for agents to discover and call tools across vendors over one wire format.',
   bodySummary: [
     'Model Context Protocol (MCP) is an open standard, published by Anthropic in November 2024, for how an agent host talks to external tools and data sources. The protocol fixes the wire format (JSON-RPC 2.0 over stdio for local servers, streamable HTTP for remote ones), the handshake (capability negotiation on connect), and three primitives a server can expose: tools the agent can invoke, resources the agent can read, and prompts the agent can substitute into its own context. Anything that follows the spec is wire-compatible with anything else that does, regardless of which model sits on the host side or which backend sits behind the server.',
-    'The point of the protocol is the inverse of bespoke tool integration. Without MCP, every host re-implements the connector for every backend it wants to expose; with MCP, a single server is written once and consumed by any compliant host. Discovery is server-side: the host calls list_tools and receives the JSON-schema-typed catalog at runtime, so the host never knew the schema in advance and the server can publish a new tool without a host release. Capability negotiation lets the two sides agree on which features apply to a given session — sampling, roots, streaming — and the host adapts.',
+    'The point of the protocol is the inverse of bespoke tool integration. Without MCP, every host re-implements the connector for every backend it wants to expose; with MCP, a single server is written once and consumed by any compliant host. Discovery is server-side: the host calls list_tools and receives the JSON-schema-typed catalog at runtime, so the host never knew the schema in advance and the server can publish a new tool without a host release. Capability negotiation lets the two sides agree on which features apply to a given session (sampling, roots, streaming) and the host adapts.',
     'MCP sits next to but distinct from Tool Use / ReAct, the runtime loop that decides when to invoke a tool. Tool Use is the consumer-side pattern; MCP is the integration substrate the consumer reads from. They compose: the ReAct agent picks an action from the catalog the MCP client returned, the client dispatches the JSON-RPC call, the result comes back as an observation, and the loop continues. The cost is operational. Local stdio servers run with the privileges of the host process; remote HTTP servers need OAuth, scope review, and a threat model for payloads hidden in tool descriptions or returned content. The protocol handles the wire; the deployment handles the trust.',
   ],
   mermaidSource: `graph TD
@@ -20,12 +20,12 @@ export const pattern: Pattern = {
   D --> F
   E --> F
   F --> G[Capability-negotiated session]`,
-  mermaidAlt: 'A top-down diagram in which an Agent host contains an MCP client that opens JSON-RPC sessions over stdio or HTTP to three independent servers — a filesystem server, a database server, and a third-party SaaS server — each of which exposes the same primitive operations (list_tools, list_resources, call_tool) through a capability-negotiated session.',
+  mermaidAlt: 'A top-down diagram in which an Agent host contains an MCP client that opens JSON-RPC sessions over stdio or HTTP to three independent servers (a filesystem server, a database server, and a third-party SaaS server), each of which exposes the same primitive operations (list_tools, list_resources, call_tool) through a capability-negotiated session.',
   whenToUse: [
-    'Apply when the same set of tools must be reachable from more than one host (a desktop assistant, an IDE, a custom agent) and writing the integration once per host is wasted effort.',
-    'Use where the tool catalog needs to grow without a host release — a server team can add a tool and every connected host sees it on the next list_tools call.',
-    'Reach for it when the host and the tool backend are owned by different teams, vendors, or companies, and a typed wire format is the cheapest contract between them.',
-    'Prefer it over a hand-rolled tool registry when you want users to install third-party servers (a Postgres connector, a GitHub connector, a Slack connector) the same way they install browser extensions.',
+    'Best for cases where the same set of tools must be reachable from more than one host (a desktop assistant, an IDE, a custom agent) and writing the integration once per host is wasted effort.',
+    'Justified where the tool catalog needs to grow without a host release. A server team can add a tool and every connected host sees it on the next list_tools call.',
+    'A good fit when the host and the tool backend are owned by different teams, vendors, or companies, and a typed wire format is the cheapest contract between them.',
+    'Better than a hand-rolled tool registry when you want users to install third-party servers (a Postgres connector, a GitHub connector, a Slack connector) the same way they install browser extensions.',
   ],
   whenNotToUse: [
     'When the agent has one host, one tool backend, and one team owns both, the protocol overhead buys nothing the local function-calling SDK does not already provide.',
@@ -38,7 +38,7 @@ export const pattern: Pattern = {
       sourceUrl: 'https://github.com/modelcontextprotocol/servers',
     },
     {
-      text: 'Cloudflare runs MCP servers on Workers behind an OAuth provider, demonstrating the remote-server deployment shape — public URL, scoped access, no local install — and ships an OAuth helper library other server authors can adopt.',
+      text: 'Cloudflare runs MCP servers on Workers behind an OAuth provider, demonstrating the remote-server deployment shape (public URL, scoped access, no local install) and ships an OAuth helper library other server authors can adopt.',
       sourceUrl: 'https://blog.cloudflare.com/remote-model-context-protocol-servers-mcp/',
     },
     {
@@ -84,7 +84,7 @@ export {}
 `,
   sdkAvailability: 'first-party-ts',
   readerGotcha: {
-    text: 'Invariant Labs documented a tool-poisoning attack in which a malicious MCP server hides instructions inside tool descriptions or in fields the host renders without showing to the user; on next session the agent reads the description, follows the embedded instructions, and exfiltrates data the user never authorised. The protocol does not sanitise descriptions — tool metadata is untrusted input the host must classify and gate before showing it to the model.',
+    text: 'Invariant Labs documented a tool-poisoning attack in which a malicious MCP server hides instructions inside tool descriptions or in fields the host renders without showing to the user; on next session the agent reads the description, follows the embedded instructions, and exfiltrates data the user never authorised. The protocol does not sanitise descriptions: tool metadata is untrusted input the host must classify and gate before showing it to the model.',
     sourceUrl: 'https://invariantlabs.ai/blog/mcp-security-notification-tool-poisoning-attacks',
   },
   relatedSlugs: ['tool-use-react', 'guardrails', 'context-engineering'],

@@ -9,7 +9,7 @@ export const pattern: Pattern = {
   bodySummary: [
     'Guardrails wrap a language model with checks that fire before it sees an input and after it produces an output. The input rail inspects the user message, retrieved context, or tool result for prompt injection, disallowed topics, PII, and policy violations; if anything trips, the request never reaches the primary model and a refusal returns instead. The output rail inspects the response for the same hazards plus hallucinated citations, jailbroken text, and shape errors, then rewrites, redacts, or replaces it before the caller sees it. The rails are separable: a system can run input checks only, output checks only, or both.',
     'The pattern is canonically a layered defence rather than one model judging another. NeMo Guardrails composes programmable rails as a flow language so authors declare which checks fire in what order; Llama Guard ships a fine-tuned classifier scoring a conversation against a published taxonomy; constitutional training bakes one behaviour layer into the primary model. Each layer trades differently: an external classifier is auditable and swappable but adds a network hop; a self-check inside the primary call is cheap but inherits the failure modes of the model judging itself; regex and allow-lists are fastest and most brittle. Production stacks two or three because each catches what the others miss.',
-    'Guardrails sit next to but distinct from prompt engineering, alignment fine-tuning, and human-in-the-loop review. Prompt engineering nudges the model toward safe outputs without blocking unsafe ones; alignment changes the model itself on a quarterly cadence; HITL inserts a person on the critical path. The guardrail layer is the run-time enforcement gap between them — the place where a refusal can be audited, a category can be added without retraining, and a bypass attempt is logged. The cost is operational, not algorithmic: someone has to author the policy, label a calibration set, watch the false-positive rate, and decide which classifier the rail itself runs.',
+    'Guardrails sit next to but distinct from prompt engineering, alignment fine-tuning, and human-in-the-loop review. Prompt engineering nudges the model toward safe outputs without blocking unsafe ones; alignment changes the model itself on a quarterly cadence; HITL inserts a person on the critical path. The guardrail layer is the run-time enforcement gap between them: the place where a refusal can be audited, a category can be added without retraining, and a bypass attempt is logged. The cost is operational, not algorithmic: someone has to author the policy, label a calibration set, watch the false-positive rate, and decide which classifier the rail itself runs.',
   ],
   mermaidSource: `graph LR
   A[User input] --> B{Input rail}
@@ -22,15 +22,15 @@ export const pattern: Pattern = {
   G --> H`,
   mermaidAlt: 'A left-to-right flowchart in which a user input first hits an input rail that either blocks the request with a refusal or forwards it to the primary LLM, whose response then hits an output rail that either blocks and sanitizes the response or passes it through, with both terminal paths converging on a logged decision.',
   whenToUse: [
-    'Apply when the agent is exposed to untrusted input — public users, third-party documents, retrieved web content — and a malicious prompt could redirect the model into hazardous tool use or content generation.',
-    'Use where the response is consumed by a non-engineer audience and a single jailbroken output, leaked secret, or hallucinated citation is the kind of incident the team is paged on.',
-    'Reach for it when policy must change faster than the model can be retrained: new disallowed topics, new regulated jurisdictions, new categories of brand safety the alignment layer never saw.',
-    'Prefer it when the same primary model serves multiple products with different risk envelopes — finance and gaming run different rails over the same backbone rather than fine-tuning two separate models.',
+    'Apply when the agent is exposed to untrusted input (public users, third-party documents, retrieved web content) and a malicious prompt could redirect the model into hazardous tool use or content generation.',
+    'Justified where the response is consumed by a non-engineer audience and a single jailbroken output, leaked secret, or hallucinated citation is the kind of incident the team is paged on.',
+    'A good fit when policy must change faster than the model can be retrained: new disallowed topics, new regulated jurisdictions, new categories of brand safety the alignment layer never saw.',
+    'Useful when the same primary model serves multiple products with different risk envelopes. Finance and gaming run different rails over the same backbone rather than fine-tuning two separate models.',
   ],
   whenNotToUse: [
     'When the agent runs entirely on trusted input from a logged-in operator and the output is reviewed downstream, the rails add latency and false-positive volume without catching a real incident.',
     'Without a labelled evaluation set or production telemetry on rail decisions, the false-positive and false-negative rates are invisible and the rail tunes itself toward whatever the author last got annoyed about.',
-    'When the rail itself is a same-prompt self-check on the primary model, it tends to approve its own outputs and the layer becomes theatre — substitute a different model, a fine-tuned classifier, or a deterministic check.',
+    'When the rail itself is a same-prompt self-check on the primary model, it tends to approve its own outputs and the layer becomes theatre. Substitute a different model, a fine-tuned classifier, or a deterministic check.',
   ],
   realWorldExamples: [
     {
@@ -38,7 +38,7 @@ export const pattern: Pattern = {
       sourceUrl: 'https://openai.github.io/openai-agents-python/guardrails/',
     },
     {
-      text: 'NVIDIA\'s NeMo Guardrails open-source toolkit composes programmable rails — input, dialog, retrieval, execution, and output — as a flow language an application author edits without touching the underlying model, with a runnable Python server documented end-to-end.',
+      text: 'NVIDIA\'s NeMo Guardrails open-source toolkit composes programmable rails (input, dialog, retrieval, execution, and output) as a flow language an application author edits without touching the underlying model, with a runnable Python server documented end-to-end.',
       sourceUrl: 'https://github.com/NVIDIA/NeMo-Guardrails',
     },
     {
