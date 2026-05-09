@@ -7,8 +7,8 @@ export const pattern: Pattern = {
   layerId: 'methodology',
   oneLineSummary: 'A dozen production principles for hardening LLM software you actually have to ship.',
   bodySummary: [
-    "12-Factor Agent is a methodology, not a mechanism. Dexter Horthy and the HumanLayer community catalogued twelve principles a team applies to push an agent across the gap between a 70-percent demo and software a customer touches: own your prompts, own your context window, treat tools as structured outputs, unify execution and business state, expose launch / pause / resume as APIs, contact humans through tool calls, own your control flow, compact errors back into the window, keep agents small and focused, trigger from anywhere, and make the agent a stateless reducer over an event log. The lineage to Adam Wiggins' 12-Factor App is deliberate — cloud-portable operational mindset, applied to LLM-powered software.",
-    "The pattern sits one layer up from the rest of this catalog. Reflexion, Checkpointing, Tool Use ReAct, and the others are mechanisms — concrete loops or protocols a system either runs or does not. 12-Factor is the lens that decides which mechanisms an agent assembles, which abstractions it owns rather than imports, and which framework defaults it dismantles to keep production behaviour legible. The methodology is opinionated about plumbing: the loop is code a developer can step through, the prompt lives in the repo, the context window is assembled by a function a reviewer can read, and the run survives a restart because its state is durable and its reducer is pure.",
+    "12-Factor Agent is a methodology, not a mechanism. Dexter Horthy and the HumanLayer community catalogued twelve principles a team applies to push an agent across the gap between a 70-percent demo and software a customer touches: own your prompts, own your context window, treat tools as structured outputs, unify execution and business state, expose launch / pause / resume as APIs, contact humans through tool calls, own your control flow, compact errors back into the window, keep agents small and focused, trigger from anywhere, and make the agent a stateless reducer over an event log. The lineage to Adam Wiggins' 12-Factor App is deliberate: a cloud-portable operational mindset, applied to LLM-powered software.",
+    "The pattern sits one layer up from the rest of this catalog. Reflexion, Checkpointing, Tool Use ReAct, and the others are mechanisms: concrete loops or protocols a system either runs or does not. 12-Factor is the lens that decides which mechanisms an agent assembles, which abstractions it owns rather than imports, and which framework defaults it dismantles to keep production behaviour legible. The methodology is opinionated about plumbing: the loop is code a developer can step through, the prompt lives in the repo, the context window is assembled by a function a reviewer can read, and the run survives a restart because its state is durable and its reducer is pure.",
     "The principles compose with the rest of the catalog rather than competing. Factor 3 (own your context window) is the operational shape of Context Engineering. Factor 5 (unify state) and factor 12 (stateless reducer) are the contract Checkpointing relies on. Factor 7 (contact humans with tool calls) is one Human-in-the-Loop implementation. Factor 4 (tools as structured outputs) is the wire shape Tool Use ReAct emits. Adoption costs the work of taking abstractions back from a framework; the payoff is that every later debugging session, eval, or incident touches code the team owns end to end.",
   ],
   mermaidSource: `graph LR
@@ -21,25 +21,25 @@ export const pattern: Pattern = {
   D --> G
   E --> G
   F --> G`,
-  mermaidAlt: 'A flowchart in which an existing agent whose framework hides the prompt, loop, and state is audited against the twelve factors, which fan out into four refactor tracks — owning prompts and the context window, treating tools as structured outputs and unifying state, owning the control flow as a stateless reducer, and exposing launch / pause / resume plus human contact through tool calls — that converge on a production-grade agent that is legible, durable, and portable.',
+  mermaidAlt: 'A flowchart in which an existing agent whose framework hides the prompt, loop, and state is audited against the twelve factors, which fan out into four refactor tracks (owning prompts and the context window, treating tools as structured outputs and unifying state, owning the control flow as a stateless reducer, and exposing launch / pause / resume plus human contact through tool calls) that converge on a production-grade agent that is legible, durable, and portable.',
   whenToUse: [
-    'Apply when an agent prototype has hit the 70–80 percent quality wall and the next gain requires reaching past framework abstractions into the prompt, the loop, and the state machine.',
-    'Use where a team owns the agent in production — they answer the pages, write the evals, and ship the patches — and needs every layer of the runtime to be code they can read and step through.',
-    'Reach for it when porting an agent across runtimes (web request, queue worker, cron, webhook, Slack bot) and the same business logic must trigger from anywhere without a rewrite.',
-    'Prefer it when an audit, compliance review, or incident review will demand an account of exactly what the model saw, what it returned, and which deterministic code acted on the result.',
+    'Right call when an agent prototype has hit the 70–80 percent quality wall and the next gain requires reaching past framework abstractions into the prompt, the loop, and the state machine.',
+    'Justified where a team owns the agent in production (they answer the pages, write the evals, and ship the patches) and needs every layer of the runtime to be code they can read and step through.',
+    'A good fit when porting an agent across runtimes (web request, queue worker, cron, webhook, Slack bot) and the same business logic must trigger from anywhere without a rewrite.',
+    'Worth the cost when an audit, compliance review, or incident review will demand an account of exactly what the model saw, what it returned, and which deterministic code acted on the result.',
   ],
   whenNotToUse: [
     'When the agent is a one-off prototype, an internal demo, or a research notebook whose lifetime is shorter than the cost of dismantling a framework abstraction.',
     'Without a team that owns the runtime end to end, the methodology produces a half-refactored codebase whose framework defaults and hand-rolled pieces fight each other in production.',
-    'When the bottleneck is base-model capability rather than engineering — owning your prompts will not rescue an agent whose underlying reasoning cannot solve the task at any prompt.',
+    'When the bottleneck is base-model capability rather than engineering: owning your prompts will not rescue an agent whose underlying reasoning cannot solve the task at any prompt.',
   ],
   realWorldExamples: [
     {
-      text: 'HumanLayer publishes the methodology as an open guide with twelve linked factor essays, an AI Engineer World\'s Fair conference talk, and a public Discord — the canonical reference and the only widely-cited treatment of 12-factor for agents.',
+      text: 'HumanLayer publishes the methodology as an open guide with twelve linked factor essays, an AI Engineer World\'s Fair conference talk, and a public Discord. It is the canonical reference and the only widely-cited treatment of 12-factor for agents.',
       sourceUrl: 'https://github.com/humanlayer/12-factor-agents',
     },
     {
-      text: 'The got-agents/agents repository ships deploybot-ts and linear-assistant-ts as worked examples that embody the methodology — small, focused TypeScript agents whose loop, prompts, and state are owned by the application code rather than a framework.',
+      text: 'The got-agents/agents repository ships deploybot-ts and linear-assistant-ts as worked examples that embody the methodology: small, focused TypeScript agents whose loop, prompts, and state are owned by the application code rather than a framework.',
       sourceUrl: 'https://github.com/got-agents/agents',
     },
     {
@@ -92,7 +92,7 @@ export {}
 `,
   sdkAvailability: 'first-party-ts',
   readerGotcha: {
-    text: "Factor 12's stateless reducer only holds if the reducer is actually pure — a stray Date.now(), an unguarded fetch, or a closure over module-level mutable state inside the step function silently breaks resume, replay, and audit. HumanLayer documents this as the price of admission for owning your control flow: side-effecting work belongs in the executeTool boundary, not in the reducer that decides the next step.",
+    text: "Factor 12's stateless reducer only holds if the reducer is actually pure: a stray Date.now(), an unguarded fetch, or a closure over module-level mutable state inside the step function silently breaks resume, replay, and audit. HumanLayer documents this as the price of admission for owning your control flow: side-effecting work belongs in the executeTool boundary, not in the reducer that decides the next step.",
     sourceUrl: 'https://github.com/humanlayer/12-factor-agents/blob/main/content/factor-12-stateless-reducer.md',
   },
   relatedSlugs: ['checkpointing', 'context-engineering', 'tool-use-react', 'evaluation-llm-as-judge'],

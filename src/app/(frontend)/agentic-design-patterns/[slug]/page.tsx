@@ -57,7 +57,7 @@ export async function generateMetadata({
   const url = `${siteUrl}/agentic-design-patterns/${pattern.slug}`;
   const title = pattern.name;
   const description =
-    pattern.oneLineSummary || `${pattern.name} — agentic design pattern reference.`;
+    pattern.oneLineSummary || `${pattern.name}: agentic design pattern reference.`;
 
   return {
     title,

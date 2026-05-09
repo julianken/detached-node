@@ -17,7 +17,7 @@ import { siteUrl } from '../site-url'
 const siteName = "detached-node";
 
 const siteDescription =
-  "Exploring modern agentic AI workflows, autonomous systems, and the philosophy of machine intelligence.";
+  "A tech blog and reference catalog on agentic AI.";
 
 export { siteUrl };
 
@@ -42,6 +42,5 @@ export const AUTHOR_CONFIG = {
   // GitHub org is the one confirmed external reference at launch.
   // Add LinkedIn/Twitter/etc. when/if disclosed.
   sameAs: ["https://github.com/detached-node"] as string[],
-  description:
-    "Writing on agentic AI workflows, autonomous systems, and machine intelligence.",
+  description: "Writing on agentic AI in software engineering.",
 } as const;

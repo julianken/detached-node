@@ -9,8 +9,8 @@ export const pattern: Pattern = {
   topologySubtier: 'single-agent',
   oneLineSummary: 'Agent writes self-critiques into memory to improve next attempts.',
   bodySummary: [
-    'Reflexion teaches a language agent to learn from its own trajectories without touching model weights. After each attempt, the agent inspects the trajectory and any environment feedback, then writes a short verbal critique — a paragraph that names what went wrong and what to try next. That critique is appended to an episodic memory buffer keyed by task or task class. On the next attempt, the agent retrieves the most recent and most relevant critiques and conditions its plan on them, treating prior failures as instructions rather than as silent gradient signal.',
-    'The pattern straddles two layers. As Topology it shapes the control flow: a generator-execute-evaluate loop that, on failure, branches into a critique step before retrying. As State it maintains durable, retrievable memory whose unit is a natural-language lesson, not an embedding of a previous answer. The mechanism only earns its keep when failures are diagnosable from the trajectory itself — the agent must be able to articulate, in words, what an outside observer could also see. Tasks where failure is invisible (a stale tool, a wrong premise the agent never questioned) defeat the loop, because the critique is grounded in nothing.',
+    'Reflexion teaches a language agent to learn from its own trajectories without touching model weights. After each attempt, the agent inspects the trajectory and any environment feedback, then writes a short verbal critique: a paragraph that names what went wrong and what to try next. That critique is appended to an episodic memory buffer keyed by task or task class. On the next attempt, the agent retrieves the most recent and most relevant critiques and conditions its plan on them, treating prior failures as instructions rather than as silent gradient signal.',
+    'The pattern straddles two layers. As Topology it shapes the control flow: a generator-execute-evaluate loop that, on failure, branches into a critique step before retrying. As State it maintains durable, retrievable memory whose unit is a natural-language lesson, not an embedding of a previous answer. The mechanism only earns its keep when failures are diagnosable from the trajectory itself: the agent must be able to articulate, in words, what an outside observer could also see. Tasks where failure is invisible (a stale tool, a wrong premise the agent never questioned) defeat the loop, because the critique is grounded in nothing.',
     'Reflexion sits next to but distinct from a within-attempt generator-critic loop. Self-Refine iterates on a single output until a critic stops complaining; Reflexion iterates across attempts, so the lesson outlives the run and the next encounter with the same problem class starts informed. The cost is operational, not algorithmic: someone has to decide what counts as the same task, how many critiques to retrieve, when to compact the buffer, and which model writes the critique. The default of having the same model judge its own work is the hazard the pattern is most often deployed without noticing.',
   ],
   mermaidSource: `graph LR
@@ -23,14 +23,14 @@ export const pattern: Pattern = {
   G --> A`,
   mermaidAlt: 'A flowchart in which a Task feeds a Generate step, which feeds an Execute step, whose Success decision either returns the result or, on failure, generates a verbal critique that is appended to episodic memory before looping back to the Task node.',
   whenToUse: [
-    'Apply when the agent attempts the same task class repeatedly and you have a place to keep critiques across runs (multi-turn assistants, recurring job types, agent benchmarks).',
-    'Use where failure is diagnosable from the trajectory — the agent can name the mistake in words an outside reviewer could verify.',
-    'Reach for it when fine-tuning is too slow or too expensive but you can afford a second LLM call per failed attempt and a small key-value store for lessons.',
-    'Prefer it when you want behavioral improvements that survive a deploy: the lessons are inspectable text you can read, edit, or evict by hand.',
+    'This earns its rent when the agent attempts the same task class repeatedly and you have a place to keep critiques across runs (multi-turn assistants, recurring job types, agent benchmarks).',
+    'Justified where failure is diagnosable from the trajectory: the agent can name the mistake in words an outside reviewer could verify.',
+    'A good fit when fine-tuning is too slow or too expensive but you can afford a second LLM call per failed attempt and a small key-value store for lessons.',
+    'Useful when you want behavioral improvements that survive a deploy: the lessons are inspectable text you can read, edit, or evict by hand.',
   ],
   whenNotToUse: [
     'When the task is single-shot, the lesson has no future attempt to inform and the critique step pays no rent.',
-    'Without external grounding, same-model self-critique tends to approve its own work even when it should not — substitute a different model, a tool-grounded check, or the CRITIC pattern.',
+    'Without external grounding, same-model self-critique tends to approve its own work even when it should not. Substitute a different model, a tool-grounded check, or the CRITIC pattern.',
     'When failures are not visible in the trajectory (stale data the agent could not have known about, hidden environment changes), the critique will hallucinate a cause.',
   ],
   realWorldExamples: [
@@ -80,7 +80,7 @@ export {}
 `,
   sdkAvailability: 'first-party-ts',
   readerGotcha: {
-    text: 'A same-model critic trained on the same prompt will systematically approve its own output, producing sycophantic agreement that looks like self-correction but adds no signal. Ground the critique externally — a different model, a code interpreter, a search-grounded checker — as CRITIC argues.',
+    text: 'A same-model critic trained on the same prompt will systematically approve its own output, producing sycophantic agreement that looks like self-correction but adds no signal. Ground the critique externally (a different model, a code interpreter, a search-grounded checker), as CRITIC argues.',
     sourceUrl: 'https://arxiv.org/abs/2305.11738',
   },
   relatedSlugs: ['evaluator-optimizer', 'memory-management', 'evaluation-llm-as-judge'],

@@ -9,9 +9,9 @@ export const pattern: Pattern = {
   parentPatternSlug: 'tool-use-react',
   oneLineSummary: 'Tool-using agent whose primary toolkit is a codebase, an editor, and a test runner.',
   bodySummary: [
-    'Code Agent is the Tool Use / ReAct loop wired to a software-engineering toolkit. The agent is given a goal stated against a working tree — fix this failing test, implement this ticket, refactor this module — and a small load-bearing set of actions: list files, open and search a file, edit a file by patch, run a shell command, read the result. Each turn is a thought, one of those actions, and the observation produced by running it against a real or sandboxed checkout. The loop terminates when the agent emits a final answer or, more commonly, when the test suite the user pinned as the success criterion comes back green.',
-    'What separates the pattern from generic Tool Use is that the toolkit is designed for the agent, not borrowed from a human. SWE-agent calls this layer the Agent-Computer Interface and reports that swapping the bare Linux shell for a line-numbered file viewer, structured edit verbs, and a syntax-checked patch tool roughly doubles SWE-bench Verified scores at the same model. OpenHands generalises the move into a sandboxed runtime with an editor, a Jupyter kernel, and a browser hung off the same loop. Aider sits at the opposite end — a thin terminal that pairs a repository map with two narrow edit formats and forces the model to commit through git on every turn.',
-    'The pattern earns its keep when the success criterion is executable: the patch compiles or it does not, the test passes or it does not, the refactor preserves behaviour or it does not. On those tasks the agent gets dense feedback from the runtime that no LLM-judged evaluation matches. Where it struggles is the inverse — work judged on style, intent, or downstream user impact. Production deployments add a human diff review step (Cursor, Claude Code, Devin all surface proposed changes before they land) because the test suite is necessary but rarely sufficient.',
+    'Code Agent is the Tool Use / ReAct loop wired to a software-engineering toolkit. The agent is given a goal stated against a working tree (fix this failing test, implement this ticket, refactor this module) and a small load-bearing set of actions: list files, open and search a file, edit a file by patch, run a shell command, read the result. Each turn is a thought, one of those actions, and the observation produced by running it against a real or sandboxed checkout. The loop terminates when the agent emits a final answer or, more commonly, when the test suite the user pinned as the success criterion comes back green.',
+    'What separates the pattern from generic Tool Use is that the toolkit is designed for the agent, not borrowed from a human. SWE-agent calls this layer the Agent-Computer Interface and reports that swapping the bare Linux shell for a line-numbered file viewer, structured edit verbs, and a syntax-checked patch tool roughly doubles SWE-bench Verified scores at the same model. OpenHands generalises the move into a sandboxed runtime with an editor, a Jupyter kernel, and a browser hung off the same loop. Aider sits at the opposite end: a thin terminal that pairs a repository map with two narrow edit formats and forces the model to commit through git on every turn.',
+    'The pattern earns its keep when the success criterion is executable: the patch compiles or it does not, the test passes or it does not, the refactor preserves behaviour or it does not. On those tasks the agent gets dense feedback from the runtime that no LLM-judged evaluation matches. Where it struggles is the inverse: work judged on style, intent, or downstream user impact. Production deployments add a human diff review step (Cursor, Claude Code, Devin all surface proposed changes before they land) because the test suite is necessary but rarely sufficient.',
   ],
   mermaidSource: `graph TD
   A[Goal + working tree] --> B[Read code: list, open, grep]
@@ -24,10 +24,10 @@ export const pattern: Pattern = {
   F -->|yes| H[Final diff for review]`,
   mermaidAlt: 'A flowchart showing a Goal plus working tree feeding a Read code step, which leads to Plan an edit, then Apply patch, then Run tests; a decision node checks whether the build is green and the goal met, looping back through Read failure output to Read code on no, or emitting a final diff for review on yes.',
   whenToUse: [
-    'Apply when the success criterion is executable — a failing test that must pass, a build that must compile, a benchmark that must hit a target — so each iteration gets unambiguous feedback from the runtime.',
-    'Use where the change is local enough to fit a sandboxed loop: bug fixes scoped by a stack trace, refactors with characterisation tests, ticket-shaped work with clear acceptance steps.',
-    'Reach for it when the agent will run dozens of read-edit-test cycles per task and a custom Agent-Computer Interface (line-numbered viewer, structured edit verbs, syntax-checked patches) earns its keep over a raw shell.',
-    'Prefer it when the diff stays reviewable by a human at the end — the loop is a faster path to a candidate change, not a substitute for the merge gate.',
+    'Use this when the success criterion is executable (a failing test that must pass, a build that must compile, a benchmark that must hit a target) so each iteration gets unambiguous feedback from the runtime.',
+    'Justified where the change is local enough to fit a sandboxed loop: bug fixes scoped by a stack trace, refactors with characterisation tests, ticket-shaped work with clear acceptance steps.',
+    'A good fit when the agent will run dozens of read-edit-test cycles per task and a custom Agent-Computer Interface (line-numbered viewer, structured edit verbs, syntax-checked patches) earns its keep over a raw shell.',
+    'Useful when the diff stays reviewable by a human at the end. The loop is a faster path to a candidate change, not a substitute for the merge gate.',
   ],
   whenNotToUse: [
     'When the desired change spans many subsystems and depends on judgement no test encodes, the loop converges on patches that pass tests without solving the problem.',
@@ -36,7 +36,7 @@ export const pattern: Pattern = {
   ],
   realWorldExamples: [
     {
-      text: 'SWE-agent ships the Agent-Computer Interface its paper introduces — a custom file viewer, edit verb, and Python linter wrapped around a sandboxed shell — and reports the interface itself, not the model, accounts for most of the SWE-bench Verified gain.',
+      text: 'SWE-agent ships the Agent-Computer Interface its paper introduces (a custom file viewer, edit verb, and Python linter wrapped around a sandboxed shell) and reports the interface itself, not the model, accounts for most of the SWE-bench Verified gain.',
       sourceUrl: 'https://swe-agent.com',
     },
     {
@@ -95,7 +95,7 @@ export {}
 `,
   sdkAvailability: 'first-party-ts',
   readerGotcha: {
-    text: 'When the model emits a search-and-replace block whose context lines drift from the file by even one whitespace, the patch fails silently and the agent retries on a stale view of the code. Aider documents the failure mode — model-specific edit formats, the "diffs not applying" loop, and the fix of pinning a stricter format with a stronger model — as the most common stall in production.',
+    text: 'When the model emits a search-and-replace block whose context lines drift from the file by even one whitespace, the patch fails silently and the agent retries on a stale view of the code. Aider documents the failure mode (model-specific edit formats, the "diffs not applying" loop, and the fix of pinning a stricter format with a stronger model) as the most common stall in production.',
     sourceUrl: 'https://aider.chat/docs/troubleshooting/edit-errors.html',
   },
   relatedSlugs: ['tool-use-react', 'reflexion', 'planning'],

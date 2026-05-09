@@ -4,7 +4,7 @@ import type { Post } from "@/payload-types";
 
 const SITE_TITLE = "detached-node";
 const SITE_DESCRIPTION =
-  "Exploring modern agentic AI workflows, autonomous systems, and the philosophy of machine intelligence.";
+  "A tech blog and reference catalog on agentic AI.";
 
 function toRfc2822(dateStr: string | null | undefined): string {
   if (!dateStr) return new Date().toUTCString();

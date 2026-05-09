@@ -14,7 +14,7 @@ export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Posts",
-  description: "Writing on agentic AI workflows, autonomous systems, and machine intelligence.",
+  description: "Articles on agentic AI in software engineering.",
   alternates: {
     canonical: siteUrl + "/posts",
   },
@@ -29,7 +29,7 @@ export default async function PostsPage() {
     <PageLayout>
       <PageHeader
         title="Posts"
-        subtitle="Writing on agentic AI workflows, autonomous systems, and machine intelligence."
+        subtitle="Articles on agentic AI in software engineering."
       />
       <div className="flex flex-col gap-6">
         {posts.length === 0 ? (

@@ -7,7 +7,7 @@ export const pattern: Pattern = {
   layerId: 'interfaces',
   oneLineSummary: 'Cross-runtime agents discover each other by URL and exchange tasks over HTTP+JSON.',
   bodySummary: [
-    "A2A defines a wire protocol for one agent to call another it did not author and may not share a runtime with. The remote agent advertises itself by serving an Agent Card — a JSON document at a well-known path under its base URL — that lists the skills it offers, declares supported transports, and names which auth schemes a caller must satisfy. A client agent fetches that card, picks a matching skill, and posts a Task over JSON-RPC, REST, or gRPC. The Task carries a stable identifier and a lifecycle (submitted, working, completed, failed, cancelled) so a long-running call can be polled or streamed without holding the request open.",
+    "A2A defines a wire protocol for one agent to call another it did not author and may not share a runtime with. The remote agent advertises itself by serving an Agent Card (a JSON document at a well-known path under its base URL) that lists the skills it offers, declares supported transports, and names which auth schemes a caller must satisfy. A client agent fetches that card, picks a matching skill, and posts a Task over JSON-RPC, REST, or gRPC. The Task carries a stable identifier and a lifecycle (submitted, working, completed, failed, cancelled) so a long-running call can be polled or streamed without holding the request open.",
     "The pattern's load-bearing claim is opacity. The remote agent is not a tool the caller introspects; it is a black box that owns its own model, prompt, memory, and tool catalogue, and the contract is the Agent Card plus the Task envelope rather than shared code. That separation is what lets a LangGraph agent in one company's VPC delegate to a CrewAI agent in another's without either side importing the other's framework. Capability negotiation happens at the card level, before any task is posted, so a missing skill is a 4xx rather than a runtime mystery.",
     "A2A sits next to but distinct from MCP and from in-process handoffs. MCP standardises the channel between an agent and the tools it consumes; A2A standardises the channel between two agents that consume tools of their own. Handoffs and Swarm-style topologies pass control between agents inside one runtime over an in-memory bus; A2A passes control across processes, networks, and trust boundaries, with mutual TLS and OAuth as the seam. The cost is operational: someone owns the public surface, the auth scheme as it rotates, the deprecation policy when a skill changes shape, and the trace that ties a downstream Task back to its upstream caller.",
   ],
@@ -22,19 +22,19 @@ export const pattern: Pattern = {
   H --> I[Artifacts and messages returned to client]`,
   mermaidAlt: 'A left-to-right flowchart in which a client agent first fetches the Agent Card from a well-known path on the remote agent, inspects the advertised skills and authentication, aborts if the required skill is missing, otherwise posts a Task over JSON-RPC, and waits for the remote agent to drive its own loop through the Task lifecycle until artifacts and messages are returned.',
   whenToUse: [
-    'Apply when one agent must delegate work to another that lives in a different runtime, was built by a different team, or runs on a different vendor — the kind of integration where importing the callee\'s framework is not on the table.',
-    'Use where the remote agent should stay opaque: it owns its model, prompt, and tools, and the caller only contracts on the advertised skill surface.',
-    'Reach for it when discovery and capability negotiation have to happen at request time — the caller does not know in advance which skills a partner agent supports, or those skills change between deploys.',
-    'Prefer it when the call may run long enough that the synchronous request-response shape breaks down (multi-minute research, code generation, ticket triage) and the Task lifecycle gives you streaming and polling without bespoke plumbing.',
+    'This earns its rent when one agent must delegate work to another that lives in a different runtime, was built by a different team, or runs on a different vendor. Importing the callee\'s framework is not on the table.',
+    'Justified where the remote agent should stay opaque: it owns its model, prompt, and tools, and the caller only contracts on the advertised skill surface.',
+    'A good fit when discovery and capability negotiation have to happen at request time. The caller does not know in advance which skills a partner agent supports, or those skills change between deploys.',
+    'Useful when the call may run long enough that the synchronous request-response shape breaks down (multi-minute research, code generation, ticket triage), and the Task lifecycle gives you streaming and polling without bespoke plumbing.',
   ],
   whenNotToUse: [
-    'When both agents live in the same process and can pass messages through an in-memory bus, the JSON-RPC hop and Agent Card round-trip are pure overhead — Handoffs / Swarm is the cheaper match.',
+    'When both agents live in the same process and can pass messages through an in-memory bus, the JSON-RPC hop and Agent Card round-trip are pure overhead. Handoffs / Swarm is the cheaper match.',
     'When the callee is a tool, resource, or function rather than an agent that runs its own reasoning loop, MCP is the protocol that fits and A2A is the wrong abstraction.',
     'Without an authentication story the operator can audit (mutual TLS, scoped OAuth, signed Agent Cards), an open A2A endpoint is an unauthenticated RPC surface that any caller on the internet can drive.',
   ],
   realWorldExamples: [
     {
-      text: 'The a2aproject reference repository ships sample servers and clients that discover each other via Agent Cards and exchange Tasks over JSON-RPC, gRPC, or REST — the canonical cross-framework demonstration the spec authors maintain alongside the spec itself.',
+      text: 'The a2aproject reference repository ships sample servers and clients that discover each other via Agent Cards and exchange Tasks over JSON-RPC, gRPC, or REST. It is the canonical cross-framework demonstration the spec authors maintain alongside the spec itself.',
       sourceUrl: 'https://github.com/a2aproject/A2A',
     },
     {
@@ -91,7 +91,7 @@ export {}
 `,
   sdkAvailability: 'community-ts',
   readerGotcha: {
-    text: 'A2A endpoints are public RPC surfaces by default — the Agent Card declares the auth scheme but the protocol does not enforce one. An agent server deployed without mutual TLS, scoped OAuth, or at minimum an API key is an unauthenticated remote-execution endpoint any caller on the internet can drive into the underlying tool catalogue. The spec\'s security section spells this out, but the failure mode in the wild is shipping the development server with the auth section of the card left empty.',
+    text: 'A2A endpoints are public RPC surfaces by default: the Agent Card declares the auth scheme but the protocol does not enforce one. An agent server deployed without mutual TLS, scoped OAuth, or at minimum an API key is an unauthenticated remote-execution endpoint any caller on the internet can drive into the underlying tool catalogue. The spec\'s security section spells this out, but the failure mode in the wild is shipping the development server with the auth section of the card left empty.',
     sourceUrl: 'https://a2a-protocol.org/latest/specification/',
   },
   relatedSlugs: ['tool-use-react', 'guardrails'],

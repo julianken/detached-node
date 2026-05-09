@@ -25,9 +25,8 @@ export function generateCollectionPageSchema(): CollectionPageSchema {
     // @id uses #collection fragment to distinguish this entity from
     // the bare /posts URL which is just a navigation path
     "@id": `${SITE_CONFIG.url}/posts#collection`,
-    name: "Posts — detached-node",
-    description:
-      "Writing on agentic AI workflows, autonomous systems, and machine intelligence.",
+    name: "Posts: detached-node",
+    description: "Articles on agentic AI in software engineering.",
     url: `${SITE_CONFIG.url}/posts`,
     // Links archive to the WebSite entity
     isPartOf: { "@id": SITE_CONFIG.websiteId },

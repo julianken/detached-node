@@ -24,9 +24,9 @@ export const pattern: Pattern = {
   mermaidAlt: 'A flowchart in which a Goal feeds a Plan that produces an ordered step list; a loop pops and executes one step at a time, and a decision node either advances to the next step, returns the final result when the list is empty, or routes back to a re-plan node that rewrites the remaining steps from the current state before continuing.',
   whenToUse: [
     'Apply when the task has interdependent sub-goals whose order matters and at least one early step constrains the choices available later (research reports, multi-tool workflows, code-mod sequences).',
-    'Use where the cost of a wrong step is high enough that committing to a forward plan and reviewing it once is cheaper than ten reactive turns.',
-    'Reach for it when the executor benefits from a written contract a different process (a reviewer, a checkpoint, a human) can read between steps.',
-    'Prefer it when tools or sub-agents are heterogeneous and the planner needs to pick which to invoke, in what order, and on what input.',
+    'Worth the cost where a wrong step is expensive enough that committing to a forward plan and reviewing it once is cheaper than ten reactive turns.',
+    'Useful when the executor benefits from a written contract a different process (a reviewer, a checkpoint, a human) can read between steps.',
+    'A good fit when tools or sub-agents are heterogeneous and the planner needs to pick which to invoke, in what order, and on what input.',
   ],
   whenNotToUse: [
     'When the goal is single-shot or a fixed pipeline already encodes the right order, the planner step pays no rent and adds an extra LLM call to every run.',
@@ -39,11 +39,11 @@ export const pattern: Pattern = {
       sourceUrl: 'https://cognition.ai/blog/swe-bench-technical-report',
     },
     {
-      text: 'AutoGPT’s classic agent loop instructs the model to think, plan, criticise, and choose the next command on every turn, then writes the resulting plan into the prompt for the following step — the canonical popular-press demonstration of the planner-executor split.',
+      text: 'AutoGPT’s classic agent loop instructs the model to think, plan, criticise, and choose the next command on every turn, then writes the resulting plan into the prompt for the following step. It became the canonical popular-press demonstration of the planner-executor split.',
       sourceUrl: 'https://github.com/Significant-Gravitas/AutoGPT/blob/master/classic/README.md',
     },
     {
-      text: 'BabyAGI maintains an explicit task list, executes the top task, and uses a task-creation step to append new tasks based on the result before reprioritising — the minimum viable planning loop in roughly a hundred lines of Python.',
+      text: 'BabyAGI maintains an explicit task list, executes the top task, and uses a task-creation step to append new tasks based on the result before reprioritising. The whole minimum viable planning loop ships in roughly a hundred lines of Python.',
       sourceUrl: 'https://github.com/yoheinakajima/babyagi/blob/main/main.py',
     },
   ],
@@ -81,7 +81,7 @@ export {}
 `,
   sdkAvailability: 'first-party-ts',
   readerGotcha: {
-    text: 'Plan-and-Solve prompting reports gains over chain-of-thought because the explicit plan suppresses missed-step errors, but the same paper documents that calculation errors and step-ordering mistakes survive untouched — the plan looks coherent while a single arithmetic slip propagates through every downstream step. Planning without a per-step check produces a confidently wrong execution trace.',
+    text: 'Plan-and-Solve prompting reports gains over chain-of-thought because the explicit plan suppresses missed-step errors, but the same paper documents that calculation errors and step-ordering mistakes survive untouched. The plan looks coherent while a single arithmetic slip propagates through every downstream step. Planning without a per-step check produces a confidently wrong execution trace.',
     sourceUrl: 'https://arxiv.org/abs/2305.04091',
   },
   relatedSlugs: [],

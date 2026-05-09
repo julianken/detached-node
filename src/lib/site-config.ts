@@ -11,7 +11,7 @@ export { siteUrl } from './site-url'
 export const siteName = "detached-node";
 
 export const siteDescription =
-  "Exploring modern agentic AI workflows, autonomous systems, and the philosophy of machine intelligence.";
+  "A tech blog and reference catalog on agentic AI.";
 
 export const siteAuthor = "detached-node";
 

@@ -6,7 +6,7 @@ test.describe('/agentic-design-patterns hub', () => {
     await page.goto('/agentic-design-patterns')
     await expect(page.getByRole('heading', { level: 1, name: 'Agentic Design Patterns' })).toBeVisible()
     for (const layer of ['Topology', 'Quality', 'State', 'Interfaces', 'Methodology']) {
-      await expect(page.getByText(new RegExp(`Layer .* — ${layer}`))).toBeVisible()
+      await expect(page.getByText(new RegExp(`Layer .*: ${layer}`))).toBeVisible()
     }
     await expect(page.getByText(/Single-agent \(\d+\)/)).toBeVisible()
     await expect(page.getByText(/Multi-agent \(\d+\)/)).toBeVisible()
@@ -28,7 +28,7 @@ test.describe('/agentic-design-patterns hub', () => {
 
   test('layer searchParam filters grid', async ({ page }) => {
     await page.goto('/agentic-design-patterns?layer=quality')
-    await expect(page.getByText(/Layer 2 — Quality/)).toBeVisible()
-    await expect(page.getByText(/Layer 1 — Topology/)).toHaveCount(0)
+    await expect(page.getByText(/Layer 2: Quality/)).toBeVisible()
+    await expect(page.getByText(/Layer 1: Topology/)).toHaveCount(0)
   })
 })
