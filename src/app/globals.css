@@ -161,7 +161,7 @@
   --foreground: #1a1628;
   --surface: #eeeaf6;
   --accent: #7c3aed;
-  --accent-muted: #6d28d9;
+  --accent-muted: #4c1d95;
 
   /* Text hierarchy */
   --text-primary: #1a1628;
@@ -706,6 +706,134 @@ a.card-scanline:active {
 
 .hero-filter {
   position: relative;
+  /* --hero-glow-light/--hero-glow-dark are set inline per-post from the
+     dominant color of each image variant (preview.color). Dominant colors
+     are often dark/muted, so we mix them with the theme --accent — accent
+     dominates (so the spilled light feels brand-aligned and remains
+     visible against the page bg), and the image dominant only shifts the
+     hue subtly per post. */
+  --hero-glow-raw: var(--hero-glow-light, var(--accent-muted));
+  /* Use --accent-muted (the darker, more saturated accent) as the glow
+     base. Box-shadow blur desaturates as it spreads, so starting from a
+     more chromatic color preserves more visible color in the halo. The
+     image dominant only nudges the hue (15% mix). */
+  --hero-glow: color-mix(in oklch, var(--accent-muted), var(--hero-glow-raw) 15%);
+  /* Outer glow stack — three layers from tight saturated core to wide
+     diffuse aura. The tight inner ring keeps the color at full saturation
+     close to the hero edge; the wider rings handle ambient spread. */
+  box-shadow:
+    0 0 28px 0 var(--hero-glow),
+    0 0 80px -4px color-mix(in srgb, var(--hero-glow) 85%, transparent),
+    0 0 200px -16px color-mix(in srgb, var(--hero-glow) 55%, transparent),
+    0 16px 48px -16px rgba(0, 0, 0, 0.5);
+}
+
+.dark .hero-filter {
+  /* The dark-theme --accent and --accent-muted are both light lavender
+     (tuned for text contrast on dark bg). They wash out as a glow. Use a
+     deeper saturated purple so the halo reads as colored emission against
+     the near-black page, not a generic bright wash. Reduce the inner-ring
+     opacity too — dark mode amplifies brightness perceptually. */
+  --hero-glow-raw: var(--hero-glow-dark, #4c1d95);
+  --hero-glow: color-mix(in oklch, #4c1d95, var(--hero-glow-raw) 15%);
+  /* Tighter glow than light mode — bright purple radiates further than
+     necessary against the near-black bg, so pull the diffuse rings in. */
+  box-shadow:
+    0 0 24px 0 color-mix(in srgb, var(--hero-glow) 75%, transparent),
+    0 0 56px -6px color-mix(in srgb, var(--hero-glow) 60%, transparent),
+    0 0 110px -20px color-mix(in srgb, var(--hero-glow) 38%, transparent),
+    0 16px 48px -16px rgba(0, 0, 0, 0.5);
+}
+
+/* Dark-mode convexity correction.
+   In light mode, the vignette darkens light corners against a light center
+   → reads convex (corners falling back). In dark mode the same vignette
+   darkens already-dark corners against a dark image, creating a "tunnel"
+   cue that reads concave (corners receding inward, like a bowl). Flip the
+   depth perception by softening the vignette and brightening the centre
+   bulge so the screen reads as pushing forward toward the viewer. */
+.dark .hero-filter::before {
+  background-image:
+    radial-gradient(
+      ellipse 45% 35% at 25% 10%,
+      rgba(255, 255, 255, 0.55) 0%,
+      rgba(255, 255, 255, 0.18) 35%,
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 90% 70% at 30% 0%,
+      rgba(255, 255, 255, 0.18) 0%,
+      transparent 65%
+    ),
+    /* Stronger centre bulge: dark mode needs more push-forward signal */
+    radial-gradient(
+      ellipse 80% 80% at 50% 48%,
+      rgba(255, 255, 255, 0.18) 0%,
+      transparent 58%
+    ),
+    /* Softer vignette: corners already dark in dark mode, additional
+       darkening reads as a void/tunnel. Pull the dark stop back. */
+    radial-gradient(
+      ellipse 120% 120% at 50% 50%,
+      transparent 65%,
+      rgba(0, 0, 0, 0.30) 100%
+    );
+}
+
+/* Counteract the scanline wash desaturating the underlying image. */
+.hero-filter img {
+  filter: saturate(1.7) contrast(1.08);
+}
+
+/* Layered overlay above the image:
+   - Soft edge feather (inset shadow in page bg) dissolves the hero into
+     the surrounding page instead of cutting out abruptly.
+   - Three stacked radial gradients fake CRT-glass convexity — listed
+     top-to-bottom in z: glass specular sheen, center bulge brightening,
+     corner vignette. The vignette sells the curvature illusion: real CRT
+     screens fall off in brightness at the corners as the glass curves
+     away from the viewer.
+   Painted on ::before so it composites above the absolutely-positioned
+   image but below the scanline ::after at z:3. */
+.hero-filter::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  box-shadow: inset 0 0 40px 8px var(--background);
+  background-image:
+    /* 1) Concentrated specular hotspot — bright glassy reflection near
+       upper-left, tighter and brighter than v1 so it reads as a real
+       reflection rather than a wash. Paints topmost. */
+    radial-gradient(
+      ellipse 45% 35% at 25% 10%,
+      rgba(255, 255, 255, 0.55) 0%,
+      rgba(255, 255, 255, 0.18) 35%,
+      transparent 70%
+    ),
+    /* 2) Wider sheen halo — secondary glass-curvature reflection that
+       fades from the hotspot. */
+    radial-gradient(
+      ellipse 90% 70% at 30% 0%,
+      rgba(255, 255, 255, 0.18) 0%,
+      transparent 65%
+    ),
+    /* 3) Center bulge brightening — the screen pushing toward viewer. */
+    radial-gradient(
+      ellipse 75% 75% at 50% 48%,
+      rgba(255, 255, 255, 0.10) 0%,
+      transparent 55%
+    ),
+    /* 4) Strong corner vignette — darkens the four corners hard so the
+       glass curvature feels like it falls away from the viewer. This is
+       what sells the convex illusion more than any single highlight. */
+    radial-gradient(
+      ellipse 110% 110% at 50% 50%,
+      transparent 45%,
+      rgba(0, 0, 0, 0.65) 100%
+    );
+  z-index: 2;
 }
 
 .hero-filter::after {
