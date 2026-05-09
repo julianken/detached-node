@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { RichText } from "@payloadcms/richtext-lexical/react";
@@ -135,14 +136,20 @@ export default async function PostPage({ params }: PostPageProps) {
         )}
 
         {isMediaObject(post.featuredImageLight) && isMediaObject(post.featuredImageDark) && (
-          <div className="hero-filter -mx-4 sm:-mx-8 overflow-hidden rounded-sm">
+          <div
+            className="hero-filter -mx-4 sm:-mx-8 overflow-hidden rounded-2xl"
+            style={{
+              "--hero-glow-light": post.featuredImageLight.preview?.color || "var(--accent)",
+              "--hero-glow-dark": post.featuredImageDark.preview?.color || "var(--accent)",
+            } as CSSProperties}
+          >
             <ThemeAwareHero
               light={post.featuredImageLight}
               dark={post.featuredImageDark}
               alt={post.title}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 720px, 768px"
               focalPoint={post.focalPoint ?? undefined}
-              aspectRatio="4 / 1"
+              aspectRatio="21 / 9"
             />
           </div>
         )}
