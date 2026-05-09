@@ -19,10 +19,10 @@ const nextConfig: NextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 31536000, // 1 year for immutable images
     localPatterns: [
-      {
-        pathname: '/api/media/file/**',
-        search: '?prefix=media',
-      },
+      // Pre-cloud-storage media docs (local-disk fallback, test seed): no query string.
+      { pathname: '/api/media/file/**', search: '' },
+      // Cloud-storage adapter (S3-compatible) appends ?prefix=media to media URLs.
+      { pathname: '/api/media/file/**', search: '?prefix=media' },
     ],
     remotePatterns: process.env.GCS_BUCKET
       ? [
