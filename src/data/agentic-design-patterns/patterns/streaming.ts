@@ -139,4 +139,37 @@ export {}
   addedAt: '2026-05-03',
   dateModified: '2026-05-04',
   lastChangeNote: 'Author Streaming satellite: SSE event-flow, token vs structured vs tool-call variants, mid-stream-error gotcha.',
+  realizingInClaudeCode: {
+    keyMoves: [
+      'Claude Code streams tool output to the terminal by default — no configuration needed for the core streaming UX.',
+      'Use [hooks](https://docs.claude.com/en/docs/claude-code/hooks) to intercept `PostToolUse` events and act on completed tool results before the next model call.',
+      'In custom agent code, use `streamText` from the AI SDK and inspect mid-stream `error` frames — an HTTP 200 does not guarantee a clean stream.',
+      'Pin `maxRetries` on your streaming client; a buffering reverse proxy holds the response until the stream closes, defeating incremental delivery.',
+    ],
+    ccPrimitives: [
+      'PostToolUse hooks (post-tool event handling)',
+      'Terminal streaming (built-in)',
+      'Vercel AI SDK streamText',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['tool-use-react', 'mcp', 'a2a'],
+    },
+  },
+  realizingInCursor: {
+    keyMoves: [
+      'Cursor streams tokens in the chat panel by default — the incremental UX is built-in for all Agent and Ask mode responses.',
+      'Reference large files via `@file` rather than pasting content; Cursor fetches and injects context on demand without pre-loading everything.',
+      'Use Ask mode for read-only queries where you want to inspect the partial output before any edits are applied.',
+      'Use [cloud agents](https://cursor.com/docs/cloud-agent) for long-running tasks; they run in isolated cloud environments and surface progress through the Cursor web interface.',
+    ],
+    ccPrimitives: [
+      'Built-in chat streaming',
+      'Ask mode (read-only stream)',
+      'Cloud agents (async long-running tasks)',
+      '@file references',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['tool-use-react', 'mcp', 'a2a'],
+    },
+  },
 }

@@ -22,7 +22,7 @@ export function StatusBar() {
   const themeLabel = mounted ? (resolvedTheme === 'dark' ? 'DARK' : 'LIGHT') : '----';
 
   return (
-    <footer className="border-t border-border px-4 py-2 font-mono text-xs tracking-wider text-text-tertiary">
+    <footer className="border-t border-border px-4 py-2 font-mono text-meta tracking-wider text-text-tertiary">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-1 min-w-0">
           <span className="shrink-0">{getSection(pathname)}</span>

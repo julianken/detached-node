@@ -1,7 +1,18 @@
+# Three load-bearing invariants for strict-mode branch protection (per
+# the mergify-merge-workflow skill). Do NOT change without reading that skill:
+#   1. merge_queue.max_parallel_checks: 1 — only one PR runs checks at a time
+#      (prevents stale-base race when branch protection requires up-to-date branches)
+#   2. queue_rules[].batch_size: 1 — each PR runs checks alone, not bundled
+#   3. NO merge_conditions: block — all conditions live under queue_conditions:
+#      so the queue's pre-merge state is the single source of truth.
+merge_queue:
+  max_parallel_checks: 1
+
 queue_rules:
   - name: default
     merge_method: squash
     update_method: merge
+    batch_size: 1
     queue_conditions:
       - "#approved-reviews-by >= 1"
       - base = main

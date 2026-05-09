@@ -153,4 +153,38 @@ export {}
   addedAt: '2026-05-03',
   dateModified: '2026-05-04',
   lastChangeNote: 'Author Evaluator-Optimizer satellite: within-attempt generator-critic loop, contrast with Reflexion, base-capability-ceiling gotcha.',
+  realizingInClaudeCode: {
+    keyMoves: [
+      'Write the rubric in [`CLAUDE.md`](https://docs.claude.com/en/docs/claude-code/memory) as named acceptance criteria the critic prompt references verbatim.',
+      'Use a [PreToolUse hook](https://docs.claude.com/en/docs/claude-code/hooks) as the critic for tool-verifiable criteria — exit non-zero forces a retry without consuming a model call.',
+      'Run generator and critic in separate [subagents](https://docs.claude.com/en/docs/claude-code/sub-agents) so the critic reads the draft cold without the generator\'s framing.',
+      'Declare a hard iteration cap in the orchestrating [`SKILL.md`](https://docs.claude.com/en/docs/claude-code/skills) prompt; a loop without a cap burns tokens on diminishing returns.',
+    ],
+    ccPrimitives: [
+      'CLAUDE.md rubric definitions',
+      'PreToolUse hooks (deterministic critic)',
+      'Task tool (isolated critic subagent)',
+      'SKILL.md iteration cap (declared in prompt)',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['reflexion', 'evaluation-llm-as-judge', 'guardrails'],
+    },
+  },
+  realizingInCursor: {
+    keyMoves: [
+      'Write acceptance criteria in a `.cursor/rules/*.mdc` file; reference it explicitly in both the generator and reviewer prompts.',
+      'Use [Plan mode](https://cursor.com/docs/agent/plan-mode) to draft the rubric before starting the generate-critique loop.',
+      'Invoke a second Agent chat as the critic — pass the draft via `@file` so it reads the output without the generation context.',
+      'Set a manual turn limit in the chat; close and re-open when iterations stop improving the verdict.',
+    ],
+    ccPrimitives: [
+      '.cursor/rules/*.mdc (rubric)',
+      'Plan mode',
+      '@file (draft reference)',
+      'Agent mode',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['reflexion', 'evaluation-llm-as-judge', 'guardrails'],
+    },
+  },
 }

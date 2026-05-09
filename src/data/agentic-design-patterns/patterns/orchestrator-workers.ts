@@ -86,6 +86,40 @@ export {}
     sourceUrl: 'https://www.anthropic.com/engineering/multi-agent-research-system',
   },
   relatedSlugs: [],
+  realizingInClaudeCode: {
+    keyMoves: [
+      'Keep the orchestrator session as a planner only — it issues [`Task()`](https://docs.claude.com/en/docs/claude-code/sub-agents) calls and reads outputs; it never edits files.',
+      'Dispatch all workers in a single assistant message so they run concurrently; serial dispatch multiplies wall-clock by N.',
+      'Write each worker\'s output to a deterministic path on disk; the orchestrator reads those files for aggregation.',
+      'Encode the decomposition policy in a [SKILL.md](https://docs.claude.com/en/docs/claude-code/skills) loaded before dispatch so the planner prompt is versioned and reviewable.',
+    ],
+    ccPrimitives: [
+      'Task tool (worker dispatch)',
+      'Single-message parallel fan-out',
+      'SKILL.md orchestrator prompt',
+      'Disk artifact convention',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['parallelization', 'planning', 'funnel-method'],
+    },
+  },
+  realizingInCursor: {
+    keyMoves: [
+      'Use [Plan mode](https://cursor.com/docs/agent/plan-mode) to draft the worker decomposition before any code changes; review the step list before execution.',
+      'Launch one [Cloud Agent](https://cursor.com/docs/cloud-agent) per worker task — each runs in an isolated VM on its own branch.',
+      'Set shared invariants in a `.cursor/rules/*.mdc` file with `alwaysApply: true` so every worker context loads the same constraints.',
+      'Aggregate by opening an Agent chat that references all worker branches via `@branch` after workers complete.',
+    ],
+    ccPrimitives: [
+      'Plan mode (orchestrator decomposition)',
+      'Cloud Agents (worker isolation)',
+      '@branch references (aggregation)',
+      '.cursor/rules/*.mdc',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['parallelization', 'planning', 'funnel-method'],
+    },
+  },
   frameworks: ['langgraph', 'crew-ai', 'autogen', 'vercel-ai-sdk'],
   references: [
     {
@@ -153,6 +187,6 @@ export {}
     },
   ],
   addedAt: '2026-05-03',
-  dateModified: '2026-05-04',
-  lastChangeNote: 'Author Orchestrator-Workers satellite: hub-and-spoke planner/worker/aggregator topology, AutoGen/MetaGPT/Claude-Research framing, token-multiplier gotcha.',
+  dateModified: '2026-05-05',
+  lastChangeNote: 'W1.1 — Populate realizingInClaudeCode Tier A: PR #218 worked example, analysis-funnel primitives, 5+5+3+1 scaffolding, Task() fan-out readerMove.',
 }

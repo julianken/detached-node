@@ -137,6 +137,41 @@ export {}
     },
   ],
   addedAt: '2026-05-03',
-  dateModified: '2026-05-03',
-  lastChangeNote: 'Author Context Engineering pattern (selection, ranking, layout, cache-aware assembly).',
+  dateModified: '2026-05-05',
+  lastChangeNote: 'W2.9 additive: 5-section PR body as reviewer context packet cross-link.',
+  realizingInClaudeCode: {
+    keyMoves: [
+      'Put always-on project rules in [`CLAUDE.md`](https://docs.claude.com/en/docs/claude-code/memory). Claude reads it at the start of every session before any tool call.',
+      'Move trigger-bearing rules into [skills](https://docs.claude.com/en/docs/claude-code/skills) — a `SKILL.md` loads only when its trigger fires, preserving always-on budget.',
+      'Keep `CLAUDE.md` under 3 K tokens. Count with `wc -w × 1.8`; every extra line crowds out the actual task context.',
+      'Use [`settings.json`](https://docs.claude.com/en/docs/claude-code/settings) to scope tool permissions per project — pin invariant config at the head so it cache-hits every session.',
+      'When a rule starts with "when X" or "before Y", it belongs in a skill, not here — keep `CLAUDE.md` to invariants.',
+    ],
+    ccPrimitives: [
+      'CLAUDE.md (always-on context)',
+      'SKILL.md (trigger-conditional context)',
+      'settings.json (tool scoping)',
+      'Prompt-caching prefix pinning',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['memory-management', 'checkpointing', '12-factor-agent'],
+    },
+  },
+  realizingInCursor: {
+    keyMoves: [
+      'Set `alwaysApply: true` in [`.cursor/rules/*.mdc`](https://cursor.com/docs/rules) only for project-wide invariants — every other rule pays that token budget on every turn.',
+      'Use `globs` in rule frontmatter to scope rules to specific file types; a rule for `**/*.tsx` fires only when those files are in context.',
+      'Keep total `alwaysApply` rule content under ~500 lines combined — beyond that, the working context fills before the task description lands.',
+      'Use @-references to inject specific files, folders, or terminal output on demand rather than loading everything up front.',
+    ],
+    ccPrimitives: [
+      '.cursor/rules/*.mdc',
+      'alwaysApply frontmatter',
+      'globs scoping',
+      '@-references (on-demand injection)',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['memory-management', 'checkpointing', '12-factor-agent'],
+    },
+  },
 }

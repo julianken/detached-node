@@ -147,6 +147,39 @@ export {}
     },
   ],
   addedAt: '2026-05-03',
-  dateModified: '2026-05-04',
-  lastChangeNote: 'Author Parallelization satellite: fan-out with deterministic aggregator, Sectioning vs Voting variants, self-consistency diversity gotcha.',
+  dateModified: '2026-05-05',
+  lastChangeNote: 'W2.1: add realizingInClaudeCode Tier A — dispatch-mechanic altitude, PR #218 worked example, single-message multi-Task() mechanic.',
+  realizingInClaudeCode: {
+    keyMoves: [
+      'Dispatch all N [subagents](https://docs.claude.com/en/docs/claude-code/sub-agents) in a single assistant message — Claude Code runs concurrent `Task()` blocks; serial messages serialize the wall-clock.',
+      'Write each worker\'s output to a deterministic disk path before the orchestrator reads results back.',
+      'Encode the aggregation rule in the orchestrator prompt before dispatching; don\'t let the aggregator be another model decision.',
+      'Use [`git worktree add`](https://git-scm.com/docs/git-worktree) per worker to prevent filesystem race conditions during parallel writes.',
+    ],
+    ccPrimitives: [
+      'Task tool (parallel dispatch)',
+      'Single-message multi-Task() mechanic',
+      'Git worktrees (isolation)',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['orchestrator-workers', 'checkpointing', 'funnel-method'],
+    },
+  },
+  realizingInCursor: {
+    keyMoves: [
+      'Open multiple [Cloud Agents](https://cursor.com/docs/cloud-agent) in parallel — each runs in its own isolated VM on a separate branch.',
+      'Scope each agent\'s task brief so workers do not overlap; write outputs to deterministic file paths or branches.',
+      'Aggregate by opening a new Agent chat that references the parallel branches via `@branch` after all workers complete.',
+      'Use `.cursor/rules/*.mdc` with `alwaysApply: true` for invariants that every parallel worker must respect.',
+    ],
+    ccPrimitives: [
+      'Cloud Agents (parallel isolated VMs)',
+      '@branch references',
+      '.cursor/rules/*.mdc (shared invariants)',
+      'Agent mode',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['orchestrator-workers', 'checkpointing', 'funnel-method'],
+    },
+  },
 }

@@ -35,7 +35,7 @@ export function PatternHeader({ pattern }: PatternHeaderProps) {
       >
         {layerLabel}
       </span>
-      <h1 className="font-mono text-3xl font-semibold tracking-tight text-text-primary [text-wrap:balance]">
+      <h1 className="font-mono text-page-h1 font-semibold tracking-tight text-text-primary [text-wrap:balance]">
         {pattern.name}
       </h1>
       {altNames.length > 0 && (
@@ -45,7 +45,7 @@ export function PatternHeader({ pattern }: PatternHeaderProps) {
         </p>
       )}
       {pattern.oneLineSummary && (
-        <p className="max-w-prose text-lg leading-7 text-text-secondary [text-wrap:pretty]">
+        <p className="max-w-prose text-body leading-relaxed text-text-secondary [text-wrap:pretty]">
           {pattern.oneLineSummary}
         </p>
       )}

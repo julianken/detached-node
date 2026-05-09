@@ -214,7 +214,7 @@ export function HubFilterableContent({ patterns, layerFiltered = false }: HubFil
                 >
                   Layer {layer.number} — {layer.title}
                 </h2>
-                <p className="text-sm text-text-tertiary italic">{layer.question}</p>
+                <p className="text-meta text-text-tertiary italic">{layer.question}</p>
               </header>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {layerPatterns.map((p) => (
@@ -225,7 +225,7 @@ export function HubFilterableContent({ patterns, layerFiltered = false }: HubFil
           ))}
         </div>
       ) : (
-        <p className="text-base text-text-secondary">
+        <p className="text-body text-text-secondary">
           No patterns match <span className="font-mono text-text-primary">{debouncedQuery}</span>.
         </p>
       )}

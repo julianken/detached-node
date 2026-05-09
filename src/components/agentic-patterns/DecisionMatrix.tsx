@@ -37,12 +37,12 @@ export function DecisionMatrix({ pattern }: DecisionMatrixProps) {
     <section id="decision-matrix" aria-labelledby="decision-heading" className="scroll-mt-24">
       <h2
         id="decision-heading"
-        className="font-mono text-base font-semibold uppercase tracking-[0.08em] text-text-tertiary"
+        className="font-mono text-nav font-semibold uppercase tracking-[0.08em] text-text-tertiary"
       >
         Decision
       </h2>
       <div className="mt-4 overflow-x-auto">
-        <table className="w-full table-fixed border border-border text-sm">
+        <table className="w-full table-fixed border border-border text-card-summary">
           <thead>
             <tr>
               <th

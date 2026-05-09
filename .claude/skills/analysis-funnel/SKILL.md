@@ -1,6 +1,11 @@
 ---
 name: analysis-funnel
 description: Structured 5→5→3→1 investigation pipeline that sends parallel agents to explore facets of a question, iterates on findings, and produces a comprehensive analysis report. Use this whenever the user asks to "analyze", "investigate", "audit", "assess", or "do a deep-dive on" a broad, open-ended topic where the goal is understanding (codebase health checks, technology assessments, architecture audits, research questions) rather than implementing a fix. Do NOT use for implementation planning (prefer decision-funnel or creative-funnel) or for tasks with a known answer.
+realizes:
+  - orchestrator-workers
+  - parallelization
+  - checkpointing
+  - prompt-chaining
 ---
 
 # Analysis Funnel: 5→5→3→1 Investigation Method
@@ -94,7 +99,7 @@ Before running the funnel, gather these from the conversation or explicitly ask:
 
 If any of these are ambiguous, ask the user before starting Phase 0. Do not assume.
 
-**Data gathering before Phase 0.** Use available MCP servers to fill in gaps *before* framing, not during. Query issue trackers (Linear `mcp__linear-server__*`, GitHub Issues, Jira) for context, use codebase tools (e.g. `mcp__plugin_serena_serena__*`) to understand current state, and fetch library docs via Context7 (`mcp__plugin_context7_context7__*`) for any technology in scope. Grounding every phase in real data is the difference between an analysis and a plausible-sounding guess.
+**Data gathering before Phase 0.** Use available MCP servers to fill in gaps *before* framing, not during. Query the project's issue tracker (e.g., GitHub Issues via `gh issue list / view`) for context, use codebase tools (e.g. `mcp__plugin_serena_serena__*`) to understand current state, and fetch library docs via Context7 (`mcp__plugin_context7_context7__*`) for any technology in scope. Grounding every phase in real data is the difference between an analysis and a plausible-sounding guess.
 
 ---
 

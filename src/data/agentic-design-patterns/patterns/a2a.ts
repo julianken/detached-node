@@ -155,4 +155,37 @@ export {}
   addedAt: '2026-05-03',
   dateModified: '2026-05-04',
   lastChangeNote: 'Author A2A satellite: Agent Card discovery, Task lifecycle, distinction from MCP and in-process Handoffs.',
+  realizingInClaudeCode: {
+    keyMoves: [
+      'Expose an A2A endpoint from a Claude Code [subagent](https://docs.claude.com/en/docs/claude-code/sub-agents) by wrapping it in a JSON-RPC server the caller discovers via Agent Card.',
+      'Add the remote agent\'s A2A base URL to a task brief; the calling subagent fetches the Agent Card before posting the first Task.',
+      'Use an [MCP](https://docs.claude.com/en/docs/claude-code/mcp) server as the internal transport if caller and callee share a runtime — A2A is for cross-runtime boundaries only.',
+      'Declare the authentication scheme in the Agent Card; treat A2A endpoints as untrusted RPC surfaces requiring scoped credentials.',
+    ],
+    ccPrimitives: [
+      'Task tool (A2A caller subagent)',
+      'MCP server (same-runtime alternative)',
+      'CLAUDE.md Agent Card URL reference',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['mcp', 'tool-use-react', 'guardrails'],
+    },
+  },
+  realizingInCursor: {
+    keyMoves: [
+      'Wrap A2A JSON-RPC calls in an [MCP server](https://cursor.com/docs/mcp) — Cursor calls the MCP tool, which delegates to the remote agent.',
+      'Store the remote agent\'s base URL and auth credentials in `~/.cursor/mcp.json` env vars, not in the rule files.',
+      'Use `@docs` to index the remote agent\'s Agent Card schema; the model then constructs valid Task payloads without hallucinating field names.',
+      'Use Agent mode for A2A-orchestrated tasks; long-running remote Tasks benefit from the iterative polling the agent loop supports natively.',
+    ],
+    ccPrimitives: [
+      '.cursor/mcp.json (A2A transport wrapper)',
+      '~/.cursor/mcp.json (credential env vars)',
+      '@docs (Agent Card schema)',
+      'Agent mode',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['mcp', 'tool-use-react', 'guardrails'],
+    },
+  },
 }

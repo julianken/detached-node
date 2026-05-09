@@ -24,6 +24,8 @@ import { SourcedClaimTable } from "./SourcedClaimTable";
 
 interface PatternBodyProps {
   pattern: Pattern;
+  /** Optional slot rendered immediately after the diagram, before the decision matrix. */
+  afterDiagram?: React.ReactNode;
 }
 
 const FRAMEWORK_LABELS: Record<Framework, string> = {
@@ -55,14 +57,14 @@ function SlotHeading({ id, children }: { id: string; children: React.ReactNode }
   return (
     <h2
       id={id}
-      className="font-mono text-base font-semibold uppercase tracking-[0.08em] text-text-tertiary"
+      className="font-mono text-nav font-semibold uppercase tracking-[0.08em] text-text-tertiary"
     >
       {children}
     </h2>
   );
 }
 
-export function PatternBody({ pattern }: PatternBodyProps) {
+export function PatternBody({ pattern, afterDiagram }: PatternBodyProps) {
   const showPseudocodeBanner = PSEUDOCODE_BANNER_SET.has(pattern.sdkAvailability);
 
   return (
@@ -70,17 +72,20 @@ export function PatternBody({ pattern }: PatternBodyProps) {
       {/* 1. Diagram */}
       {pattern.mermaidSource && (
         <section>
-          <figure>
+          <figure className="mx-auto max-w-prose-wide">
             {/* IMPORTANT: only `{ source: string }` crosses the server/client boundary. */}
             <MermaidDiagram source={pattern.mermaidSource} />
             {pattern.mermaidAlt && (
-              <figcaption className="mt-2 text-sm text-text-tertiary italic">
+              <figcaption className="mt-2 text-card-summary leading-relaxed text-text-secondary italic">
                 {pattern.mermaidAlt}
               </figcaption>
             )}
           </figure>
         </section>
       )}
+
+      {/* 1b. Optional slot — e.g. RealizingDisclosure card sits here */}
+      {afterDiagram}
 
       {/* 2. Decision matrix — replaces When-to-use + When-NOT */}
       <DecisionMatrix pattern={pattern} />
@@ -93,7 +98,7 @@ export function PatternBody({ pattern }: PatternBodyProps) {
         <section id="reader-gotcha" aria-labelledby="gotcha-heading" className="scroll-mt-24">
           <SlotHeading id="gotcha-heading">Reader gotcha</SlotHeading>
           <div className="mt-4 rounded-sm border-l-2 border-rose-400/60 border-y border-r border-border-subtle bg-surface p-4">
-            <p className="text-base leading-7 text-text-secondary [text-wrap:pretty]">
+            <p className="text-body leading-7 text-text-secondary [text-wrap:pretty]">
               {pattern.readerGotcha.text}{" "}
               <a
                 href={pattern.readerGotcha.sourceUrl}
@@ -118,7 +123,7 @@ export function PatternBody({ pattern }: PatternBodyProps) {
           {showPseudocodeBanner && (
             <div
               role="note"
-              className="mb-4 rounded-sm border border-border-subtle bg-surface px-4 py-3 text-sm text-text-tertiary"
+              className="mb-4 rounded-sm border border-border-subtle bg-surface px-4 py-3 text-meta text-text-tertiary"
             >
               <span className="font-mono uppercase tracking-[0.05em] text-text-secondary">
                 Pseudocode:

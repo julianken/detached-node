@@ -130,20 +130,21 @@ export default async function PostPage({ params }: PostPageProps) {
           )}
         </header>
 
+        {post.summary && (
+          <p className="text-lg leading-relaxed text-text-secondary">{post.summary}</p>
+        )}
+
         {isMediaObject(post.featuredImageLight) && isMediaObject(post.featuredImageDark) && (
-          <div className="my-8 -mx-4 sm:-mx-8 overflow-hidden rounded-sm">
+          <div className="hero-filter -mx-4 sm:-mx-8 overflow-hidden rounded-sm">
             <ThemeAwareHero
               light={post.featuredImageLight}
               dark={post.featuredImageDark}
               alt={post.title}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 720px, 768px"
               focalPoint={post.focalPoint ?? undefined}
+              aspectRatio="4 / 1"
             />
           </div>
-        )}
-
-        {post.summary && (
-          <p className="text-lg leading-relaxed text-text-secondary">{post.summary}</p>
         )}
 
         <TextGlitch>

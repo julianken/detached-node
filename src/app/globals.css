@@ -11,7 +11,7 @@
   color: var(--prose-body);
   line-height: 1.75;
   transition: color 150ms ease;
-  font-size: 1.125rem;
+  font-size: var(--type-body);
 }
 
 .prose p {
@@ -46,6 +46,20 @@
 .prose h3 {
   font-size: 1.25em;
   margin-top: 1.75em;
+  margin-bottom: 0.5em;
+}
+
+/* Lock article-h1 at 2× body so it tracks the fluid body scale.
+   Set explicitly so we don't depend on browser-default drift. */
+.prose h1 {
+  font-size: 2em;
+  margin-top: 0;
+  margin-bottom: 0.5em;
+}
+
+.prose h4 {
+  font-size: 1.125em;
+  margin-top: 1.5em;
   margin-bottom: 0.5em;
 }
 
@@ -187,6 +201,24 @@
   --font-sans-stack: var(--font-crimson), Georgia, "Times New Roman", serif;
   --font-mono-stack: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo,
     Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  /* ── Magazine-scale typography tokens ────────────────────
+     Values picked so each clamp's min hits at a 375px viewport
+     and max hits at a 1280px viewport. 1rem = 16px (root unchanged). */
+
+  /* Width tokens */
+  --width-frame: 1280px;
+  --width-prose: 960px;
+  --width-content: 1100px;
+
+  /* Type tokens (fluid) */
+  --type-body: clamp(19px, 1.1rem + 0.34vw, 22px);
+  --type-nav: clamp(14px, 0.8rem + 0.34vw, 17px);
+  --type-brand: clamp(18px, 1rem + 0.5vw, 22px);
+  --type-meta: clamp(11px, 0.65rem + 0.22vw, 13px);
+  --type-card-title: clamp(17px, 0.95rem + 0.45vw, 21px);
+  --type-card-summary: clamp(15px, 0.85rem + 0.34vw, 18px);
+  --type-page-h1: clamp(30px, 1.72rem + 0.66vw, 36px);
 }
 
 .dark {
@@ -254,6 +286,20 @@
 
   --font-sans: var(--font-sans-stack);
   --font-mono: var(--font-mono-stack);
+
+  /* Magazine-scale theme tokens — generate text-* and max-w-* utilities.
+     Tailwind 4 reads --text-{name} for font-size, not --font-size-{name}. */
+  --text-body: var(--type-body);
+  --text-nav: var(--type-nav);
+  --text-brand: var(--type-brand);
+  --text-meta: var(--type-meta);
+  --text-card-title: var(--type-card-title);
+  --text-card-summary: var(--type-card-summary);
+  --text-page-h1: var(--type-page-h1);
+
+  --max-width-frame: var(--width-frame);
+  --max-width-prose-wide: var(--width-prose);
+  --max-width-content-wide: var(--width-content);
 }
 
 /* ──────────────────────────────────────────────
@@ -649,6 +695,34 @@ a.card-scanline:active {
   transform: scale(0.98);
   opacity: 0.9;
   transition: transform 100ms ease-out, opacity 100ms ease-out;
+}
+
+/* ──────────────────────────────────────────────
+   HERO FILTER
+   Theme-tinted scanline overlay for the hero image.
+   Inherits --accent so the wash flips from purple
+   (#7c3aed) to lavender (#b49cff) on theme toggle.
+   ────────────────────────────────────────────── */
+
+.hero-filter {
+  position: relative;
+}
+
+.hero-filter::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent 0px,
+    transparent 3px,
+    color-mix(in srgb, var(--accent) 12%, transparent) 3px,
+    color-mix(in srgb, var(--accent) 12%, transparent) 5px
+  );
+  /* Above .ascii-preview-img (z:2) so scanlines paint on top of the
+     loaded image, not behind a same-z DOM-order tiebreak. */
+  z-index: 3;
 }
 
 /* ──────────────────────────────────────────────

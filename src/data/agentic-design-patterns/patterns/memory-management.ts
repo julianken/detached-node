@@ -150,6 +150,40 @@ export {}
     },
   ],
   addedAt: '2026-05-03',
-  dateModified: '2026-05-03',
-  lastChangeNote: 'Initial authoring of Memory Management pattern (wave 2; tiered working/episodic/semantic stores).',
+  dateModified: '2026-05-05',
+  lastChangeNote: 'W3.1 additive: seeAlso already includes 12-factor-agent; W1.4 forward-reference resolved by umbrella landing.',
+  realizingInClaudeCode: {
+    keyMoves: [
+      'Keep [`CLAUDE.md`](https://docs.claude.com/en/docs/claude-code/memory) small — it is working memory loaded on every session. Move trigger-bearing rules into [skills](https://docs.claude.com/en/docs/claude-code/skills) so they load only when needed.',
+      'Use `.claude/skills/*/SKILL.md` as procedural memory — each skill loads only when its trigger fires, preserving the working-tier budget for task context.',
+      'Write episodic state (progress, decisions, artifact lists) to disk files between sessions; read them back at session start via file references.',
+      'Audit always-on files with `wc -w × 1.8`; if a rule has a trigger, it belongs in a skill, not here — migrate to skills.',
+    ],
+    ccPrimitives: [
+      'CLAUDE.md (working memory)',
+      'SKILL.md (procedural memory)',
+      'Disk artifacts (episodic memory)',
+      'Task tool (isolated recall subagents)',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['context-engineering', '12-factor-agent', 'checkpointing'],
+    },
+  },
+  realizingInCursor: {
+    keyMoves: [
+      'Use [`.cursor/rules/*.mdc`](https://cursor.com/docs/rules) with `alwaysApply: true` for stable project facts that constitute semantic memory; scope domain-specific facts with `globs` so they load only on matching files.',
+      'Write learned facts explicitly into a dedicated `memory.mdc` rule file after each session — Cursor has no automatic fact-extraction; the write step is manual.',
+      'Reference prior session output files via `@file` at session start to restore episodic context without repeating prior work.',
+      'Keep all `alwaysApply: true` rules under 500 lines combined to avoid crowding the working context on every turn.',
+    ],
+    ccPrimitives: [
+      '.cursor/rules/*.mdc (semantic/procedural memory)',
+      'alwaysApply rule loading',
+      'globs-scoped rules (domain memory)',
+      '@file references (episodic recall)',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['context-engineering', '12-factor-agent', 'checkpointing'],
+    },
+  },
 }

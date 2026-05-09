@@ -145,6 +145,39 @@ export {}
     },
   ],
   addedAt: '2026-05-03',
-  dateModified: '2026-05-03',
-  lastChangeNote: 'Author Guardrails satellite: input/output rails, layered defence, indirect-prompt-injection gotcha.',
+  dateModified: '2026-05-05',
+  lastChangeNote: 'W2.4 — Populate realizingInClaudeCode Tier A: three-layer realization (hooks + CLAUDE.md + branch-protection).',
+  realizingInClaudeCode: {
+    keyMoves: [
+      'Write [PreToolUse hooks](https://docs.claude.com/en/docs/claude-code/hooks) as shell scripts in `.claude/hooks/`; track them in git and reference them in [`settings.json`](https://docs.claude.com/en/docs/claude-code/settings).',
+      'Exit non-zero from a hook to block the tool call — the hook intercepts the model\'s Bash calls before they execute.',
+      'Declare soft constraints in [`CLAUDE.md`](https://docs.claude.com/en/docs/claude-code/memory) — convention-layer rules that shape behavior without blocking tool calls.',
+      'Gate the merge queue on CI checks (lint, typecheck, tests) so the model cannot land code that bypasses those checks via the commit path.',
+    ],
+    ccPrimitives: [
+      'PreToolUse hooks (process-level enforcement)',
+      'settings.json hook schema',
+      'CLAUDE.md (convention layer)',
+      'CI merge-queue gate (infrastructure layer)',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['evaluation-llm-as-judge', 'human-in-the-loop', 'tool-use-react'],
+    },
+  },
+  realizingInCursor: {
+    keyMoves: [
+      'Add policy rules to `.cursor/rules/*.mdc` with `alwaysApply: true` so the agent reads constraints before every action.',
+      'Review every file change via Agent mode\'s diff UI before accepting — the diff step is a soft guardrail built into the workflow.',
+      'Add a `.cursor/rules/*.mdc` with explicit `do not` instructions for high-risk operations (deletion, config changes, credential handling).',
+      'Gate merges via a branch protection rule or merge queue — CI checks run outside Cursor and the model cannot bypass them.',
+    ],
+    ccPrimitives: [
+      '.cursor/rules/*.mdc (policy rules)',
+      'Agent mode diff review',
+      'Branch protection (infrastructure layer)',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['evaluation-llm-as-judge', 'human-in-the-loop', 'tool-use-react'],
+    },
+  },
 }

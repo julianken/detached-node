@@ -59,11 +59,11 @@ scripts/.tmp-seed-images/
 /tests/.auth/
 
 # Tool configs
-.claude/hooks/
 .claude/settings.local.json
 .playwright-mcp/
 .serena/
 .superpowers/
+docs/superpowers/
 
 # Working directories (drafts, analysis, brainstorming)
 # analysis-funnel default ARTIFACT_ROOT — keep out of version control

@@ -2,8 +2,8 @@
 //
 // Two-column on lg+: sticky meta rail (left, 14rem) + content article (right).
 // Below lg the rail collapses to a non-sticky horizontal block above the
-// content. PageLayout uses `content` (max-w-5xl, 1024px) to give the rail
-// room without crushing the prose column.
+// content. PageLayout uses `full` so the rail starts flush with the frame's
+// inner padding — no extra gutter from a centered max-width.
 //
 // Routing:
 //   - generateStaticParams emits the full set of non-archived slugs
@@ -22,6 +22,7 @@ import { PatternStickyRail } from "@/components/agentic-patterns/PatternStickyRa
 import { PatternBody } from "@/components/agentic-patterns/PatternBody";
 import { ReferencesSection } from "@/components/agentic-patterns/ReferencesSection";
 import { DisclosureSection } from "@/components/agentic-patterns/DisclosureSection";
+import { RealizingDisclosure } from "@/components/agentic-patterns/RealizingDisclosure";
 import { PrevNextNav } from "@/components/agentic-patterns/PrevNextNav";
 import {
   generateHubChildBreadcrumb,
@@ -87,7 +88,7 @@ export default async function PatternSatellitePage({
           generateHubChildBreadcrumb(pattern.slug, pattern.name),
         ]}
       />
-      <PageLayout maxWidth="content">
+      <PageLayout maxWidth="full">
         <Link
           href="/agentic-design-patterns"
           className="text-sm text-text-tertiary hover:text-accent transition-colors focus-ring"
@@ -98,7 +99,21 @@ export default async function PatternSatellitePage({
           <PatternStickyRail pattern={pattern} />
           <article className="flex flex-col gap-10">
             <PatternHeader pattern={pattern} />
-            <PatternBody pattern={pattern} />
+            <PatternBody
+              pattern={pattern}
+              afterDiagram={
+                <div className="flex flex-col gap-3">
+                  <RealizingDisclosure
+                    label="Claude Code"
+                    realizing={pattern.realizingInClaudeCode}
+                  />
+                  <RealizingDisclosure
+                    label="Cursor"
+                    realizing={pattern.realizingInCursor}
+                  />
+                </div>
+              }
+            />
             <ReferencesSection pattern={pattern} />
             {overviewLead && (
               <DisclosureSection

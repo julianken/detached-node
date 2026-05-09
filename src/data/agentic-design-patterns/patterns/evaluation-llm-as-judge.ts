@@ -147,6 +147,40 @@ export {}
     },
   ],
   addedAt: '2026-05-03',
-  dateModified: '2026-05-03',
-  lastChangeNote: 'Initial authoring of the Evaluation (LLM-as-Judge) pattern (wave-2, issue #179).',
+  dateModified: '2026-05-05',
+  lastChangeNote: 'W2.9 additive: Mergify merge-queue structural-lock cross-link + 5-section PR body cross-link.',
+
+  realizingInClaudeCode: {
+    keyMoves: [
+      'Dispatch the judge as a separate subagent in a fresh context window — same-model self-review inflates scores structurally.',
+      'Write the rubric as a [SKILL.md](https://docs.claude.com/en/docs/claude-code/skills) the judge subagent loads at invocation; version it in git so rubric changes are auditable.',
+      'Use a stronger model tier for the judge than the implementer when possible; cross-tier review breaks the shared-prior bias.',
+      'Gate the merge queue on the judge\'s structured verdict; require at least one approval before any PR advances to merge.',
+    ],
+    ccPrimitives: [
+      'Task tool (judge subagent)',
+      'SKILL.md rubric (versioned criteria)',
+      'settings.json merge-gate config',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['guardrails', 'human-in-the-loop', 'identity-separated-review'],
+    },
+  },
+  realizingInCursor: {
+    keyMoves: [
+      'Open a second Agent chat as the judge — pass the candidate output via `@file`; the judge reads it cold without the implementer\'s framing.',
+      'Write the evaluation rubric in a `.cursor/rules/*.mdc` file; reference it explicitly in the judge chat opening prompt.',
+      'Use a different model in the judge chat than the implementer chat when Cursor\'s model picker allows — reduces same-model self-preference.',
+      'Record the judge\'s verdict in a file and reference it via `@file` in the implementer chat to close the feedback loop.',
+    ],
+    ccPrimitives: [
+      'Multiple Agent chats (implementer + judge)',
+      '.cursor/rules/*.mdc (rubric file)',
+      '@file (candidate and verdict sharing)',
+      'Model picker (cross-tier selection)',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['guardrails', 'human-in-the-loop', 'identity-separated-review'],
+    },
+  },
 }

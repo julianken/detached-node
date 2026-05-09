@@ -25,10 +25,10 @@ export function HubHero() {
           Reference
         </span>
       </div>
-      <h1 className="font-mono text-4xl font-semibold tracking-tight text-text-primary [text-wrap:balance] sm:text-5xl">
+      <h1 className="font-mono text-page-h1 font-semibold tracking-tight text-text-primary [text-wrap:balance]">
         Agentic Design Patterns
       </h1>
-      <p className="max-w-prose text-lg leading-7 text-text-secondary [text-wrap:pretty]">
+      <p className="max-w-prose text-body leading-relaxed text-text-secondary [text-wrap:pretty]">
         A field-aware reference covering {count} patterns for building agentic systems —
         organized by the question each pattern answers, not by the year it was named.
       </p>

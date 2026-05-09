@@ -11,6 +11,7 @@ interface ThemeAwareHeroProps {
   className?: string;
   sizes?: string;
   focalPoint?: { x?: number | null; y?: number | null } | null;
+  aspectRatio?: string;
 }
 
 /**
@@ -83,6 +84,7 @@ export function ThemeAwareHero({
   className = "",
   sizes,
   focalPoint,
+  aspectRatio,
 }: ThemeAwareHeroProps) {
   if (!isMediaObject(light) || !light.url || !isMediaObject(dark) || !dark.url) {
     return null;
@@ -90,7 +92,7 @@ export function ThemeAwareHero({
 
   const width = light.width || 1200;
   const height = light.height || 630;
-  const aspectStyle = { aspectRatio: `${width} / ${height}` };
+  const aspectStyle = { aspectRatio: aspectRatio ?? `${width} / ${height}` };
   const imgStyle = focalPointStyle(focalPoint);
 
   const lightUsesPreview = hasUsablePreview(light);

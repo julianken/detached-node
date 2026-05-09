@@ -137,4 +137,38 @@ export {}
   addedAt: '2026-05-03',
   dateModified: '2026-05-03',
   lastChangeNote: 'Authored RAG pattern (vanilla retrieve-and-generate; agentic variant remains separate).',
+  realizingInClaudeCode: {
+    keyMoves: [
+      'Use a [MCP](https://docs.claude.com/en/docs/claude-code/mcp) server to expose your retrieval index as a `search` tool; Claude calls it inside the normal tool-use loop.',
+      'Declare the retrieval tool in [`settings.json`](https://docs.claude.com/en/docs/claude-code/settings) `permissions.allow` so it fires without prompting on every session.',
+      'Pin the prompt template (evidence layout, citation instruction) in [`CLAUDE.md`](https://docs.claude.com/en/docs/claude-code/memory) so the grounding format is consistent across calls.',
+      'Use a [subagent](https://docs.claude.com/en/docs/claude-code/sub-agents) for retrieval-heavy tasks so the main session context stays clean from bulk passage text.',
+    ],
+    ccPrimitives: [
+      'MCP server (retrieval tool)',
+      'settings.json tool allow-list',
+      'CLAUDE.md prompt template',
+      'Task tool (retrieval subagent)',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['agentic-rag', 'context-engineering', 'mcp'],
+    },
+  },
+  realizingInCursor: {
+    keyMoves: [
+      'Add a retrieval MCP server to `.cursor/mcp.json`; the agent calls it as a tool inside the standard Agent mode loop.',
+      'Use `@docs` to index a documentation URL directly into Cursor\'s context — no embedding pipeline setup required for known doc sites.',
+      'Reference retrieved files via `@file` to give the model grounding passages without embedding them in the prompt by hand.',
+      'Use `@codebase` for codebase-native retrieval — Cursor indexes the repo and retrieves relevant snippets automatically.',
+    ],
+    ccPrimitives: [
+      '.cursor/mcp.json (retrieval server)',
+      '@docs (URL indexing)',
+      '@codebase (repo retrieval)',
+      '@file (explicit grounding)',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['agentic-rag', 'context-engineering', 'mcp'],
+    },
+  },
 }

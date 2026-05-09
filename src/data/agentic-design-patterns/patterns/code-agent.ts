@@ -167,6 +167,40 @@ export {}
     },
   ],
   addedAt: '2026-05-03',
-  dateModified: '2026-05-04',
-  lastChangeNote: 'Author Code Agent satellite: read-edit-test loop, Agent-Computer Interface as the differentiator from generic Tool Use, edit-format gotcha.',
+  dateModified: '2026-05-05',
+  lastChangeNote: 'Editorial scrub: generalize realizingInClaudeCode to general CC voice; add keyMoves; remove repo-specific skill names and PR citations.',
+  realizingInClaudeCode: {
+    keyMoves: [
+      'Declare in [`CLAUDE.md`](https://docs.claude.com/en/docs/claude-code/memory): the lead agent orchestrates and reviews; implementer [subagents](https://docs.claude.com/en/docs/claude-code/sub-agents) hold the edit tools.',
+      'Define the test-gate sequence (`test:unit → lint → typecheck → test:e2e`) in `CLAUDE.md` — the loop terminates on green, not on the agent\'s assessment.',
+      'Give each issue its own git worktree (`git worktree add`); implementer agents work in isolation and the lead checkout stays clean.',
+      'Scope implementer subagents to file-editing tools only via [`settings.json`](https://docs.claude.com/en/docs/claude-code/settings) `permissions.allow`; the lead holds Bash.',
+    ],
+    ccPrimitives: [
+      'Edit / Bash / Read tool loop (built-in ACI)',
+      'Task tool (implementer subagents)',
+      'Git worktrees (isolation)',
+      'CLAUDE.md test-gate definition',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['tool-use-react', 'orchestrator-workers', 'guardrails'],
+    },
+  },
+  realizingInCursor: {
+    keyMoves: [
+      'Use Agent mode — it ships Read/Edit/Bash equivalents and the read-edit-test loop natively without additional configuration.',
+      'Use [Plan mode](https://cursor.com/docs/agent/plan-mode) before implementation to produce an inspectable step list; review it before the agent touches files.',
+      'Add a `.cursor/rules/*.mdc` rule defining the test-gate sequence (`pnpm test:unit`, etc.) as the success criterion the loop targets.',
+      'Launch [Cloud Agents](https://cursor.com/docs/cloud-agent) for longer-running code tasks; they run in isolated VMs and surface a diff for review on completion.',
+    ],
+    ccPrimitives: [
+      'Agent mode (built-in read-edit-run loop)',
+      'Plan mode (pre-implementation review)',
+      'Cloud Agents (isolated VM execution)',
+      '.cursor/rules/*.mdc (test-gate definition)',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['tool-use-react', 'orchestrator-workers', 'guardrails'],
+    },
+  },
 }

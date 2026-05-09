@@ -152,6 +152,40 @@ export {}
     },
   ],
   addedAt: '2026-05-03',
-  dateModified: '2026-05-04',
-  lastChangeNote: 'Author MCP satellite: open protocol for cross-vendor tool/resource/prompt discovery; tool-poisoning gotcha.',
+  dateModified: '2026-05-05',
+  lastChangeNote: 'W2.5: add realizingInClaudeCode Tier B (MCP in active Claude Code config; stale-allowlist maintenance note added).',
+  realizingInClaudeCode: {
+    keyMoves: [
+      'Add MCP servers to [`~/.claude/settings.json`](https://docs.claude.com/en/docs/claude-code/mcp) under `mcpServers`; Claude Code calls `list_tools` on session start and the catalog is immediately available.',
+      'Allowlist each server\'s tools in `permissions.allow` via [`settings.json`](https://docs.claude.com/en/docs/claude-code/settings) to avoid per-call prompts for trusted servers.',
+      'Review the allow-list periodically — stale entries from removed servers accumulate silently and expand the permission surface without active use.',
+      'Prefer project-level `~/.claude/settings.json` for project-specific servers; global `~/` config for servers used across all projects.',
+    ],
+    ccPrimitives: [
+      'settings.json mcpServers config',
+      'permissions.allow (tool allow-list)',
+      'MCP stdio transport (local)',
+      'MCP HTTP transport (remote)',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['tool-use-react', 'guardrails', 'context-engineering'],
+    },
+  },
+  realizingInCursor: {
+    keyMoves: [
+      'Add servers to `.cursor/mcp.json` (project) or `~/.cursor/mcp.json` (global) in the `mcpServers` object with `command` and `args`.',
+      'Remote servers use a `url` field instead of `command`; Cursor handles OAuth automatically for marketplace-installed servers.',
+      'Enable auto-run for trusted servers in Cursor settings to avoid per-call approval prompts during Agent sessions.',
+      'Review `.cursor/mcp.json` when removing servers — Cursor does not automatically remove stale tool entries from the active session.',
+    ],
+    ccPrimitives: [
+      '.cursor/mcp.json (project MCP config)',
+      '~/.cursor/mcp.json (global MCP config)',
+      'Cursor Marketplace (one-click install)',
+      'Agent mode (MCP tool consumer)',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['tool-use-react', 'guardrails', 'context-engineering'],
+    },
+  },
 }

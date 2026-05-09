@@ -82,6 +82,40 @@ export {}
     sourceUrl: 'https://docs.temporal.io/workflows',
   },
   relatedSlugs: [],
+  realizingInClaudeCode: {
+    keyMoves: [
+      'Write each phase\'s outputs to deterministic disk paths before the next [subagent](https://docs.claude.com/en/docs/claude-code/sub-agents) wave dispatches — the filesystem is the checkpoint store.',
+      'Maintain a `STATUS.md` with one row per phase (status, artifact count, timestamp); a fresh session reads it to find the resume point without replaying transcripts.',
+      'Gate each phase transition on a shell assertion that all expected artifact files exist and are non-empty — fail loudly rather than forward silently.',
+      'Forward a compressed context packet (1–2 K tokens) between phases, not raw transcripts; this keeps successor contexts clean and bounded.',
+    ],
+    ccPrimitives: [
+      'Disk artifact checkpoint protocol',
+      'STATUS.md recovery anchor',
+      'Task tool (phase workers)',
+      'PreToolUse hooks (phase-exit gate)',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['orchestrator-workers', 'context-engineering', 'funnel-method'],
+    },
+  },
+  realizingInCursor: {
+    keyMoves: [
+      'Commit partial work to a dedicated branch after each milestone; [cloud agents](https://cursor.com/docs/cloud-agent) already work on isolated branches by default.',
+      'Use a `STATUS.md` at the repo root as the recovery anchor; reference it via `@file` at the start of a resumed session.',
+      'Write task progress to a [`.cursor/rules/*.mdc`](https://cursor.com/docs/rules) file with `alwaysApply: true` so context survives Cursor session restarts.',
+      'Reference committed artifacts via `@git` or file references when resuming so the agent reads the actual persisted state, not its in-context assumption.',
+    ],
+    ccPrimitives: [
+      'Cloud agents (branch isolation)',
+      '.cursor/rules/*.mdc (persistent state)',
+      '@file (recovery anchor)',
+      'Agent mode',
+    ],
+    seeAlso: {
+      siblingPatternSlugs: ['orchestrator-workers', 'context-engineering', 'funnel-method'],
+    },
+  },
   frameworks: ['langgraph', 'mastra'],
   references: [
     {
@@ -150,6 +184,6 @@ export {}
     },
   ],
   addedAt: '2026-05-03',
-  dateModified: '2026-05-03',
-  lastChangeNote: 'Author Checkpointing satellite: durable agent state across crashes; snapshot vs replay variants; determinism gotcha.',
+  dateModified: '2026-05-05',
+  lastChangeNote: 'W2.2 — Populate realizingInClaudeCode Tier A: analysis-funnel SKILL.md worked example, disk-checkpoint primitives, STATUS.md scaffolding, phase-boundary readerMove.',
 }

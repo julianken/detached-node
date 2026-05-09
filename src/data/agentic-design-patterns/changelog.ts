@@ -18,6 +18,34 @@ import type { ChangelogEntry } from './types'
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    date: '2026-05-05',
+    slug: 'funnel-method',
+    type: 'added',
+    note: 'W2.7: New Layer-5 satellite — funnel-method; Tier A realizingInClaudeCode; 4th bridge essay seed script; forward seeAlso from parallelization.',
+    author: 'julianken',
+  },
+  {
+    date: '2026-05-05',
+    slug: 'parallelization',
+    type: 'edited',
+    note: 'W2.7 additive: add seeAlso.articleSlug (phase-boundary-loop) and funnel-method sibling cross-link.',
+    author: 'julianken',
+  },
+  {
+    date: '2026-05-05',
+    slug: 'identity-separated-review',
+    type: 'added',
+    note: 'W2.6: New Layer-5 satellite — identity-separated-review; Tier A realizingInClaudeCode; companion article seed script; forward-link from evaluation-llm-as-judge.',
+    author: 'julianken',
+  },
+  {
+    date: '2026-05-05',
+    slug: 'evaluation-llm-as-judge',
+    type: 'edited',
+    note: 'W2.6 additive: add seeAlso.articleSlug (cross-identity-code-review) and identity-separated-review sibling cross-link.',
+    author: 'julianken',
+  },
+  {
     date: '2026-05-04',
     slug: '12-factor-agent',
     type: 'added',

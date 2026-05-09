@@ -44,7 +44,7 @@ describe("PageHeader", () => {
     render(<PageHeader title="Styled Title" />);
 
     const heading = screen.getByRole("heading");
-    expect(heading).toHaveClass("text-3xl");
+    expect(heading).toHaveClass("text-page-h1");
     expect(heading).toHaveClass("font-semibold");
     expect(heading).toHaveClass("tracking-tight");
   });
@@ -54,7 +54,7 @@ describe("PageHeader", () => {
 
     const subtitle = screen.getByText("Subtitle text");
     expect(subtitle).toHaveClass("mt-2");
-    expect(subtitle).toHaveClass("text-base");
+    expect(subtitle).toHaveClass("text-body");
   });
 
   it("handles special characters in title", () => {
