@@ -699,9 +699,9 @@ a.card-scanline:active {
 
 /* ──────────────────────────────────────────────
    HERO FILTER
-   Theme-tinted scanline overlay for the hero image.
-   Inherits --accent so the wash flips from purple
-   (#7c3aed) to lavender (#b49cff) on theme toggle.
+   CRT-glass treatment for the hero image: convex
+   sheen + vignette on ::before, accent-tinted glow
+   halo via box-shadow.
    ────────────────────────────────────────────── */
 
 .hero-filter {
@@ -780,11 +780,6 @@ a.card-scanline:active {
     );
 }
 
-/* Counteract the scanline wash desaturating the underlying image. */
-.hero-filter img {
-  filter: saturate(1.7) contrast(1.08);
-}
-
 /* Layered overlay above the image:
    - Soft edge feather (inset shadow in page bg) dissolves the hero into
      the surrounding page instead of cutting out abruptly.
@@ -794,7 +789,7 @@ a.card-scanline:active {
      screens fall off in brightness at the corners as the glass curves
      away from the viewer.
    Painted on ::before so it composites above the absolutely-positioned
-   image but below the scanline ::after at z:3. */
+   image. */
 .hero-filter::before {
   content: "";
   position: absolute;
@@ -834,23 +829,6 @@ a.card-scanline:active {
       rgba(0, 0, 0, 0.65) 100%
     );
   z-index: 2;
-}
-
-.hero-filter::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image: repeating-linear-gradient(
-    0deg,
-    transparent 0px,
-    transparent 3px,
-    color-mix(in srgb, var(--accent) 12%, transparent) 3px,
-    color-mix(in srgb, var(--accent) 12%, transparent) 5px
-  );
-  /* Above .ascii-preview-img (z:2) so scanlines paint on top of the
-     loaded image, not behind a same-z DOM-order tiebreak. */
-  z-index: 3;
 }
 
 /* ──────────────────────────────────────────────
