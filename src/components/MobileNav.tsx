@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { NavLink } from './NavLink';
 
@@ -25,15 +25,21 @@ export function MobileNav({
   const [open, setOpen] = useState(false);
   const [exiting, setExiting] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const exitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     setMounted(true);
+    return () => {
+      if (exitTimerRef.current !== null) clearTimeout(exitTimerRef.current);
+    };
   }, []);
 
   const close = () => {
     if (!open || exiting) return;
     setExiting(true);
-    setTimeout(() => {
+    if (exitTimerRef.current !== null) clearTimeout(exitTimerRef.current);
+    exitTimerRef.current = setTimeout(() => {
+      exitTimerRef.current = null;
       setOpen(false);
       setExiting(false);
     }, EXIT_MS);

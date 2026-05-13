@@ -510,7 +510,13 @@ main {
   to { opacity: 1; }
 }
 
-/* Pill theme-change glitch — harsh jitter + chromatic shift */
+/* Pill theme-change glitch — harsh jitter + chromatic shift.
+   Duration is set via --pill-glitch-ms on the pill wrapper (default 280ms).
+   The JS setTimeout uses the same constant; see GLITCH_MS in ScrollPillNav.tsx. */
+[data-glitching="true"] {
+  animation: pill-theme-jitter var(--pill-glitch-ms, 280ms) steps(5, jump-end) forwards;
+}
+
 @keyframes pill-theme-jitter {
   0% { transform: translate3d(5px, -2px, 0); }
   20% { transform: translate3d(-4px, 2px, 0); }
@@ -523,7 +529,7 @@ main {
 [data-glitching="true"] a,
 [data-glitching="true"] .font-mono,
 [data-glitching="true"] button {
-  animation: pill-theme-text 280ms steps(5, jump-end) forwards;
+  animation: pill-theme-text var(--pill-glitch-ms, 280ms) steps(5, jump-end) forwards;
 }
 
 @keyframes pill-theme-text {
