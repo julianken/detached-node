@@ -3,6 +3,9 @@ import { Link, ViewTransitions } from "next-view-transitions";
 import { Crimson_Pro, JetBrains_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { MobileNav } from "@/components/MobileNav";
+import { ScrollPillNav } from "@/components/ScrollPillNav";
+import { NavLink } from "@/components/NavLink";
 import { StatusBar } from "@/components/StatusBar";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { TextureOverlay } from "@/components/TextureOverlay";
@@ -90,27 +93,43 @@ export default function FrontendLayout({
           <WebVitalsReporter />
           <ScrollToTop />
           <TextureOverlay />
+          <ScrollPillNav />
           <div className="site-frame mx-auto my-4 flex min-h-[calc(100vh-2rem)] max-w-frame flex-col rounded-sm border border-border sm:my-6 sm:min-h-[calc(100vh-3rem)]">
-            <header className="flex items-center justify-between border-b border-border px-4 py-3 sm:px-6">
+            <header className="relative flex items-center justify-between border-b border-border px-4 py-3 sm:px-6">
               <Link href="/" className="font-mono text-brand font-semibold tracking-tight text-accent lowercase focus-ring">
                 d-n
               </Link>
               <div className="flex items-center gap-4">
-                <nav className="flex flex-wrap items-center gap-4 text-nav font-mono tracking-[0.04em] text-text-secondary sm:gap-6" aria-label="Main navigation">
-                  <Link className="hover:text-accent py-2 transition-colors focus-ring" href="/">
-                    Home
-                  </Link>
-                  <Link className="hover:text-accent py-2 transition-colors focus-ring" href="/posts">
-                    Posts
-                  </Link>
-                  <Link className="hover:text-accent py-2 transition-colors focus-ring" href="/agentic-design-patterns">
-                    Patterns
-                  </Link>
-                  <Link className="hover:text-accent py-2 transition-colors focus-ring" href="/about">
-                    About
-                  </Link>
+                <nav className="hidden items-center gap-6 text-nav font-mono tracking-[0.04em] text-text-secondary sm:flex" aria-label="Main navigation">
+                  <NavLink className="py-2" href="/">Home</NavLink>
+                  <NavLink className="py-2" href="/posts">Posts</NavLink>
+                  <NavLink className="py-2" href="/agentic-design-patterns">Patterns</NavLink>
+                  <NavLink className="py-2" href="/about">About</NavLink>
                 </nav>
-                <ThemeToggle />
+                <div className="flex items-center gap-1">
+                  <a
+                    href="https://github.com/julianken"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="GitHub profile"
+                    className="p-2 text-text-secondary hover:text-accent transition-colors focus-ring rounded-md"
+                  >
+                    <svg
+                      className="h-5 w-5"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        clipRule="evenodd"
+                        d="M12 2C6.475 2 2 6.475 2 12a9.994 9.994 0 006.838 9.488c.5.087.687-.213.687-.476 0-.237-.013-1.024-.013-1.862-2.512.463-3.162-.612-3.362-1.175-.113-.288-.6-1.175-1.025-1.413-.35-.187-.85-.65-.013-.662.788-.013 1.35.725 1.538 1.025.9 1.512 2.338 1.087 2.912.825.088-.65.35-1.087.638-1.337-2.225-.25-4.55-1.113-4.55-4.938 0-1.088.387-1.987 1.025-2.688-.1-.25-.45-1.275.1-2.65 0 0 .837-.262 2.75 1.026a9.28 9.28 0 012.5-.338c.85 0 1.7.112 2.5.337 1.912-1.3 2.75-1.024 2.75-1.024.55 1.375.2 2.4.1 2.65.637.7 1.025 1.587 1.025 2.687 0 3.838-2.337 4.688-4.562 4.938.362.312.675.912.675 1.85 0 1.337-.013 2.412-.013 2.75 0 .262.188.574.688.474A10.016 10.016 0 0022 12c0-5.525-4.475-10-10-10z"
+                      />
+                    </svg>
+                  </a>
+                  <ThemeToggle />
+                  <MobileNav />
+                </div>
               </div>
             </header>
             <main id="main-content" className="flex-1 px-4 py-8 sm:px-6 lg:px-8">{children}</main>

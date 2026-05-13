@@ -137,7 +137,7 @@ export default async function PostPage({ params }: PostPageProps) {
 
         {isMediaObject(post.featuredImageLight) && isMediaObject(post.featuredImageDark) && (
           <div
-            className="hero-filter -mx-4 sm:-mx-8 overflow-hidden rounded-2xl"
+            className="hero-filter overflow-hidden rounded-2xl"
             style={{
               "--hero-glow-light": post.featuredImageLight.preview?.color || "var(--accent)",
               "--hero-glow-dark": post.featuredImageDark.preview?.color || "var(--accent)",
