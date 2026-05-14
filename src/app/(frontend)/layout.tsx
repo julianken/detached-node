@@ -95,8 +95,8 @@ export default function FrontendLayout({
           <ScrollToTop />
           <TextureOverlay />
           <ScrollPillNav />
-          <div className="site-frame mx-auto my-4 flex min-h-[calc(100vh-2rem)] max-w-frame flex-col rounded-sm border border-border sm:my-6 sm:min-h-[calc(100vh-3rem)]">
-            <header className="relative flex items-center justify-between border-b border-border px-4 py-3 sm:px-6">
+          <div className="site-frame relative z-40 mx-auto my-4 flex min-h-[calc(100vh-2rem)] max-w-frame flex-col rounded-sm border border-border sm:my-6 sm:min-h-[calc(100vh-3rem)]">
+            <header className="relative z-40 flex items-center justify-between border-b border-border px-4 py-3 sm:px-6">
               <Link href="/" className="font-mono text-brand font-semibold tracking-tight text-accent lowercase focus-ring">
                 d-n
               </Link>
