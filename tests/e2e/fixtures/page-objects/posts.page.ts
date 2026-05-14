@@ -13,7 +13,7 @@ export class PostsPage {
 
   constructor(page: Page) {
     this.page = page
-    this.navigation = page.locator('nav')
+    this.navigation = page.locator('nav[aria-label="Main navigation"]')
     this.pageTitle = page.getByRole('heading', { name: /^Posts$/i })
     this.pageSubtitle = page.getByText(/Articles on agentic AI/)
     this.postCards = page.locator('a[href^="/posts/"]')

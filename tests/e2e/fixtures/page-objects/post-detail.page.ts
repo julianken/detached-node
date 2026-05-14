@@ -14,7 +14,7 @@ export class PostDetailPage {
 
   constructor(page: Page) {
     this.page = page
-    this.navigation = page.locator('nav')
+    this.navigation = page.locator('nav[aria-label="Main navigation"]')
     this.postTitle = page.locator('article h1').first()
     this.postDate = page.locator('article header p').last()
     this.postSummary = page.locator('article p.text-lg').first()
