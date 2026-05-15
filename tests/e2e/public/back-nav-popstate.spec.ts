@@ -25,19 +25,23 @@ test.describe('Back-button (popstate) navigation', () => {
     const postCount = await postsPage.getPostCount()
     test.skip(postCount === 0, 'No posts seeded; cannot exercise back-nav')
 
-    // Forward navigation: click into the first post
+    // Forward navigation: click into the first post and wait for the URL to
+    // actually reach a post-detail route. `waitForLoadState('domcontentloaded')`
+    // resolves immediately when the previous page is already loaded, so we'd
+    // read the URL before the client-side navigation commits — use waitForURL.
     await postsPage.postCards.first().click()
-    await postsPage.page.waitForLoadState('domcontentloaded')
-    expect(postsPage.page.url()).toMatch(/\/posts\/[^/]+\/?$/)
+    await postsPage.page.waitForURL(/\/posts\/[^/]+\/?$/)
 
-    // Back navigation via the browser back button (triggers `popstate`)
+    // Back navigation via the browser back button (triggers `popstate`).
+    // Wait for the URL to settle back to /posts to measure the real
+    // navigation time, not the goBack() RPC roundtrip.
     const start = Date.now()
-    await postsPage.page.goBack({ waitUntil: 'domcontentloaded' })
+    await postsPage.page.goBack()
+    await postsPage.page.waitForURL(/\/posts\/?$/)
     const elapsedMs = Date.now() - start
 
     // The page must land back on /posts and DOM must be interactive.
     await expect(postsPage.pageTitle).toBeVisible()
-    expect(postsPage.page.url()).toMatch(/\/posts\/?$/)
 
     // The bug produced 1000–5000ms of frozen snapshot before commit. A 4s
     // ceiling is permissive enough for cold dev + still fails loud on a
