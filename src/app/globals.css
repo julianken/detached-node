@@ -398,11 +398,7 @@ body {
    get instant navigation with no degradation.
    ────────────────────────────────────────────── */
 
-@view-transition {
-  navigation: auto;
-}
-
-main {
+.route-content {
   view-transition-name: main-content;
 }
 
