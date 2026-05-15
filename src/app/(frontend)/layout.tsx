@@ -114,7 +114,9 @@ export default function FrontendLayout({
                 </div>
               </div>
             </header>
-            <main id="main-content" className="flex-1 px-4 py-8 sm:px-6 lg:px-8">{children}</main>
+            <main id="main-content" className="flex-1 px-4 py-8 sm:px-6 lg:px-8">
+              <div className="route-content">{children}</div>
+            </main>
             <StatusBar />
           </div>
 
