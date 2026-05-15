@@ -22,7 +22,7 @@ export const pattern: Pattern = {
   E --> G
   F --> G
   G --> H[Synthesised response]`,
-  mermaidAlt: 'A flowchart in which an incoming task feeds an orchestrator node that produces a plan listing worker briefs; the plan fans out to N parallel worker nodes whose outputs converge on an aggregator node that emits a single synthesised response.',
+  mermaidAlt: 'Where Parallelization fans a fixed prompt across N workers, Orchestrator-Workers lets the model decide the decomposition at runtime: orchestrator plans, workers run in isolation, aggregator synthesises.',
   whenToUse: [
     'Use this when the request decomposes into sub-tasks the planner can only enumerate after reading the input (multi-file code edits, deep research over an open question set, document pipelines that branch by content type).',
     'Justified where each sub-task benefits from a clean context (its own prompt, tool subset, and scratch space) so workers do not pollute each other or the orchestrator.',
@@ -100,7 +100,7 @@ export {}
       'Disk artifact convention',
     ],
     seeAlso: {
-      siblingPatternSlugs: ['parallelization', 'planning', 'funnel-method'],
+      siblingPatternSlugs: ['parallelization', 'planning'],
     },
   },
   realizingInCursor: {
@@ -117,7 +117,7 @@ export {}
       '.cursor/rules/*.mdc',
     ],
     seeAlso: {
-      siblingPatternSlugs: ['parallelization', 'planning', 'funnel-method'],
+      siblingPatternSlugs: ['parallelization', 'planning'],
     },
   },
   frameworks: ['langgraph', 'crew-ai', 'autogen', 'vercel-ai-sdk'],

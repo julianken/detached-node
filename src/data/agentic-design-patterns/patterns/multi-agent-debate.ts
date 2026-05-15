@@ -26,7 +26,7 @@ export const pattern: Pattern = {
   D2 --> E
   D3 --> E
   E --> F[Final answer]`,
-  mermaidAlt: 'A top-down flowchart in which one Question fans out to three agents that produce independent initial answers; those answers are concatenated and fed back to every agent for a critique-and-revise round, and the three revised answers are then collapsed by a majority vote or judge into one final answer.',
+  mermaidAlt: 'N symmetric agents answer the same prompt independently, then each reads all peer answers and revises; the round repeats for a fixed count before a majority vote or judge picks the verdict — peer disagreement surfaces errors a single rollout would ratify.',
   whenToUse: [
     'Best for cases where factual accuracy or reasoning depth matters more than latency, and a single rollout silently produces a confident wrong answer that peer disagreement would expose.',
     'Justified where the task admits a single committable verdict (a numeric answer, a multiple-choice label, a yes/no decision) that a deterministic aggregator can collapse the round to.',

@@ -19,7 +19,7 @@ export const pattern: Pattern = {
   D -->|crash| E[New worker]
   E --> F[Load latest checkpoint by run id]
   F --> A`,
-  mermaidAlt: 'A horizontal flowchart in which an Agent step executes an LLM call or tool, then atomically writes a checkpoint containing the state, the next step, and the result; if the worker is alive the loop continues, but if the worker crashes a new worker loads the latest checkpoint by run id and resumes the loop from the same point.',
+  mermaidAlt: 'After each step, run state is atomically written to durable storage keyed by run ID; when the worker crashes, a fresh worker loads the last checkpoint and resumes from that boundary — completed steps are not redone, side effects do not re-fire.',
   whenToUse: [
     'Apply when an agent run is long enough that a process restart between steps is likely (multi-minute tool calls, multi-hour batch jobs, sessions that span days).',
     'Required where steps have side effects you cannot afford to fire twice (charging a card, sending an email, opening a pull request) and need an idempotency anchor that survives crashes.',
@@ -96,7 +96,7 @@ export {}
       'PreToolUse hooks (phase-exit gate)',
     ],
     seeAlso: {
-      siblingPatternSlugs: ['orchestrator-workers', 'context-engineering', 'funnel-method'],
+      siblingPatternSlugs: ['orchestrator-workers', 'context-engineering'],
     },
   },
   realizingInCursor: {
@@ -113,7 +113,7 @@ export {}
       'Agent mode',
     ],
     seeAlso: {
-      siblingPatternSlugs: ['orchestrator-workers', 'context-engineering', 'funnel-method'],
+      siblingPatternSlugs: ['orchestrator-workers', 'context-engineering'],
     },
   },
   frameworks: ['langgraph', 'mastra'],

@@ -22,7 +22,7 @@ export const pattern: Pattern = {
   F --> H
   H --> I[Retriever]
   I --> B`,
-  mermaidAlt: 'A horizontal flowchart in which a User turn enters Working memory inside the context window, an Agent step decides whether to persist the turn as an episode, persist a learned fact, or discard it, with the episodic and semantic stores feeding a Summariser and Retriever that re-inject relevant slices back into Working memory on the next turn.',
+  mermaidAlt: 'Tiered state under agent control: a working context window, an episodic store for what happened, and a semantic store for what was learned — the agent connects them through explicit persist, summarise, and retrieve calls.',
   whenToUse: [
     'Right call when conversations or task threads span multiple sessions and the agent must recall prior interactions, learned facts, or user preferences after the context window resets.',
     'Justified where the working set exceeds the context window in tokens or in cost (long-running assistants, project-scoped coding agents, customer support copilots that accumulate ticket history).',

@@ -19,16 +19,9 @@ import type { ChangelogEntry } from './types'
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: '2026-05-05',
-    slug: 'funnel-method',
-    type: 'added',
-    note: 'W2.7: New Layer-5 satellite — funnel-method; Tier A realizingInClaudeCode; 4th bridge essay seed script; forward seeAlso from parallelization.',
-    author: 'julianken',
-  },
-  {
-    date: '2026-05-05',
     slug: 'parallelization',
     type: 'edited',
-    note: 'W2.7 additive: add seeAlso.articleSlug (phase-boundary-loop) and funnel-method sibling cross-link.',
+    note: 'W2.7 additive: add seeAlso.articleSlug (phase-boundary-loop).',
     author: 'julianken',
   },
   {
