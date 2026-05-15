@@ -9,7 +9,6 @@ const nextConfig: NextConfig = {
   experimental: {
     // Optimize package imports to reduce bundle size
     optimizePackageImports: ['@payloadcms/richtext-lexical'],
-    viewTransition: true,
   },
 
   // Image optimization configuration
