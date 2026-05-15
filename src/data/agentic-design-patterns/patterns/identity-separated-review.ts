@@ -22,7 +22,7 @@ export const pattern: Pattern = {
   H --> I{Verdict}
   I -->|APPROVE + polish SUGGESTION| J[Dispatcher merges via Mergify queue]
   I -->|REQUEST_CHANGES| K[Loop: fix + re-review]`,
-  mermaidAlt: 'A flowchart in which an Implementer subagent commits and opens a PR; the Dispatcher loads a reviewer skill, retrieves the bot PAT from Keychain, and dispatches a Reviewer in a fresh context window with a cross-tier model; the Reviewer reads the diff cold, applies the 12-rule rubric, and posts via the REST API as the machine-user identity; an APPROVE with a polish SUGGESTION leads to a Mergify queue merge, while REQUEST_CHANGES triggers a fix-and-re-review loop.',
+  mermaidAlt: 'Structural identity separation: implementer commits and opens the PR; a separate machine-user identity — different credential, fresh context, cross-tier model — reads the diff cold, applies the rubric, and posts; APPROVE queues a merge, REQUEST_CHANGES loops.',
   whenToUse: [
     'Apply when the implementer and reviewer share a model family — same-model self-verification is measurably worse than cross-tier verification, and the bias cannot be corrected by rubric adjustments alone.',
     'Use where PR review is a gate before merge and the consequences of a missed defect (broken public contract, security issue, silent regression) justify the cost of a separate reviewing identity.',

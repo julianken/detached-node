@@ -20,7 +20,7 @@ export const pattern: Pattern = {
   E --> F[Observation appended to context]
   F --> B
   C -->|no| G[Final answer]`,
-  mermaidAlt: 'A flowchart showing a User task entering a Thought node, which branches on whether a tool is needed; the yes branch emits an Action that the runtime executes, appends the Observation back to context, and returns to Thought, while the no branch emits a Final answer.',
+  mermaidAlt: 'Thought-Action-Observation: at each turn the agent writes a private rationale, picks a typed tool call, and reads the result; the runtime dispatches and re-invokes until the agent decides no tool is needed and emits a final answer.',
   whenToUse: [
     'Worth the cost when answering the question requires data the model does not have at training time (current prices, account state, the contents of a file, the result of a search).',
     'Justified where each tool result genuinely shifts the next step: code execution, database queries, retrieval against a corpus the model has not memorised.',

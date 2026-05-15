@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { CHANGELOG } from '@/data/agentic-design-patterns/changelog'
-import { getPatternSlugs } from '@/data/agentic-design-patterns/index'
+import { getPatternSlugs, PATTERNS } from '@/data/agentic-design-patterns/index'
 
 describe('CHANGELOG', () => {
   it('is an array', () => {
@@ -43,26 +43,25 @@ describe('CHANGELOG', () => {
     // entry's date is bumped to the Reflexion authoring date so lint-changelog's
     // "latest CHANGELOG date >= today" check passes alongside pattern.dateModified.
     // The note text is preserved verbatim per #152's AC (asserted below).
-    // Phase 2 prepends new authoring entries, so the Reflexion seed is no
-    // longer guaranteed to be at index 0 — find it by slug.
-    const reflexionSeed = CHANGELOG.find((e) => e.slug === 'reflexion')
+    // Later edits may prepend new entries for the same slug; find the 'added' seed.
+    const reflexionSeed = CHANGELOG.find((e) => e.slug === 'reflexion' && e.type === 'added')
     expect(reflexionSeed).toBeDefined()
     expect(reflexionSeed!.date).toMatch(/^\d{4}-\d{2}-\d{2}$/)
     expect(reflexionSeed!.date >= '2026-05-02').toBe(true)
   })
 
   it('Phase 1 seed entry slug is reflexion', () => {
-    const reflexionSeed = CHANGELOG.find((e) => e.slug === 'reflexion')
+    const reflexionSeed = CHANGELOG.find((e) => e.slug === 'reflexion' && e.type === 'added')
     expect(reflexionSeed).toBeDefined()
   })
 
   it('Phase 1 seed entry type is added', () => {
-    const reflexionSeed = CHANGELOG.find((e) => e.slug === 'reflexion')
+    const reflexionSeed = CHANGELOG.find((e) => e.slug === 'reflexion' && e.type === 'added')
     expect(reflexionSeed?.type).toBe('added')
   })
 
   it('Phase 1 seed entry note matches issue AC verbatim', () => {
-    const reflexionSeed = CHANGELOG.find((e) => e.slug === 'reflexion')
+    const reflexionSeed = CHANGELOG.find((e) => e.slug === 'reflexion' && e.type === 'added')
     expect(reflexionSeed?.note).toBe(
       'Catalog scaffold launched; Reflexion exemplar shipped in #158.',
     )
@@ -72,10 +71,11 @@ describe('CHANGELOG', () => {
     // NOTE: This test is intentionally incomplete — archived patterns won't be
     // in getPatternSlugs(). Deliberately not "fixed" preemptively (per issue AC).
     const slugs = new Set(getPatternSlugs())
+    const archivedSlugs = new Set(PATTERNS.filter((p) => p.archived).map((p) => p.slug))
     for (const entry of CHANGELOG) {
-      // If slug is in the active catalog, it must resolve.
-      // Retired patterns are excluded from getPatternSlugs() — skip them.
-      if (entry.type !== 'retired') {
+      // Skip retired entries and entries for archived patterns — both are
+      // correctly absent from getPatternSlugs() (which excludes archived).
+      if (entry.type !== 'retired' && !archivedSlugs.has(entry.slug)) {
         expect(slugs.has(entry.slug)).toBe(true)
       }
     }

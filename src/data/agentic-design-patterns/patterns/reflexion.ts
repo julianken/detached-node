@@ -21,7 +21,7 @@ export const pattern: Pattern = {
   D -->|no| F[Generate verbal critique]
   F --> G[Append to episodic memory]
   G --> A`,
-  mermaidAlt: 'A flowchart in which a Task feeds a Generate step, which feeds an Execute step, whose Success decision either returns the result or, on failure, generates a verbal critique that is appended to episodic memory before looping back to the Task node.',
+  mermaidAlt: 'Where Evaluator-Optimizer critiques within a single attempt, Reflexion persists the lesson: a verbal critique written after failure is appended to episodic memory, and the next attempt retrieves it — the loop teaches across runs, not within them.',
   whenToUse: [
     'This earns its rent when the agent attempts the same task class repeatedly and you have a place to keep critiques across runs (multi-turn assistants, recurring job types, agent benchmarks).',
     'Justified where failure is diagnosable from the trajectory: the agent can name the mistake in words an outside reviewer could verify.',
