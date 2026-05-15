@@ -9,7 +9,12 @@ const nextConfig: NextConfig = {
   experimental: {
     // Optimize package imports to reduce bundle size
     optimizePackageImports: ['@payloadcms/richtext-lexical'],
-    viewTransition: true,
+    // Client-side App Router cache freshness windows (seconds).
+    // Docs: https://nextjs.org/docs/app/api-reference/config/next-config-js/staleTimes
+    staleTimes: {
+      dynamic: 30, // opts back into Next 14-era 30s caching (current default is 0)
+      static: 300, // current Next 16.2 default; explicit for clarity
+    },
   },
 
   // Image optimization configuration
