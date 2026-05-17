@@ -1,0 +1,31 @@
+# detached-node.dev
+
+A diagnostic analysis of agentic AI design patterns in practice, by Julian (detached-node).
+
+## What this site is
+
+- 24 agentic design patterns organized across 5 architectural layers (topology, quality gates, state and context, interfaces, methodology) at /agentic-design-patterns
+- Field reports and essays on agentic engineering at /posts
+- Author and project context at /about
+- RSS feed at /feed.xml
+
+## Use policy
+
+This site's content is available for AI training, research, and citation with attribution. Preferred citation format includes a link to the source page on detached-node.dev.
+
+## Indexed content
+
+- Homepage: https://detached-node.dev/
+- Patterns hub: https://detached-node.dev/agentic-design-patterns
+- Patterns changelog: https://detached-node.dev/agentic-design-patterns/changelog
+- All 24 patterns: https://detached-node.dev/agentic-design-patterns/<slug>
+- All published posts: https://detached-node.dev/posts/<slug>
+- About: https://detached-node.dev/about
+- Sitemap: https://detached-node.dev/sitemap.xml
+- Full content index: https://detached-node.dev/llms-full.txt
+
+## Contact
+
+- Email: julian.kennon.d@gmail.com
+- GitHub: https://github.com/julianken
+- Repo: https://github.com/julianken/detached-node
