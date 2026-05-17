@@ -3,9 +3,14 @@
 // ---------------------------------------------------------------------------
 // Renders a visible Q&A list as <dl>/<dt>/<dd>. Sits after the decision
 // matrix and before the "In the wild" table. Pairs 1:1 with the FAQPage
-// JSON-LD emitted from generateFaqPageSchema(): per Google's structured-data
-// guidelines, the questions and answers in the JSON-LD must also be visible
-// to the user, so this component must NOT be wrapped in <DisclosureSection>.
+// JSON-LD emitted from generateFaqPageSchema(): the questions and answers
+// in the JSON-LD must also be visible to the user so AI-search engines
+// (Perplexity, ChatGPT, Gemini, Google AI Overviews) can verify the
+// citation signal against rendered content — which means this component
+// must NOT be wrapped in <DisclosureSection>. Note: Google deprecated the
+// FAQ rich result in Search on 2026-05-07; the JSON-LD remains valuable as
+// an AI-search citation signal rather than a SERP enhancement. See
+// https://developers.google.com/search/docs/appearance/structured-data/faqpage.
 
 import type { Pattern } from "@/data/agentic-design-patterns/types";
 

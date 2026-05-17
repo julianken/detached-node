@@ -12,10 +12,15 @@ import type { CollectionBeforeChangeHook } from 'payload'
  * Semantics:
  *   - create operations: pass through unchanged (the post is new; an editor
  *     can fill `dedicatedDateModified` manually or leave it null).
- *   - update operations: when `body`, `title`, or `summary` actually changed
- *     (deep-equal compare via JSON serialization), and the editor has NOT
- *     manually set `dedicatedDateModified` in this save, stamp the field
- *     with the current ISO timestamp. Editor-supplied values are preserved.
+ *   - update operations: Payload's `data` partial only contains fields the
+ *     editor actually touched in this save, so presence of the key in
+ *     `data` is the correct test for "editor set this field explicitly".
+ *     - If `dedicatedDateModified` IS in the partial → respect the editor
+ *       value, return data unchanged.
+ *     - Else if `body`, `title`, or `summary` is in the partial (meaningful
+ *       content changed) → stamp `data.dedicatedDateModified` with the
+ *       current ISO timestamp.
+ *     - Else → no-op (non-content field change like `featured`).
  *
  * The hook is non-blocking: it never throws and never rejects a save.
  */
@@ -23,27 +28,26 @@ const MEANINGFUL_FIELDS = ['body', 'title', 'summary'] as const
 
 export const beforeChangeDedicatedDateModified: CollectionBeforeChangeHook = ({
   data,
-  originalDoc,
   operation,
 }) => {
   if (operation === 'create') {
     return data
   }
 
-  // If the editor manually changed dedicatedDateModified in this save,
-  // respect that value — do not overwrite.
-  const editorSetField =
-    data?.dedicatedDateModified !== originalDoc?.dedicatedDateModified
+  // Payload's `data` on update is a partial containing only the fields the
+  // editor changed. Presence of the key is the correct signal that the
+  // editor set the field explicitly — a value-vs-originalDoc comparison
+  // would treat any unchanged save as an editor override.
+  const editorSetField = data != null && 'dedicatedDateModified' in data
 
   if (editorSetField) {
     return data
   }
 
-  const changed = MEANINGFUL_FIELDS.some((field) => {
-    return JSON.stringify(data?.[field]) !== JSON.stringify(originalDoc?.[field])
-  })
+  const meaningfulContentChanged =
+    data != null && MEANINGFUL_FIELDS.some((field) => field in data)
 
-  if (changed) {
+  if (meaningfulContentChanged) {
     return {
       ...data,
       dedicatedDateModified: new Date().toISOString(),
