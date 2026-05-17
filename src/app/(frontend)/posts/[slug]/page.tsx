@@ -17,7 +17,8 @@ import { isValidSlug } from "@/lib/types/branded";
 import { isMediaObject } from "@/lib/types/media";
 import { FadeReveal } from "@/components/FadeReveal";
 import { siteUrl, ogDefaultImage } from "@/lib/site-config";
-import { mermaidConverters } from "@/lib/lexical/mermaid-converter";
+import { postBodyConverters } from "@/lib/lexical/post-body-converters";
+import { PostReferencesSection } from "@/components/PostReferencesSection";
 
 // ISR: Revalidate every hour - post content changes infrequently
 export const revalidate = 3600;
@@ -168,10 +169,12 @@ export default async function PostPage({ params }: PostPageProps) {
           <section className="prose dark:prose-invert max-w-none">
             <RichText
               data={post.body as SerializedEditorState}
-              converters={mermaidConverters}
+              converters={postBodyConverters}
             />
           </section>
         </TextGlitch>
+
+        <PostReferencesSection references={post.references ?? []} />
       </PageLayout>
     </article>
     </FadeReveal>
