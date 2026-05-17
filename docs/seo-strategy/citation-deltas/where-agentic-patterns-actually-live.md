@@ -3,6 +3,15 @@
 Post URL: https://detached-node.dev/posts/where-agentic-patterns-actually-live
 Published: May 15, 2026
 
+> **Note on grouping:** Although 8 citations are proposed below, they group into 4 unique anchor passages, not 8 independent edit cycles:
+>
+> - **Passage 1** (Anthropic essay sentence) — Citation 1
+> - **Passage 2** (Reflexion + Self-Refine sentence) — Citations 2 and 3 land together
+> - **Passage 3** (Anthropic's SDK docs sentence) — Citation 4
+> - **Passage 4** (subagents / skills / hooks / MCP servers sentence) — Citations 5, 6, 7, 8 land together
+>
+> The README workflow describes per-citation cycles, but Citations 3 and 6-8 are marked "(Combined with Citation 2/5 above.)" because they share an anchor passage. Plan **4 edit cycles** in the Payload admin, one per passage, each cycle inserting all the inline links for that passage at once — not 8 separate cycles per individual link.
+
 ## Summary
 
 - **Proposed citations:** 8
@@ -63,11 +72,11 @@ This post is the densest source of unattributed external references in the publi
 
 **Proposed edit:**
 
-> [Anthropic's SDK docs](https://github.com/anthropics/claude-cookbooks) show you how to build the patterns from scratch in code. The feature docs cover subagents, skills, hooks, and MCP servers individually.
+> [Anthropic's SDK docs](https://github.com/anthropics/anthropic-sdk-python) show you how to build the patterns from scratch in code. The feature docs cover subagents, skills, hooks, and MCP servers individually.
 
-**Source:** https://github.com/anthropics/claude-cookbooks
-**Source verified:** YES on 2026-05-17. Confirmed as the official Anthropic Cookbook repo (`anthropics/claude-cookbooks`, 43.2k stars), which contains a `patterns/agents` directory of from-scratch implementations for the building-effective-agents workflows — exactly the artifact the prose references.
-**Rationale:** The Cookbook is the canonical "build the patterns from scratch in code" companion to the Building Effective Agents essay. This connects Julian's claim to the actual implementation artifact. Note: if Julian had a narrower target in mind (e.g., the `@anthropic-ai/sdk` API reference, or a specific `claude-agent-sdk` page), this can be substituted, but the cookbook is the most defensible match for "show you how to build the patterns from scratch."
+**Source:** https://github.com/anthropics/anthropic-sdk-python
+**Source verified:** YES on 2026-05-17. Confirmed as the official `anthropics/anthropic-sdk-python` repo — the canonical Python client library for the Anthropic API, with `examples/` covering tool use, streaming, and message handling patterns developers compose into agent workflows.
+**Rationale:** Preserves Julian's existing prose ("Anthropic's SDK docs") and points it at the actual SDK rather than the Cookbook. The post's contrast is between the SDK as a *library/API for building patterns programmatically* and the *feature docs* that cover the four primitives individually — that's an SDK-vs-features framing, not a cookbook-vs-features framing. The Python SDK is the more visible of the two (Python and TypeScript SDKs sit side by side); either would be defensible, but the Python repo is the more common landing surface for "Anthropic SDK" queries. The Cookbook, while topically adjacent, is explicitly a *pattern examples* repo — labeling it "Anthropic's SDK docs" would be inaccurate.
 
 ### Citation 5: Claude Code subagents docs
 
