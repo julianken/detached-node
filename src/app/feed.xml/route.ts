@@ -56,7 +56,6 @@ export async function GET(): Promise<Response> {
     <description>${escapeXml(SITE_DESCRIPTION)}</description>
     <language>en</language>
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
-    <author>${escapeXml(CONTACT_EMAIL)} (${escapeXml(SITE_TITLE)})</author>
     <copyright>Copyright © 2024–${new Date().getFullYear()} ${escapeXml(SITE_TITLE)}. All rights reserved.</copyright>
     <managingEditor>${escapeXml(CONTACT_EMAIL)} (${escapeXml(SITE_TITLE)})</managingEditor>
     <generator>Next.js + Payload CMS</generator>
