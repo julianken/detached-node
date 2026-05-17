@@ -7,8 +7,7 @@ import { generatePersonSchema, generatePageBreadcrumbSchema } from "@/lib/schema
 import { getPageBySlug } from "@/lib/queries/pages";
 import { siteUrl } from "@/lib/site-config";
 
-// Static generation - about page changes very rarely
-export const dynamic = "force-static";
+export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getPageBySlug('about');
