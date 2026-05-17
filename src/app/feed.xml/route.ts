@@ -60,9 +60,11 @@ export async function GET(): Promise<Response> {
     <managingEditor>${escapeXml(CONTACT_EMAIL)} (${escapeXml(SITE_TITLE)})</managingEditor>
     <generator>Next.js + Payload CMS</generator>
     <image>
-      <url>${escapeXml(siteUrl)}/og-default.png</url>
+      <url>${escapeXml(siteUrl)}/rss-icon-144.png</url>
       <title>${escapeXml(SITE_TITLE)}</title>
       <link>${escapeXml(siteUrl)}</link>
+      <width>144</width>
+      <height>144</height>
     </image>
     <atom:link href="${escapeXml(siteUrl)}/feed.xml" rel="self" type="application/rss+xml" />${items}
   </channel>
