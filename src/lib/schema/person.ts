@@ -26,5 +26,7 @@ export function generatePersonSchema(): PersonSchema {
     // Spread to avoid mutating the const array
     sameAs: [...AUTHOR_CONFIG.sameAs],
     description: AUTHOR_CONFIG.description,
+    jobTitle: AUTHOR_CONFIG.jobTitle,
+    knowsAbout: [...AUTHOR_CONFIG.knowsAbout],
   };
 }

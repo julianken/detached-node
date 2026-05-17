@@ -129,6 +129,16 @@ export default async function PostPage({ params }: PostPageProps) {
           {post.publishedAt && (
             <p className="text-sm tracking-[0.03em] text-text-tertiary">{formatDate(post.publishedAt)}</p>
           )}
+          <p className="text-sm text-text-tertiary">
+            by{" "}
+            <Link
+              href="/about"
+              rel="author"
+              className="hover:text-accent transition-colors"
+            >
+              Julian (detached-node)
+            </Link>
+          </p>
         </header>
 
         {post.summary && (

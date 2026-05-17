@@ -63,6 +63,28 @@ export interface PersonSchema extends SchemaBase {
   url: string;
   sameAs?: string[];
   description?: string;
+  jobTitle?: string;
+  knowsAbout?: string[];
+}
+
+// -------------------------------------------------------------------------
+// ProfilePage — top-level schema for /about
+// Embeds the canonical Person as mainEntity. Google + AI citation pipelines
+// use the ProfilePage + Person combo as the authoritative author-identity
+// declaration. The embedded Person retains @context because Google
+// historically tolerates it on embedded entities and several validators
+// expect it; this matches the convention used for the top-level Person
+// emitted elsewhere on the site (no @context-stripping convention exists
+// in this codebase for embedded entities yet).
+// -------------------------------------------------------------------------
+
+export interface ProfilePageSchema extends SchemaBase {
+  "@type": "ProfilePage";
+  "@id": string;
+  url: string;
+  name: string;
+  isPartOf: { "@id": string };
+  mainEntity: PersonSchema;
 }
 
 // -------------------------------------------------------------------------
