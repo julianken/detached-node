@@ -317,6 +317,10 @@ export interface Post {
   tags?: (number | Tag)[] | null;
   status: 'draft' | 'published' | 'archived';
   publishedAt?: string | null;
+  /**
+   * Manually set when meaningful content changes ship. Used as the `dateModified` signal in BlogPosting schema. The beforeChange hook auto-stamps this on body/title/summary edits; falls back to `updatedAt` if unset.
+   */
+  dedicatedDateModified?: string | null;
   featured?: boolean | null;
   /**
    * Cluster theme for pillar page grouping.
@@ -577,6 +581,7 @@ export interface PostsSelect<T extends boolean = true> {
   tags?: T;
   status?: T;
   publishedAt?: T;
+  dedicatedDateModified?: T;
   featured?: T;
   theme?: T;
   seoTitle?: T;
