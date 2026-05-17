@@ -24,6 +24,10 @@ export const alt = "Agentic design pattern reference card";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
+const SITE_DOMAIN = process.env.NEXT_PUBLIC_SERVER_URL
+  ? new URL(process.env.NEXT_PUBLIC_SERVER_URL).hostname
+  : "detached-node.dev";
+
 // Pre-bake one OG image per non-archived pattern at build time.
 export async function generateStaticParams(): Promise<{ slug: string }[]> {
   return getPatternSlugs().map((slug) => ({ slug }));
@@ -128,7 +132,7 @@ export default async function OgImage({ params }: OgImageProps) {
           }}
         >
           <span>Agentic Design Patterns</span>
-          <span>detached-node.com</span>
+          <span>{SITE_DOMAIN}</span>
         </div>
       </div>
     ),

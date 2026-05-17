@@ -10,19 +10,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: siteUrl,
       lastModified: new Date(),
       changeFrequency: "weekly",
-      priority: 1,
     },
     {
       url: `${siteUrl}/posts`,
       lastModified: new Date(),
       changeFrequency: "daily",
-      priority: 0.9,
     },
     {
       url: `${siteUrl}/about`,
       lastModified: new Date(),
       changeFrequency: "monthly",
-      priority: 0.8,
     },
   ];
 
@@ -32,13 +29,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${siteUrl}/agentic-design-patterns`,
       lastModified: new Date(),
       changeFrequency: "weekly",
-      priority: 0.95,
     },
     {
       url: `${siteUrl}/agentic-design-patterns/changelog`,
       lastModified: new Date(),
       changeFrequency: "weekly",
-      priority: 0.7,
     },
   ];
   const adpSatelliteRoutes: MetadataRoute.Sitemap = PATTERNS.filter(
@@ -47,7 +42,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${siteUrl}/agentic-design-patterns/${p.slug}`,
     lastModified: new Date(p.dateModified),
     changeFrequency: "monthly" as const,
-    priority: 0.85,
   }));
 
   // Fetch published posts
@@ -56,7 +50,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${siteUrl}/posts/${post.slug}`,
     lastModified: new Date(post.updatedAt),
     changeFrequency: "weekly" as const,
-    priority: 0.7,
   }));
 
   // Fetch published pages
@@ -67,7 +60,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${siteUrl}/${page.slug}`,
       lastModified: new Date(page.updatedAt),
       changeFrequency: "monthly" as const,
-      priority: 0.6,
     }));
 
   return [
