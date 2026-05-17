@@ -18,4 +18,4 @@ Software engineer (10+ years, full-stack) writing about agentic AI design patter
 - Site: [detached-node.dev](https://detached-node.dev)
 - Email: julian.kennon.d@gmail.com
 - GitHub: [@julianken](https://github.com/julianken)
-- LinkedIn: _to be added_
+- LinkedIn: [julian-k-ba6b5897](https://www.linkedin.com/in/julian-k-ba6b5897)

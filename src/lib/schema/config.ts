@@ -35,7 +35,7 @@ export const AUTHOR_CONFIG = {
   id: `${siteUrl}/#author`,
   sameAs: [
     "https://github.com/julianken",
-    "https://www.linkedin.com/in/julian-kennon",
+    "https://www.linkedin.com/in/julian-k-ba6b5897",
   ] as string[],
   description:
     "Software engineer with a decade-plus of full-stack experience, focused on agentic AI workflows and autonomous system design. Author of the agentic design patterns reference catalog at detached-node.dev.",

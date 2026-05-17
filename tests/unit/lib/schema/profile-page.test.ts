@@ -17,7 +17,7 @@ vi.mock("@/lib/schema/config", () => ({
     id: "https://detached-node.com/#author",
     sameAs: [
       "https://github.com/julianken",
-      "https://www.linkedin.com/in/julian-kennon",
+      "https://www.linkedin.com/in/julian-k-ba6b5897",
     ],
     description: "Software engineer focused on agentic AI workflows.",
     jobTitle: "Software Engineer",
