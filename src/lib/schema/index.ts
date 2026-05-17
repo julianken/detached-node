@@ -8,6 +8,7 @@
 
 export { generateWebSiteSchema } from "./website";
 export { generatePersonSchema } from "./person";
+export { generateProfilePageSchema } from "./profile-page";
 export { generateBlogPostingSchema } from "./blog-posting";
 export { generateBreadcrumbSchema, generatePageBreadcrumbSchema, generateHubChildBreadcrumb } from "./breadcrumb";
 export { generateCollectionPageSchema } from "./collection-page";
@@ -19,6 +20,7 @@ export { generateFaqPageSchema } from "./faq-page";
 export type {
   SchemaBase,
   PersonSchema,
+  ProfilePageSchema,
   WebSiteSchema,
   BlogPostingSchema,
   BreadcrumbListSchema,

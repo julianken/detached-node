@@ -10,6 +10,7 @@
 // Renders alternative names inline as a comma-separated synonym list, since
 // these are how readers find the pattern under names from other sources.
 
+import { Link } from "next-view-transitions";
 import type { LayerId, Pattern } from "@/data/agentic-design-patterns/types";
 import { LAYERS } from "@/data/agentic-design-patterns/layers";
 import { formatDate } from "@/lib/formatting";
@@ -56,6 +57,16 @@ export function PatternHeader({ pattern }: PatternHeaderProps) {
       >
         Last edited {formatDate(pattern.dateModified)}
       </time>
+      <p className="text-xs text-text-tertiary">
+        by{" "}
+        <Link
+          href="/about"
+          rel="author"
+          className="hover:text-accent transition-colors"
+        >
+          Julian (detached-node)
+        </Link>
+      </p>
     </header>
   );
 }

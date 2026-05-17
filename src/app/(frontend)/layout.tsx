@@ -41,7 +41,7 @@ export const metadata: Metadata = {
   },
   description: siteDescription,
   keywords: siteKeywords,
-  authors: [{ name: siteName }],
+  authors: [{ name: "Julian Kennon" }],
   // RSS autodiscovery is rendered as a direct <link> tag in <head> below,
   // not via alternates.types, because page-level alternates.canonical
   // would clobber it (Next.js metadata merging replaces alternates entirely).
