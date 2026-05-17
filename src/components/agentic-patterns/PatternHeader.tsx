@@ -12,6 +12,7 @@
 
 import type { LayerId, Pattern } from "@/data/agentic-design-patterns/types";
 import { LAYERS } from "@/data/agentic-design-patterns/layers";
+import { formatDate } from "@/lib/formatting";
 
 interface PatternHeaderProps {
   pattern: Pattern;
@@ -49,6 +50,12 @@ export function PatternHeader({ pattern }: PatternHeaderProps) {
           {pattern.oneLineSummary}
         </p>
       )}
+      <time
+        dateTime={pattern.dateModified}
+        className="text-sm tracking-[0.03em] text-text-tertiary"
+      >
+        Last edited {formatDate(pattern.dateModified)}
+      </time>
     </header>
   );
 }
