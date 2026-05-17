@@ -6,20 +6,28 @@
 // + Overview/Background disclosures by [slug]/page.tsx.
 //
 // Body slot order (top to bottom):
+//   0. Key statistic          — optional, callout above the diagram
 //   1. Diagram                — figure, no h2
+//   1b. afterDiagram slot     — e.g. RealizingDisclosure cards
+//   1c. Expert quote          — optional, semantic <blockquote>
 //   2. Decision matrix        — h2 "Decision" (replaces When-to-use + When-NOT)
+//   2b. Related questions     — optional, visible <dl> Q&A (unlocks FAQPage JSON-LD)
 //   3. In the wild            — h2, source/claim table
 //   4. Reader gotcha          — h2, optional, red-bordered callout
 //   5. Implementation sketch  — h2, denser pre, frameworks subsection
 //
-// Heading count: this body emits up to 4 h2s (Decision, In the wild,
-// Reader gotcha, Implementation sketch). Plus h2 from References + the
+// Heading count: this body emits up to 5 h2s (Decision, Common questions,
+// In the wild, Reader gotcha, Implementation sketch) plus optional sr-only
+// h2s on Key statistic and Expert quote. Plus h2 from References + the
 // disclosure summaries (which are NOT h2s — <summary> elements). The E2E
-// fixture must be updated.
+// fixture must be updated when relatedQuestions is populated for a pattern.
 
 import type { Framework, Pattern, SdkAvailability } from "@/data/agentic-design-patterns/types";
 import { MermaidDiagram } from "@/components/MermaidDiagram";
 import { DecisionMatrix } from "./DecisionMatrix";
+import { ExpertQuoteBlock } from "./ExpertQuoteBlock";
+import { KeyStatisticCallout } from "./KeyStatisticCallout";
+import { RelatedQuestionsBlock } from "./RelatedQuestionsBlock";
 import { SourcedClaimTable } from "./SourcedClaimTable";
 
 interface PatternBodyProps {
@@ -69,6 +77,11 @@ export function PatternBody({ pattern, afterDiagram }: PatternBodyProps) {
 
   return (
     <div className="flex flex-col gap-10">
+      {/* 0. Key statistic — optional above-fold callout */}
+      {pattern.keyStatistic && (
+        <KeyStatisticCallout statistic={pattern.keyStatistic} />
+      )}
+
       {/* 1. Diagram */}
       {pattern.mermaidSource && (
         <section>
@@ -87,8 +100,18 @@ export function PatternBody({ pattern, afterDiagram }: PatternBodyProps) {
       {/* 1b. Optional slot — e.g. RealizingDisclosure card sits here */}
       {afterDiagram}
 
+      {/* 1c. Expert quote — optional semantic <blockquote> */}
+      {pattern.expertQuote && (
+        <ExpertQuoteBlock quote={pattern.expertQuote} />
+      )}
+
       {/* 2. Decision matrix — replaces When-to-use + When-NOT */}
       <DecisionMatrix pattern={pattern} />
+
+      {/* 2b. Related questions — optional visible Q&A; unlocks FAQPage JSON-LD */}
+      {pattern.relatedQuestions && pattern.relatedQuestions.length > 0 && (
+        <RelatedQuestionsBlock questions={pattern.relatedQuestions} />
+      )}
 
       {/* 3. In the wild — source/claim table */}
       <SourcedClaimTable pattern={pattern} />

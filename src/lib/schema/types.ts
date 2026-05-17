@@ -197,3 +197,24 @@ export interface ArticleSchema extends SchemaBase {
   author: { "@id": string };
   citation?: PatternCitationSchema[];
 }
+
+// -------------------------------------------------------------------------
+// FAQPage — top-level schema emitted on satellite pages when the underlying
+// Pattern declares a populated `relatedQuestions` array. Per Google's
+// rich-result guidance the FAQPage is a sibling of (not nested inside) the
+// Article schema and the questions/answers must be visible on the page —
+// the renderer in RelatedQuestionsBlock enforces that contract.
+// -------------------------------------------------------------------------
+
+export interface FaqPageSchema extends SchemaBase {
+  "@type": "FAQPage";
+  "@id": string;
+  mainEntity: Array<{
+    "@type": "Question";
+    name: string;
+    acceptedAnswer: {
+      "@type": "Answer";
+      text: string;
+    };
+  }>;
+}
