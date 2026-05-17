@@ -2,15 +2,10 @@
 //
 // Author entity configuration and site constants for JSON-LD schema generation.
 //
-// AUTHOR IDENTITY DECISION POINT:
-// The author name and sameAs values are set here. When identity is finalized,
-// update:
-//   1. AUTHOR_CONFIG.name  — real name or finalized pseudonym
-//   2. AUTHOR_CONFIG.sameAs — add LinkedIn, Twitter, or other verifiable profiles
-//   3. AUTHOR_CONFIG.description — update biography text
-//
-// These are the only changes needed for author identity migration. All schema
-// generators reference AUTHOR_CONFIG and will pick up the update automatically.
+// Tier C identity migration complete: real name lives in AUTHOR_CONFIG.name,
+// the brand "detached-node" is retained as siteName, and AUTHOR_CONFIG.alternateName
+// bridges the two so search and LLM citation pipelines can resolve the alias.
+// All schema generators reference AUTHOR_CONFIG; updates here propagate automatically.
 
 import { siteUrl } from '../site-url'
 
@@ -32,6 +27,10 @@ export const SITE_CONFIG = {
 export const AUTHOR_CONFIG = {
   // Tier C identity migration: real name in schema; brand "detached-node" stays as siteName.
   name: "Julian Kennon",
+  // alternateName bridges the visible byline "Julian (detached-node)" to a
+  // machine-readable alias so search and LLM citation pipelines can resolve
+  // the brand to this Person entity.
+  alternateName: "detached-node",
   url: `${siteUrl}/about`,
   id: `${siteUrl}/#author`,
   sameAs: [

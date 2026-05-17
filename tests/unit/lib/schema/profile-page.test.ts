@@ -12,6 +12,7 @@ vi.mock("@/lib/schema/config", () => ({
   },
   AUTHOR_CONFIG: {
     name: "Julian Kennon",
+    alternateName: "detached-node",
     url: "https://detached-node.com/about",
     id: "https://detached-node.com/#author",
     sameAs: [
@@ -36,7 +37,7 @@ import { SITE_CONFIG, AUTHOR_CONFIG } from "@/lib/schema/config";
 // ---------------------------------------------------------------------------
 
 describe("generateProfilePageSchema", () => {
-  it("returns @context and @type ProfilePage", () => {
+  it("returns top-level @context and @type ProfilePage", () => {
     const schema = generateProfilePageSchema();
     expect(schema["@context"]).toBe("https://schema.org");
     expect(schema["@type"]).toBe("ProfilePage");
@@ -64,17 +65,25 @@ describe("generateProfilePageSchema", () => {
     expect(schema.isPartOf).toEqual({ "@id": SITE_CONFIG.websiteId });
   });
 
-  it("embeds Person as mainEntity with @context and @id", () => {
+  it("embeds Person as mainEntity with @type and @id, but NOT @context (matches Google's example)", () => {
     const schema = generateProfilePageSchema();
-    expect(schema.mainEntity["@context"]).toBe("https://schema.org");
     expect(schema.mainEntity["@type"]).toBe("Person");
     expect(schema.mainEntity["@id"]).toBe(AUTHOR_CONFIG.id);
+    // Embedded Person must not carry @context — it lives on the top-level
+    // ProfilePage only.
+    expect("@context" in schema.mainEntity).toBe(false);
   });
 
   it("mainEntity.name matches AUTHOR_CONFIG.name (real name, not pseudonym)", () => {
     const schema = generateProfilePageSchema();
     expect(schema.mainEntity.name).toBe(AUTHOR_CONFIG.name);
     expect(schema.mainEntity.name).toBe("Julian Kennon");
+  });
+
+  it("mainEntity.alternateName is the brand alias 'detached-node'", () => {
+    const schema = generateProfilePageSchema();
+    expect(schema.mainEntity.alternateName).toBe(AUTHOR_CONFIG.alternateName);
+    expect(schema.mainEntity.alternateName).toBe("detached-node");
   });
 
   it("mainEntity.url points at /about (canonical author page)", () => {

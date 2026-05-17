@@ -18,11 +18,13 @@ export function generateProfilePageSchema(): ProfilePageSchema {
     url: `${SITE_CONFIG.url}/about`,
     name: `About ${AUTHOR_CONFIG.name} — ${SITE_CONFIG.name}`,
     isPartOf: { "@id": SITE_CONFIG.websiteId },
+    // Embedded Person mainEntity intentionally omits @context — it lives on
+    // the top-level ProfilePage only, matching Google's documented example.
     mainEntity: {
-      "@context": "https://schema.org",
       "@type": "Person",
       "@id": AUTHOR_CONFIG.id,
       name: AUTHOR_CONFIG.name,
+      alternateName: AUTHOR_CONFIG.alternateName,
       url: AUTHOR_CONFIG.url,
       sameAs: [...AUTHOR_CONFIG.sameAs],
       description: AUTHOR_CONFIG.description,
