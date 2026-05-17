@@ -15,6 +15,8 @@ export const siteDescription =
 
 export const siteAuthor = "detached-node";
 
+export const CONTACT_EMAIL = "julian.kennon.d@gmail.com";
+
 export const siteKeywords = [
   "agentic AI",
   "autonomous systems",

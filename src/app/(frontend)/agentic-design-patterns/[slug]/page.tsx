@@ -116,15 +116,9 @@ export default async function PatternSatellitePage({
             />
             <ReferencesSection pattern={pattern} />
             {overviewLead && (
-              <DisclosureSection
-                id="overview-discussion"
-                label="Overview · 1-paragraph mechanism"
-                defaultOpen
-              >
-                <p className="text-base leading-7 text-text-secondary [text-wrap:pretty]">
-                  {overviewLead}
-                </p>
-              </DisclosureSection>
+              <p className="text-base leading-7 text-text-secondary [text-wrap:pretty]">
+                {overviewLead}
+              </p>
             )}
             {backgroundParagraphs.length > 0 && (
               <DisclosureSection

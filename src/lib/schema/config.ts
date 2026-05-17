@@ -41,6 +41,6 @@ export const AUTHOR_CONFIG = {
   // sameAs: external verifiable profiles for entity disambiguation.
   // GitHub org is the one confirmed external reference at launch.
   // Add LinkedIn/Twitter/etc. when/if disclosed.
-  sameAs: ["https://github.com/detached-node"] as string[],
+  sameAs: ["https://github.com/julianken"] as string[],
   description: "Writing on agentic AI in software engineering.",
 } as const;

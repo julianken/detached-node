@@ -22,6 +22,10 @@ export const alt = "Agentic Design Patterns reference catalog";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
+const SITE_DOMAIN = process.env.NEXT_PUBLIC_SERVER_URL
+  ? new URL(process.env.NEXT_PUBLIC_SERVER_URL).hostname
+  : "detached-node.dev";
+
 export default async function OgImage() {
   const subtitle = "A reference catalog of agentic AI design patterns.";
   const footerStat = "5 layers · reference catalog";
@@ -106,7 +110,7 @@ export default async function OgImage() {
           }}
         >
           <span>{footerStat}</span>
-          <span>detached-node.com</span>
+          <span>{SITE_DOMAIN}</span>
         </div>
       </div>
     ),
