@@ -60,15 +60,11 @@ export function generateBlogPostingSchema(post: Post): BlogPostingSchema {
       ? post.references.map(mapReferenceToCitation)
       : undefined;
 
-  // dateModified: Post.updatedAt is always present (Payload sets it on every save).
-  // It is a proxy for dateModified — accurate for content changes, but also updates
-  // on non-content admin saves (e.g., toggling featured flag, changing tags).
-  //
-  // TODO: Replace post.updatedAt with post.dateModified when the dedicated
-  // dateModified field is added to the Posts collection (SEO impl plan item 1).
-  // The field should use a beforeChange hook that only fires on body/title/summary
-  // field changes, not on status or admin field changes.
-  const dateModified = post.updatedAt;
+  // dateModified: prefer the deliberate `dedicatedDateModified` signal, which a
+  // beforeChange hook (src/lib/hooks/before-change-dedicated-date-modified.ts)
+  // stamps only when `body`, `title`, or `summary` actually change. Falls back
+  // to Payload's auto-updated `updatedAt` for posts that pre-date the field.
+  const dateModified = post.dedicatedDateModified ?? post.updatedAt;
 
   // Build the schema object. Required fields are always present.
   // Optional fields use conditional assignment to avoid undefined-valued keys

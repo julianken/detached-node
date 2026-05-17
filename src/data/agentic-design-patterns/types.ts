@@ -136,6 +136,18 @@ export type Pattern = {
   implementationSketch: string // ~15 lines; TypeScript or pseudocode
   sdkAvailability: SdkAvailability
   readerGotcha?: { text: string; sourceUrl: string }
+  // -------------------------------------------------------------------------
+  // Citation-bait fields (optional; populated per-pattern in a follow-up).
+  // All three render visibly on the satellite page (NOT inside DisclosureSection)
+  // and feed schema.org signals. relatedQuestions additionally unlocks emission
+  // of FAQPage JSON-LD as a second top-level schema on the satellite page.
+  // -------------------------------------------------------------------------
+  /** Visible Q&A block rendered as <dl>; unlocks FAQPage JSON-LD emission. */
+  relatedQuestions?: { q: string; a: string }[]
+  /** Above-fold quantitative claim rendered as a callout; cites a public source. */
+  keyStatistic?: { claim: string; sourceUrl: string; year: number }
+  /** Authoritative quote rendered as a semantic <blockquote>; attribution links to source. */
+  expertQuote?: { text: string; attribution: string; sourceUrl: string }
   relatedSlugs: string[]      // 2-4 cross-link chips; build fails if any don't resolve
   frameworks: Framework[]
   references: Reference[]     // 3-7 references

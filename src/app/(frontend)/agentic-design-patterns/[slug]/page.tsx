@@ -25,6 +25,7 @@ import { DisclosureSection } from "@/components/agentic-patterns/DisclosureSecti
 import { RealizingDisclosure } from "@/components/agentic-patterns/RealizingDisclosure";
 import { PrevNextNav } from "@/components/agentic-patterns/PrevNextNav";
 import {
+  generateFaqPageSchema,
   generateHubChildBreadcrumb,
   generatePatternArticleSchema,
 } from "@/lib/schema";
@@ -80,14 +81,19 @@ export default async function PatternSatellitePage({
   const overviewLead = pattern.bodySummary[0];
   const backgroundParagraphs = pattern.bodySummary.slice(1);
 
+  // FAQPage emits as a SECOND top-level schema (per Google's rich-result
+  // guidance) only when the pattern declares related questions. Null when
+  // absent, so we spread-and-filter to keep the schemas array clean.
+  const faqSchema = generateFaqPageSchema(pattern, siteUrl);
+  const schemas = [
+    generatePatternArticleSchema(pattern, siteUrl),
+    generateHubChildBreadcrumb(pattern.slug, pattern.name),
+    ...(faqSchema ? [faqSchema] : []),
+  ];
+
   return (
     <>
-      <SchemaScript
-        schema={[
-          generatePatternArticleSchema(pattern, siteUrl),
-          generateHubChildBreadcrumb(pattern.slug, pattern.name),
-        ]}
-      />
+      <SchemaScript schema={schemas} />
       <PageLayout maxWidth="full">
         <Link
           href="/agentic-design-patterns"
