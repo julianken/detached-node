@@ -18,7 +18,7 @@ export const pattern: Pattern = {
   D --> E[Layout: system, evidence, history, question]
   E --> F[Cache-aware prompt assembly]
   F --> G[Model call]`,
-  mermaidAlt: 'A left-to-right flowchart in which a Turn input fans into a Score-candidates step that gathers retrievals, memory entries, and tool outputs; the candidates are ranked by signal-to-cost, packed into a token budget, laid out with the system prompt followed by evidence then history then the question, run through cache-aware prompt assembly, and finally sent to the model.',
+  mermaidAlt: 'The window is a finite resource the runtime allocates: candidates from retrieval, memory, and tools are ranked by signal-to-cost, packed into a token budget, and laid out in attention order — system prompt, then evidence, then history, then question.',
   whenToUse: [
     'Indicated when the candidate set of relevant tokens (transcripts, retrievals, tool outputs, scratchpad notes) regularly exceeds the model window or your latency and cost budget for one turn.',
     'Justified where the agent runs many turns and the same prefix can be cached across calls. Pin invariant tokens at the head so cache reads pay for themselves.',

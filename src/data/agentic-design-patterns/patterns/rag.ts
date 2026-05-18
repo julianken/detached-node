@@ -20,7 +20,7 @@ export const pattern: Pattern = {
   A --> E
   E --> F[Generator LLM]
   F --> G[Grounded answer]`,
-  mermaidAlt: 'A flowchart in which a User query is embedded and scored against a vector and keyword index, the top-k passages are concatenated with the original query into an augmented prompt, and a generator LLM produces a grounded answer.',
+  mermaidAlt: 'Single-pass retrieval: embed the query, score it against a precomputed index, concatenate top-k passages with the question, generate — knowledge updates by swapping the index, not retraining the model.',
   whenToUse: [
     'Best for cases where the answer must be grounded in a corpus that changes faster than you can retrain or fine-tune (product manuals, internal wikis, regulatory filings, customer ticket history).',
     "Justified where the user's question is well-formed and self-contained: a single retrieval step is enough to surface the relevant passage.",

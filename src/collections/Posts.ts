@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 import { createSlugHook } from '@/lib/slug'
 import { publishedOrAuthenticated } from '@/lib/access-control'
+import { beforeChangeDedicatedDateModified } from '@/lib/hooks/before-change-dedicated-date-modified'
 import { revalidateAfterChange, revalidateAfterDelete } from '@/lib/revalidate-post'
 
 export const Posts: CollectionConfig = {
@@ -17,6 +18,7 @@ export const Posts: CollectionConfig = {
     delete: ({ req: { user } }) => !!user,
   },
   hooks: {
+    beforeChange: [beforeChangeDedicatedDateModified],
     afterChange: [revalidateAfterChange],
     afterDelete: [revalidateAfterDelete],
   },
@@ -148,6 +150,16 @@ export const Posts: CollectionConfig = {
         date: { pickerAppearance: 'dayAndTime' },
       },
       index: true, // Index for sorting by publication date
+    },
+    {
+      name: 'dedicatedDateModified',
+      type: 'date',
+      admin: {
+        position: 'sidebar',
+        date: { pickerAppearance: 'dayAndTime' },
+        description:
+          'Manually set when meaningful content changes ship. Used as the `dateModified` signal in BlogPosting schema. The beforeChange hook auto-stamps this on body/title/summary edits; falls back to `updatedAt` if unset.',
+      },
     },
     {
       name: 'featured',

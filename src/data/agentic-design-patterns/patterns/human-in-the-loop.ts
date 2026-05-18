@@ -24,7 +24,7 @@ export const pattern: Pattern = {
   H --> A
   I --> J[Stop]
   C --> A`,
-  mermaidAlt: 'A top-down flowchart in which an Agent step branches on whether the next action is sensitive: non-sensitive actions execute and loop back, while sensitive ones snapshot state, pause, and surface the request to a reviewer whose approve, edit, or reject signal either resumes the loop with original or edited arguments, or aborts the run.',
+  mermaidAlt: 'The orchestrator declares which actions pause for a human signal, snapshots run state at the boundary, and resumes only after the reviewer approves, edits, or rejects.',
   whenToUse: [
     'Worth the cost when a tool call is irreversible or hard to recover from (money movement, destructive filesystem or database operations, sending external messages) and a wrong call costs more than the latency of waiting.',
     'Required where regulation or policy demands a named human on the commit (clinical orders, legal filings, hiring decisions) so the audit trail attributes the action to a person, not the model.',

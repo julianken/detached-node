@@ -18,7 +18,7 @@ export const pattern: Pattern = {
   D --> E[Structured judgement: score + rationale]
   E --> F[Aggregate over eval set]
   F --> G[Leaderboard or regression report]`,
-  mermaidAlt: 'A flowchart in which a candidate output and an optional reference or paired candidate are combined with a judge prompt and rubric, fed to a judge LLM that emits a structured judgement of score plus rationale, which is aggregated over an eval set into a leaderboard or regression report.',
+  mermaidAlt: 'A stronger LLM reads a candidate output, applies a written rubric, and emits a score and rationale — either pairwise (which of two responses is better) or single-answer (rate one on a fixed scale); aggregated over an eval set it becomes a regression baseline or leaderboard.',
   whenToUse: [
     'Use this when collecting human preferences is the bottleneck on every release and a frontier model agrees with majority human judgement closely enough to gate CI on its score.',
     'Justified where the rubric can be written down (helpfulness against an instruction, faithfulness to retrieved context, format conformance, safety policy adherence) and the judge can read both the criteria and the candidate in one call.',

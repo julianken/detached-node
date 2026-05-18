@@ -72,5 +72,10 @@
     "typescript": "^6",
     "vitest": "^4.1.4",
     "zod": "^3.25.76"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "next-view-transitions": "patches/next-view-transitions.patch"
+    }
   }
 }

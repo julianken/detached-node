@@ -150,15 +150,15 @@ describe('getPatternsByLayer', () => {
     expect(getPatternsByLayer('interfaces')).toHaveLength(3)
   })
 
-  it('methodology has 3 patterns', () => {
-    expect(getPatternsByLayer('methodology')).toHaveLength(3)
+  it('methodology has 2 patterns', () => {
+    expect(getPatternsByLayer('methodology')).toHaveLength(2)
   })
 
-  it('layer counts sum to 25', () => {
+  it('layer counts sum to 24', () => {
     const total = ['topology', 'quality', 'state', 'interfaces', 'methodology']
       .map((id) => getPatternsByLayer(id as Parameters<typeof getPatternsByLayer>[0]).length)
       .reduce((a, b) => a + b, 0)
-    expect(total).toBe(25)
+    expect(total).toBe(24)
   })
 })
 
@@ -190,8 +190,8 @@ describe('getPattern', () => {
 // ---------------------------------------------------------------------------
 
 describe('getPatternSlugs', () => {
-  it('returns exactly 25 slugs', () => {
-    expect(getPatternSlugs().length).toBe(25)
+  it('returns exactly 24 slugs', () => {
+    expect(getPatternSlugs().length).toBe(24)
   })
 
   it('includes 12-factor-agent', () => {
@@ -235,15 +235,15 @@ describe('getAdjacentPatterns', () => {
     expect(next?.slug).toBe('identity-separated-review')
   })
 
-  it('identity-separated-review is middle in methodology — prev is 12-factor-agent, next is funnel-method', () => {
+  it('identity-separated-review is last in methodology — prev is 12-factor-agent, next null', () => {
     const { prev, next } = getAdjacentPatterns('identity-separated-review')
     expect(prev?.slug).toBe('12-factor-agent')
-    expect(next?.slug).toBe('funnel-method')
+    expect(next).toBeNull()
   })
 
-  it('funnel-method is last in methodology — prev is identity-separated-review, next null', () => {
+  it('funnel-method is archived — getAdjacentPatterns returns both null', () => {
     const { prev, next } = getAdjacentPatterns('funnel-method')
-    expect(prev?.slug).toBe('identity-separated-review')
+    expect(prev).toBeNull()
     expect(next).toBeNull()
   })
 })
@@ -271,7 +271,7 @@ describe('getCatalogDateModified', () => {
 // ---------------------------------------------------------------------------
 
 describe('getCatalogPatternCount', () => {
-  it('returns 25 (no patterns archived in this PR)', () => {
-    expect(getCatalogPatternCount()).toBe(25)
+  it('returns 24 (funnel-method archived in this PR)', () => {
+    expect(getCatalogPatternCount()).toBe(24)
   })
 })

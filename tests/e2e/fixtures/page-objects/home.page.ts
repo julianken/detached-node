@@ -13,7 +13,7 @@ export class HomePage {
 
   constructor(page: Page) {
     this.page = page
-    this.navigation = page.locator('nav')
+    this.navigation = page.locator('nav[aria-label="Main navigation"]')
     this.heroTitle = page.getByRole('heading', { name: /detached-node/i })
     this.featuredPostsHeading = page.getByRole('heading', { name: /featured posts/i })
     this.featuredPostsSection = page.locator('section').last()

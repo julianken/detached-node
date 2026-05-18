@@ -22,9 +22,12 @@ export function generatePersonSchema(): PersonSchema {
     // all reference. Mismatch here breaks the entity graph.
     "@id": AUTHOR_CONFIG.id,
     name: AUTHOR_CONFIG.name,
+    alternateName: AUTHOR_CONFIG.alternateName,
     url: AUTHOR_CONFIG.url,
     // Spread to avoid mutating the const array
     sameAs: [...AUTHOR_CONFIG.sameAs],
     description: AUTHOR_CONFIG.description,
+    jobTitle: AUTHOR_CONFIG.jobTitle,
+    knowsAbout: [...AUTHOR_CONFIG.knowsAbout],
   };
 }

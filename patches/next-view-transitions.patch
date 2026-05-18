@@ -1,0 +1,78 @@
+diff --git a/dist/index.js b/dist/index.js
+index 41ba06885ed234bc14ef6790ae9f023e3ee4886e..57d3a963027e3e2ab386b548c681f3b5530f7f77 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -18,65 +18,15 @@ function subscribeHash(onStoreChange) {
+     return ()=>window.removeEventListener('hashchange', onStoreChange);
+ }
+ 
+-// TODO: This implementation might not be complete when there are nested
+-// Suspense boundaries during a route transition. But it should work fine for
+-// the most common use cases.
++// PATCHED for detached-node issue #377:
++// The original implementation registered a `popstate` listener that wrapped
++// every browser back/forward in `document.startViewTransition()`, which froze
++// the snapshot for the full RSC fetch duration (multi-second on cold Cloud
++// Run). The click-path transitions (via `useTransitionRouter` below) are
++// unaffected — they still animate with the project's glitch transition.
++// See: github.com/julianken/detached-node/issues/377
+ function useBrowserNativeTransitions() {
+-    const pathname = usePathname();
+-    const currentPathname = useRef(pathname);
+-    // This is a global state to keep track of the view transition state.
+-    const [currentViewTransition, setCurrentViewTransition] = useState(null);
+-    useEffect(()=>{
+-        if (!('startViewTransition' in document)) {
+-            return ()=>{};
+-        }
+-        const onPopState = ()=>{
+-            let pendingViewTransitionResolve;
+-            const pendingViewTransition = new Promise((resolve)=>{
+-                pendingViewTransitionResolve = resolve;
+-            });
+-            const pendingStartViewTransition = new Promise((resolve)=>{
+-                // @ts-ignore
+-                document.startViewTransition(()=>{
+-                    resolve();
+-                    return pendingViewTransition;
+-                });
+-            });
+-            setCurrentViewTransition([
+-                pendingStartViewTransition,
+-                pendingViewTransitionResolve
+-            ]);
+-        };
+-        window.addEventListener('popstate', onPopState);
+-        return ()=>{
+-            window.removeEventListener('popstate', onPopState);
+-        };
+-    }, []);
+-    if (currentViewTransition && currentPathname.current !== pathname) {
+-        // Whenever the pathname changes, we block the rendering of the new route
+-        // until the view transition is started (i.e. DOM screenshotted).
+-        use(currentViewTransition[0]);
+-    }
+-    // Keep the transition reference up-to-date.
+-    const transitionRef = useRef(currentViewTransition);
+-    useEffect(()=>{
+-        transitionRef.current = currentViewTransition;
+-    }, [
+-        currentViewTransition
+-    ]);
+-    const hash = useHash();
+-    useEffect(()=>{
+-        // When the new route component is actually mounted, we finish the view
+-        // transition.
+-        currentPathname.current = pathname;
+-        if (transitionRef.current) {
+-            transitionRef.current[1]();
+-            transitionRef.current = null;
+-        }
+-    }, [
+-        hash,
+-        pathname
+-    ]);
++// no-op: popstate-driven view transitions disabled (see comment above)
+ }
+ 
+ const ViewTransitionsContext = /*#__PURE__*/ createContext(null);

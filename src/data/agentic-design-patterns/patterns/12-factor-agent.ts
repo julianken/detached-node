@@ -21,7 +21,7 @@ export const pattern: Pattern = {
   D --> G
   E --> G
   F --> G`,
-  mermaidAlt: 'A flowchart in which an existing agent whose framework hides the prompt, loop, and state is audited against the twelve factors, which fan out into four refactor tracks (owning prompts and the context window, treating tools as structured outputs and unifying state, owning the control flow as a stateless reducer, and exposing launch / pause / resume plus human contact through tool calls) that converge on a production-grade agent that is legible, durable, and portable.',
+  mermaidAlt: 'Twelve principles applied as a methodology: an existing agent is audited against the factors, and four refactor tracks — own the prompt and context, tools as structured outputs, own the control flow, expose lifecycle APIs — converge on a production-grade agent the team can step through and own end to end.',
   whenToUse: [
     'Right call when an agent prototype has hit the 70–80 percent quality wall and the next gain requires reaching past framework abstractions into the prompt, the loop, and the state machine.',
     'Justified where a team owns the agent in production (they answer the pages, write the evals, and ship the patches) and needs every layer of the runtime to be code they can read and step through.',

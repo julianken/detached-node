@@ -22,7 +22,7 @@ export const pattern: Pattern = {
   F -->|no| G[Read failure output]
   G --> B
   F -->|yes| H[Final diff for review]`,
-  mermaidAlt: 'A flowchart showing a Goal plus working tree feeding a Read code step, which leads to Plan an edit, then Apply patch, then Run tests; a decision node checks whether the build is green and the goal met, looping back through Read failure output to Read code on no, or emitting a final diff for review on yes.',
+  mermaidAlt: 'The Tool Use loop wired to a software-engineering toolkit: read code, plan an edit, apply a patch, run tests — the loop continues on failure and terminates when the test suite comes back green, then proposes a final diff for human review.',
   whenToUse: [
     'Use this when the success criterion is executable (a failing test that must pass, a build that must compile, a benchmark that must hit a target) so each iteration gets unambiguous feedback from the runtime.',
     'Justified where the change is local enough to fit a sandboxed loop: bug fixes scoped by a stack trace, refactors with characterisation tests, ticket-shaped work with clear acceptance steps.',

@@ -20,7 +20,7 @@ export const pattern: Pattern = {
   E -->|allow| G[Response]
   F --> H[Logged decision]
   G --> H`,
-  mermaidAlt: 'A left-to-right flowchart in which a user input first hits an input rail that either blocks the request with a refusal or forwards it to the primary LLM, whose response then hits an output rail that either blocks and sanitizes the response or passes it through, with both terminal paths converging on a logged decision.',
+  mermaidAlt: 'An input rail screens the request before the model sees it; an output rail screens the response before the caller sees it — either can block, rewrite, or pass through, no person required.',
   whenToUse: [
     'Apply when the agent is exposed to untrusted input (public users, third-party documents, retrieved web content) and a malicious prompt could redirect the model into hazardous tool use or content generation.',
     'Justified where the response is consumed by a non-engineer audience and a single jailbroken output, leaked secret, or hallucinated citation is the kind of incident the team is paged on.',
