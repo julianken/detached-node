@@ -5,6 +5,7 @@ export const pattern: Pattern = {
   name: 'Funnel Method',
   alternativeNames: ['Phase-Funnel', 'Multi-Phase Agent Loop', '5+5+3+1 Funnel', 'Progressive Synthesis'],
   layerId: 'methodology',
+  archived: true,
   oneLineSummary: 'Runs a 5+5+3+1 cascade of agents across four disk-anchored phases.',
   bodySummary: [
     'The Funnel Method is a four-phase multi-agent investigation and synthesis loop. Phase 1 fans out five parallel investigators, each exploring an independent facet of the problem space. Phase 2 fans out five iterators that develop, challenge, and extend the Phase 1 findings. Phase 3 fans out three synthesizers that converge through different analytical lenses. Phase 4 runs a single unifier that produces the final deliverable. Every phase boundary writes artifacts to disk before the next wave dispatches; a STATUS.md row updates synchronously at each transition; a compressed context packet (1–2 K tokens, not raw transcripts) flows forward as the dispatch payload. The next wave reads the packet plus its own brief — never the prior wave\'s full transcript.',
@@ -43,7 +44,7 @@ export const pattern: Pattern = {
       sourceUrl: 'https://google.github.io/adk-docs/agents/multi-agents/',
     },
     {
-      text: 'The Double Diamond framework (British Design Council) names Discover, Define, Develop, and Deliver as the four moves of a design process — the same four-phase funnel shape, applied to human design teams rather than agent waves.',
+      text: 'The Double Diamond framework (British Design Council) names Discover, Define, Deliver, and Develop as the four moves of a design process — the same four-phase funnel shape, applied to human design teams rather than agent waves.',
       sourceUrl: 'https://www.designcouncil.org.uk/our-resources/framework-for-innovation/',
     },
   ],
@@ -169,8 +170,8 @@ export {}
     },
   ],
   addedAt: '2026-05-05',
-  dateModified: '2026-05-05',
-  lastChangeNote: 'W3.0 — Generalize skill-name references to generic framing; update Cursor cloud-agent URL; fix readerGotcha sourceUrl.',
+  dateModified: '2026-05-15',
+  lastChangeNote: 'Archived: pattern retired from active catalog.',
 
   realizingInClaudeCode: {
     keyMoves: [

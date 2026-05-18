@@ -20,7 +20,7 @@ export const pattern: Pattern = {
   F --> G[Remote agent runs its own loop]
   G --> H[Task lifecycle: working then completed or failed]
   H --> I[Artifacts and messages returned to client]`,
-  mermaidAlt: 'A left-to-right flowchart in which a client agent first fetches the Agent Card from a well-known path on the remote agent, inspects the advertised skills and authentication, aborts if the required skill is missing, otherwise posts a Task over JSON-RPC, and waits for the remote agent to drive its own loop through the Task lifecycle until artifacts and messages are returned.',
+  mermaidAlt: 'A client agent fetches an Agent Card at a well-known URL, confirms the required skill is advertised, and posts a Task over JSON-RPC — the remote agent runs its own opaque loop, owns its model and tools, and returns artifacts when the Task lifecycle completes.',
   whenToUse: [
     'This earns its rent when one agent must delegate work to another that lives in a different runtime, was built by a different team, or runs on a different vendor. Importing the callee\'s framework is not on the table.',
     'Justified where the remote agent should stay opaque: it owns its model, prompt, and tools, and the caller only contracts on the advertised skill surface.',

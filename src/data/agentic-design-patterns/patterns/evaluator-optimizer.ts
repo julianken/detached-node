@@ -19,7 +19,7 @@ export const pattern: Pattern = {
   D -->|yes| E[Return final answer]
   D -->|no| F[Append critique to prompt]
   F --> B`,
-  mermaidAlt: 'A flowchart in which a Task feeds a Generator that drafts an answer, passed to an Evaluator that scores it against a rubric; if the verdict passes or attempts are exhausted the loop returns the final answer, otherwise the critique is appended to the prompt and the Generator runs again.',
+  mermaidAlt: 'Generator-critic loop within one task: a Generator drafts, an Evaluator scores against a written rubric, and the critique is appended for a fresh generation — a hard iteration cap terminates the loop whether or not the verdict clears.',
   whenToUse: [
     'Right call when the acceptance criteria can be written down and a separate critic can check the draft against them more reliably than the generator can self-correct in one shot.',
     'Justified where a single failed iteration is cheap and observable: code that has to compile, JSON that has to validate against a schema, translations a back-translation step can grade, prose that must hit a style or length target.',

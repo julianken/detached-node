@@ -23,7 +23,7 @@ export const pattern: Pattern = {
   E --> H
   F --> H
   G --> H`,
-  mermaidAlt: 'A flowchart in which an incoming request feeds a classifier node, whose label decision branches into one of three intent-specific handlers or a low-confidence fallback handler, all of which converge on a single response node.',
+  mermaidAlt: 'A classifier maps every incoming request to one label from a fixed vocabulary; exactly one handler fires — intent-specific prompt, cheaper model, or specialist sub-agent — with a low-confidence fallback for uncertain cases.',
   whenToUse: [
     'Best for input distributions that split into distinct categories each benefiting from a different prompt, tool set, or model size: customer-service intents, document types, programming languages, query difficulty tiers.',
     'Justified where one fat prompt is measurably worse than several narrower ones on a held-out eval, and the categories are stable enough that a classifier trained today is still right next quarter.',

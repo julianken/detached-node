@@ -20,7 +20,7 @@ export const pattern: Pattern = {
   F --> G[message_stop frame]
   E -.token-by-token.-> H[UI renders incrementally]
   G --> I[Client closes stream]`,
-  mermaidAlt: 'A left-to-right flowchart showing a client request reaching an inference server that opens an HTTP keep-alive connection and writes a Server-Sent Events response composed of a message_start frame, a sequence of content_block_delta frames, optional tool_call argument deltas, and a final message_stop frame; a dashed branch off the delta frames feeds a UI that renders the partial output incrementally before the client closes the stream.',
+  mermaidAlt: 'Token-by-token, field-by-field, or argument-by-argument: streaming sends typed SSE deltas as the model generates them; the client accumulates and reconstructs rather than waiting for a complete response.',
   whenToUse: [
     'Use this when the end-to-end latency of a full response would feel broken to a human reader: chat assistants, code completion, anything a person watches arrive in real time.',
     'Justified where the consumer can act on partial output before the model finishes: a UI that renders tokens as they arrive, a downstream pipeline that processes structured fields the moment each one closes.',

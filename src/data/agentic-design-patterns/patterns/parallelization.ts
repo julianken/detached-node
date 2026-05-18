@@ -21,7 +21,7 @@ export const pattern: Pattern = {
   C2 --> D
   C3 --> D
   D --> E[Final answer]`,
-  mermaidAlt: 'A left-to-right flowchart in which an Input feeds a Fan-out node that dispatches the work to N independent LLM calls running in parallel, whose outputs all converge on a deterministic aggregator that produces the final answer.',
+  mermaidAlt: 'Where Orchestrator-Workers asks an LLM to plan the decomposition at runtime, Parallelization fixes the fan-out at design time: N calls fire simultaneously, branches never see each other, and a deterministic aggregator reduces the outputs in code.',
   whenToUse: [
     'Right call when the workload decomposes into independent sub-tasks at author time (long-document chunks, multi-API lookups, parallel guardrail screens) and the slowest branch is what gates wall-clock latency.',
     'Required where the aggregation rule is decidable in code (majority vote on a single answer field, sum or concatenation by section, schema-typed merge, longest-justification heuristic) so the parallel branches collapse to one committable output.',
@@ -162,7 +162,7 @@ export {}
       'Git worktrees (isolation)',
     ],
     seeAlso: {
-      siblingPatternSlugs: ['orchestrator-workers', 'checkpointing', 'funnel-method'],
+      siblingPatternSlugs: ['orchestrator-workers', 'checkpointing'],
     },
   },
   realizingInCursor: {
@@ -179,7 +179,7 @@ export {}
       'Agent mode',
     ],
     seeAlso: {
-      siblingPatternSlugs: ['orchestrator-workers', 'checkpointing', 'funnel-method'],
+      siblingPatternSlugs: ['orchestrator-workers', 'checkpointing'],
     },
   },
 }

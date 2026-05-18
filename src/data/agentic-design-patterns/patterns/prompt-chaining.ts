@@ -21,7 +21,7 @@ export const pattern: Pattern = {
   E -->|pass| F[Stage 3 prompt]
   E -->|fail| D
   F --> G[Output]`,
-  mermaidAlt: 'A left-to-right flowchart in which an Input feeds a Stage 1 prompt whose output passes through a schema gate that either advances to Stage 2 or loops back to retry, with the same gated structure repeating for Stage 2 and Stage 3 before producing the final Output.',
+  mermaidAlt: 'The simplest agentic topology: a fixed sequence of LLM calls authored by a human at design time, each stage feeding the next through a schema gate that validates the handoff or retries on failure — no planner, no fan-out.',
   whenToUse: [
     'Use this when the task decomposes cleanly into 2–5 fixed stages whose order is known up front (extract, normalize, draft, review).',
     'Each stage should produce a parseable artifact (JSON object, list, scored shortlist) so a deterministic gate can validate the handoff between calls.',
