@@ -72,7 +72,7 @@ SITEMAP.md                          # Public route inventory
 
 ## Recent essays
 
-- **[Agentic Patterns in Your Coding Workflow](https://detached-node.dev/posts/agentic-patterns-in-your-coding-workflow)** (May 15, 2026)
+- **[Where Agentic Patterns Actually Live in Your Coding Workflow](https://detached-node.dev/posts/where-agentic-patterns-actually-live)** (May 15, 2026)
 - **[Subagent Orchestration Workflow](https://detached-node.dev/posts/subagent-orchestration-workflow)** (Apr 24, 2026)
 - **[In Defense of Tickets and Pull Requests](https://detached-node.dev/posts/what-tickets-and-prs-are-actually-for)** (Apr 20, 2026)
 - **[Rethinking Systems in the Agentic Age](https://detached-node.dev/posts/rethinking-systems-in-the-agentic-age)** (Apr 19, 2026)
