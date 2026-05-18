@@ -23,7 +23,22 @@ import { PostReferencesSection } from "@/components/PostReferencesSection";
 // ISR: Revalidate every hour - post content changes infrequently
 export const revalidate = 3600;
 
-// Allow dynamic rendering of posts not pre-rendered at build time
+// Allow dynamic rendering of posts not pre-rendered at build time.
+//
+// Soft-404 trap (issue #414): with ISR (`revalidate`) + `dynamicParams=true`,
+// Next.js prerenders and caches the `notFound()` render as a 200 with
+// the page-level `s-maxage=3600` (known framework limitation —
+// vercel/next.js#43831, #79497). The result was every missing-slug URL
+// being indexable as a valid page. The fix lives in `src/proxy.ts`:
+// for `/posts/<slug>` requests, the proxy does a fast existence check
+// against the posts table BEFORE the ISR-cached page route is entered.
+// Missing slugs short-circuit at the proxy layer with a proper 404 +
+// `Cache-Control: no-cache, no-store, max-age=0, must-revalidate`;
+// valid slugs pass through to this page, which keeps its
+// `revalidate = 3600` ISR cache headers. The
+// `agentic-design-patterns/[slug]` route avoids the same trap via
+// `dynamicParams=false` (its slug list is statically known); that's not
+// viable here because Payload CMS adds posts at runtime.
 export const dynamicParams = true;
 
 type PostPageProps = {
