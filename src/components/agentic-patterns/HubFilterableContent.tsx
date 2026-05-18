@@ -83,7 +83,9 @@ export function HubFilterableContent({ patterns, layerFiltered = false }: HubFil
     const params = new URLSearchParams(window.location.search);
     const q = params.get("q");
     if (q && q !== query) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setQuery(q);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setDebouncedQuery(q);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
