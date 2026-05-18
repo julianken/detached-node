@@ -23,7 +23,7 @@ export const pattern: Pattern = {
   G -->|done| H[Reply to user]
   G -->|hand back| B
   D --> H`,
-  mermaidAlt: 'A flowchart in which a user message reaches a triage agent that either answers in turn, transfers to a billing specialist, or transfers to a refunds specialist; each specialist either replies to the user when done or hands the conversation back to the triage agent for re-routing.',
+  mermaidAlt: 'Where Routing classifies once before any agent runs, Handoffs let agents re-route mid-conversation: exactly one agent is active at a time, transfers are tool calls, and the full message history moves with the conversation.',
   whenToUse: [
     'Right call when a single conversation spans multiple narrow specialisations and the right specialist is only knowable after the user has spoken (customer support triage, multi-domain copilots, intake-then-treatment flows).',
     'Justified where each specialist needs a different system prompt, tool surface, or model tier, and you want the boundary between roles to be visible in the trace as a named transfer rather than buried inside one prompt.',

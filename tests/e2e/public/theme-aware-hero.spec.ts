@@ -47,9 +47,11 @@ async function setThemeAndGoto(
 }
 
 async function toggleTheme(page: import('@playwright/test').Page) {
-  // Use the header toggle (there may be additional theme toggles elsewhere,
-  // e.g. a text indicator button; .first() picks the canonical one).
-  await page.locator('button[aria-label*="mode"]').first().click()
+  // Target the in-frame header toggle specifically. ScrollPillNav adds a
+  // second theme toggle inside the floating pill; that one is pointer-events-none
+  // until scroll reveals the pill, so a generic `.first()` selector hits it and
+  // times out waiting for stability.
+  await page.locator('header button[aria-label*="mode"]').click()
   // The view-transition animation runs for 400ms; give it a little headroom
   // plus one extra frame for any settle effects.
   await page.waitForTimeout(500)

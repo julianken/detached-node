@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 import { createSlugHook } from '@/lib/slug'
 import { publishedOrAuthenticated } from '@/lib/access-control'
+import { revalidateAfterChange, revalidateAfterDelete } from '@/lib/revalidate-page'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
@@ -14,6 +15,10 @@ export const Pages: CollectionConfig = {
     create: ({ req: { user } }) => !!user,
     update: ({ req: { user } }) => !!user,
     delete: ({ req: { user } }) => !!user,
+  },
+  hooks: {
+    afterChange: [revalidateAfterChange],
+    afterDelete: [revalidateAfterDelete],
   },
   fields: [
     {

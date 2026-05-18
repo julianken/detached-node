@@ -17,7 +17,8 @@ import { isValidSlug } from "@/lib/types/branded";
 import { isMediaObject } from "@/lib/types/media";
 import { FadeReveal } from "@/components/FadeReveal";
 import { siteUrl, ogDefaultImage } from "@/lib/site-config";
-import { mermaidConverters } from "@/lib/lexical/mermaid-converter";
+import { postBodyConverters } from "@/lib/lexical/post-body-converters";
+import { PostReferencesSection } from "@/components/PostReferencesSection";
 
 // ISR: Revalidate every hour - post content changes infrequently
 export const revalidate = 3600;
@@ -129,6 +130,16 @@ export default async function PostPage({ params }: PostPageProps) {
           {post.publishedAt && (
             <p className="text-sm tracking-[0.03em] text-text-tertiary">{formatDate(post.publishedAt)}</p>
           )}
+          <p className="text-sm text-text-tertiary">
+            by{" "}
+            <Link
+              href="/about"
+              rel="author"
+              className="hover:text-accent transition-colors"
+            >
+              Julian (detached-node)
+            </Link>
+          </p>
         </header>
 
         {post.summary && (
@@ -137,7 +148,7 @@ export default async function PostPage({ params }: PostPageProps) {
 
         {isMediaObject(post.featuredImageLight) && isMediaObject(post.featuredImageDark) && (
           <div
-            className="hero-filter -mx-4 sm:-mx-8 overflow-hidden rounded-2xl"
+            className="hero-filter overflow-hidden rounded-2xl"
             style={{
               "--hero-glow-light": post.featuredImageLight.preview?.color || "var(--accent)",
               "--hero-glow-dark": post.featuredImageDark.preview?.color || "var(--accent)",
@@ -158,10 +169,12 @@ export default async function PostPage({ params }: PostPageProps) {
           <section className="prose dark:prose-invert max-w-none">
             <RichText
               data={post.body as SerializedEditorState}
-              converters={mermaidConverters}
+              converters={postBodyConverters}
             />
           </section>
         </TextGlitch>
+
+        <PostReferencesSection references={post.references ?? []} />
       </PageLayout>
     </article>
     </FadeReveal>

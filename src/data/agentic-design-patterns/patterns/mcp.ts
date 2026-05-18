@@ -20,7 +20,7 @@ export const pattern: Pattern = {
   D --> F
   E --> F
   F --> G[Capability-negotiated session]`,
-  mermaidAlt: 'A top-down diagram in which an Agent host contains an MCP client that opens JSON-RPC sessions over stdio or HTTP to three independent servers (a filesystem server, a database server, and a third-party SaaS server), each of which exposes the same primitive operations (list_tools, list_resources, call_tool) through a capability-negotiated session.',
+  mermaidAlt: 'A server written once against the MCP spec is consumed by any compliant host: an MCP client opens a JSON-RPC session, calls list_tools to discover the typed catalog at runtime, and dispatches to tools, resources, or prompts the server exposes.',
   whenToUse: [
     'Best for cases where the same set of tools must be reachable from more than one host (a desktop assistant, an IDE, a custom agent) and writing the integration once per host is wasted effort.',
     'Justified where the tool catalog needs to grow without a host release. A server team can add a tool and every connected host sees it on the next list_tools call.',

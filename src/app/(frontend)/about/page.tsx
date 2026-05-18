@@ -3,12 +3,11 @@ import { RichText } from "@payloadcms/richtext-lexical/react";
 import { PageHeader } from "@/components/PageHeader";
 import { PageLayout } from "@/components/PageLayout";
 import { SchemaScript } from "@/components/SchemaScript";
-import { generatePersonSchema, generatePageBreadcrumbSchema } from "@/lib/schema";
+import { generateProfilePageSchema, generatePageBreadcrumbSchema } from "@/lib/schema";
 import { getPageBySlug } from "@/lib/queries/pages";
 import { siteUrl } from "@/lib/site-config";
 
-// Static generation - about page changes very rarely
-export const dynamic = "force-static";
+export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getPageBySlug('about');
@@ -38,7 +37,7 @@ export default async function AboutPage() {
   if (!page) {
     return (
       <PageLayout>
-        <SchemaScript schema={[generatePersonSchema(), generatePageBreadcrumbSchema("about", "About")]} />
+        <SchemaScript schema={[generateProfilePageSchema(), generatePageBreadcrumbSchema("about", "About")]} />
         <PageHeader
           title="About"
           subtitle="What this is, why it exists, and how to read it."
@@ -67,7 +66,7 @@ export default async function AboutPage() {
 
   return (
     <PageLayout>
-      <SchemaScript schema={[generatePersonSchema(), generatePageBreadcrumbSchema("about", "About")]} />
+      <SchemaScript schema={[generateProfilePageSchema(), generatePageBreadcrumbSchema("about", "About")]} />
       <PageHeader title={page.title} subtitle={page.description ?? undefined} />
       <section className="prose dark:prose-invert max-w-none">
         <RichText data={page.body} />

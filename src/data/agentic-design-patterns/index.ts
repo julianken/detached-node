@@ -69,9 +69,10 @@ export const PATTERNS: Pattern[] = [
   mcp,
   a2a,
   streaming,
-  // Layer 5 — Methodology (3)
+  // Layer 5 — Methodology (2 active)
   twelveFactorAgent,
   identitySeparatedReview,
+  // Archived — lint-changelog check #2 requires retired slugs remain in PATTERNS
   funnelMethod,
 ]
 

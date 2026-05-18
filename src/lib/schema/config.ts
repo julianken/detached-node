@@ -2,15 +2,10 @@
 //
 // Author entity configuration and site constants for JSON-LD schema generation.
 //
-// AUTHOR IDENTITY DECISION POINT:
-// The author name and sameAs values are set here. When identity is finalized,
-// update:
-//   1. AUTHOR_CONFIG.name  — real name or finalized pseudonym
-//   2. AUTHOR_CONFIG.sameAs — add LinkedIn, Twitter, or other verifiable profiles
-//   3. AUTHOR_CONFIG.description — update biography text
-//
-// These are the only changes needed for author identity migration. All schema
-// generators reference AUTHOR_CONFIG and will pick up the update automatically.
+// Tier C identity migration complete: real name lives in AUTHOR_CONFIG.name,
+// the brand "detached-node" is retained as siteName, and AUTHOR_CONFIG.alternateName
+// bridges the two so search and LLM citation pipelines can resolve the alias.
+// All schema generators reference AUTHOR_CONFIG; updates here propagate automatically.
 
 import { siteUrl } from '../site-url'
 
@@ -30,17 +25,31 @@ export const SITE_CONFIG = {
 } as const;
 
 export const AUTHOR_CONFIG = {
-  // Decision: Using pseudonym "detached-node" as the author identity.
-  // Update name to real name or final pseudonym when identity is decided.
-  name: "detached-node",
-  // Canonical author page — the semantic owner of the Person schema
+  // Tier C identity migration: real name in schema; brand "detached-node" stays as siteName.
+  name: "Julian Kennon",
+  // alternateName bridges the visible byline "Julian (detached-node)" to a
+  // machine-readable alias so search and LLM citation pipelines can resolve
+  // the brand to this Person entity.
+  alternateName: "detached-node",
   url: `${siteUrl}/about`,
-  // @id: canonical identifier referenced by WebSite, BlogPosting, and Person schemas.
-  // Must be identical in every schema that references the author entity.
   id: `${siteUrl}/#author`,
-  // sameAs: external verifiable profiles for entity disambiguation.
-  // GitHub org is the one confirmed external reference at launch.
-  // Add LinkedIn/Twitter/etc. when/if disclosed.
-  sameAs: ["https://github.com/detached-node"] as string[],
-  description: "Writing on agentic AI in software engineering.",
+  sameAs: [
+    "https://github.com/julianken",
+    "https://www.linkedin.com/in/julian-k-ba6b5897",
+  ] as string[],
+  description:
+    "Software engineer with a decade-plus of full-stack experience, focused on agentic AI workflows and autonomous system design. Author of the agentic design patterns reference catalog at detached-node.dev.",
+  jobTitle: "Software Engineer",
+  knowsAbout: [
+    "Agentic AI design patterns",
+    "Autonomous software systems",
+    "Full-stack software engineering",
+    "LLM orchestration",
+    "Multi-agent systems",
+    "Prompt engineering",
+    "Model Context Protocol",
+    "AI-assisted software development",
+    "TypeScript",
+    "Distributed systems",
+  ],
 } as const;

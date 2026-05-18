@@ -21,7 +21,7 @@ export const pattern: Pattern = {
   E -->|yes, no steps left| F[Return result]
   E -->|no| G[Re-plan tail from current state]
   G --> C`,
-  mermaidAlt: 'A flowchart in which a Goal feeds a Plan that produces an ordered step list; a loop pops and executes one step at a time, and a decision node either advances to the next step, returns the final result when the list is empty, or routes back to a re-plan node that rewrites the remaining steps from the current state before continuing.',
+  mermaidAlt: 'Where ReAct improvises at every turn, Planning commits upfront: a planner generates a written step list before execution begins, and only the remaining tail is rewritten when a step fails — completed work stays intact.',
   whenToUse: [
     'Apply when the task has interdependent sub-goals whose order matters and at least one early step constrains the choices available later (research reports, multi-tool workflows, code-mod sequences).',
     'Worth the cost where a wrong step is expensive enough that committing to a forward plan and reviewing it once is cheaper than ten reactive turns.',

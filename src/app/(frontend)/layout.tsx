@@ -3,6 +3,10 @@ import { Link, ViewTransitions } from "next-view-transitions";
 import { Crimson_Pro, JetBrains_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { MobileNav } from "@/components/MobileNav";
+import { ScrollPillNav } from "@/components/ScrollPillNav";
+import { NavLink } from "@/components/NavLink";
+import { GitHubLink } from "@/components/GitHubLink";
 import { StatusBar } from "@/components/StatusBar";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { TextureOverlay } from "@/components/TextureOverlay";
@@ -37,7 +41,7 @@ export const metadata: Metadata = {
   },
   description: siteDescription,
   keywords: siteKeywords,
-  authors: [{ name: siteName }],
+  authors: [{ name: "Julian Kennon" }],
   // RSS autodiscovery is rendered as a direct <link> tag in <head> below,
   // not via alternates.types, because page-level alternates.canonical
   // would clobber it (Next.js metadata merging replaces alternates entirely).
@@ -90,30 +94,29 @@ export default function FrontendLayout({
           <WebVitalsReporter />
           <ScrollToTop />
           <TextureOverlay />
-          <div className="site-frame mx-auto my-4 flex min-h-[calc(100vh-2rem)] max-w-frame flex-col rounded-sm border border-border sm:my-6 sm:min-h-[calc(100vh-3rem)]">
-            <header className="flex items-center justify-between border-b border-border px-4 py-3 sm:px-6">
+          <ScrollPillNav />
+          <div className="site-frame relative z-40 mx-auto my-4 flex min-h-[calc(100vh-2rem)] max-w-frame flex-col rounded-sm border border-border sm:my-6 sm:min-h-[calc(100vh-3rem)]">
+            <header className="relative z-40 flex items-center justify-between border-b border-border px-4 py-3 sm:px-6">
               <Link href="/" className="font-mono text-brand font-semibold tracking-tight text-accent lowercase focus-ring">
                 d-n
               </Link>
               <div className="flex items-center gap-4">
-                <nav className="flex flex-wrap items-center gap-4 text-nav font-mono tracking-[0.04em] text-text-secondary sm:gap-6" aria-label="Main navigation">
-                  <Link className="hover:text-accent py-2 transition-colors focus-ring" href="/">
-                    Home
-                  </Link>
-                  <Link className="hover:text-accent py-2 transition-colors focus-ring" href="/posts">
-                    Posts
-                  </Link>
-                  <Link className="hover:text-accent py-2 transition-colors focus-ring" href="/agentic-design-patterns">
-                    Patterns
-                  </Link>
-                  <Link className="hover:text-accent py-2 transition-colors focus-ring" href="/about">
-                    About
-                  </Link>
+                <nav className="hidden items-center gap-6 text-nav font-mono tracking-[0.04em] text-text-secondary sm:flex" aria-label="Main navigation">
+                  <NavLink className="py-2" href="/">Home</NavLink>
+                  <NavLink className="py-2" href="/posts">Posts</NavLink>
+                  <NavLink className="py-2" href="/agentic-design-patterns">Patterns</NavLink>
+                  <NavLink className="py-2" href="/about">About</NavLink>
                 </nav>
-                <ThemeToggle />
+                <div className="flex items-center gap-1">
+                  <GitHubLink />
+                  <ThemeToggle />
+                  <MobileNav />
+                </div>
               </div>
             </header>
-            <main id="main-content" className="flex-1 px-4 py-8 sm:px-6 lg:px-8">{children}</main>
+            <main id="main-content" className="flex-1 px-4 py-8 sm:px-6 lg:px-8">
+              <div className="route-content">{children}</div>
+            </main>
             <StatusBar />
           </div>
 
