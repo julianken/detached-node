@@ -28,6 +28,7 @@ export function MobileNav({
   const exitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
     return () => {
       if (exitTimerRef.current !== null) clearTimeout(exitTimerRef.current);
@@ -47,6 +48,7 @@ export function MobileNav({
 
   useEffect(() => {
     if (forceClose && open && !exiting) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       close();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
