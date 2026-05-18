@@ -226,7 +226,9 @@
   --background: #06050a;
   --foreground: #e0dce8;
   --surface: #0e0c16;
-  --accent: #b49cff;
+  /* sRGB fallback; the next line pushes chroma beyond sRGB on P3-capable displays */
+  --accent: #a78bfa;
+  --accent: oklch(0.74 0.26 287);
   --accent-muted: #9678f0;
 
   /* Text hierarchy */
@@ -386,17 +388,17 @@ body {
   view-transition-name: theme-transition;
 }
 
+.scroll-pill-nav { view-transition-name: pill-nav; }
+::view-transition-old(pill-nav) { animation: none; opacity: 0; }
+::view-transition-new(pill-nav) { animation: none; opacity: 1; }
+
 /* ──────────────────────────────────────────────
    VIEW TRANSITIONS (glitch page navigation)
    Progressive enhancement — unsupported browsers
    get instant navigation with no degradation.
    ────────────────────────────────────────────── */
 
-@view-transition {
-  navigation: auto;
-}
-
-main {
+.route-content {
   view-transition-name: main-content;
 }
 
@@ -483,6 +485,93 @@ main {
    Animated conic-gradient border on hover.
    Dark mode only — subtle effect for terminal aesthetic.
    ────────────────────────────────────────────── */
+
+/* ──────────────────────────────────────────────
+   PANEL GLITCH (mobile nav)
+   No opacity fade — element is fully visible the
+   whole time; the rgb-split filter + transform jitter
+   are what carry the entrance/exit feel.
+   ────────────────────────────────────────────── */
+
+.panel-glitch-in {
+  animation: panel-fade-in 70ms ease-out forwards;
+}
+
+.panel-glitch-in .font-mono {
+  animation: panel-text-glitch-in 240ms steps(4, jump-end) forwards;
+}
+
+@keyframes panel-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Pill theme-change glitch — harsh jitter + chromatic shift.
+   Duration is set via --pill-glitch-ms on the pill wrapper (default 280ms).
+   The JS setTimeout uses the same constant; see GLITCH_MS in ScrollPillNav.tsx. */
+[data-glitching="true"] {
+  animation: pill-theme-jitter var(--pill-glitch-ms, 280ms) steps(5, jump-end) forwards;
+}
+
+@keyframes pill-theme-jitter {
+  0% { transform: translate3d(5px, -2px, 0); }
+  20% { transform: translate3d(-4px, 2px, 0); }
+  40% { transform: translate3d(3px, -1px, 0); }
+  60% { transform: translate3d(-2px, 1px, 0); }
+  80% { transform: translate3d(1px, 0, 0); }
+  100% { transform: none; }
+}
+
+[data-glitching="true"] a,
+[data-glitching="true"] .font-mono,
+[data-glitching="true"] button {
+  animation: pill-theme-text var(--pill-glitch-ms, 280ms) steps(5, jump-end) forwards;
+}
+
+@keyframes pill-theme-text {
+  0% { text-shadow: 6px -1px 0 rgba(255, 20, 20, 0.95), -6px 1px 0 rgba(20, 255, 255, 0.95); }
+  20% { text-shadow: 6px 1px 0 rgba(255, 20, 20, 0.95), -6px -1px 0 rgba(20, 255, 255, 0.95); }
+  40% { text-shadow: 4px 0 0 rgba(255, 20, 20, 0.9), -4px 0 0 rgba(20, 255, 255, 0.9); }
+  60% { text-shadow: 2px 0 0 rgba(255, 20, 20, 0.6), -2px 0 0 rgba(20, 255, 255, 0.6); }
+  80% { text-shadow: 1px 0 0 rgba(255, 20, 20, 0.3), -1px 0 0 rgba(20, 255, 255, 0.3); }
+  100% { text-shadow: 0 0 0 rgba(255, 20, 20, 0), 0 0 0 rgba(20, 255, 255, 0); }
+}
+
+@keyframes panel-text-glitch-in {
+  0% { text-shadow: 5px -1px 0 rgba(255, 20, 20, 0.95), -5px 1px 0 rgba(20, 255, 255, 0.95); }
+  35% { text-shadow: 5px 1px 0 rgba(255, 20, 20, 0.95), -5px -1px 0 rgba(20, 255, 255, 0.95); }
+  70% { text-shadow: 2px 0 0 rgba(255, 20, 20, 0.5), -2px 0 0 rgba(20, 255, 255, 0.5); }
+  100% { text-shadow: 0 0 0 rgba(255, 20, 20, 0), 0 0 0 rgba(20, 255, 255, 0); }
+}
+
+.panel-glitch-out {
+  animation:
+    panel-fade-out 50ms linear 70ms forwards,
+    panel-jitter-out 150ms steps(3, jump-end) forwards;
+}
+
+.panel-glitch-out .font-mono {
+  animation: panel-text-glitch-out 150ms steps(3, jump-end) forwards;
+}
+
+@keyframes panel-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes panel-jitter-out {
+  0% { transform: none; }
+  40% { transform: translate3d(-2px, 1px, 0); }
+  80% { transform: translate3d(2px, -1px, 0); }
+  100% { transform: translate3d(-1px, 0, 0); }
+}
+
+@keyframes panel-text-glitch-out {
+  0% { text-shadow: 0 0 0 rgba(255, 20, 20, 0), 0 0 0 rgba(20, 255, 255, 0); }
+  40% { text-shadow: 5px -1px 0 rgba(255, 20, 20, 0.95), -5px 1px 0 rgba(20, 255, 255, 0.95); }
+  80% { text-shadow: 5px 1px 0 rgba(255, 20, 20, 0.95), -5px -1px 0 rgba(20, 255, 255, 0.95); }
+  100% { text-shadow: 6px 0 0 rgba(255, 20, 20, 0.95), -6px 0 0 rgba(20, 255, 255, 0.95); }
+}
 
 @property --border-angle {
   syntax: "<angle>";

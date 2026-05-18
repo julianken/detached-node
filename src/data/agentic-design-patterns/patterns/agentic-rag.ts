@@ -23,7 +23,7 @@ export const pattern: Pattern = {
   F --> G{Enough evidence?}
   G -->|no, refine| D
   G -->|yes| I[Grounded answer with citations]`,
-  mermaidAlt: 'A flowchart in which a User question is read by the Agent, which decides whether retrieval is needed; if not it answers from parametric memory, otherwise it formulates a query that the retrieval tool resolves against an index, appends the passages back to context, and decides whether the evidence is sufficient, looping back to refine the query if not, or emitting a grounded answer with citations if so.',
+  mermaidAlt: 'Where vanilla RAG fires a single similarity search before generation, Agentic RAG makes retrieval a tool call: the agent formulates queries, reads results, and decides whether to refine or stop — the model owns the iteration count, the runtime owns the bound.',
   whenToUse: [
     'Apply when questions are multi-hop or ambiguous and a single similarity search will miss the bridging fact (cross-document reasoning, follow-up questions that depend on what the first hop returned, vague queries that need a clarifying search).',
     'Justified where the agent has access to multiple corpora or tools and must decide which one to consult (internal docs, the public web, a structured database) rather than treating all evidence as one undifferentiated index.',

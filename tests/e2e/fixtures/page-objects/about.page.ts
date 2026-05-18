@@ -11,7 +11,7 @@ export class AboutPage {
 
   constructor(page: Page) {
     this.page = page
-    this.navigation = page.locator('nav')
+    this.navigation = page.locator('nav[aria-label="Main navigation"]')
     this.pageTitle = page.getByRole('heading', { level: 1 }).first()
     this.pageContent = page.locator('main')
   }
