@@ -29,6 +29,9 @@ export const ErrorIds = {
 
   // Sitemap errors
   SITEMAP_GENERATION_FAILED: 'SITEMAP_GENERATION_FAILED',
+
+  // Schema errors
+  SCHEMA_HOWTO_MISTAGGED: 'SCHEMA_HOWTO_MISTAGGED',
 } as const
 
 export type ErrorId = typeof ErrorIds[keyof typeof ErrorIds]

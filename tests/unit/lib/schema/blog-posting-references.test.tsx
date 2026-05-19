@@ -80,6 +80,7 @@ const mockPost: Post = {
   publishedAt: "2026-01-15T00:00:00.000Z",
   updatedAt: "2026-01-15T00:00:00.000Z",
   createdAt: "2026-01-15T00:00:00.000Z",
+  schemaType: "BlogPosting",
 } as Post;
 
 describe("Post references dual-consumer contract", () => {
