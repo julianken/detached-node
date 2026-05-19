@@ -1,0 +1,150 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`robots-config > matches the named-block snapshot 1`] = `
+[
+  {
+    "allow": "/",
+    "disallow": [
+      "/admin",
+      "/api",
+    ],
+    "userAgent": "GPTBot",
+  },
+  {
+    "allow": "/",
+    "disallow": [
+      "/admin",
+      "/api",
+    ],
+    "userAgent": "ChatGPT-User",
+  },
+  {
+    "allow": "/",
+    "disallow": [
+      "/admin",
+      "/api",
+    ],
+    "userAgent": "OAI-SearchBot",
+  },
+  {
+    "allow": "/",
+    "disallow": [
+      "/admin",
+      "/api",
+    ],
+    "userAgent": "ClaudeBot",
+  },
+  {
+    "allow": "/",
+    "disallow": [
+      "/admin",
+      "/api",
+    ],
+    "userAgent": "anthropic-ai",
+  },
+  {
+    "allow": "/",
+    "disallow": [
+      "/admin",
+      "/api",
+    ],
+    "userAgent": "Claude-User",
+  },
+  {
+    "allow": "/",
+    "disallow": [
+      "/admin",
+      "/api",
+    ],
+    "userAgent": "Claude-SearchBot",
+  },
+  {
+    "allow": "/",
+    "disallow": [
+      "/admin",
+      "/api",
+    ],
+    "userAgent": "Google-Extended",
+  },
+  {
+    "allow": "/",
+    "disallow": [
+      "/admin",
+      "/api",
+    ],
+    "userAgent": "PerplexityBot",
+  },
+  {
+    "allow": "/",
+    "disallow": [
+      "/admin",
+      "/api",
+    ],
+    "userAgent": "Perplexity-User",
+  },
+  {
+    "allow": "/",
+    "disallow": [
+      "/admin",
+      "/api",
+    ],
+    "userAgent": "CCBot",
+  },
+  {
+    "allow": "/",
+    "disallow": [
+      "/admin",
+      "/api",
+    ],
+    "userAgent": "applebot-extended",
+  },
+  {
+    "allow": "/",
+    "disallow": [
+      "/admin",
+      "/api",
+    ],
+    "userAgent": "Meta-ExternalAgent",
+  },
+  {
+    "allow": "/",
+    "disallow": [
+      "/admin",
+      "/api",
+    ],
+    "userAgent": "Amazonbot",
+  },
+  {
+    "allow": "/",
+    "disallow": [
+      "/admin",
+      "/api",
+    ],
+    "userAgent": "Googlebot",
+  },
+  {
+    "allow": "/",
+    "disallow": [
+      "/admin",
+      "/api",
+    ],
+    "userAgent": "Bingbot",
+  },
+  {
+    "allow": "/",
+    "disallow": [
+      "/admin",
+      "/api",
+    ],
+    "userAgent": "DuckDuckBot",
+  },
+  {
+    "allow": "/",
+    "disallow": [
+      "/admin",
+      "/api",
+    ],
+    "userAgent": "*",
+  },
+]
+`;
