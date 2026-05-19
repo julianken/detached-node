@@ -19,6 +19,7 @@ import { FadeReveal } from "@/components/FadeReveal";
 import { siteUrl, ogDefaultImage } from "@/lib/site-config";
 import { postBodyConverters } from "@/lib/lexical/post-body-converters";
 import { PostReferencesSection } from "@/components/PostReferencesSection";
+import { RelatedPosts } from "@/components/RelatedPosts";
 
 // ISR: Revalidate every hour - post content changes infrequently
 export const revalidate = 3600;
@@ -175,6 +176,8 @@ export default async function PostPage({ params }: PostPageProps) {
         </TextGlitch>
 
         <PostReferencesSection references={post.references ?? []} />
+
+        <RelatedPosts post={post} />
       </PageLayout>
     </article>
     </FadeReveal>
