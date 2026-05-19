@@ -25,13 +25,23 @@ test.describe('posts/[slug] — HTTP contract', () => {
     // Use the slug from the issue — the apostrophe is the AI-generated
     // typo we're protecting against. We follow the redirect chain via
     // page.goto and assert (a) the final URL is canonical, and (b) the
-    // first response in the chain is a 301.
+    // first server-emitted response in the chain is a 301.
     //
     // page.goto returns the LAST response. To prove the redirect was 301,
     // we listen to the response event for the leading hop.
+    //
+    // Filter: Chromium emits its own internal 307 "Internal Redirect" to
+    // URL-encode the apostrophe before the request leaves the browser.
+    // That hop is a client-side artefact, not the contract under test —
+    // skip it and assert against the first redirect that actually
+    // originates from the server.
     const redirectResponses: { url: string; status: number }[] = []
     page.on('response', (resp) => {
-      if (resp.status() >= 300 && resp.status() < 400) {
+      if (
+        resp.status() >= 300 &&
+        resp.status() < 400 &&
+        resp.statusText() !== 'Internal Redirect'
+      ) {
         redirectResponses.push({ url: resp.url(), status: resp.status() })
       }
     })
@@ -41,7 +51,7 @@ test.describe('posts/[slug] — HTTP contract', () => {
     )
     expect(finalResponse, 'page.goto should return a response').not.toBeNull()
 
-    // The first redirect we captured must be a 301 on the punctuated URL.
+    // The first server redirect we captured must be a 301 on the punctuated URL.
     const firstRedirect = redirectResponses[0]
     expect(firstRedirect, 'a 3xx hop was expected').toBeDefined()
     expect(firstRedirect!.status, 'redirect must be 301 (permanent)').toBe(301)
@@ -62,9 +72,15 @@ test.describe('posts/[slug] — HTTP contract', () => {
   test('trailing parenthesis on a slug also 301-redirects', async ({ page }) => {
     // Defensive coverage for the second punctuation class — apostrophe
     // is the wild-traffic case, but the spec requires the full set.
+    // Filter out Chromium's internal URL-canonicalization 307 (see the
+    // apostrophe test above) so we assert against the server-emitted hop.
     const redirectResponses: { url: string; status: number }[] = []
     page.on('response', (resp) => {
-      if (resp.status() >= 300 && resp.status() < 400) {
+      if (
+        resp.status() >= 300 &&
+        resp.status() < 400 &&
+        resp.statusText() !== 'Internal Redirect'
+      ) {
         redirectResponses.push({ url: resp.url(), status: resp.status() })
       }
     })
