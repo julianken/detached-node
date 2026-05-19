@@ -73,6 +73,16 @@ export const metadata: Metadata = {
   },
 };
 
+// Microsoft Clarity project ID. Sourced from `NEXT_PUBLIC_CLARITY_PROJECT_ID`
+// (a `NEXT_PUBLIC_*` var so its value is inlined into the client bundle at
+// build time). When unset, the Clarity <Script> tag is not emitted at all —
+// this is the build-time gate that keeps Clarity blank on dev, E2E, and any
+// environment where the variable isn't configured. See issue #426 for the
+// empirical reason the prior `NODE_ENV === 'production'` gate was insufficient:
+// `next start` sets NODE_ENV=production, so Playwright + local `pnpm build &&
+// pnpm start` runs were firing events into the production Clarity project.
+const clarityProjectId = process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID;
+
 export default function FrontendLayout({
   children,
 }: Readonly<{
@@ -146,14 +156,24 @@ export default function FrontendLayout({
 
           </ViewTransitions>
         </ThemeProvider>
-        {process.env.NODE_ENV === 'production' && (
+        {clarityProjectId && (
           <Script id="microsoft-clarity" strategy="afterInteractive">
             {`
               (function(c,l,a,r,i,t,y){
+                // Defense B (issue #426): runtime browser-side localhost guard.
+                // Stops Clarity from initializing on local prod-mode runs even
+                // if the env-var gate leaks (e.g., NEXT_PUBLIC_CLARITY_PROJECT_ID
+                // set in a developer's .env.local). The minimum list below
+                // covers the empirically-observed pollution sources (Playwright
+                // webServer + local \`pnpm build && pnpm start\`). Extending
+                // to \`*.localhost\` (RFC 6761), preview URLs, or private IP
+                // ranges is a judgment call left to future maintainers — the
+                // env-var gate is the primary defense; this is belt-and-braces.
+                if (l.location.hostname === "localhost" || l.location.hostname === "127.0.0.1" || l.location.hostname === "::1") return;
                 c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
                 t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
                 y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-              })(window, document, "clarity", "script", "wsu7mgk54v");
+              })(window, document, "clarity", "script", ${JSON.stringify(clarityProjectId)});
             `}
           </Script>
         )}
