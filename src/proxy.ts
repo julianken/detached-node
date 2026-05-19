@@ -2,57 +2,82 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 /**
- * Proxy handler for `/posts/<slug>` routes (issue #414).
+ * Proxy handler — combines three independently-developed concerns for the
+ * Payload-backed public routes. Whichever PR landed last (here: #418, merged
+ * after #421) was responsible for stitching the responsibilities together
+ * without dropping any of the other's behavior. Order matters:
  *
- * Two concerns:
- *   1. Trailing-punctuation redirect — AI-generated markdown links and
- *      search-index crawlers produce URLs with stray trailing punctuation
- *      (e.g. `/posts/some-slug'`, `/posts/some-slug)`). Strip the
- *      punctuation and 301 to the canonical URL.
- *   2. Soft-404 short-circuit — Next.js ISR caches the `notFound()`
- *      render as a successful 200 with the page's normal `s-maxage`
- *      headers (vercel/next.js#43831, #79497). To keep `revalidate = 3600`
- *      on valid posts but avoid soft-404s on missing ones, we do a
- *      fast slug-existence check here (BEFORE the page enters the ISR
- *      cache envelope) and emit a proper 404 with no-cache headers when
- *      the slug doesn't resolve to a published post.
+ *   1. Trailing-punctuation redirect            (issue #414 / PR #421)
+ *      — strip `'`, `"`, `)`, `]`, `.`, `,`, `;`, `:`, `!`, `?` off the end
+ *        of `/posts/<slug>` and 301 to the canonical URL.
+ *   2. Soft-404 slug-existence short-circuit    (issue #414 / PR #421)
+ *      — if the slug doesn't resolve to a published post, return HTTP 404
+ *        with no-cache headers so the response never enters the ISR cache
+ *        envelope (vercel/next.js#43831, #79497).
+ *   3. `Last-Modified` header injection         (issue #418 / this PR)
+ *      — on the pass-through path only, stamp a `Last-Modified` header
+ *        sourced from the appropriate per-route timestamp so AI grounding
+ *        crawlers (Bingbot/Copilot, PerplexityBot, CCBot) can schedule
+ *        revalidation by date instead of by content hash.
  *
- * Implementation notes:
- *   - Slugs follow `isValidSlug` (lowercase alphanumeric + hyphens).
- *     Format-invalid slugs are short-circuited synchronously — no DB
- *     hop needed.
- *   - The existence check delegates to `postSlugExists`, a
- *     field-projected query (`select: { slug: true }`, depth 0, no
- *     joins) — it answers existence without pulling the post's Lexical
- *     body, references, or joined media. The proxy lookup is separate
- *     from the page handler's `getPostBySlug` — React `cache()` is
- *     per-request and is NOT shared between `proxy.ts` and the page
- *     render in Next.js 16 (they are distinct execution contexts). The
- *     cost is one extra projected query in the proxy.
- *   - Errors during the existence check fail OPEN (pass through to the
- *     page). A transient DB outage shouldn't paint the entire site 404.
+ * Steps 1 and 2 terminate the request before step 3 ever runs. Step 3 only
+ * decorates the `NextResponse.next()` response on canonical paths that the
+ * matcher and runtime regexes accept.
  *
- * Next 16 naming: this file is `proxy.ts` rather than `middleware.ts`
- * because `proxy.ts` runs on the Node.js runtime (per the Next 16
- * upgrade guide), and the existence check imports Payload which is
- * Node-only. The issue spec uses the `middleware` term but the
- * mechanism it specifies — a per-request handler that runs before the
- * route — is exactly what `proxy.ts` provides in Next 16. The legacy
- * `middleware.ts` file convention defaults to the Edge runtime, which
- * cannot import Payload's transitive deps (`url`, `fs`, `sharp`).
+ * Routes touched by step 3:
+ *   - `/posts/<slug>`                      → Payload `posts.updatedAt` lookup
+ *   - `/agentic-design-patterns/<slug>`    → static pattern `dateModified`
+ *   - `/posts`                             → ISR-snapshot floor (cheap)
+ *   - `/agentic-design-patterns`           → ISR-snapshot floor (cheap)
+ *   - `/about`                             → Payload `pages.updatedAt` for slug "about"
+ *
+ * Page-level mechanisms (`generateMetadata`, `next/headers`,
+ * `next.config.js`'s `headers()`, route handlers) cannot inject a dynamic
+ * response header keyed off a per-doc `updatedAt`. See vercel/next.js#50914
+ * and #58110. The Next 16 `proxy.ts` middleware successor is the only
+ * viable hook.
+ *
+ * 304 / `If-Modified-Since` handling is intentionally NOT in this file. Per
+ * vercel/next.js#82790, Next does not auto-convert presence of the header
+ * into conditional-request shortcircuits, and the comparison adds a second
+ * DB hop per gated request. Tracked separately.
+ *
+ * Why `proxy.ts` and not `middleware.ts`: Next 16 renamed the convention;
+ * `proxy.ts` runs on the Node runtime by default, which is necessary so
+ * the existence / `updatedAt` lookups can import Payload's Node-only
+ * transitive deps (`url`, `fs`, `sharp`). The legacy `middleware.ts` file
+ * convention defaults to the Edge runtime and cannot import Payload.
+ *
+ * The existence check delegates to `postSlugExists`, a field-projected
+ * query (`select: { slug: true }`, depth 0, no joins) — it answers
+ * existence without pulling the post's Lexical body, references, or joined
+ * media. The proxy lookup is separate from the page handler's
+ * `getPostBySlug` — React `cache()` is per-request and is NOT shared
+ * between `proxy.ts` and the page render in Next.js 16 (they are distinct
+ * execution contexts). The cost is one extra projected query in the proxy.
+ *
+ * Errors during the existence check fail OPEN (pass through to the page).
+ * A transient DB outage shouldn't paint the entire site 404. The
+ * `Last-Modified` lookups behave the same way — on failure, the header is
+ * just omitted; the request never breaks.
  */
 
+// ── Route-shape regexes (anchored, narrow) ────────────────────────────────
+//
 // Trailing-punctuation characters are case-invariant, and the downstream
 // slug pattern + `isFormatValidSlug` are case-sensitive (lowercase only).
-// Using `/i` here would 301 `/posts/Foo'` to `/posts/Foo` which would
-// then 404 — an extra hop. Drop the `/i` and let mixed-case slugs fall
-// through; they'd 404 anyway since they don't match the slug format.
+// Using `/i` here would 301 `/posts/Foo'` to `/posts/Foo` which would then
+// 404 — an extra hop. Drop the `/i` and let mixed-case slugs fall through;
+// they'd 404 anyway since they don't match the slug format.
 const TRAILING_PUNCT_PATTERN = /^(\/posts\/[a-z0-9-]+?)['")\].,;:!?]+$/;
 const POSTS_SLUG_PATTERN = /^\/posts\/([a-z0-9-]+)$/;
+const PATTERNS_SLUG_PATTERN = /^\/agentic-design-patterns\/([a-z0-9-]+)$/;
+const POSTS_LISTING_PATTERN = /^\/posts\/?$/;
+const PATTERNS_LISTING_PATTERN = /^\/agentic-design-patterns\/?$/;
+const ABOUT_PATTERN = /^\/about\/?$/;
 
-// Synchronous slug-format check — mirrors `isValidSlug` from
-// `src/lib/types/branded.ts`. Inlined here so the proxy bundle doesn't
-// need to pull the branded-types module's transitive imports.
+// Slug-format gate — mirrors `isValidSlug` from `src/lib/types/branded.ts`.
+// Inlined to keep the proxy module's bundle minimal.
 const SLUG_FORMAT = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const SLUG_MAX_LENGTH = 200;
 
@@ -63,11 +88,35 @@ function isFormatValidSlug(slug: string): boolean {
 }
 
 /**
+ * ISR-snapshot floor: the earliest moment the currently-served snapshot of
+ * a listing route could have been generated. Captured at module load (i.e.
+ * process startup), it bounds the snapshot age to "no older than this
+ * server's boot". For listing routes whose `revalidate` is 3600s, the
+ * actual snapshot timestamp drifts forward as ISR regenerates, but the
+ * boot floor is a safe lower bound — and matches the spec's chosen
+ * "this snapshot was generated at X" semantic without requiring a true-live
+ * max-of-children query (rejected as too expensive).
+ *
+ * In dev mode, this resets per `pnpm dev` restart; in production it resets
+ * per Cloud Run cold start. Both are acceptable for the crawler signal.
+ */
+const ISR_SNAPSHOT_FLOOR_DATE: Date = new Date();
+
+// ── DB-lookup delegates (test-swappable) ──────────────────────────────────
+//
+// Each lookup is field-projected to only the timestamp / existence bit we
+// need and returns `null` on miss / fail-open. The proxy never
+// short-circuits a request on lookup failure — it just omits the header
+// and passes through, or (for the existence check) falls open to the page.
+
+type UpdatedAtLookup = (slug: string) => Promise<string | null>;
+
+/**
  * Existence-check delegate, broken out so unit tests can swap it via
- * `__testing__.setPostSlugExists` without booting Payload. The
- * production binding (below) defers the Payload import so proxy module
- * load doesn't pull the CMS into the cold-start path; the cost is only
- * paid on actual `/posts/<slug>` requests.
+ * `__testing__.setPostSlugExists` without booting Payload. The production
+ * binding (below) defers the Payload import so proxy module load doesn't
+ * pull the CMS into the cold-start path; the cost is only paid on actual
+ * `/posts/<slug>` requests.
  */
 async function defaultPostSlugExists(slug: string): Promise<boolean | null> {
   try {
@@ -79,12 +128,72 @@ async function defaultPostSlugExists(slug: string): Promise<boolean | null> {
   }
 }
 
-// Mutable binding so tests can override. Production code never
-// reassigns this.
+async function defaultPostUpdatedAt(slug: string): Promise<string | null> {
+  try {
+    const { getPayload } = await import("payload");
+    const config = (await import("@payload-config")).default;
+    const payload = await getPayload({ config });
+    const { docs } = await payload.find({
+      collection: "posts",
+      where: {
+        slug: { equals: slug },
+        status: { equals: "published" },
+      },
+      limit: 1,
+      depth: 0,
+      select: { updatedAt: true },
+    });
+    const doc = docs[0];
+    return doc?.updatedAt ?? null;
+  } catch {
+    return null;
+  }
+}
+
+async function defaultPatternUpdatedAt(slug: string): Promise<string | null> {
+  try {
+    const { getPattern } = await import("@/data/agentic-design-patterns/index");
+    const pattern = getPattern(slug);
+    return pattern?.dateModified ?? null;
+  } catch {
+    return null;
+  }
+}
+
+async function defaultAboutUpdatedAt(): Promise<string | null> {
+  try {
+    const { getPayload } = await import("payload");
+    const config = (await import("@payload-config")).default;
+    const payload = await getPayload({ config });
+    const { docs } = await payload.find({
+      collection: "pages",
+      where: {
+        slug: { equals: "about" },
+        status: { equals: "published" },
+      },
+      limit: 1,
+      depth: 0,
+      select: { updatedAt: true },
+    });
+    const doc = docs[0];
+    return doc?.updatedAt ?? null;
+  } catch {
+    return null;
+  }
+}
+
+// Mutable bindings so tests can override without booting Payload or the
+// pattern catalog. Production code never reassigns these — only the
+// `__testing__` API below does.
 // eslint-disable-next-line prefer-const
 let postSlugExistsImpl: (slug: string) => Promise<boolean | null> =
   defaultPostSlugExists;
+let postUpdatedAtImpl: UpdatedAtLookup = defaultPostUpdatedAt;
+let patternUpdatedAtImpl: UpdatedAtLookup = defaultPatternUpdatedAt;
+let aboutUpdatedAtImpl: () => Promise<string | null> = defaultAboutUpdatedAt;
 
+// ── Soft-404 response body ────────────────────────────────────────────────
+//
 // Minimal not-found HTML body. The browser shows a stripped-down 404
 // page; this path is exercised primarily by crawlers and typo'd URLs,
 // not human navigation, so we trade full-layout fidelity for the
@@ -125,11 +234,30 @@ function notFoundResponse(): NextResponse {
   });
 }
 
-export async function proxy(request: NextRequest) {
+// ── Header formatting ─────────────────────────────────────────────────────
+
+/**
+ * Format a value as an RFC 7231 HTTP-date suitable for `Last-Modified`.
+ * Accepts ISO strings, raw Date objects, or millisecond epochs. Returns
+ * null when the input doesn't parse to a real date — the caller should
+ * omit the header rather than send a malformed value.
+ */
+export function toHttpDate(input: string | Date | number | null): string | null {
+  if (input === null) return null;
+  const date = input instanceof Date ? input : new Date(input);
+  if (Number.isNaN(date.getTime())) return null;
+  // `Date.prototype.toUTCString` emits RFC 7231 / 1123 format, e.g.
+  // "Sun, 18 May 2026 14:23:01 GMT". This is the canonical HTTP-date form.
+  return date.toUTCString();
+}
+
+// ── Main proxy entry point ────────────────────────────────────────────────
+
+export async function proxy(request: NextRequest): Promise<NextResponse> {
   const { pathname } = request.nextUrl;
 
   // 1. Trailing-punctuation redirect — runs first so the canonical URL
-  // is what the existence check below evaluates on the next hop.
+  //    is what the existence check below evaluates on the next hop.
   const puncMatch = pathname.match(TRAILING_PUNCT_PATTERN);
   if (puncMatch) {
     const canonicalPath = puncMatch[1];
@@ -139,10 +267,10 @@ export async function proxy(request: NextRequest) {
   }
 
   // 2. Soft-404 short-circuit — only fires on canonical `/posts/<slug>`
-  // shapes (after the redirect above has cleaned trailing chars).
-  const slugMatch = pathname.match(POSTS_SLUG_PATTERN);
-  if (slugMatch) {
-    const slug = slugMatch[1];
+  //    shapes (after the redirect above has cleaned trailing chars).
+  const postsMatch = pathname.match(POSTS_SLUG_PATTERN);
+  if (postsMatch) {
+    const slug = postsMatch[1];
     if (!isFormatValidSlug(slug)) {
       return notFoundResponse();
     }
@@ -150,15 +278,67 @@ export async function proxy(request: NextRequest) {
     if (exists === false) {
       return notFoundResponse();
     }
-    // `null` (DB unavailable) → fall through to page, fail-open.
+    // `null` (DB unavailable) → fall through to header decoration below,
+    // which itself fails open if the timestamp lookup also fails.
+
+    // 3. Last-Modified header on the pass-through path for posts.
+    const response = NextResponse.next();
+    const updatedAt = await postUpdatedAtImpl(slug);
+    const httpDate = toHttpDate(updatedAt);
+    if (httpDate) {
+      response.headers.set("Last-Modified", httpDate);
+    }
+    return response;
   }
 
-  return NextResponse.next();
+  // 3. Last-Modified header for the remaining handled routes. None of
+  //    these have a soft-404 short-circuit attached — they either render
+  //    static content (`/about`, listing routes) or pass through to a
+  //    static pattern catalog.
+
+  const response = NextResponse.next();
+
+  const patternsMatch = pathname.match(PATTERNS_SLUG_PATTERN);
+  if (patternsMatch) {
+    const slug = patternsMatch[1];
+    if (isFormatValidSlug(slug)) {
+      const updatedAt = await patternUpdatedAtImpl(slug);
+      const httpDate = toHttpDate(updatedAt);
+      if (httpDate) {
+        response.headers.set("Last-Modified", httpDate);
+      }
+    }
+    return response;
+  }
+
+  // Listing routes — ISR-snapshot floor (cheap, snapshot-accurate semantic).
+  if (
+    POSTS_LISTING_PATTERN.test(pathname) ||
+    PATTERNS_LISTING_PATTERN.test(pathname)
+  ) {
+    const httpDate = toHttpDate(ISR_SNAPSHOT_FLOOR_DATE);
+    if (httpDate) {
+      response.headers.set("Last-Modified", httpDate);
+    }
+    return response;
+  }
+
+  // About — single Pages collection doc keyed on slug "about".
+  if (ABOUT_PATTERN.test(pathname)) {
+    const updatedAt = await aboutUpdatedAtImpl();
+    const httpDate = toHttpDate(updatedAt);
+    if (httpDate) {
+      response.headers.set("Last-Modified", httpDate);
+    }
+    return response;
+  }
+
+  return response;
 }
 
 /**
- * Test-only: swap the existence-check delegate so unit tests don't
- * boot Payload. Reset via `resetPostSlugExists` in `afterEach`.
+ * Test-only: swap the lookup delegates so unit tests don't boot Payload or
+ * the pattern catalog. Reset via the `reset*` methods in `afterEach`.
  */
 export const __testing__ = {
   setPostSlugExists: (fn: (slug: string) => Promise<boolean | null>): void => {
@@ -167,13 +347,41 @@ export const __testing__ = {
   resetPostSlugExists: (): void => {
     postSlugExistsImpl = defaultPostSlugExists;
   },
+  setPostUpdatedAt: (fn: UpdatedAtLookup): void => {
+    postUpdatedAtImpl = fn;
+  },
+  resetPostUpdatedAt: (): void => {
+    postUpdatedAtImpl = defaultPostUpdatedAt;
+  },
+  setPatternUpdatedAt: (fn: UpdatedAtLookup): void => {
+    patternUpdatedAtImpl = fn;
+  },
+  resetPatternUpdatedAt: (): void => {
+    patternUpdatedAtImpl = defaultPatternUpdatedAt;
+  },
+  setAboutUpdatedAt: (fn: () => Promise<string | null>): void => {
+    aboutUpdatedAtImpl = fn;
+  },
+  resetAboutUpdatedAt: (): void => {
+    aboutUpdatedAtImpl = defaultAboutUpdatedAt;
+  },
+  getIsrSnapshotFloor: (): Date => ISR_SNAPSHOT_FLOOR_DATE,
 };
 
 /**
- * Narrow the matcher to `/posts/<slug>` paths only — never the `/posts`
- * listing, never any other route. The handler regexes still gate the
- * actual behavior at runtime.
+ * Enumerated matcher — covers the union of routes both concerns touch and
+ * nothing else. Static assets (`/_next/...`, `/favicon.ico`, `/icon.png`,
+ * `/feed.xml`, `/sitemap.xml`, `/robots.txt`) and Payload's `/api/...`
+ * routes are not matched. The runtime regexes above further gate the
+ * actual behavior so an unrelated path that happens to start with
+ * `/posts/` still passes through with no header.
  */
 export const config = {
-  matcher: ["/posts/:slug+"],
+  matcher: [
+    "/posts",
+    "/posts/:slug+",
+    "/agentic-design-patterns",
+    "/agentic-design-patterns/:slug",
+    "/about",
+  ],
 };
