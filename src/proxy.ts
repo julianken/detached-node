@@ -25,11 +25,12 @@ import type { NextRequest } from "next/server";
  * matcher and runtime regexes accept.
  *
  * Routes touched by step 3:
- *   - `/posts/<slug>`                      → Payload `posts.updatedAt` lookup
- *   - `/agentic-design-patterns/<slug>`    → static pattern `dateModified`
- *   - `/posts`                             → ISR-snapshot floor (cheap)
- *   - `/agentic-design-patterns`           → ISR-snapshot floor (cheap)
- *   - `/about`                             → Payload `pages.updatedAt` for slug "about"
+ *   - `/posts/<slug>`                          → Payload `posts.dedicatedDateModified ?? updatedAt`
+ *   - `/agentic-design-patterns/<slug>`        → static pattern `dateModified`
+ *   - `/agentic-design-patterns/changelog`     → catalog `getCatalogDateModified()` (static shadow of `[slug]`)
+ *   - `/posts`                                 → ISR-snapshot floor (cheap)
+ *   - `/agentic-design-patterns`               → ISR-snapshot floor (cheap)
+ *   - `/about`                                 → Payload `pages.updatedAt` for slug "about"
  *
  * Page-level mechanisms (`generateMetadata`, `next/headers`,
  * `next.config.js`'s `headers()`, route handlers) cannot inject a dynamic
@@ -72,6 +73,7 @@ import type { NextRequest } from "next/server";
 const TRAILING_PUNCT_PATTERN = /^(\/posts\/[a-z0-9-]+?)['")\].,;:!?]+$/;
 const POSTS_SLUG_PATTERN = /^\/posts\/([a-z0-9-]+)$/;
 const PATTERNS_SLUG_PATTERN = /^\/agentic-design-patterns\/([a-z0-9-]+)$/;
+const PATTERNS_CHANGELOG_PATTERN = /^\/agentic-design-patterns\/changelog\/?$/;
 const POSTS_LISTING_PATTERN = /^\/posts\/?$/;
 const PATTERNS_LISTING_PATTERN = /^\/agentic-design-patterns\/?$/;
 const ABOUT_PATTERN = /^\/about\/?$/;
@@ -128,6 +130,31 @@ async function defaultPostSlugExists(slug: string): Promise<boolean | null> {
   }
 }
 
+/**
+ * Pick the post timestamp that should drive `Last-Modified`, matching the
+ * BlogPosting JSON-LD's `dateModified` precedence (see
+ * `src/lib/schema/blog-posting.ts` and PR #397):
+ *
+ *   1. `dedicatedDateModified` — deliberate signal stamped only on meaningful
+ *      content changes (body/title/summary). Lets non-content saves
+ *      (toggling featured, swapping a tag) avoid moving the freshness signal.
+ *   2. `updatedAt` — Payload's auto-updated timestamp; covers posts that
+ *      pre-date the dedicated field.
+ *   3. `null` — both missing → omit the header rather than send a wrong one.
+ *
+ * Sending `Last-Modified` from a different source than the JSON-LD
+ * `dateModified` would hand crawlers two contradictory freshness values
+ * for the same page.
+ *
+ * Exported as a named symbol so unit tests can verify the precedence
+ * without mocking Payload module-wide (which leaks across files).
+ */
+export function pickPostTimestamp(
+  doc: { updatedAt?: string | null; dedicatedDateModified?: string | null } | undefined,
+): string | null {
+  return doc?.dedicatedDateModified ?? doc?.updatedAt ?? null;
+}
+
 async function defaultPostUpdatedAt(slug: string): Promise<string | null> {
   try {
     const { getPayload } = await import("payload");
@@ -141,10 +168,11 @@ async function defaultPostUpdatedAt(slug: string): Promise<string | null> {
       },
       limit: 1,
       depth: 0,
-      select: { updatedAt: true },
+      // Project both timestamps so `pickPostTimestamp` can apply the
+      // BlogPosting `dateModified` precedence — see that helper's docstring.
+      select: { updatedAt: true, dedicatedDateModified: true },
     });
-    const doc = docs[0];
-    return doc?.updatedAt ?? null;
+    return pickPostTimestamp(docs[0]);
   } catch {
     return null;
   }
@@ -155,6 +183,25 @@ async function defaultPatternUpdatedAt(slug: string): Promise<string | null> {
     const { getPattern } = await import("@/data/agentic-design-patterns/index");
     const pattern = getPattern(slug);
     return pattern?.dateModified ?? null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * `/agentic-design-patterns/changelog` is a static App Router route that
+ * shadows the dynamic `[slug]` segment. The catalog has no pattern named
+ * "changelog", so it would otherwise fall through with no header. Its
+ * natural freshness signal is the most recent `dateModified` across all
+ * non-archived patterns — the same value the changelog page itself uses
+ * to describe the catalog's last edit.
+ */
+async function defaultChangelogUpdatedAt(): Promise<string | null> {
+  try {
+    const { getCatalogDateModified } = await import(
+      "@/data/agentic-design-patterns/index"
+    );
+    return getCatalogDateModified();
   } catch {
     return null;
   }
@@ -191,6 +238,8 @@ let postSlugExistsImpl: (slug: string) => Promise<boolean | null> =
 let postUpdatedAtImpl: UpdatedAtLookup = defaultPostUpdatedAt;
 let patternUpdatedAtImpl: UpdatedAtLookup = defaultPatternUpdatedAt;
 let aboutUpdatedAtImpl: () => Promise<string | null> = defaultAboutUpdatedAt;
+let changelogUpdatedAtImpl: () => Promise<string | null> =
+  defaultChangelogUpdatedAt;
 
 // ── Soft-404 response body ────────────────────────────────────────────────
 //
@@ -298,6 +347,19 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
 
   const response = NextResponse.next();
 
+  // `/agentic-design-patterns/changelog` is a static route that shadows the
+  // `[slug]` dynamic segment. Check it BEFORE the slug regex so we emit the
+  // catalog's most-recent-dateModified rather than falling through with no
+  // header (which is what would happen for a slug not in the catalog).
+  if (PATTERNS_CHANGELOG_PATTERN.test(pathname)) {
+    const updatedAt = await changelogUpdatedAtImpl();
+    const httpDate = toHttpDate(updatedAt);
+    if (httpDate) {
+      response.headers.set("Last-Modified", httpDate);
+    }
+    return response;
+  }
+
   const patternsMatch = pathname.match(PATTERNS_SLUG_PATTERN);
   if (patternsMatch) {
     const slug = patternsMatch[1];
@@ -365,6 +427,12 @@ export const __testing__ = {
   resetAboutUpdatedAt: (): void => {
     aboutUpdatedAtImpl = defaultAboutUpdatedAt;
   },
+  setChangelogUpdatedAt: (fn: () => Promise<string | null>): void => {
+    changelogUpdatedAtImpl = fn;
+  },
+  resetChangelogUpdatedAt: (): void => {
+    changelogUpdatedAtImpl = defaultChangelogUpdatedAt;
+  },
   getIsrSnapshotFloor: (): Date => ISR_SNAPSHOT_FLOOR_DATE,
 };
 
@@ -381,7 +449,8 @@ export const config = {
     "/posts",
     "/posts/:slug+",
     "/agentic-design-patterns",
-    "/agentic-design-patterns/:slug",
+    "/agentic-design-patterns/:slug+",
+    "/agentic-design-patterns/changelog",
     "/about",
   ],
 };

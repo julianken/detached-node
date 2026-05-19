@@ -74,7 +74,7 @@ vi.mock("next/server", () => ({
   },
 }));
 
-import { proxy, toHttpDate, __testing__ } from "@/proxy";
+import { proxy, toHttpDate, pickPostTimestamp, __testing__ } from "@/proxy";
 
 /**
  * Minimal NextRequest-shaped object — only the three fields the proxy
@@ -94,22 +94,26 @@ const slugExistsMock = vi.fn();
 const postUpdatedAtMock = vi.fn();
 const patternUpdatedAtMock = vi.fn();
 const aboutUpdatedAtMock = vi.fn();
+const changelogUpdatedAtMock = vi.fn();
 
 beforeEach(() => {
   slugExistsMock.mockReset();
   postUpdatedAtMock.mockReset();
   patternUpdatedAtMock.mockReset();
   aboutUpdatedAtMock.mockReset();
+  changelogUpdatedAtMock.mockReset();
   // Default: slug exists, all timestamp lookups return null (no header).
   // Tests override per-case as needed.
   slugExistsMock.mockResolvedValue(true);
   postUpdatedAtMock.mockResolvedValue(null);
   patternUpdatedAtMock.mockResolvedValue(null);
   aboutUpdatedAtMock.mockResolvedValue(null);
+  changelogUpdatedAtMock.mockResolvedValue(null);
   __testing__.setPostSlugExists(slugExistsMock);
   __testing__.setPostUpdatedAt(postUpdatedAtMock);
   __testing__.setPatternUpdatedAt(patternUpdatedAtMock);
   __testing__.setAboutUpdatedAt(aboutUpdatedAtMock);
+  __testing__.setChangelogUpdatedAt(changelogUpdatedAtMock);
 });
 
 afterEach(() => {
@@ -117,6 +121,7 @@ afterEach(() => {
   __testing__.resetPostUpdatedAt();
   __testing__.resetPatternUpdatedAt();
   __testing__.resetAboutUpdatedAt();
+  __testing__.resetChangelogUpdatedAt();
 });
 
 // A real, parseable ISO date the lookups can return.
@@ -388,6 +393,51 @@ describe("proxy: /posts/<slug> emits Last-Modified from Payload updatedAt", () =
   });
 });
 
+// ── PR #418: post-timestamp precedence (BlogPosting alignment) ──────────
+//
+// `pickPostTimestamp` encodes the same precedence used in
+// `src/lib/schema/blog-posting.ts` (PR #397): `dedicatedDateModified` wins
+// when present, otherwise `updatedAt`. Sending a different signal from the
+// proxy than the JSON-LD on the rendered page would hand crawlers two
+// contradictory freshness values for the same URL.
+
+describe("pickPostTimestamp: dedicatedDateModified takes precedence over updatedAt", () => {
+  const POST_UPDATED_AT = "2026-05-12T10:30:00.000Z";
+  const POST_DEDICATED = "2026-05-10T08:00:00.000Z";
+
+  it("uses dedicatedDateModified when both are present (matches BlogPosting JSON-LD)", () => {
+    expect(
+      pickPostTimestamp({
+        updatedAt: POST_UPDATED_AT,
+        dedicatedDateModified: POST_DEDICATED,
+      }),
+    ).toBe(POST_DEDICATED);
+  });
+
+  it("falls back to updatedAt when dedicatedDateModified is null", () => {
+    expect(
+      pickPostTimestamp({
+        updatedAt: POST_UPDATED_AT,
+        dedicatedDateModified: null,
+      }),
+    ).toBe(POST_UPDATED_AT);
+  });
+
+  it("falls back to updatedAt when dedicatedDateModified is absent (pre-#397 post)", () => {
+    expect(pickPostTimestamp({ updatedAt: POST_UPDATED_AT })).toBe(
+      POST_UPDATED_AT,
+    );
+  });
+
+  it("returns null when both timestamps are absent", () => {
+    expect(pickPostTimestamp({})).toBeNull();
+  });
+
+  it("returns null when the doc itself is undefined (missing post)", () => {
+    expect(pickPostTimestamp(undefined)).toBeNull();
+  });
+});
+
 // ── PR #418: pattern detail route ────────────────────────────────────────
 
 describe("proxy: /agentic-design-patterns/<slug> emits Last-Modified from pattern dateModified", () => {
@@ -568,19 +618,28 @@ describe("proxy: scope discipline", () => {
     expect(aboutUpdatedAtMock).not.toHaveBeenCalled();
   });
 
-  it("treats /agentic-design-patterns/changelog as a slug-shape path that resolves to no pattern", async () => {
-    // The URL `/agentic-design-patterns/changelog` matches the
-    // `:slug` shape, so the proxy WILL invoke the pattern lookup. The
-    // lookup returns null (no pattern with slug "changelog") and no
-    // header is emitted. This is correct: the changelog page is its own
-    // route under the app, and treating it as a non-pattern slug is
-    // benign — one wasted lookup at request time, no incorrect header.
-    patternUpdatedAtMock.mockResolvedValue(null);
+  it("treats /agentic-design-patterns/changelog as the changelog branch, not a pattern slug", async () => {
+    // `/agentic-design-patterns/changelog` is a static App Router route
+    // that shadows the `[slug]` dynamic segment, so the proxy routes it to
+    // the dedicated changelog lookup BEFORE the slug regex runs. The
+    // pattern lookup must not be called for this path.
+    changelogUpdatedAtMock.mockResolvedValue(FAKE_UPDATED_AT);
+    const result = (await proxy(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      makeRequest("/agentic-design-patterns/changelog") as any,
+    )) as unknown as NextResult;
+    expect(result.headers.get("Last-Modified")).toBe(FAKE_UPDATED_AT_HTTP);
+    expect(changelogUpdatedAtMock).toHaveBeenCalledTimes(1);
+    expect(patternUpdatedAtMock).not.toHaveBeenCalled();
+  });
+
+  it("omits Last-Modified on the changelog when the catalog lookup fails", async () => {
+    changelogUpdatedAtMock.mockResolvedValue(null);
     const result = (await proxy(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       makeRequest("/agentic-design-patterns/changelog") as any,
     )) as unknown as NextResult;
     expect(result.headers.get("Last-Modified")).toBeNull();
-    expect(patternUpdatedAtMock).toHaveBeenCalledWith("changelog");
+    expect(changelogUpdatedAtMock).toHaveBeenCalledTimes(1);
   });
 });
