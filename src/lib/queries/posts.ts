@@ -68,6 +68,55 @@ export const getPublishedPosts = cache(async (): Promise<Post[]> => {
 });
 
 /**
+ * Existence check for a published post by slug.
+ *
+ * Field-projected (select: { slug: true }), depth: 0, limit: 1 — used by
+ * `src/proxy.ts` to short-circuit missing slugs without paying the cost
+ * of pulling the full Post document (Lexical body, references, joined
+ * media). The proxy runs on every uncached `/posts/<slug>` request, so
+ * dropping the full-document load here is a meaningful saving.
+ *
+ * Not wrapped in `cache()` — the proxy's React-`cache()` scope is not
+ * shared with the page handler in Next.js 16 (proxy.ts and the page
+ * render are separate execution contexts), so caching here would only
+ * deduplicate within a single proxy invocation, where the same slug is
+ * never queried twice.
+ *
+ * @param slug - Raw slug string from URL params (validated internally)
+ * @returns true if a published post with this slug exists, false otherwise
+ */
+export const postSlugExists = async (slug: string): Promise<boolean> => {
+  if (!isValidSlug(slug)) {
+    return false;
+  }
+
+  const validatedSlug: Slug = slug;
+
+  try {
+    const payload = await getPayload({ config });
+    const { docs } = await payload.find({
+      collection: 'posts',
+      where: {
+        slug: { equals: validatedSlug },
+        status: { equals: 'published' },
+      },
+      select: { slug: true },
+      depth: 0,
+      limit: 1,
+    });
+    return docs.length > 0;
+  } catch (error) {
+    logError(
+      'Failed to check post slug existence',
+      error,
+      { collection: 'posts', slug: validatedSlug },
+      ErrorIds.PAYLOAD_FIND_FAILED
+    );
+    throw error;
+  }
+};
+
+/**
  * Get post by slug with branded type validation
  * Cached to prevent duplicate queries in generateMetadata + page component
  *

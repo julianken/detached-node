@@ -21,10 +21,14 @@ import type { NextRequest } from "next/server";
  *   - Slugs follow `isValidSlug` (lowercase alphanumeric + hyphens).
  *     Format-invalid slugs are short-circuited synchronously — no DB
  *     hop needed.
- *   - The existence check delegates to `getPostBySlug` (the same
- *     React-`cache()`-wrapped query the page uses). The downstream
- *     page render therefore hits a primed Payload connection rather
- *     than a cold-start one.
+ *   - The existence check delegates to `postSlugExists`, a
+ *     field-projected query (`select: { slug: true }`, depth 0, no
+ *     joins) — it answers existence without pulling the post's Lexical
+ *     body, references, or joined media. The proxy lookup is separate
+ *     from the page handler's `getPostBySlug` — React `cache()` is
+ *     per-request and is NOT shared between `proxy.ts` and the page
+ *     render in Next.js 16 (they are distinct execution contexts). The
+ *     cost is one extra projected query in the proxy.
  *   - Errors during the existence check fail OPEN (pass through to the
  *     page). A transient DB outage shouldn't paint the entire site 404.
  *
@@ -38,7 +42,12 @@ import type { NextRequest } from "next/server";
  * cannot import Payload's transitive deps (`url`, `fs`, `sharp`).
  */
 
-const TRAILING_PUNCT_PATTERN = /^(\/posts\/[a-z0-9-]+?)['")\].,;:!?]+$/i;
+// Trailing-punctuation characters are case-invariant, and the downstream
+// slug pattern + `isFormatValidSlug` are case-sensitive (lowercase only).
+// Using `/i` here would 301 `/posts/Foo'` to `/posts/Foo` which would
+// then 404 — an extra hop. Drop the `/i` and let mixed-case slugs fall
+// through; they'd 404 anyway since they don't match the slug format.
+const TRAILING_PUNCT_PATTERN = /^(\/posts\/[a-z0-9-]+?)['")\].,;:!?]+$/;
 const POSTS_SLUG_PATTERN = /^\/posts\/([a-z0-9-]+)$/;
 
 // Synchronous slug-format check — mirrors `isValidSlug` from
@@ -62,9 +71,8 @@ function isFormatValidSlug(slug: string): boolean {
  */
 async function defaultPostSlugExists(slug: string): Promise<boolean | null> {
   try {
-    const { getPostBySlug } = await import("@/lib/queries/posts");
-    const post = await getPostBySlug(slug);
-    return post !== null;
+    const { postSlugExists } = await import("@/lib/queries/posts");
+    return await postSlugExists(slug);
   } catch {
     // Fail open — let the page handle it.
     return null;

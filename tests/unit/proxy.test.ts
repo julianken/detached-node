@@ -143,6 +143,26 @@ describe("proxy: trailing-punctuation redirect for /posts/<slug>", () => {
       status: 301,
     });
   });
+
+  it("does NOT redirect mixed-case slugs (case-sensitive — avoids 301→404 hop)", async () => {
+    // The trailing-punctuation regex was previously `/i`, which would
+    // match `/posts/Foo'` and 301 to `/posts/Foo` — only to 404 at the
+    // next hop because the downstream slug pattern + `isFormatValidSlug`
+    // are case-sensitive (lowercase only). Dropping `/i` lets mixed-case
+    // paths fall through unchanged (the format-invalid slug check then
+    // 404s them directly, no extra hop).
+    slugExistsMock.mockResolvedValue(false);
+    const result = (await proxy(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      makeRequest("/posts/Foo'") as any,
+    )) as unknown as ResponseResult | NextResult;
+    // Either a 404 (matcher hit + format check fails) or a pass-through
+    // (`NextResponse.next()`) — what must NOT happen is a 301 to
+    // `/posts/Foo`.
+    expect(result.kind).not.toBe(REDIRECT);
+    // Existence check never runs for format-invalid slugs.
+    expect(slugExistsMock).not.toHaveBeenCalled();
+  });
 });
 
 describe("proxy: soft-404 short-circuit", () => {
