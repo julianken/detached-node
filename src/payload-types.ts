@@ -176,7 +176,6 @@ export interface Media {
      */
     ascii?: string | null;
   };
-  prefix?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -334,6 +333,26 @@ export interface Post {
    * Meta description for search results. Falls back to summary if blank.
    */
   metaDescription?: string | null;
+  /**
+   * Schema.org primary @type emitted in the post detail page JSON-LD. Replace strategy: only this schema is emitted (BlogPosting is NOT co-emitted for HowTo or TechArticle). HowTo additionally requires the Steps field below.
+   */
+  schemaType: 'BlogPosting' | 'HowTo' | 'TechArticle';
+  /**
+   * Procedural steps emitted as schema.org HowTo.step. Required when Schema Type is HowTo; at least one step with name and text is needed for the JSON-LD to trigger Google's HowTo rich result.
+   */
+  steps?:
+    | {
+        /**
+         * Short label for this step.
+         */
+        name: string;
+        /**
+         * Prose describing what the reader does in this step.
+         */
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -479,7 +498,6 @@ export interface MediaSelect<T extends boolean = true> {
         color?: T;
         ascii?: T;
       };
-  prefix?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -586,6 +604,14 @@ export interface PostsSelect<T extends boolean = true> {
   theme?: T;
   seoTitle?: T;
   metaDescription?: T;
+  schemaType?: T;
+  steps?:
+    | T
+    | {
+        name?: T;
+        text?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }

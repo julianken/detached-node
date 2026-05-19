@@ -125,6 +125,72 @@ export interface BlogPostingSchema extends SchemaBase {
 }
 
 // -------------------------------------------------------------------------
+// HowToStep — embedded in HowTo.step array
+//
+// Schema.org defines several optional properties on HowToStep (image, url,
+// itemListElement, etc.); we use only the two that are semantically required
+// for grounding signal: `name` (a short step label) and `text` (the prose
+// describing what the reader does). The Posts collection's `steps` array
+// field shape matches this 1:1 so the generator is a straight map.
+// -------------------------------------------------------------------------
+
+export interface HowToStep {
+  "@type": "HowToStep";
+  name: string;
+  text: string;
+}
+
+// -------------------------------------------------------------------------
+// HowTo — top-level schema for procedural / step-by-step posts.
+// Mirrors BlogPostingSchema except @type is "HowTo" and `step` replaces the
+// generic Article fields' role as the primary content signal. `@id` uses the
+// same #article suffix on the canonical post URL so it can interop with the
+// breadcrumb and website entities through their existing references.
+// -------------------------------------------------------------------------
+
+export interface HowToSchema extends SchemaBase {
+  "@type": "HowTo";
+  "@id": string;
+  name: string;
+  description?: string;
+  url: string;
+  datePublished?: string;
+  dateModified?: string;
+  author: { "@id": string };
+  publisher: { "@id": string };
+  image?: ImageObjectSchema;
+  keywords?: string[];
+  citation?: CitationSchema[];
+  isPartOf: { "@id": string };
+  step: HowToStep[];
+}
+
+// -------------------------------------------------------------------------
+// TechArticle — top-level schema for deep technical / analytical posts.
+// Field-for-field mirror of BlogPostingSchema with `@type` swapped, because
+// TechArticle and BlogPosting are siblings under Article and share the same
+// descriptive surface. Replace-emission strategy (see issue #416) means a
+// post tagged TechArticle does NOT also emit BlogPosting.
+// -------------------------------------------------------------------------
+
+export interface TechArticleSchema extends SchemaBase {
+  "@type": "TechArticle";
+  "@id": string;
+  headline: string;
+  description?: string;
+  url: string;
+  datePublished?: string;
+  dateModified?: string;
+  author: { "@id": string };
+  publisher: { "@id": string };
+  image?: ImageObjectSchema;
+  articleSection?: string;
+  keywords?: string[];
+  citation?: CitationSchema[];
+  isPartOf: { "@id": string };
+}
+
+// -------------------------------------------------------------------------
 // BreadcrumbList — navigation schema for post detail pages
 // No @id: breadcrumbs are positional, not entities that other schemas
 // reference. Each ListItem has position (1-indexed), name, and item (URL).
