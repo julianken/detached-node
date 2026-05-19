@@ -232,7 +232,6 @@ async function defaultAboutUpdatedAt(): Promise<string | null> {
 // Mutable bindings so tests can override without booting Payload or the
 // pattern catalog. Production code never reassigns these — only the
 // `__testing__` API below does.
-// eslint-disable-next-line prefer-const
 let postSlugExistsImpl: (slug: string) => Promise<boolean | null> =
   defaultPostSlugExists;
 let postUpdatedAtImpl: UpdatedAtLookup = defaultPostUpdatedAt;

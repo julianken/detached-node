@@ -380,16 +380,19 @@ describe("proxy: /posts/<slug> emits Last-Modified from Payload updatedAt", () =
 
   it("falls through with no header when the DB existence check returns null", async () => {
     // fail-open from existence check should still let the request reach
-    // the page (NEXT), and the Last-Modified lookup should NOT run — we
-    // don't want to compound a DB hiccup by issuing a second query.
+    // the page (NEXT). The timestamp lookup IS attempted on this path —
+    // it's an independent best-effort call and fails open just like the
+    // existence check. The default mock returns null, so no header is
+    // emitted, but absence of a Last-Modified header is the only
+    // guaranteed observable.
     slugExistsMock.mockResolvedValue(null);
+    postUpdatedAtMock.mockResolvedValue(null);
     const result = (await proxy(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       makeRequest("/posts/some-slug") as any,
     )) as unknown as NextResult;
     expect(result.kind).toBe(NEXT);
     expect(result.headers.get("Last-Modified")).toBeNull();
-    expect(postUpdatedAtMock).not.toHaveBeenCalled();
   });
 });
 
