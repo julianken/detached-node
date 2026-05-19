@@ -9,7 +9,13 @@ import { PageLayout } from "@/components/PageLayout";
 import { ThemeAwareHero } from "@/components/ThemeAwareHero";
 import { TextGlitch } from "@/components/TextGlitch";
 import { SchemaScript } from "@/components/SchemaScript";
-import { generateBlogPostingSchema, generateBreadcrumbSchema } from "@/lib/schema";
+import {
+  generateBlogPostingSchema,
+  generateBreadcrumbSchema,
+  generateHowToSchema,
+  generateTechArticleSchema,
+} from "@/lib/schema";
+import type { Post } from "@/payload-types";
 import { logWarning } from "@/lib/logging";
 import { ErrorIds } from "@/lib/error-ids";
 import { getPostBySlug, getPublishedPosts } from "@/lib/queries/posts";
@@ -111,9 +117,20 @@ export default async function PostPage({ params }: PostPageProps) {
     notFound();
   }
 
+  // Replace strategy (per issue #416): when schemaType is HowTo or
+  // TechArticle, emit ONLY that schema as the per-post primary @type —
+  // BlogPosting is not co-emitted. Default schemaType "BlogPosting"
+  // preserves existing behavior for every existing and un-tagged post.
+  //
+  // HowTo additionally requires a populated `steps` array (enforced at the
+  // Payload validation layer). If an editor tags a post HowTo but the
+  // generator returns null (mis-tagging slip), fall back to BlogPosting so
+  // the page still ships a grounded schema.
+  const primarySchema = selectPrimarySchema(post);
+
   return (
     <FadeReveal>
-    <SchemaScript schema={[generateBlogPostingSchema(post), generateBreadcrumbSchema(post.slug, post.title)]} />
+    <SchemaScript schema={[primarySchema, generateBreadcrumbSchema(post.slug, post.title)]} />
     <article>
       <PageLayout maxWidth="prose">
         <Link
@@ -179,4 +196,24 @@ export default async function PostPage({ params }: PostPageProps) {
     </article>
     </FadeReveal>
   );
+}
+
+// Selects the single primary schema for this post per the replace strategy
+// committed to in issue #416. Default falls through to BlogPosting so any
+// existing or un-tagged post keeps its current schema unchanged.
+function selectPrimarySchema(post: Post) {
+  if (post.schemaType === "TechArticle") {
+    return generateTechArticleSchema(post);
+  }
+  if (post.schemaType === "HowTo") {
+    const howto = generateHowToSchema(post);
+    // Mis-tagging guard: HowTo without steps falls back to BlogPosting so
+    // the page never ships a non-grounding HowTo (no `step` array).
+    if (howto) return howto;
+    logWarning(
+      "Post tagged HowTo but missing steps; falling back to BlogPosting",
+      { slug: post.slug },
+    );
+  }
+  return generateBlogPostingSchema(post);
 }

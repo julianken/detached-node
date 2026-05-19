@@ -15,6 +15,8 @@ export { generateCollectionPageSchema } from "./collection-page";
 export { mapReferenceToCitation } from "./citation";
 export { generatePatternArticleSchema, referenceToPatternCitation } from "./agentic-patterns";
 export { generateFaqPageSchema } from "./faq-page";
+export { generateHowToSchema } from "./howto";
+export { generateTechArticleSchema } from "./tech-article";
 
 // Type exports — available when page components need to type schema variables
 export type {
@@ -30,4 +32,7 @@ export type {
   ArticleSchema,
   PatternCitationSchema,
   FaqPageSchema,
+  HowToSchema,
+  HowToStep,
+  TechArticleSchema,
 } from "./types";

@@ -200,5 +200,54 @@ export const Posts: CollectionConfig = {
         description: 'Meta description for search results. Falls back to summary if blank.',
       },
     },
+    {
+      name: 'schemaType',
+      type: 'select',
+      required: true,
+      defaultValue: 'BlogPosting',
+      options: [
+        { label: 'Blog Posting (default)', value: 'BlogPosting' },
+        { label: 'How To (step-by-step)', value: 'HowTo' },
+        { label: 'Tech Article (deep analysis)', value: 'TechArticle' },
+      ],
+      admin: {
+        position: 'sidebar',
+        description:
+          'Schema.org primary @type emitted in the post detail page JSON-LD. Replace strategy: only this schema is emitted (BlogPosting is NOT co-emitted for HowTo or TechArticle). HowTo additionally requires the Steps field below.',
+      },
+    },
+    {
+      name: 'steps',
+      type: 'array',
+      admin: {
+        condition: (data) => data?.schemaType === 'HowTo',
+        description:
+          'Procedural steps emitted as schema.org HowTo.step. Required when Schema Type is HowTo; at least one step with name and text is needed for the JSON-LD to trigger Google\'s HowTo rich result.',
+      },
+      validate: (value, { data }: { data: Partial<{ schemaType: string }> }) => {
+        if (data?.schemaType !== 'HowTo') return true
+        if (!Array.isArray(value) || value.length === 0) {
+          return 'At least one step is required when Schema Type is HowTo.'
+        }
+        return true
+      },
+      fields: [
+        {
+          name: 'name',
+          type: 'text',
+          required: true,
+          maxLength: 200,
+          admin: { description: 'Short label for this step.' },
+        },
+        {
+          name: 'text',
+          type: 'textarea',
+          required: true,
+          minLength: 10,
+          maxLength: 2000,
+          admin: { description: 'Prose describing what the reader does in this step.' },
+        },
+      ],
+    },
   ],
 }
