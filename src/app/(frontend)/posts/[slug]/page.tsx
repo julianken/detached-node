@@ -213,6 +213,7 @@ function selectPrimarySchema(post: Post) {
     logWarning(
       "Post tagged HowTo but missing steps; falling back to BlogPosting",
       { slug: post.slug },
+      ErrorIds.SCHEMA_HOWTO_MISTAGGED,
     );
   }
   return generateBlogPostingSchema(post);
