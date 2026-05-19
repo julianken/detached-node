@@ -52,6 +52,24 @@ vi.mock("@/lib/queries/posts", () => ({
   getPublishedPosts: vi.fn(() => Promise.resolve([])),
 }));
 
+// Stub the Payload config + client so the page's transitive deps (e.g.
+// `@/components/RelatedPosts` → `@/lib/queries/related-posts`) don't pull
+// `@payload-config` at module load — that file calls `assertRequiredEnv`
+// for `PAYLOAD_SECRET` + `DATABASE_URL` at import time and would throw
+// under the CI unit-test job (which doesn't provision those env vars).
+// Matches the pattern in `tests/unit/lib/queries/posts.test.ts`.
+vi.mock("@payload-config", () => ({
+  default: {},
+}));
+vi.mock("payload", () => ({
+  getPayload: vi.fn(async () => ({
+    find: vi.fn(async () => ({ docs: [] })),
+  })),
+}));
+vi.mock("@/lib/queries/related-posts", () => ({
+  getRelatedPosts: vi.fn(() => Promise.resolve([])),
+}));
+
 // Mock logging to avoid noisy stderr during tests.
 vi.mock("@/lib/logging", () => ({
   logWarning: vi.fn(),
