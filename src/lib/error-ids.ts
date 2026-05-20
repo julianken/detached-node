@@ -32,6 +32,9 @@ export const ErrorIds = {
 
   // Schema errors
   SCHEMA_HOWTO_MISTAGGED: 'SCHEMA_HOWTO_MISTAGGED',
+
+  // IndexNow push protocol
+  INDEXNOW_NOTIFY_FAILED: 'INDEXNOW_NOTIFY_FAILED',
 } as const
 
 export type ErrorId = typeof ErrorIds[keyof typeof ErrorIds]

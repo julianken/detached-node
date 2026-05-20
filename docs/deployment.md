@@ -106,6 +106,26 @@ For a git-level revert: `git revert HEAD && git push origin main` triggers a new
 
 Only the GraphQL endpoint (`/api/graphql`) is rate-limited in Phase 1. Numeric limits and the in-memory fallback strategy are in [`docs/rate-limiting-strategy.md`](./rate-limiting-strategy.md) — do not restate them here.
 
+## IndexNow (Bing / Yandex push)
+
+Payload `afterChange` and `afterDelete` hooks on `posts` and `pages` automatically POST the affected URL to `https://api.indexnow.org/IndexNow` after a save. This notifies all participating engines (Bing, Yandex, Naver, Seznam, Mojeek) in one call. Google does **not** participate; for Google, continue using Search Console URL Inspection.
+
+Key file: `public/<INDEXNOW_KEY>.txt` is served as a static asset at `https://detached-node.dev/<INDEXNOW_KEY>.txt`. The key value is also hardcoded in `src/lib/indexnow.ts` (the constant `INDEXNOW_KEY`). Both must agree — rotating the key requires updating both and waiting for the new file to be live before the next submit.
+
+**Bulk submit the full sitemap** after a key rotation, a content migration, or the first-time enablement:
+
+```bash
+# From a developer workstation, NOT from CI
+pnpm tsx scripts/indexnow-submit-all.ts --dry-run   # preview
+pnpm tsx scripts/indexnow-submit-all.ts             # live
+```
+
+Verification:
+- `curl -s https://detached-node.dev/<INDEXNOW_KEY>.txt` returns the key as plaintext.
+- Bing Webmaster Tools → Crawl Information shows fresh fetches within ~24h.
+
+Failure mode: notify failures are logged via `logWarning` with `ErrorIds.INDEXNOW_NOTIFY_FAILED` and silently swallowed; an IndexNow outage never blocks a content save.
+
 ## Troubleshooting
 
 | Symptom | Likely cause | Fix |
