@@ -25,6 +25,8 @@ const safeRevalidate = (path: string) => {
 // this hook's import chain. `payload.config.ts` owns the canonical
 // NEXT_PUBLIC_SERVER_URL preflight; this hook fails soft if the var
 // is somehow missing at hook-fire time (returns no URLs to notify).
+// See tests/unit/lib/payload-config-env.test.ts for the contract this
+// preserves.
 const getSiteOrigin = (): string | null => {
   const raw = process.env.NEXT_PUBLIC_SERVER_URL
   if (!raw) return null

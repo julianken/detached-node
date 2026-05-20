@@ -101,12 +101,21 @@ export async function notifyIndexNow(urls: string[]): Promise<void> {
   }
 
   try {
+    // 5s timeout guards against a hung TCP connection to api.indexnow.org
+    // pinning a socket + event-loop handler + retained context indefinitely.
+    // Node's native fetch has no default timeout; without `AbortSignal.timeout`
+    // a stalled connection never settles and the `.catch()` in the calling
+    // hook can't help (the promise simply never resolves). 5s is well above
+    // p99 latency for the fan-out endpoint, and on abort the `AbortError`
+    // is caught below and logged via the same fail-soft path as any other
+    // network error.
     const res = await fetch(INDEXNOW_ENDPOINT, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(body),
+      signal: AbortSignal.timeout(5000),
     })
 
     if (!res.ok) {
