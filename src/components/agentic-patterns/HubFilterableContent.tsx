@@ -163,29 +163,16 @@ export function HubFilterableContent({ patterns, layerFiltered = false }: HubFil
         <label htmlFor="hub-search" className="sr-only">
           Search agentic design patterns
         </label>
-        <div className="relative">
-          <input
-            ref={inputRef}
-            id="hub-search"
-            type="search"
-            value={query}
-            onChange={handleChange}
-            aria-label="Search agentic design patterns"
-            aria-describedby="hub-search-hint"
-            placeholder="Search patterns…"
-            className="w-full rounded-sm border border-border bg-surface px-4 py-2.5 pr-16 font-mono text-base text-text-primary placeholder:text-text-tertiary focus-ring"
-          />
-          <kbd
-            aria-hidden="true"
-            className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 rounded-sm border border-border bg-background px-1.5 py-0.5 font-mono text-xs text-text-tertiary"
-          >
-            /
-          </kbd>
-        </div>
-        <p id="hub-search-hint" className="text-xs text-text-tertiary">
-          Press <kbd className="rounded-sm border border-border bg-surface px-1 font-mono text-[0.65rem]">/</kbd>{" "}
-          to focus. Searches name, alternative names, summary, and layer.
-        </p>
+        <input
+          ref={inputRef}
+          id="hub-search"
+          type="search"
+          value={query}
+          onChange={handleChange}
+          aria-label="Search agentic design patterns"
+          placeholder="Search patterns…"
+          className="w-full rounded-sm border border-border bg-surface px-4 py-2.5 font-mono text-base text-text-primary placeholder:text-text-tertiary focus-ring"
+        />
         <p
           role="status"
           aria-live="polite"
