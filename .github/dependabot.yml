@@ -40,6 +40,15 @@ updates:
           - "@types/*"
     labels:
       - "dependencies"
+    ignore:
+      # Keep the agentic-pattern teaching sketches on the AI SDK v4 API they
+      # document. `ai` / `@ai-sdk/*` are typecheck-only devDependencies with no
+      # shipped/runtime impact; the v6 majors break 7 sketches (maxSteps removed,
+      # tool() signature changed) for no benefit. See closed PR #314.
+      - dependency-name: "ai"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@ai-sdk/*"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: "github-actions"
     directory: "/"
