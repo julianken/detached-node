@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@10.34.1",
   "engines": {
     "node": ">=22"
   },
@@ -76,6 +77,11 @@
   "pnpm": {
     "patchedDependencies": {
       "next-view-transitions": "patches/next-view-transitions.patch"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp",
+      "unrs-resolver"
+    ]
   }
 }
