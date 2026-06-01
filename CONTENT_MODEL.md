@@ -89,7 +89,7 @@ Taxonomy labels applied to posts. Source: `src/collections/Tags.ts`.
 
 ### 5) Media
 
-Image uploads with auto-generated preview data. Source: `src/collections/Media.ts`.
+Image uploads managed by Payload. Source: `src/collections/Media.ts`.
 
 **Access:** public read; write requires authentication.
 
@@ -99,12 +99,6 @@ Image uploads with auto-generated preview data. Source: `src/collections/Media.t
 
 - `alt` — text, required
 - `caption` — textarea
-- `lqip` — text, read-only; legacy AVIF data-URL placeholder written during the PR #140 → #246 deploy window. Transitional: will be removed once all documents have a populated `preview`. Tracked in #246.
-- `preview` — group field (auto-generated content-aware preview, populated on upload or by backfill) with sub-fields:
-  - `color` — text, read-only; dominant color as `#rrggbb`
-  - `ascii` — text, read-only; 24×12 luminance halftone (288 chars, row-major)
-
-Both `lqip` and `preview` hooks (`generateLqipHook`, `generatePreviewHook`) run on `beforeChange`. The `preview` fields are canonical post-PR-#140; `lqip` is dual-written only during the cutover window.
 
 ---
 

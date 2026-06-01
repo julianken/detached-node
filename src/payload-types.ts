@@ -159,23 +159,6 @@ export interface Media {
   id: number;
   alt: string;
   caption?: string | null;
-  /**
-   * Legacy AVIF data URL placeholder. Used as a fallback during the PR 1 → PR 2 deploy window. Will be removed once all docs have a populated preview.
-   */
-  lqip?: string | null;
-  /**
-   * Auto-generated content-aware preview. Populated on upload (or by backfill).
-   */
-  preview?: {
-    /**
-     * Dominant color (#rrggbb).
-     */
-    color?: string | null;
-    /**
-     * 24×12 luminance halftone (288 chars, row-major).
-     */
-    ascii?: string | null;
-  };
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -491,13 +474,6 @@ export interface UsersSelect<T extends boolean = true> {
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   caption?: T;
-  lqip?: T;
-  preview?:
-    | T
-    | {
-        color?: T;
-        ascii?: T;
-      };
   updatedAt?: T;
   createdAt?: T;
   url?: T;
