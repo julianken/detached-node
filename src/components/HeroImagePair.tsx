@@ -93,7 +93,6 @@ export function HeroImagePair({
       setState({ loaded: true, glitch: false, vars: {} });
     }
     // Empty deps: this is a one-shot mount probe, mirroring FadeReveal.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function handleLoad(e: React.SyntheticEvent<HTMLImageElement>) {

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import React from "react";
 import { ThemeAwareHero } from "@/components/ThemeAwareHero";
@@ -164,6 +164,94 @@ describe("ThemeAwareHero", () => {
     fireEvent.load(lightImg);
 
     // Spinner gone; glitch-in applied to the (theme-agnostic) image wrapper.
+    expect(container.querySelector(".hero-spinner")).toBeNull();
+    expect(container.querySelector(".glitch-reveal")).toBeTruthy();
+  });
+
+  // --- visible/hidden onLoad discrimination (the display:"none" guard) ---
+  //
+  // The component decides which variant "owns" the reveal by reading
+  // window.getComputedStyle(img).display: only the variant that is NOT
+  // display:"none" may remove the spinner and trigger the glitch. jsdom never
+  // applies the Tailwind stylesheet, so by default BOTH variants report
+  // display:"inline" and the guard branch (handleLoad early-return for the
+  // hidden variant) is never exercised — visibleImg() passes only by
+  // first-element fallthrough. These tests stub getComputedStyle so the dark
+  // variant reports display:"none" (hidden) and the light variant reports a
+  // visible display, then drive onLoad on each variant to prove the guard.
+
+  let computedStyleSpy: ReturnType<typeof vi.spyOn> | undefined;
+
+  afterEach(() => {
+    computedStyleSpy?.mockRestore();
+    computedStyleSpy = undefined;
+  });
+
+  /**
+   * Stub getComputedStyle so the DARK variant (src .../post-dark.png) reports
+   * display:"none" and everything else delegates to jsdom's real
+   * implementation (so the light variant stays visible: display:"inline").
+   * The component only reads `.display`, so a minimal override is sufficient.
+   */
+  function stubDarkHidden() {
+    const real = window.getComputedStyle.bind(window);
+    computedStyleSpy = vi
+      .spyOn(window, "getComputedStyle")
+      .mockImplementation((el: Element, pseudo?: string | null) => {
+        if (
+          el instanceof window.HTMLImageElement &&
+          (el.getAttribute("src") ?? "").endsWith("post-dark.png")
+        ) {
+          return { display: "none" } as unknown as CSSStyleDeclaration;
+        }
+        return real(el, pseudo ?? undefined);
+      });
+  }
+
+  it("ignores onLoad from the HIDDEN (display:none) variant — no spinner removal, no glitch", () => {
+    stubDarkHidden();
+
+    const { container } = render(
+      <ThemeAwareHero light={lightMedia} dark={darkMedia} alt="Hero" />
+    );
+    // Spinner shows (images not complete at mount); no glitch yet.
+    expect(container.querySelector(".hero-spinner")).toBeTruthy();
+    expect(container.querySelector(".glitch-reveal")).toBeNull();
+
+    // Fire load on the HIDDEN variant. Its onLoad must early-return on the
+    // display:"none" guard and leave state untouched.
+    const darkImg = container.querySelector(
+      'img[src="/media/post-dark.png"]'
+    ) as HTMLImageElement;
+    fireEvent.load(darkImg);
+
+    // No state change: spinner still present, still no glitch.
+    expect(container.querySelector(".hero-spinner")).toBeTruthy();
+    expect(container.querySelector(".glitch-reveal")).toBeNull();
+  });
+
+  it("honors onLoad from the VISIBLE variant — removes spinner and applies glitch (with dark variant stubbed hidden)", () => {
+    stubDarkHidden();
+
+    const { container } = render(
+      <ThemeAwareHero light={lightMedia} dark={darkMedia} alt="Hero" />
+    );
+    expect(container.querySelector(".hero-spinner")).toBeTruthy();
+    expect(container.querySelector(".glitch-reveal")).toBeNull();
+
+    // Loading the hidden variant first must NOT consume the reveal (guard).
+    const darkImg = container.querySelector(
+      'img[src="/media/post-dark.png"]'
+    ) as HTMLImageElement;
+    fireEvent.load(darkImg);
+    expect(container.querySelector(".hero-spinner")).toBeTruthy();
+    expect(container.querySelector(".glitch-reveal")).toBeNull();
+
+    // Now the VISIBLE (light) variant finishes: spinner removed + glitch-in.
+    const lightImg = container.querySelector(
+      'img[src="/media/post-light.png"]'
+    ) as HTMLImageElement;
+    fireEvent.load(lightImg);
     expect(container.querySelector(".hero-spinner")).toBeNull();
     expect(container.querySelector(".glitch-reveal")).toBeTruthy();
   });
