@@ -19,8 +19,6 @@ vi.mock("next/image", () => ({
     width,
     height,
     style,
-    blurDataURL,
-    placeholder,
     ...rest
   }: {
     src: string;
@@ -33,14 +31,11 @@ vi.mock("next/image", () => ({
     width?: number;
     height?: number;
     style?: React.CSSProperties;
-    blurDataURL?: string;
-    placeholder?: string;
     [key: string]: unknown;
   }) => {
     // Strip out Next.js-only props that would generate React warnings on an
     // intrinsic <img> element; preserve the props we actually want to assert.
     void rest;
-    void placeholder;
     return React.createElement("img", {
       src,
       alt,
@@ -52,7 +47,6 @@ vi.mock("next/image", () => ({
       "data-sizes": sizes,
       "data-width": width,
       "data-height": height,
-      "data-blur-data-url": blurDataURL,
     });
   },
 }));
@@ -98,6 +92,7 @@ describe("ThemeAwareHero", () => {
 
     const lightImg = container.querySelector('img[src="/media/post-light.png"]');
     expect(lightImg?.className).toContain("dark:hidden");
+    expect(lightImg?.className).toContain("object-cover");
   });
 
   it("applies hidden + dark:block to the dark variant", () => {
@@ -108,6 +103,20 @@ describe("ThemeAwareHero", () => {
     const darkImg = container.querySelector('img[src="/media/post-dark.png"]');
     expect(darkImg?.className).toContain("hidden");
     expect(darkImg?.className).toContain("dark:block");
+    expect(darkImg?.className).toContain("object-cover");
+  });
+
+  it("renders a centered loading spinner behind the images", () => {
+    const { container } = render(
+      <ThemeAwareHero light={lightMedia} dark={darkMedia} alt="Hero" />
+    );
+
+    // A decorative spinner element exists inside the positioned wrapper and is
+    // aria-hidden (the images carry the real alt text).
+    const spinner = container.querySelector(".hero-spinner");
+    expect(spinner).toBeTruthy();
+    expect(spinner?.getAttribute("aria-hidden")).toBe("true");
+    expect(spinner?.querySelector(".animate-spin")).toBeTruthy();
   });
 
   it("does NOT apply transition-opacity or fade animation CSS (View Transitions compliance)", () => {
@@ -330,175 +339,5 @@ describe("ThemeAwareHero", () => {
     images.forEach((img) => {
       expect((img as HTMLElement).style.objectPosition).toBe("0% 0%");
     });
-  });
-
-  // --- LQIP tests ---
-
-  it("passes light.lqip as blurDataURL to the light <OptimizedImage>", () => {
-    const lightWithLqip = makeMedia({
-      ...lightMedia,
-      lqip: "data:image/avif;base64,lightlqip",
-    });
-    const { container } = render(
-      <ThemeAwareHero light={lightWithLqip} dark={darkMedia} alt="Hero" />
-    );
-    const lightImg = container.querySelector(
-      'img[src="/media/post-light.png"]'
-    ) as HTMLElement;
-    expect(lightImg.getAttribute("data-blur-data-url")).toBe(
-      "data:image/avif;base64,lightlqip"
-    );
-  });
-
-  it("passes both light.lqip and dark.lqip to their respective <OptimizedImage> children", () => {
-    const lightWithLqip = makeMedia({
-      ...lightMedia,
-      lqip: "data:image/avif;base64,lightlqip",
-    });
-    const darkWithLqip = makeMedia({
-      ...darkMedia,
-      lqip: "data:image/avif;base64,darklqip",
-    });
-    const { container } = render(
-      <ThemeAwareHero light={lightWithLqip} dark={darkWithLqip} alt="Hero" />
-    );
-    const lightImg = container.querySelector(
-      'img[src="/media/post-light.png"]'
-    ) as HTMLElement;
-    const darkImg = container.querySelector(
-      'img[src="/media/post-dark.png"]'
-    ) as HTMLElement;
-    expect(lightImg.getAttribute("data-blur-data-url")).toBe(
-      "data:image/avif;base64,lightlqip"
-    );
-    expect(darkImg.getAttribute("data-blur-data-url")).toBe(
-      "data:image/avif;base64,darklqip"
-    );
-  });
-
-  it("renders without custom blurDataURL when neither light nor dark has lqip (default fallback)", () => {
-    // When lqip is absent, ThemeAwareHero passes undefined → OptimizedImage
-    // uses its own 1×1 PNG default. The rendered img should NOT have a
-    // custom AVIF data URL.
-    const { container } = render(
-      <ThemeAwareHero light={lightMedia} dark={darkMedia} alt="Hero" />
-    );
-    const images = container.querySelectorAll("img");
-    images.forEach((img) => {
-      const val = img.getAttribute("data-blur-data-url");
-      // OptimizedImage's fallback 1×1 PNG — not a custom AVIF lqip
-      expect(val).not.toMatch(/^data:image\/avif/);
-    });
-  });
-
-  // --- Dual-read tests (PR 1 truth table per bot review #139 finding I2) ---
-  //
-  //   preview present + lqip present  → ImageWithAsciiPreview wins
-  //   preview present + lqip missing  → ImageWithAsciiPreview wins
-  //   preview missing + lqip present  → OptimizedImage with blur (legacy)
-  //   preview missing + lqip missing  → OptimizedImage with FALLBACK 1×1 PNG
-  //
-  // The first two cases produce a wrapper with the .ascii-preview-wrapper
-  // marker class and the data-loaded attribute. The latter two do not.
-
-  const VALID_ASCII = ".".repeat(288);
-
-  it("uses ImageWithAsciiPreview when preview.color and 288-char preview.ascii are both present", () => {
-    const lightWithPreview = makeMedia({
-      ...lightMedia,
-      preview: { color: "#1e2530", ascii: VALID_ASCII },
-    });
-    const { container } = render(
-      <ThemeAwareHero light={lightWithPreview} dark={darkMedia} alt="Hero" />
-    );
-    // The new wrapper is detectable by its class + data-loaded attribute.
-    expect(container.querySelector('.ascii-preview-wrapper[data-loaded="false"]')).toBeTruthy();
-    // The dominant color is wired in as a CSS custom property on the wrapper.
-    const wrapper = container.querySelector(".ascii-preview-wrapper") as HTMLElement;
-    expect(wrapper.style.getPropertyValue("--preview-color")).toBe("#1e2530");
-  });
-
-  it("preview wins over lqip when both are present (preview path used)", () => {
-    const lightBoth = makeMedia({
-      ...lightMedia,
-      lqip: "data:image/avif;base64,lightlqip",
-      preview: { color: "#1e2530", ascii: VALID_ASCII },
-    });
-    const { container } = render(
-      <ThemeAwareHero light={lightBoth} dark={darkMedia} alt="Hero" />
-    );
-    // Light variant: new wrapper exists; the legacy blur data URL is NOT
-    // attached to the light <img> (because the lqip path is bypassed).
-    expect(container.querySelector(".ascii-preview-wrapper")).toBeTruthy();
-    const lightImg = container.querySelector(
-      'img[src="/media/post-light.png"]'
-    ) as HTMLElement | null;
-    // Light img exists (rendered by AsciiPreviewImage) but with no blur prop.
-    expect(lightImg).toBeTruthy();
-    expect(lightImg!.getAttribute("data-blur-data-url")).toBeNull();
-  });
-
-  it("falls back to OptimizedImage with lqip blur when preview is missing but lqip is present", () => {
-    const lightOnlyLqip = makeMedia({
-      ...lightMedia,
-      lqip: "data:image/avif;base64,lightlqip",
-    });
-    const { container } = render(
-      <ThemeAwareHero light={lightOnlyLqip} dark={darkMedia} alt="Hero" />
-    );
-    expect(container.querySelector(".ascii-preview-wrapper")).toBeNull();
-    const lightImg = container.querySelector(
-      'img[src="/media/post-light.png"]'
-    ) as HTMLElement;
-    expect(lightImg.getAttribute("data-blur-data-url")).toBe(
-      "data:image/avif;base64,lightlqip"
-    );
-  });
-
-  it("falls back to OptimizedImage when preview.ascii length is wrong (validation fails closed)", () => {
-    const lightBadAscii = makeMedia({
-      ...lightMedia,
-      preview: { color: "#1e2530", ascii: "too-short" },
-    });
-    const { container } = render(
-      <ThemeAwareHero light={lightBadAscii} dark={darkMedia} alt="Hero" />
-    );
-    // Wrong length → not a usable preview → OptimizedImage path.
-    expect(container.querySelector(".ascii-preview-wrapper")).toBeNull();
-  });
-
-  it("falls back to OptimizedImage when preview.color is missing (validation fails closed)", () => {
-    const lightNoColor = makeMedia({
-      ...lightMedia,
-      preview: { color: "", ascii: VALID_ASCII },
-    });
-    const { container } = render(
-      <ThemeAwareHero light={lightNoColor} dark={darkMedia} alt="Hero" />
-    );
-    expect(container.querySelector(".ascii-preview-wrapper")).toBeNull();
-  });
-
-  it("dual-read independently per variant (light uses preview, dark uses lqip)", () => {
-    const lightWithPreview = makeMedia({
-      ...lightMedia,
-      preview: { color: "#1e2530", ascii: VALID_ASCII },
-    });
-    const darkWithLqip = makeMedia({
-      ...darkMedia,
-      lqip: "data:image/avif;base64,darklqip",
-    });
-    const { container } = render(
-      <ThemeAwareHero light={lightWithPreview} dark={darkWithLqip} alt="Hero" />
-    );
-    // Exactly one wrapper (light variant).
-    const wrappers = container.querySelectorAll(".ascii-preview-wrapper");
-    expect(wrappers).toHaveLength(1);
-    // Dark variant still gets its lqip on the <img>.
-    const darkImg = container.querySelector(
-      'img[src="/media/post-dark.png"]'
-    ) as HTMLElement;
-    expect(darkImg.getAttribute("data-blur-data-url")).toBe(
-      "data:image/avif;base64,darklqip"
-    );
   });
 });

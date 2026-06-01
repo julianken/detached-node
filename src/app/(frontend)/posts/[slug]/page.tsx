@@ -183,8 +183,8 @@ export default async function PostPage({ params }: PostPageProps) {
           <div
             className="hero-filter overflow-hidden rounded-2xl"
             style={{
-              "--hero-glow-light": post.featuredImageLight.preview?.color || "var(--accent)",
-              "--hero-glow-dark": post.featuredImageDark.preview?.color || "var(--accent)",
+              "--hero-glow-light": "var(--accent)",
+              "--hero-glow-dark": "var(--accent)",
             } as CSSProperties}
           >
             <ThemeAwareHero
