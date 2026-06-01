@@ -1,5 +1,5 @@
-import { describe, it, expect, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { describe, it, expect, vi, afterEach } from "vitest";
+import { render, screen, fireEvent } from "@testing-library/react";
 import React from "react";
 import { ThemeAwareHero } from "@/components/ThemeAwareHero";
 import type { Media } from "@/payload-types";
@@ -19,6 +19,7 @@ vi.mock("next/image", () => ({
     width,
     height,
     style,
+    onLoad,
     ...rest
   }: {
     src: string;
@@ -31,16 +32,19 @@ vi.mock("next/image", () => ({
     width?: number;
     height?: number;
     style?: React.CSSProperties;
+    onLoad?: React.ReactEventHandler<HTMLImageElement>;
     [key: string]: unknown;
   }) => {
     // Strip out Next.js-only props that would generate React warnings on an
     // intrinsic <img> element; preserve the props we actually want to assert.
+    // onLoad is preserved so tests can simulate the image finishing loading.
     void rest;
     return React.createElement("img", {
       src,
       alt,
       className,
       style,
+      onLoad,
       "data-fill": fill ? "true" : undefined,
       "data-fetch-priority": fetchPriority,
       "data-priority": priority ? "true" : undefined,
@@ -106,7 +110,9 @@ describe("ThemeAwareHero", () => {
     expect(darkImg?.className).toContain("object-cover");
   });
 
-  it("renders a centered loading spinner behind the images", () => {
+  it("renders a centered loading spinner while the image is loading", () => {
+    // jsdom never actually loads the image, so img.complete stays false and the
+    // mount layout-effect leaves the component in its loading state.
     const { container } = render(
       <ThemeAwareHero light={lightMedia} dark={darkMedia} alt="Hero" />
     );
@@ -117,6 +123,137 @@ describe("ThemeAwareHero", () => {
     expect(spinner).toBeTruthy();
     expect(spinner?.getAttribute("aria-hidden")).toBe("true");
     expect(spinner?.querySelector(".animate-spin")).toBeTruthy();
+  });
+
+  // --- load-aware behavior (spinner / cached-instant / glitch-in) ---
+
+  it("shows NO spinner and NO glitch when the visible image is already cached on mount", () => {
+    // Stub the cached signal the layout effect reads: a warm image reports
+    // complete=true with a real naturalWidth before paint.
+    const completeSpy = vi
+      .spyOn(window.HTMLImageElement.prototype, "complete", "get")
+      .mockReturnValue(true);
+    const naturalWidthSpy = vi
+      .spyOn(window.HTMLImageElement.prototype, "naturalWidth", "get")
+      .mockReturnValue(1200);
+
+    const { container } = render(
+      <ThemeAwareHero light={lightMedia} dark={darkMedia} alt="Hero" />
+    );
+
+    // No spinner flash for a cached image, and no glitch-reveal applied.
+    expect(container.querySelector(".hero-spinner")).toBeNull();
+    expect(container.querySelector(".glitch-reveal")).toBeNull();
+
+    completeSpy.mockRestore();
+    naturalWidthSpy.mockRestore();
+  });
+
+  it("removes the spinner and applies glitch-reveal when a real load completes", () => {
+    // Default jsdom: images are not complete on mount, so the spinner shows.
+    const { container } = render(
+      <ThemeAwareHero light={lightMedia} dark={darkMedia} alt="Hero" />
+    );
+    expect(container.querySelector(".hero-spinner")).toBeTruthy();
+    expect(container.querySelector(".glitch-reveal")).toBeNull();
+
+    // Simulate the visible variant finishing a genuine load.
+    const lightImg = container.querySelector(
+      'img[src="/media/post-light.png"]'
+    ) as HTMLImageElement;
+    fireEvent.load(lightImg);
+
+    // Spinner gone; glitch-in applied to the (theme-agnostic) image wrapper.
+    expect(container.querySelector(".hero-spinner")).toBeNull();
+    expect(container.querySelector(".glitch-reveal")).toBeTruthy();
+  });
+
+  // --- visible/hidden onLoad discrimination (the display:"none" guard) ---
+  //
+  // The component decides which variant "owns" the reveal by reading
+  // window.getComputedStyle(img).display: only the variant that is NOT
+  // display:"none" may remove the spinner and trigger the glitch. jsdom never
+  // applies the Tailwind stylesheet, so by default BOTH variants report
+  // display:"inline" and the guard branch (handleLoad early-return for the
+  // hidden variant) is never exercised — visibleImg() passes only by
+  // first-element fallthrough. These tests stub getComputedStyle so the dark
+  // variant reports display:"none" (hidden) and the light variant reports a
+  // visible display, then drive onLoad on each variant to prove the guard.
+
+  let computedStyleSpy: ReturnType<typeof vi.spyOn> | undefined;
+
+  afterEach(() => {
+    computedStyleSpy?.mockRestore();
+    computedStyleSpy = undefined;
+  });
+
+  /**
+   * Stub getComputedStyle so the DARK variant (src .../post-dark.png) reports
+   * display:"none" and everything else delegates to jsdom's real
+   * implementation (so the light variant stays visible: display:"inline").
+   * The component only reads `.display`, so a minimal override is sufficient.
+   */
+  function stubDarkHidden() {
+    const real = window.getComputedStyle.bind(window);
+    computedStyleSpy = vi
+      .spyOn(window, "getComputedStyle")
+      .mockImplementation((el: Element, pseudo?: string | null) => {
+        if (
+          el instanceof window.HTMLImageElement &&
+          (el.getAttribute("src") ?? "").endsWith("post-dark.png")
+        ) {
+          return { display: "none" } as unknown as CSSStyleDeclaration;
+        }
+        return real(el, pseudo ?? undefined);
+      });
+  }
+
+  it("ignores onLoad from the HIDDEN (display:none) variant — no spinner removal, no glitch", () => {
+    stubDarkHidden();
+
+    const { container } = render(
+      <ThemeAwareHero light={lightMedia} dark={darkMedia} alt="Hero" />
+    );
+    // Spinner shows (images not complete at mount); no glitch yet.
+    expect(container.querySelector(".hero-spinner")).toBeTruthy();
+    expect(container.querySelector(".glitch-reveal")).toBeNull();
+
+    // Fire load on the HIDDEN variant. Its onLoad must early-return on the
+    // display:"none" guard and leave state untouched.
+    const darkImg = container.querySelector(
+      'img[src="/media/post-dark.png"]'
+    ) as HTMLImageElement;
+    fireEvent.load(darkImg);
+
+    // No state change: spinner still present, still no glitch.
+    expect(container.querySelector(".hero-spinner")).toBeTruthy();
+    expect(container.querySelector(".glitch-reveal")).toBeNull();
+  });
+
+  it("honors onLoad from the VISIBLE variant — removes spinner and applies glitch (with dark variant stubbed hidden)", () => {
+    stubDarkHidden();
+
+    const { container } = render(
+      <ThemeAwareHero light={lightMedia} dark={darkMedia} alt="Hero" />
+    );
+    expect(container.querySelector(".hero-spinner")).toBeTruthy();
+    expect(container.querySelector(".glitch-reveal")).toBeNull();
+
+    // Loading the hidden variant first must NOT consume the reveal (guard).
+    const darkImg = container.querySelector(
+      'img[src="/media/post-dark.png"]'
+    ) as HTMLImageElement;
+    fireEvent.load(darkImg);
+    expect(container.querySelector(".hero-spinner")).toBeTruthy();
+    expect(container.querySelector(".glitch-reveal")).toBeNull();
+
+    // Now the VISIBLE (light) variant finishes: spinner removed + glitch-in.
+    const lightImg = container.querySelector(
+      'img[src="/media/post-light.png"]'
+    ) as HTMLImageElement;
+    fireEvent.load(lightImg);
+    expect(container.querySelector(".hero-spinner")).toBeNull();
+    expect(container.querySelector(".glitch-reveal")).toBeTruthy();
   });
 
   it("does NOT apply transition-opacity or fade animation CSS (View Transitions compliance)", () => {

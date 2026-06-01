@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { HeroImagePair } from "@/components/HeroImagePair";
 import { isMediaObject } from "@/lib/types/media";
 import type { Media } from "@/payload-types";
 
@@ -55,12 +55,11 @@ function toRelativeSrc(src: string): string {
  * The parent `relative` wrapper holds an `aspect-ratio` matching the source
  * images so swapping which child is `display: none` never causes layout shift.
  *
- * Loading state: a CSS-only spinner sits in the center of the positioned
- * wrapper, rendered BEHIND both images (the images are `object-cover` + `fill`,
- * so the opaque loaded image paints over the spinner). This keeps the
- * component a zero-JS server component — no `onLoad` handler, no client
- * boundary — while still showing a standard centered spinner during the
- * brief window before the active variant's bytes arrive.
+ * This component stays a server component: it does the Media null-guard, URL
+ * normalization, focal-point math, and aspect-ratio sizing, then hands the
+ * image pair to {@link HeroImagePair} — a thin `"use client"` child that owns
+ * the load-aware spinner + glitch-in reveal. Keeping the boundary here means
+ * the public props and call sites (PostCard, posts/[slug]) are unchanged.
  *
  * LCP note: both children are `loading="lazy"` by default with
  * `fetchPriority="high"`. The browser correctly skips lazy-loading the
@@ -92,30 +91,13 @@ export function ThemeAwareHero({
       className={`relative w-full overflow-hidden ${className}`.trim()}
       style={aspectStyle}
     >
-      {/* Centered loading spinner, painted over by the opaque image once loaded. */}
-      <div
-        className="hero-spinner pointer-events-none absolute inset-0 flex items-center justify-center"
-        aria-hidden="true"
-      >
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-border border-t-accent" />
-      </div>
-      <Image
-        src={toRelativeSrc(light.url)}
-        alt={light.alt || alt}
-        fill
-        fetchPriority="high"
+      <HeroImagePair
+        lightSrc={toRelativeSrc(light.url)}
+        darkSrc={toRelativeSrc(dark.url)}
+        lightAlt={light.alt || alt}
+        darkAlt={dark.alt || alt}
         sizes={resolvedSizes}
-        className="object-cover dark:hidden"
-        style={imgStyle}
-      />
-      <Image
-        src={toRelativeSrc(dark.url)}
-        alt={dark.alt || alt}
-        fill
-        fetchPriority="high"
-        sizes={resolvedSizes}
-        className="hidden object-cover dark:block"
-        style={imgStyle}
+        imgStyle={imgStyle}
       />
     </div>
   );
